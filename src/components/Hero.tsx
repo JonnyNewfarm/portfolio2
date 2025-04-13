@@ -5,9 +5,10 @@ import React, { useLayoutEffect, useRef } from "react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import ImgParallax from "./ImgParallax";
 import { useScroll, useTransform, motion } from "motion/react";
-import para1 from "../../public/jonny9.jpg";
-import para2 from "../../public/jonas1.jpeg";
+import para1 from "../../public/jonny18.jpg";
+import para2 from "../../public/jonas1.jpg";
 import para3 from "../../public/jonas2.jpg";
+import lake from "../../public/lake.jpg";
 
 const Hero = () => {
   const container = useRef(null);
@@ -44,14 +45,14 @@ const Hero = () => {
     {
       img: para2,
       style:
-        "left-[57.5vw] [@media(max-width:376px)]:left-[57.5vw] [@media(max-width:450px)]:h-[25vh]  [@media(max-width:391px)]:left-[54vw]  [@media(max-width:450px)]:w-[20vh] [@media(max-width:450px)]:h-[25vh] md:left-[57vw] top-[25vh] md:top-[20vh] w-[20vh] h-[30vh] sm:h-[30vh] sm:w-[20vh] z-[2]",
+        "left-[57.5vw]   [@media(max-width:376px)]:left-[57.5vw] [@media(max-width:450px)]:h-[25vh]  [@media(max-width:391px)]:left-[54vw]  [@media(max-width:450px)]:w-[20vh] [@media(max-width:450px)]:h-[25vh] md:left-[57vw] top-[25vh] md:top-[20vh] w-[20vh] h-[30vh] sm:h-[30vh] sm:w-[20vh] z-[2]",
       value: md,
     },
 
     {
       img: para3,
       style:
-        "left-[5vw] sm:left-[10vw]  md:left-[12.5vw] lg:left-[33.5vw]  top-[38vh] h-[20vh] w-[15vh] sm:h-[23vh] sm:w-[20vh] z-[3]",
+        "left-[5vw] sm:left-[10vw]   md:left-[12.5vw] lg:left-[34.5vw]  top-[35vh] h-[20vh] w-[15vh] sm:h-[23vh] sm:w-[20vh] z-[3]",
       value: lg,
     },
   ];
@@ -108,6 +109,7 @@ const Hero = () => {
                   <Image
                     className="object-cover"
                     fill
+                    quality={100}
                     placeholder="blur"
                     alt="image"
                     src={image.img}
@@ -121,14 +123,14 @@ const Hero = () => {
           <div ref={slider} className="relative    flex whitespace-nowrap">
             <p
               ref={firstParagraph}
-              className="font-bold text-[160px] text-[#161310]  m-2.5 uppercase"
+              className=" text-[160px] text-[#161310]  m-2.5 uppercase"
             >
               developer & designer -
             </p>
 
             <p
               ref={secondParagraph}
-              className="font-bold text-[160px] text-[#161310] z-50 left-[100%] absolute m-2.5 uppercase"
+              className=" text-[160px] text-[#161310] z-50 left-[100%] absolute m-2.5 uppercase"
             >
               developer & designer -
             </p>

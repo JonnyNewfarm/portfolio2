@@ -5,7 +5,7 @@ import BurgerMenu from "./BurgerMenu";
 
 const Navbar = () => {
   return (
-    <div className="bg-[#ecebeb] font-extrabold text-lg text-[#161310] px-20 py-3 flex items-center sticky top-0 z-50 w-full justify-between">
+    <div className="bg-[#ecebeb] font-extrabold text-[16px] text-[#161310] px-20 py-3 flex items-center sticky top-0 z-50 w-full justify-between">
       <div className="tracking-tighter">
         <h1 className="text-[#161310] opacity-70 m-0 leading-none">Name:</h1>
         <p className="text-[#161310] m-0 leading-tight">Jonas Nygaard</p>

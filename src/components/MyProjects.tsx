@@ -11,23 +11,11 @@ const MyProjects = () => {
       video.play().catch((err) => console.error("Autoplay failed:", err));
     }
   }, []);
+
   return (
-    <div className="bg-[#ecebeb] h-screen flex justify-center gap-x-20 items-center">
-      <div className="text-6xl font-serif uppercase text-center">
-        <h1>Check out</h1>
-        <h1>My projects</h1>
-      </div>
-      <div>
-        <video
-          ref={videoRef}
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="w-[30vw]"
-        >
-          <source src="/canvas-video.mp4" type="video/mp4" />
-        </video>
+    <div className="h-screen bg-[#ecebeb] flex justify-end">
+      <div className="w-[35vw] h-screen">
+        <img src="/myrecent.jpg" className="object-cover h-full" alt="" />
       </div>
     </div>
   );

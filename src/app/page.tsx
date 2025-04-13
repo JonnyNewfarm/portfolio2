@@ -16,7 +16,6 @@ export default function Home() {
       <Contact />
 
       <MyProjects />
-      <BgImg />
 
       <div className="h-screen bg-[#ecebeb]"></div>
     </ScrollSection>
