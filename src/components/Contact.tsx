@@ -22,7 +22,10 @@ export default function Section() {
       className="relative flex items-center justify-center min-h-[150vh] overflow-hidden"
       style={{ clipPath: "polygon(0% 0, 100% 0%, 100% 100%, 0 100%)" }}
     >
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[80vw] sm:w-[60vw] md:w-[50vw] lg:w-[40vw] font-serif px-4 py-6 sm:px-10 sm:py-16 flex flex-col h-[75vh] bg-[#ecebeb] z-50">
+      <div
+        id="contact"
+        className="absolute scroll-mt-28 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[80vw] sm:w-[60vw] md:w-[50vw] lg:w-[40vw] font-serif px-4 py-6 sm:px-10 sm:py-16 flex flex-col h-[75vh] bg-[#ecebeb] z-50"
+      >
         <h1 className="text-center text-xl sm:text-3xl">
           I’m always open to discussing new projects and collaboration
           opportunities. Let’s work together to create something exceptional.

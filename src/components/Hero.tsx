@@ -75,7 +75,7 @@ const Hero = () => {
   }, []);
 
   return (
-    <div ref={container} className="bg-[#ecebeb] h-screen relative">
+    <div id="home" ref={container} className="bg-[#ecebeb] h-screen relative">
       {/* Floating images */}
       <div className="absolute top-[16vh]  left-0 w-full h-full flex justify-center pointer-events-none">
         {images.map((image, i) => (

@@ -22,7 +22,10 @@ const MyProjects = () => {
   const [modal, setModal] = useState({ active: false, index: 0 });
 
   return (
-    <main className="h-screen bg-[#ecebeb] flex items-center justify-center relative">
+    <main
+      id="my-work"
+      className="h-screen bg-[#ecebeb] flex items-center justify-center relative"
+    >
       <div className="w-full p-8 sm:p-10 md:p-40 lg:p-60 hidden sm:block">
         <h1 className="ml-12 mb-2 font-semibold text-lg">My work</h1>
         <div className="w-full flex flex-col justify-center items-center ">
