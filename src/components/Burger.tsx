@@ -9,10 +9,10 @@ const Burger = () => {
           <div className="flex gap-y-6 flex-col">
             <h1 className="text-3xl font-semibold">Navigation</h1>
             <Link className="hover-underline" href={""}>
-              My work
+              Home
             </Link>
             <Link className="hover-underline" href={""}>
-              About
+              My work
             </Link>
 
             <Link className="hover-underline" href={""}>
