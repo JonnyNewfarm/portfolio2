@@ -13,7 +13,7 @@ const MyProjects = () => {
     },
     {
       title: "Lunnettes",
-      src: "Lunnettes-screen.png",
+      src: "lunnettes-screen.png",
       color: "#161310",
       link: "https://lunnettes-shop.vercel.app/",
     },

@@ -11,8 +11,8 @@ interface Project {
 
 interface ModalProps {
   modal: {
-    active: boolean; // active is a boolean
-    index: number; // index is a number
+    active: boolean;
+    index: number;
   };
   projects: Project[];
 }

@@ -12,7 +12,12 @@ const FlowerRotate = ({ scrollYProgress }: FlowerRotate) => {
 
   return (
     <motion.div style={{ rotate }} className="w-20 h-20 mx-auto my-10">
-      <Image src="/blomst.png" className="w-20 h-20" alt="flower" />
+      <Image
+        fill
+        src="/blomst.png"
+        className="w-20 h-20 object-contain"
+        alt="flower"
+      />
     </motion.div>
   );
 };
