@@ -1,7 +1,6 @@
 "use client";
 import React, { useRef } from "react";
 import { useScroll, useTransform, motion } from "framer-motion";
-import Link from "next/link";
 import Image from "next/image";
 import para1 from "../../public/jonny9.jpg";
 import para2 from "../../public/jonas1.jpeg";
@@ -15,22 +14,8 @@ const ImgParallax = () => {
     offset: ["start end", "end start"],
   });
 
-  const sm = useTransform(scrollYProgress, [0, 1], [0, -50]);
   const md = useTransform(scrollYProgress, [0, 1], [0, -150]);
   const lg = useTransform(scrollYProgress, [0, 1], [0, -250]);
-  const FadeInAnimation = {
-    initial: {
-      opacity: 0,
-      y: 100,
-    },
-    animate: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        delay: 0.3,
-      },
-    },
-  };
 
   const images = [
     {

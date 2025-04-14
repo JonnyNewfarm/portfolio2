@@ -59,7 +59,7 @@ export default function StickyScrollParagraphs() {
               transition={{ duration: 0.3 }}
               className="max-w-4xl px-4 text-center font-serif"
             >
-              Hi, I'm Jonas, a 28-year-old designer and developer with a passion
+              Hi, Im Jonas, a 28-year-old designer and developer with a passion
               for creating seamless, user-friendly digital experiences. I like
               to work in JavaScript and TypeScript.
             </motion.p>

@@ -1,6 +1,5 @@
 "use client";
 import Image from "next/image";
-import jonny4 from "../../public/jonny4.jpg";
 import paraply from "../../public/paraply.jpg";
 import { useScroll, useTransform, motion } from "framer-motion";
 import { useRef } from "react";

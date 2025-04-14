@@ -8,7 +8,6 @@ import FlowerRotate from "./FlowerRotate";
 
 export default function Section() {
   const container = useRef(null);
-  const flowerRef = useRef(null);
 
   const { scrollYProgress } = useScroll({
     target: container,

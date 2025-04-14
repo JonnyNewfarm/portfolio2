@@ -10,12 +10,13 @@ interface Project {
 }
 
 interface ModalProps {
-  modal?: {
-    active: any;
-    index: any;
+  modal: {
+    active: boolean; // active is a boolean
+    index: number; // index is a number
   };
   projects: Project[];
 }
+
 const scaleAnimation = {
   initial: { scale: 0 },
   open: {

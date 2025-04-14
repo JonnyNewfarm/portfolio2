@@ -1,21 +1,5 @@
 import type { Metadata } from "next";
-import {
-  Cormorant,
-  Cormorant_Upright,
-  EB_Garamond,
-  Forum,
-  Geist,
-  Geist_Mono,
-  Inter,
-  Libre_Baskerville,
-  Lora,
-  Lusitana,
-  Marcellus,
-  Marcellus_SC,
-  Playfair_Display_SC,
-  Spectral,
-  Spectral_SC,
-} from "next/font/google";
+import { Inter, Lusitana } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 

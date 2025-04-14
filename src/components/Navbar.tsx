@@ -1,7 +1,5 @@
 import Link from "next/link";
 import React from "react";
-import Burger from "./Burger";
-import BurgerMenu from "./BurgerMenu";
 
 const Navbar = () => {
   return (

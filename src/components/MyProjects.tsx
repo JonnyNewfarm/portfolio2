@@ -1,6 +1,5 @@
 "use client";
-import { div } from "motion/react-client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import Project from "./Project";
 import Modal from "./Modal";
 

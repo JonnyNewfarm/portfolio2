@@ -1,8 +1,10 @@
 "use client";
-import { motion, useTransform } from "framer-motion";
+import { motion, useTransform, MotionValue } from "framer-motion";
+import Image from "next/image";
 import React from "react";
+
 interface FlowerRotate {
-  scrollYProgress: any;
+  scrollYProgress: MotionValue<number>;
 }
 
 const FlowerRotate = ({ scrollYProgress }: FlowerRotate) => {
@@ -10,7 +12,7 @@ const FlowerRotate = ({ scrollYProgress }: FlowerRotate) => {
 
   return (
     <motion.div style={{ rotate }} className="w-20 h-20 mx-auto my-10">
-      <img src="/blomst.png" className="w-20 h-20" alt="flower" />
+      <Image src="/blomst.png" className="w-20 h-20" alt="flower" />
     </motion.div>
   );
 };
