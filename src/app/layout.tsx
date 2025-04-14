@@ -29,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} ${lusitana.variable}`}>
-        <div className="w-full h-full overflow-x-clip">
+        <div className="w-full min-h-screen overflow-clip">
           <Navbar />
           {children}
         </div>

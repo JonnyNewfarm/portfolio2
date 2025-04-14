@@ -16,19 +16,18 @@ export default function ScrollSection({
 
   useEffect(() => {
     const scroller = new Lenis();
-    setLenis(scroller); // Update state with Lenis instance
+    setLenis(scroller);
 
-    // Smooth scroll loop
-    const raf = (time: number) => {
+    function raf(time: number) {
       scroller.raf(time);
       requestAnimationFrame(raf);
-    };
+    }
 
     const rafId = requestAnimationFrame(raf);
 
     return () => {
       cancelAnimationFrame(rafId);
-      scroller.destroy(); // Cleanup on unmount
+      scroller.destroy();
     };
   }, []);
 

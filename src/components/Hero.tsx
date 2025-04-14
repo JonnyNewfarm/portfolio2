@@ -10,7 +10,7 @@ import para3 from "../../public/jonas2.jpg";
 
 const Hero = () => {
   const container = useRef(null);
-  const direction = useRef(-1); // Store direction in useRef
+  const direction = useRef(-1);
 
   const { scrollYProgress } = useScroll({
     target: container,
@@ -29,13 +29,13 @@ const Hero = () => {
     {
       img: para2,
       style:
-        "left-[57.5vw] hidden hidden lg:block  [@media(max-width:376px)]:left-[57.5vw] [@media(max-width:450px)]:h-[25vh]  [@media(max-width:391px)]:left-[54vw]  [@media(max-width:450px)]:w-[20vh] [@media(max-width:450px)]:h-[25vh] md:left-[57vw] top-[25vh] md:top-[20vh] w-[20vh] h-[30vh] sm:h-[30vh] sm:w-[20vh] z-[2]",
+        "left-[57.5vw] hidden lg:block top-[25vh] md:top-[20vh] w-[20vh] h-[30vh] sm:h-[30vh] sm:w-[20vh] z-[2]",
       value: md,
     },
     {
       img: para3,
       style:
-        "left-[5vw] sm:left-[10vw] hidden lg:block   lg:left-[29.5vw] xl:left-[33.3vw] top-[35vh] h-[20vh] w-[15vh] sm:h-[23vh] sm:w-[20vh] z-[3]",
+        "left-[5vw] sm:left-[10vw] hidden lg:block lg:left-[29.5vw] xl:left-[33.3vw] top-[35vh] h-[20vh] w-[15vh] sm:h-[23vh] sm:w-[20vh] z-[3]",
       value: lg,
     },
   ];
@@ -46,17 +46,13 @@ const Hero = () => {
   let xPercent = 0;
 
   const animation = () => {
-    if (xPercent < -100) {
-      xPercent = 0;
-    }
+    if (xPercent < -100) xPercent = 0;
+    if (xPercent > 0) xPercent = -100;
 
-    if (xPercent > 0) {
-      xPercent = -100;
-    }
-    gsap.set(firstParagraph.current, { xPercent: xPercent });
-    gsap.set(secondParagraph.current, { xPercent: xPercent });
+    gsap.set(firstParagraph.current, { xPercent });
+    gsap.set(secondParagraph.current, { xPercent });
     requestAnimationFrame(animation);
-    xPercent += 0.04 * direction.current; // Use direction from useRef
+    xPercent += 0.04 * direction.current;
   };
 
   useLayoutEffect(() => {
@@ -68,59 +64,56 @@ const Hero = () => {
         scrub: 0.25,
         start: 0,
         end: window.innerHeight,
-
         onUpdate: (event) => {
-          direction.current = event.direction * -1; // Update direction with useRef
+          direction.current = event.direction * -1;
         },
       },
       x: "-200px",
     });
 
     requestAnimationFrame(animation);
-  }, [animation]); // Add animation to the dependency array
+  }, []);
 
   return (
-    <div ref={container} className="bg-[#ecebeb] h-screen overflow-x-hidden">
-      <div className="overflow-x-hidden">
-        <div className="overflow-x-hidden">
-          <div className="flex w-full overflow-x-hidden h-screen justify-center absolute top-[25vh] sm:top-[20vh]">
-            {images.map((image, i) => {
-              return (
-                <motion.div
-                  style={{ y: image.value }}
-                  whileInView={{}}
-                  key={i}
-                  className={`absolute object-cover ${image.style}`}
-                >
-                  <Image
-                    className="object-cover"
-                    fill
-                    quality={100}
-                    placeholder="blur"
-                    alt="image"
-                    src={image.img}
-                  />
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-        <div className="absolute z-30 overflow-x-hidden font-serif  top-[68vh] overflow-hiddenS">
-          <div ref={slider} className="relative    flex whitespace-nowrap">
-            <p
-              ref={firstParagraph}
-              className=" text-[160px] text-[#161310]  m-2.5 uppercase"
-            >
-              developer & designer -
-            </p>
+    <div ref={container} className="bg-[#ecebeb] h-screen relative">
+      {/* Floating images */}
+      <div className="absolute top-[25vh] sm:top-[20vh] left-0 w-full h-full flex justify-center pointer-events-none">
+        {images.map((image, i) => (
+          <motion.div
+            key={i}
+            style={{ y: image.value }}
+            className={`absolute object-cover ${image.style}`}
+          >
+            <Image
+              className="object-cover"
+              fill
+              quality={100}
+              placeholder="blur"
+              alt="image"
+              src={image.img}
+            />
+          </motion.div>
+        ))}
+      </div>
 
-            <p
-              ref={secondParagraph}
-              className=" text-[160px] text-[#161310] z-50 left-[100%] absolute m-2.5 uppercase"
-            >
-              developer & designer -
-            </p>
-          </div>
+      {/* Animated Text */}
+      <div className="absolute z-30 top-[65vh] font-serif w-screen overflow-hidden">
+        <div
+          ref={slider}
+          className="relative flex whitespace-nowrap w-max will-change-transform"
+        >
+          <p
+            ref={firstParagraph}
+            className="text-[clamp(2rem,10vw,10rem)] text-[#161310] m-2.5 uppercase"
+          >
+            developer & designer -
+          </p>
+          <p
+            ref={secondParagraph}
+            className="text-[clamp(2rem,10vw,10rem)] text-[#161310] m-2.5 uppercase absolute left-full"
+          >
+            developer & designer -
+          </p>
         </div>
       </div>
     </div>
