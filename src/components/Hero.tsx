@@ -23,7 +23,7 @@ const Hero = () => {
   const images = [
     {
       img: para1,
-      style: "h-[40vh] sm:h-[45vh] sm:w-[30vh] w-[30vh] z-[1]",
+      style: "h-[40vh] mb-16 sm:h-[45vh] sm:w-[30vh] w-[30vh] z-[1]",
       value: 0,
     },
     {
@@ -77,7 +77,7 @@ const Hero = () => {
   return (
     <div ref={container} className="bg-[#ecebeb] h-screen relative">
       {/* Floating images */}
-      <div className="absolute top-[25vh] sm:top-[20vh] left-0 w-full h-full flex justify-center pointer-events-none">
+      <div className="absolute top-[16vh]  left-0 w-full h-full flex justify-center pointer-events-none">
         {images.map((image, i) => (
           <motion.div
             key={i}
@@ -104,13 +104,13 @@ const Hero = () => {
         >
           <p
             ref={firstParagraph}
-            className="text-[clamp(2rem,10vw,10rem)] text-[#161310] m-2.5 uppercase"
+            className="text-[clamp(6rem,10vw,10rem)] text-[#161310] m-2.5 uppercase"
           >
             developer & designer -
           </p>
           <p
             ref={secondParagraph}
-            className="text-[clamp(2rem,10vw,10rem)] text-[#161310] m-2.5 uppercase absolute left-full"
+            className="text-[clamp(6rem,10vw,10rem)] text-[#161310] m-2.5 uppercase absolute left-full"
           >
             developer & designer -
           </p>
