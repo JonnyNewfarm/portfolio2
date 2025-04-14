@@ -1,4 +1,3 @@
-import Link from "next/link";
 import React from "react";
 
 interface ProjectProps {
@@ -10,7 +9,9 @@ interface ProjectProps {
 
 const Project = ({ index, title, setModal, link }: ProjectProps) => {
   return (
-    <Link
+    <a
+      target="_blank"
+      rel="noopener noreferrer"
       href={link}
       onMouseEnter={() => {
         setModal({ active: true, index: index });
@@ -27,7 +28,7 @@ const Project = ({ index, title, setModal, link }: ProjectProps) => {
       <p className="transition-all text-nowrap ease-in-out">
         Design & Development
       </p>
-    </Link>
+    </a>
   );
 };
 
