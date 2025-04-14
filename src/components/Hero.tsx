@@ -23,19 +23,19 @@ const Hero = () => {
   const images = [
     {
       img: para1,
-      style: "h-[50vh] sm:h-[45vh] sm:w-[30vh] w-[35vh] z-[1]",
+      style: "h-[40vh] sm:h-[45vh] sm:w-[30vh] w-[30vh] z-[1]",
       value: 0,
     },
     {
       img: para2,
       style:
-        "left-[57.5vw]   [@media(max-width:376px)]:left-[57.5vw] [@media(max-width:450px)]:h-[25vh]  [@media(max-width:391px)]:left-[54vw]  [@media(max-width:450px)]:w-[20vh] [@media(max-width:450px)]:h-[25vh] md:left-[57vw] top-[25vh] md:top-[20vh] w-[20vh] h-[30vh] sm:h-[30vh] sm:w-[20vh] z-[2]",
+        "left-[57.5vw] hidden hidden lg:block  [@media(max-width:376px)]:left-[57.5vw] [@media(max-width:450px)]:h-[25vh]  [@media(max-width:391px)]:left-[54vw]  [@media(max-width:450px)]:w-[20vh] [@media(max-width:450px)]:h-[25vh] md:left-[57vw] top-[25vh] md:top-[20vh] w-[20vh] h-[30vh] sm:h-[30vh] sm:w-[20vh] z-[2]",
       value: md,
     },
     {
       img: para3,
       style:
-        "left-[5vw] sm:left-[10vw]   md:left-[12.5vw] lg:left-[34.5vw]  top-[35vh] h-[20vh] w-[15vh] sm:h-[23vh] sm:w-[20vh] z-[3]",
+        "left-[5vw] sm:left-[10vw] hidden lg:block   lg:left-[29.5vw] xl:left-[33.3vw] top-[35vh] h-[20vh] w-[15vh] sm:h-[23vh] sm:w-[20vh] z-[3]",
       value: lg,
     },
   ];
