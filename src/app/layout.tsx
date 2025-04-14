@@ -30,7 +30,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} ${lusitana.variable}`}>
-        <div style={{ scrollbarWidth: "thin" }} className="w-full min-h-screen">
+        <div className="w-full min-h-screen">
           <Navbar />
           {children}
           <Footer />
