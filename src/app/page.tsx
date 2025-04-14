@@ -1,12 +1,13 @@
 import Hero from "@/components/Hero";
 
 import TextOnScroll from "@/components/TextOnScroll";
+import ScrollSection from "@/components/SmoothScroll";
 import MyProjects from "@/components/MyProjects";
 import Contact from "@/components/Contact";
 
 export default function Home() {
   return (
-    <div>
+    <ScrollSection>
       <Hero />
 
       <TextOnScroll />
@@ -15,6 +16,6 @@ export default function Home() {
       <MyProjects />
 
       <div className="h-screen bg-[#ecebeb]"></div>
-    </div>
+    </ScrollSection>
   );
 }

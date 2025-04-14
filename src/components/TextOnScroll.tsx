@@ -36,7 +36,7 @@ export default function StickyScrollParagraphs() {
     if (!canScroll) {
       document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = "hidden";
+      document.body.style.overflowX = "hidden";
     }
 
     window.addEventListener("scroll", onScroll);
