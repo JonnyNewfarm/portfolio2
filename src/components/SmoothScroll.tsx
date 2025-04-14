@@ -18,16 +18,17 @@ export default function ScrollSection({
     const scroller = new Lenis();
     setLenis(scroller); // Update state with Lenis instance
 
-    function raf(time: number) {
+    // Smooth scroll loop
+    const raf = (time: number) => {
       scroller.raf(time);
       requestAnimationFrame(raf);
-    }
+    };
 
     const rafId = requestAnimationFrame(raf);
 
     return () => {
       cancelAnimationFrame(rafId);
-      scroller.destroy();
+      scroller.destroy(); // Cleanup on unmount
     };
   }, []);
 

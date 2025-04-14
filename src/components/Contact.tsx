@@ -20,31 +20,39 @@ export default function Section() {
   return (
     <div
       ref={container}
-      className="relative flex items-center justify-center h-[150vh] overflow-hidden"
+      className="relative flex items-center justify-center min-h-[150vh] overflow-hidden"
       style={{ clipPath: "polygon(0% 0, 100% 0%, 100% 100%, 0 100%)" }}
     >
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2  w-[40vw] font-serif   px-10 py-16  flex flex-col h-[75vh]  bg-[#ecebeb] z-50">
-        <h1 className="text-center text-3xl">
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[80vw] sm:w-[60vw] md:w-[50vw] lg:w-[40vw] font-serif px-4 py-6 sm:px-10 sm:py-16 flex flex-col h-[75vh] bg-[#ecebeb] z-50">
+        <h1 className="text-center text-xl sm:text-3xl">
           I’m always open to discussing new projects and collaboration
-          opportunities. let’s work together to create something exceptional.
+          opportunities. Let’s work together to create something exceptional.
         </h1>
         <FlowerRotate scrollYProgress={scrollYProgress} />
 
-        <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 font-sans">
+        <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 font-sans text-sm sm:text-base">
           <h1>jonasnygaard96@gmail.com</h1>
           <h1>github.com/JonnyNewfarm</h1>
         </div>
       </div>
 
-      <div className="fixed top-[-10vh] left-0 h-[120vh] w-full">
-        <motion.div style={{ y }} className="relative w-full h-full">
+      {/* Mobile Fix: Adjust height and ensure proper positioning */}
+      <div className="fixed top-[-10vh] left-0 w-full h-full">
+        {/* Applying motion.div for mobile might cause issues, so let's simplify */}
+        <motion.div
+          style={{ y }}
+          className="relative w-full [@media(max-width:500px)]:h-full min-h-[150vh]"
+        >
           <Image
             src={wnb}
             priority
             quality={100}
             fill
             alt="image"
-            style={{ objectFit: "cover" }}
+            style={{
+              objectFit: "cover",
+              zIndex: -1, // Make sure image stays behind content
+            }}
           />
         </motion.div>
       </div>

@@ -22,3 +22,16 @@
   width: 100%;
   
 }
+
+#hover-div:hover h1 {
+  transform: translateX(-10px);
+}
+
+
+#hover-div:hover p {
+  transform: translateX(10px);
+}
+
+#modal-slider {
+  transition: top 0.5s cubic-bezier(0.76, 0, 0.24, 1);
+}
