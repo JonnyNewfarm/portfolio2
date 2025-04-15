@@ -29,13 +29,13 @@ const Hero = () => {
     {
       img: para2,
       style:
-        "left-[57.5vw] hidden lg:block top-[25vh] md:top-[20vh] w-[20vh] h-[30vh] sm:h-[30vh] sm:w-[20vh] z-[2]",
+        "left-[55.5vw] hidden lg:block top-[25vh] md:top-[20vh] w-[20vh] h-[30vh] sm:h-[30vh] sm:w-[20vh] z-[2]",
       value: md,
     },
     {
       img: para3,
       style:
-        "left-[5vw] sm:left-[10vw] hidden lg:block lg:left-[29.5vw] xl:left-[33.3vw] top-[35vh] h-[20vh] w-[15vh] sm:h-[23vh] sm:w-[20vh] z-[3]",
+        "left-[5vw] sm:left-[10vw] hidden lg:block lg:left-[32vw] xl:left-[35.5vw] top-[35vh] h-[20vh] w-[15vh] sm:h-[23vh] sm:w-[20vh] z-[3]",
       value: lg,
     },
   ];
@@ -82,11 +82,12 @@ const Hero = () => {
           <motion.div
             key={i}
             style={{ y: image.value }}
-            className={`absolute object-cover ${image.style}`}
+            className={` absolute object-cover ${image.style}`}
           >
             <Image
               className="object-cover"
               fill
+              priority
               quality={100}
               placeholder="blur"
               alt="image"
