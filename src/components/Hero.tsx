@@ -17,7 +17,7 @@ const Hero = () => {
     offset: ["start end", "end start"],
   });
 
-  const md = useTransform(scrollYProgress, [0, 1], [0, -150]);
+  const md = useTransform(scrollYProgress, [0, 1], [0, -200]);
   const lg = useTransform(scrollYProgress, [0, 1], [0, -250]);
 
   const images = [
