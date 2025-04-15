@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import Project from "./Project";
 import Modal from "./Modal";
+import MyProjectCard from "./MyProjectCard";
 
 const MyProjects = () => {
   const projects = [
@@ -24,8 +25,22 @@ const MyProjects = () => {
   return (
     <main
       id="my-work"
-      className="h-screen bg-[#ecebeb] flex items-center justify-center relative"
+      className="min-h-screen bg-[#ecebeb] flex sm:items-center flex-col justify-center relative"
     >
+      <div className="w-full flex flex-col px-10 gap-y-28 py-10 sm:hidden">
+        <h1 className="font-semibold text-lg text-black/90">My work</h1>
+        {projects.map((project, index) => {
+          return (
+            <MyProjectCard
+              key={index}
+              src={project.src}
+              color={project.color}
+              title={project.title}
+              link={project.link}
+            />
+          );
+        })}
+      </div>
       <div className="w-full p-8 sm:p-10 md:p-40 lg:p-60 hidden sm:block">
         <h1 className="ml-12 mb-2 font-semibold text-lg">My work</h1>
         <div className="w-full flex flex-col justify-center items-center ">

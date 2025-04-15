@@ -104,13 +104,13 @@ const Hero = () => {
         >
           <p
             ref={firstParagraph}
-            className="text-[clamp(6rem,10vw,10rem)] text-[#161310] m-2.5 uppercase"
+            className="text-[clamp(7rem,10vw,10rem)] text-[#161310] m-2.5 uppercase"
           >
             developer & designer -
           </p>
           <p
             ref={secondParagraph}
-            className="text-[clamp(6rem,10vw,10rem)] text-[#161310] m-2.5 uppercase absolute left-full"
+            className="text-[clamp(7rem,10vw,10rem)] text-[#161310] m-2.5 uppercase absolute left-full"
           >
             developer & designer -
           </p>

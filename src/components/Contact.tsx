@@ -24,9 +24,9 @@ export default function Section() {
     >
       <div
         id="contact"
-        className="absolute scroll-mt-28 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[80vw] sm:w-[60vw] md:w-[50vw] lg:w-[40vw] font-serif px-4 py-6 sm:px-10 sm:py-16 flex flex-col h-[75vh] bg-[#ecebeb] z-50"
+        className="absolute  scroll-mt-28 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[80vw] sm:w-[60vw] md:w-[50vw] lg:w-[40vw] font-serif px-4 py-14 sm:px-10 sm:py-16 flex flex-col h-[75vh] bg-[#ecebeb] z-50"
       >
-        <h1 className="text-center text-xl sm:text-3xl">
+        <h1 className="text-center text-2xl sm:text-3xl">
           I’m always open to discussing new projects and collaboration
           opportunities. Let’s work together to create something exceptional.
         </h1>
