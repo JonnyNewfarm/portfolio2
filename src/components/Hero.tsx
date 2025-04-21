@@ -96,7 +96,6 @@ const Hero = () => {
         ))}
       </div>
 
-      {/* Animated Text */}
       <div className="absolute z-30 top-[60vh] sm:top-[65vh] font-serif w-screen overflow-hidden">
         <div
           ref={slider}
@@ -110,7 +109,7 @@ const Hero = () => {
           </p>
           <p
             ref={secondParagraph}
-            className="text-[clamp(6rem,10vw,10rem)] text-[#161310] m-2.5 uppercase absolute left-full"
+            className="text-[clamp(7rem,10vw,10rem)] text-[#161310] m-2.5 uppercase absolute translate-x-full left-0"
           >
             developer & designer -
           </p>

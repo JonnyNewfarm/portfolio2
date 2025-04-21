@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 const PreLoadingShow = () => {
   const [index, setIndex] = useState(0);
-  const texts = ["Hello everybody", "welcome to my page"];
+  const texts = ["Hello.", "welcome to my page."];
 
   useEffect(() => {
     if (index == texts.length - 1) return;
