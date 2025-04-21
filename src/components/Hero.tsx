@@ -4,7 +4,7 @@ import Image from "next/image";
 import React, { useLayoutEffect, useRef } from "react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useScroll, useTransform, motion } from "motion/react";
-import para1 from "../../public/jonny18.jpg";
+import para1 from "../../public/jonny27.jpg";
 import para2 from "../../public/jonas1.jpg";
 import para3 from "../../public/jonas2.jpg";
 
@@ -85,11 +85,10 @@ const Hero = () => {
             className={` absolute object-cover ${image.style}`}
           >
             <Image
-              className="object-cover"
+              className="object-contain"
               fill
               priority
               quality={100}
-              placeholder="blur"
               alt="image"
               src={image.img}
             />
