@@ -35,7 +35,7 @@ const Hero = () => {
     {
       img: para3,
       style:
-        "left-[5vw] sm:left-[10vw] hidden lg:block lg:left-[32vw] xl:left-[35.5vw] top-[35vh] h-[20vh] w-[15vh] sm:h-[23vh] sm:w-[20vh] z-[3]",
+        "left-[5vw] sm:left-[10vw] hidden lg:block lg:left-[32vw] xl:left-[35.5vw] top-[33vh] h-[20vh] w-[15vh] sm:h-[23vh] sm:w-[20vh] z-[3]",
       value: lg,
     },
   ];
