@@ -9,7 +9,7 @@ const MyProjects = () => {
     {
       title: "Custom Canvas",
       src: "canvas-screen.png",
-      color: "#8c8c8c",
+      color: "#504f4e",
       link: "https://createcanvas.vercel.app/",
     },
     {
