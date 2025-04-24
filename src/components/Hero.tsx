@@ -80,6 +80,17 @@ const Hero = () => {
       <div className="absolute top-[16vh]  left-0 w-full h-full flex justify-center pointer-events-none">
         {images.map((image, i) => (
           <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{
+              scale: [0, 1],
+              opacity: [0, 1, 1],
+            }}
+            transition={{
+              delay: 2,
+              duration: 1,
+              times: [0, 0.4, 1],
+              ease: "easeInOut",
+            }}
             key={i}
             style={{ y: image.value }}
             className={` absolute object-cover ${image.style}`}
@@ -97,7 +108,18 @@ const Hero = () => {
       </div>
 
       <div className="absolute z-30 top-[70vh] sm:top-[65vh]  w-screen overflow-hidden">
-        <div
+        <motion.div
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{
+            scale: [0, 1],
+            opacity: [0, 1, 1],
+          }}
+          transition={{
+            delay: 2,
+            duration: 1,
+            times: [0, 0.4, 1],
+            ease: "easeInOut",
+          }}
           ref={slider}
           className="relative flex whitespace-nowrap   w-max will-change-transform"
         >
@@ -113,7 +135,7 @@ const Hero = () => {
           >
             developer & designer -
           </p>
-        </div>
+        </motion.div>
       </div>
     </div>
   );
