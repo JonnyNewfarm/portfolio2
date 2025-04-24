@@ -107,7 +107,7 @@ const Hero = () => {
         ))}
       </div>
 
-      <div className="absolute z-30 top-[64vh] sm:top-[65vh]  w-screen overflow-hidden">
+      <div className="absolute z-30 top-[66vh] sm:top-[65vh]  w-screen overflow-hidden">
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{
