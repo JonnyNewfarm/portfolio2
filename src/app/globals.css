@@ -7,6 +7,14 @@ html, body {
   
 }
 
+html {
+  font-family: var(--font-m), sans-serif !important;
+}
+
+body {
+  font-family: var(--font-m), sans-serif !important;
+}
+
 html::-webkit-scrollbar,
 body::-webkit-scrollbar {
   display: none; 

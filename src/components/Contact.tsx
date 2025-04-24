@@ -24,7 +24,7 @@ export default function Section() {
     >
       <div
         id="contact"
-        className="absolute  scroll-mt-28 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[80vw] sm:w-[60vw] md:w-[50vw] lg:w-[40vw] font-serif px-4 py-14 sm:px-10 sm:py-16 flex flex-col h-[75vh] bg-[#ecebeb] z-50"
+        className="absolute  scroll-mt-28 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[80vw] sm:w-[60vw] md:w-[50vw] lg:w-[40vw]  px-4 py-14 sm:px-10 sm:py-16 flex flex-col h-[75vh] bg-[#ecebeb] z-50"
       >
         <h1 className="text-center text-2xl sm:text-3xl">
           I’m always open to discussing new projects and collaboration
@@ -32,7 +32,7 @@ export default function Section() {
         </h1>
         <FlowerRotate scrollYProgress={scrollYProgress} />
 
-        <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 font-sans text-sm sm:text-base">
+        <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2  text-sm sm:text-base">
           <h1>jonasnygaard96@gmail.com</h1>
           <h1>github.com/JonnyNewfarm</h1>
         </div>

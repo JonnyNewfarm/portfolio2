@@ -57,7 +57,7 @@ export default function StickyScrollParagraphs() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -40 }}
               transition={{ duration: 0.3 }}
-              className="max-w-4xl px-4 text-center font-serif"
+              className="max-w-4xl px-4 text-center"
             >
               Hi, Im Jonas, a 28-year-old designer and developer with a passion
               for creating seamless, user-friendly digital experiences. I like
@@ -70,7 +70,7 @@ export default function StickyScrollParagraphs() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -40 }}
               transition={{ duration: 0.3 }}
-              className="max-w-4xl px-4 text-center font-serif"
+              className="max-w-4xl px-4 text-center"
             >
               I work extensively with libraries like React and Next.js to build
               dynamic, responsive websites and applications. I’m always excited

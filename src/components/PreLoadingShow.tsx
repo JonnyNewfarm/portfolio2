@@ -44,7 +44,7 @@ const PreLoadingShow = () => {
       className="h-screen w-screen bg-[#161310] fixed top-0 left-0 z-[999] text-[#ecebeb] flex justify-center items-center"
     >
       <motion.p
-        className="font-serif font-semibold text-3xl sm:text-5xl"
+        className="font-semibold text-3xl sm:text-5xl"
         variants={opacity}
         initial="initial"
         animate="enter"

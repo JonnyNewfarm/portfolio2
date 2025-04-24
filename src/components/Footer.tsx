@@ -8,7 +8,7 @@ const Footer = () => {
     >
       <div className="relative  h-[calc(100vh+420px)] -top-[100vh] bg-[#161310]  flex-col justify-start">
         <div className="h-[420px] text-[#ecebeb] p-14 sticky top-[calc(100vh-420px)]">
-          <div className="w-full h-[270px] text-3xl px-5  sm:text-6xl md:text-8xl lg:text-9xl flex justify-center items-center font-serif font-semibold">
+          <div className="w-full h-[270px] text-3xl px-5  sm:text-6xl md:text-8xl lg:text-9xl flex justify-center items-center  font-semibold">
             <h1 className="text-nowrap opacity-75">Jonas Nygaard</h1>
           </div>
 

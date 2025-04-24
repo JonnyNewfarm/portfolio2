@@ -3,9 +3,9 @@ import BurgerMenu from "./BurgerMenu";
 
 const Navbar = () => {
   return (
-    <div className="bg-[#ecebeb]  font-extrabold text-[16px] text-[#161310] px-20 py-3 flex items-center sticky top-0 z-50 w-full justify-between">
+    <div className="bg-[#ecebeb]   font-extrabold text-[16px] text-[#161310] px-20 py-3 flex items-center sticky top-0 z-50 w-full justify-between">
       <div>
-        <h1 className="font-serif lg:hidden font-semibold text-4xl fixed left-6 top-7">
+        <h1 className=" lg:hidden font-semibold text-4xl fixed left-6 top-7">
           JN
         </h1>
       </div>

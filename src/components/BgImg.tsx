@@ -21,12 +21,10 @@ export default function Section() {
       style={{ clipPath: "polygon(0% 0, 100% 0%, 100% 100%, 0 100%)" }}
     >
       <div className="absolute top-8 left-16  w-full z-50">
-        <h1 className="text-white/80 text-5xl font-bold font-serif">
-          Jonas F. Nygaard
-        </h1>
+        <h1 className="text-white/80 text-5xl font-bold ">Jonas F. Nygaard</h1>
       </div>
       <div className="absolute bottom-8 left-16  w-full z-50">
-        <h1 className="text-white/80 text-8xl font-bold font-serif">
+        <h1 className="text-white/80 text-8xl font-bold">
           Designer & Developer
         </h1>
       </div>
