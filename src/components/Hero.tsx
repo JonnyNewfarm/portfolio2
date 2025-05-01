@@ -123,7 +123,7 @@ const Hero = () => {
             <span className="font-semibold ">Jonas Nygaard</span>
           </h1>
           <a
-            href="/"
+            href="https://createcanvas.vercel.app/"
             className="border-[1px] text-sm border-black flex items-center justify-center py-[2px] px-4 w-[100px]"
           >
             Live link
