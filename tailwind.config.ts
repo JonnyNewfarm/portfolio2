@@ -1,4 +1,4 @@
-// tailwind.config.ts
+
 import type { Config } from 'tailwindcss'
 
 const config: Config = {
@@ -10,7 +10,10 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['var(--font-m)', 'sans-serif'], // This is correct
+        sans: ['var(--font-m)', 'sans-serif'],
+      },
+      screens: {
+        'max-xs': { max: '399px' }, 
       },
     },
   },
@@ -18,3 +21,4 @@ const config: Config = {
 }
 
 export default config
+

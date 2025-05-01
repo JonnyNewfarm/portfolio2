@@ -107,7 +107,31 @@ const Hero = () => {
         ))}
       </div>
 
-      <div className="absolute z-30 top-[66vh] sm:top-[65vh]  w-screen overflow-hidden">
+      <div className="xl:w-[400px] w-[300px] h-[120px] gap-x-4 [@media(max-width:400px)]:bottom-[23vh] bottom-[25vh]  lg:top-1/3 xl:h-[150px] flex flex-row items-center p-2 absolute border-r-[1px] border-b-[1px] border-t-[1px] border-black  ">
+        <div className="w-[200px] relative h-[200px]">
+          <Image
+            fill
+            className="object-contain"
+            src="/projects/canvas-screen.png"
+            alt=""
+          />
+        </div>
+        <div className="w-[200px] tracking-tighter text-[13px] xl:text-sm m-0">
+          <h1 className="font-bold ">Latest work</h1>
+          <h1 className="tracking-tighter -mt-1">
+            Design & Development, by{" "}
+            <span className="font-semibold ">Jonas Nygaard</span>
+          </h1>
+          <a
+            href="/"
+            className="border-[1px] text-sm border-black flex items-center justify-center py-[2px] px-4 w-[100px]"
+          >
+            Live link
+          </a>
+        </div>
+      </div>
+
+      <div className="absolute z-30 top-[75vh] sm:top-[75vh] md:top-[75vh] lg:top-[66vh]   w-screen overflow-hidden">
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{
