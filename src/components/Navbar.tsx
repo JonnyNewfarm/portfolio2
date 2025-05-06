@@ -1,12 +1,14 @@
 import React from "react";
 import BurgerMenu from "./BurgerMenu";
+import { FaRegCopyright } from "react-icons/fa";
 
 const Navbar = () => {
   return (
     <div className="bg-[#ecebeb]   font-extrabold text-[16px] text-[#161310] px-20 py-3 flex items-center sticky top-0 z-50 w-full justify-between">
       <div>
-        <h1 className=" lg:hidden font-semibold text-4xl fixed left-6 top-7">
-          JN
+        <h1 className=" lg:hidden flex items-center gap-x-1 font-normal text-xl fixed left-6 top-7">
+          <FaRegCopyright />
+          Code by Jonas
         </h1>
       </div>
       <BurgerMenu />

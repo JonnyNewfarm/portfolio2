@@ -7,6 +7,7 @@ import { useScroll, useTransform, motion } from "motion/react";
 import para1 from "../../public/jonny27.jpg";
 import para2 from "../../public/jonas1.jpg";
 import para3 from "../../public/jonas2.jpg";
+import { FaArrowUp } from "react-icons/fa";
 
 const Hero = () => {
   const container = useRef(null);
@@ -103,6 +104,14 @@ const Hero = () => {
               alt="image"
               src={image.img}
             />
+
+            <div className="absolute top-[45vh] left-8 text-nowrap sm:hidden">
+              <div className="rotate-12">
+                <FaArrowUp />
+              </div>
+              <h1>Jonas Nygaard,</h1>
+              <h1>Freelance Developer</h1>
+            </div>
           </motion.div>
         ))}
       </div>
@@ -119,7 +128,7 @@ const Hero = () => {
           times: [0, 0.4, 1],
           ease: "easeInOut",
         }}
-        className="xl:w-[400px] w-[300px] h-[120px] gap-x-4 [@media(max-width:400px)]:bottom-[4vh] bottom-[8vh] sm:bottom-[22vh]  lg:top-1/3 xl:h-[150px] flex flex-row items-center p-2 absolute border-r-[1px] border-b-[1px] border-t-[1px] border-black  "
+        className="xl:w-[400px] w-[300px] h-[120px] gap-x-4 [@media(max-width:400px)]:bottom-[4vh] bottom-[8vh] sm:bottom-[22vh]  lg:top-1/3 xl:h-[150px] sm:flex flex-row items-center p-2 absolute border-r-[1px] border-b-[1px] border-t-[1px] border-black hidden "
       >
         <div className="w-[200px] relative h-[200px]">
           <Image
@@ -144,7 +153,7 @@ const Hero = () => {
         </div>
       </motion.div>
 
-      <div className="absolute z-30 top-[55vh] [@media(max-width:400px)]:top-[55vh] sm:top-[75vh]  md:top-[75vh] lg:top-[66vh]   w-screen overflow-hidden">
+      <div className="absolute z-30 top-[66vh] [@media(max-width:400px)]:top-[66vh] sm:top-[75vh]  md:top-[75vh] lg:top-[66vh]   w-screen overflow-hidden">
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{
