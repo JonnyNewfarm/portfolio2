@@ -107,7 +107,20 @@ const Hero = () => {
         ))}
       </div>
 
-      <div className="xl:w-[400px] w-[300px] h-[120px] gap-x-4 [@media(max-width:400px)]:bottom-[23vh] bottom-[25vh]  lg:top-1/3 xl:h-[150px] flex flex-row items-center p-2 absolute border-r-[1px] border-b-[1px] border-t-[1px] border-black  ">
+      <motion.div
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{
+          scale: [0, 1],
+          opacity: [0, 1, 1],
+        }}
+        transition={{
+          delay: 2,
+          duration: 1,
+          times: [0, 0.4, 1],
+          ease: "easeInOut",
+        }}
+        className="xl:w-[400px] w-[300px] h-[120px] gap-x-4 [@media(max-width:400px)]:bottom-[4vh] bottom-[8vh] sm:bottom-[22vh]  lg:top-1/3 xl:h-[150px] flex flex-row items-center p-2 absolute border-r-[1px] border-b-[1px] border-t-[1px] border-black  "
+      >
         <div className="w-[200px] relative h-[200px]">
           <Image
             fill
@@ -129,13 +142,12 @@ const Hero = () => {
             Live link
           </a>
         </div>
-      </div>
+      </motion.div>
 
-      <div className="absolute z-30 top-[75vh] sm:top-[75vh] md:top-[75vh] lg:top-[66vh]   w-screen overflow-hidden">
+      <div className="absolute z-30 top-[55vh] [@media(max-width:400px)]:top-[55vh] sm:top-[75vh]  md:top-[75vh] lg:top-[66vh]   w-screen overflow-hidden">
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{
-            scale: [0, 1],
             opacity: [0, 1, 1],
           }}
           transition={{
@@ -145,7 +157,7 @@ const Hero = () => {
             ease: "easeInOut",
           }}
           ref={slider}
-          className="relative flex whitespace-nowrap   w-max will-change-transform"
+          className="relative flex whitespace-nowrap    w-max will-change-transform"
         >
           <p
             ref={firstParagraph}
