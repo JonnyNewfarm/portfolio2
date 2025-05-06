@@ -106,11 +106,11 @@ const Hero = () => {
             />
 
             <div className="absolute top-[45vh] left-8 text-nowrap sm:hidden">
-              <div className="rotate-12">
+              <div className="rotate-12 -mb-2.5">
                 <FaArrowUp />
               </div>
-              <h1>Jonas Nygaard,</h1>
-              <h1>Freelance Developer</h1>
+              <h1 className="text-nowrap">Jonas Nygaard,</h1>
+              <h1 className="text-nowrap">Freelance Developer</h1>
             </div>
           </motion.div>
         ))}
@@ -153,7 +153,7 @@ const Hero = () => {
         </div>
       </motion.div>
 
-      <div className="absolute z-30 top-[66vh] [@media(max-width:400px)]:top-[66vh] sm:top-[75vh]  md:top-[75vh] lg:top-[66vh]   w-screen overflow-hidden">
+      <div className="absolute z-30 top-[63vh] [@media(max-width:400px)]:top-[63vh] sm:top-[75vh]  md:top-[75vh] lg:top-[66vh]   w-screen overflow-hidden">
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{
