@@ -10,7 +10,7 @@ const BurgerMenu = () => {
     <>
       <div
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed right-0 mr-5 mt-[58px] flex items-center justify-center md:hidden cursor-pointer z-50"
+        className=" right-0 mr-5 absolute top-[19px] flex items-center justify-center lg:hidden cursor-pointer z-50"
       >
         <span
           className={`text-lg font-normal px-2 py-2 rounded flex items-center gap-2 ${
