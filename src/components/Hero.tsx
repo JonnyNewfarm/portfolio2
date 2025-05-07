@@ -104,16 +104,13 @@ const Hero = () => {
               alt="image"
               src={image.img}
             />
-
-            <div className="absolute top-[45vh] left-8 text-nowrap sm:hidden w-full">
-              <div className="rotate-12 -mb-2.5">
-                <FaArrowUp />
-              </div>
-              <h1 className="text-nowrap">Jonas Nygaard,</h1>
-              <h1 className="whitespace-nowrap">Freelance developer</h1>
-            </div>
           </motion.div>
         ))}
+      </div>
+
+      <div className="absolute top-[60vh] w-full flex flex-col items-center sm:hidden">
+        <h1 className="text-xl">Jonas Nygaard,</h1>
+        <h1 className="text-xl">Freelance developer</h1>
       </div>
 
       <motion.div

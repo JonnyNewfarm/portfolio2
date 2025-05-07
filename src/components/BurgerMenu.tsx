@@ -10,21 +10,16 @@ const BurgerMenu = () => {
     <>
       <div
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed text-white right-0 mr-5 top-8  flex items-center justify-center lg:hidden cursor-pointer z-50"
+        className="fixed right-0 mr-5 mt-[58px] flex items-center justify-center md:hidden cursor-pointer z-50"
       >
-        <div className="flex flex-col justify-between items-center w-6 h-6">
-          <span
-            className={`block w-8 h-1 bg-black transition-transform duration-300 ${
-              isOpen ? "rotate-45 absolute bg-white" : ""
-            }`}
-          />
-
-          <span
-            className={`block w-8 h-1 bg-black transition-transform duration-300 ${
-              isOpen ? "-rotate-45 absolute bg-white" : ""
-            }`}
-          />
-        </div>
+        <span
+          className={`text-lg font-normal px-2 py-2 rounded flex items-center gap-2 ${
+            isOpen ? "text-white" : "text-black"
+          }`}
+        >
+          <span className="h-1.5 w-1.5 rounded-full bg-black inline-block" />
+          {isOpen ? "Close" : "Menu"}
+        </span>
       </div>
       {isOpen && <Burger />}
     </>
