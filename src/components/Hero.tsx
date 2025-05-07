@@ -7,7 +7,6 @@ import { useScroll, useTransform, motion } from "motion/react";
 import para1 from "../../public/jonny27.jpg";
 import para2 from "../../public/jonas1.jpg";
 import para3 from "../../public/jonas2.jpg";
-import { FaArrowUp } from "react-icons/fa";
 
 const Hero = () => {
   const container = useRef(null);
