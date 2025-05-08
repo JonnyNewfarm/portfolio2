@@ -134,15 +134,13 @@ const Hero = () => {
             alt=""
           />
         </div>
-        <div className="w-[200px] tracking-tighter text-[13px] xl:text-sm m-0">
-          <h1 className="font-bold ">Latest work</h1>
-          <h1 className="tracking-tighter -mt-1">
-            Design & Development, by{" "}
-            <span className="font-semibold ">Jonas Nygaard</span>
-          </h1>
+        <div className="w-[200px] tracking-tighter text-[13px] text-sm">
+          <h1 className="text-lg">Latest work</h1>
+          <h1 className="tracking-tighter -mt-1.5">Design & Development, </h1>
+          <h1 className="-mt-1.5 mb-2">by Jonas Nygaard</h1>
           <a
             href="https://createcanvas.vercel.app/"
-            className="border-[1px] text-sm border-black flex items-center justify-center py-[2px] px-4 w-[100px]"
+            className="text-sm whitespace-nowrap font-semibold"
           >
             Live link
           </a>
