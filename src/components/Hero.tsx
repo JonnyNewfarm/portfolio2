@@ -29,13 +29,13 @@ const Hero = () => {
     {
       img: para2,
       style:
-        "left-[55.5vw] hidden lg:block top-[25vh] md:top-[20vh] w-[20vh] h-[30vh] sm:h-[30vh] sm:w-[20vh] z-[2]",
+        "left-[55.5vw] hidden  top-[25vh] md:top-[20vh] w-[20vh] h-[30vh] sm:h-[30vh] sm:w-[20vh] z-[2]",
       value: md,
     },
     {
       img: para3,
       style:
-        "left-[5vw] sm:left-[10vw] hidden lg:block lg:left-[32vw] xl:left-[35.5vw] top-[33vh] h-[20vh] w-[15vh] sm:h-[23vh] sm:w-[20vh] z-[3]",
+        "left-[5vw] sm:left-[10vw] hidden  lg:left-[32vw] xl:left-[35.5vw] top-[33vh]   sm:h-[21vh] sm:w-[20vh] z-[3]",
       value: lg,
     },
   ];
@@ -107,12 +107,12 @@ const Hero = () => {
         ))}
       </div>
 
-      <div className="absolute top-[60vh] w-full flex flex-col items-center sm:hidden">
+      <div className="absolute top-[60vh] sm:top-[65vh] w-full flex flex-col items-center lg:hidden">
         <h1 className="text-xl">Jonas Nygaard,</h1>
         <h1 className="text-xl">Freelance developer</h1>
       </div>
 
-      <motion.div
+      <motion.a
         initial={{ scale: 0.8, opacity: 0 }}
         animate={{
           scale: [0, 1],
@@ -124,7 +124,8 @@ const Hero = () => {
           times: [0, 0.4, 1],
           ease: "easeInOut",
         }}
-        className="xl:w-[400px] w-[300px] h-[120px] gap-x-4 [@media(max-width:400px)]:bottom-[4vh] bottom-[8vh] sm:bottom-[22vh]  lg:top-1/3 xl:h-[150px] sm:flex flex-row items-center p-2 absolute border-r-[1px] border-b-[1px] border-t-[1px] border-black hidden "
+        className="xl:w-[400px] w-[300px] h-[120px] gap-x-4 [@media(max-width:400px)]:bottom-[4vh] bottom-[8vh] sm:bottom-[22vh]  lg:top-1/3 xl:h-[150px] lg:flex flex-row items-center p-2 absolute border-r-[1px] border-b-[1px] border-t-[1px] border-black hidden"
+        href="https://createcanvas.vercel.app/"
       >
         <div className="w-[200px] relative h-[200px]">
           <Image
@@ -138,14 +139,11 @@ const Hero = () => {
           <h1 className="text-lg">Latest work</h1>
           <h1 className="tracking-tighter -mt-1.5">Design & Development, </h1>
           <h1 className="-mt-1.5 mb-2">by Jonas Nygaard</h1>
-          <a
-            href="https://createcanvas.vercel.app/"
-            className="text-sm whitespace-nowrap font-semibold"
-          >
+          <div className="text-sm whitespace-nowrap font-semibold">
             Live link
-          </a>
+          </div>
         </div>
-      </motion.div>
+      </motion.a>
 
       <div className="absolute z-30 top-[63vh] [@media(max-width:400px)]:top-[63vh] sm:top-[75vh]  md:top-[75vh] lg:top-[66vh]   w-screen overflow-hidden">
         <motion.div
