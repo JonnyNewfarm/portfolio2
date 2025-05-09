@@ -11,7 +11,7 @@ const montserrat = Montserrat({
   display: "swap",
 });
 export const metadata: Metadata = {
-  title: "JN - Portfolio",
+  title: "Jonas Nygaard | Portfolio",
   description: "My portfolio",
   icons: {
     icon: "/favicon.ico?v=2",
