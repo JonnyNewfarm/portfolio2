@@ -6,10 +6,13 @@ const Navbar = () => {
   return (
     <div className="bg-[#ecebeb]   font-extrabold text-[16px] text-[#161310] px-20 py-3 flex items-center sticky top-0 z-50 w-full justify-between">
       <div>
-        <h1 className=" lg:hidden flex items-center gap-x-1 font-normal text-xl fixed left-6 top-7">
+        <a
+          href="#home"
+          className=" lg:hidden flex items-center gap-x-1 font-normal text-xl fixed left-6 top-7"
+        >
           <FaRegCopyright />
           Code by Jonas
-        </h1>
+        </a>
       </div>
       <BurgerMenu />
       <div className="w-full h-full hidden lg:block">
