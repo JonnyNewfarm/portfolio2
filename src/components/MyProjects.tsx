@@ -34,7 +34,6 @@ const MyProjects = () => {
             <MyProjectCard
               key={index}
               src={project.src}
-              color={project.color}
               title={project.title}
               link={project.link}
             />

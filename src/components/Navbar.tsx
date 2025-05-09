@@ -36,7 +36,7 @@ const Navbar = () => {
           </div>
           <div className="tracking-tighter">
             <h1 className="text-[#161310] opacity-70 m-0 leading-none">
-              Naviation:
+              Navigation:
             </h1>
             <div className="flex gap-x-1 text-[#161310] m-0 leading-tight">
               <a href={"#home"}>Home,</a>

@@ -2,21 +2,16 @@ import Image from "next/image";
 import React from "react";
 
 interface MyProjectCardProps {
-  color: string;
   title: string;
   src: string;
   link: string;
 }
 
-const MyProjectCard = ({ color, title, src, link }: MyProjectCardProps) => {
+const MyProjectCard = ({ title, src, link }: MyProjectCardProps) => {
   return (
     <div>
       <div className="border-b-[1px] -mt-14 relative border-b-black/50 flex flex-col justify-center">
-        <a
-          href={link}
-          className="px-6 py-4 w-full h-full"
-          style={{ background: color }}
-        >
+        <a href={link} className="px-6 py-4 w-full h-full bg-[#161310]">
           <div className="relative max-w-[600px] mx-auto aspect-[4/3]">
             <Image
               fill
