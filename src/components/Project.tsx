@@ -1,10 +1,10 @@
 import React from "react";
 
 interface ProjectProps {
-  index: number; // Assuming index is a number
-  title: string; // Assuming title is a string
-  setModal: (modalState: { active: boolean; index: number }) => void; // Assuming setModal is a function
-  link: string; // Assuming link is a string
+  index: number;
+  title: string;
+  setModal: (modalState: { active: boolean; index: number }) => void;
+  link: string;
 }
 
 const Project = ({ index, title, setModal, link }: ProjectProps) => {

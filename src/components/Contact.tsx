@@ -27,7 +27,7 @@ export default function Section() {
         className="absolute  scroll-mt-28 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[80vw] sm:w-[60vw] md:w-[50vw] lg:w-[40vw]  px-4 py-14 sm:px-10 sm:py-16 flex flex-col h-[75vh] bg-[#ecebeb] z-50"
       >
         <h1 className="text-center text-xl sm:text-3xl">
-          I’m always open to discussing new projects and collaboration
+          I’m always open to discuss new projects and collaboration
           opportunities. Let’s work together to create something exceptional.
         </h1>
         <FlowerRotate scrollYProgress={scrollYProgress} />
@@ -38,9 +38,7 @@ export default function Section() {
         </div>
       </div>
 
-      {/* Mobile Fix: Adjust height and ensure proper positioning */}
       <div className="fixed top-[-10vh] left-0 w-full h-full">
-        {/* Applying motion.div for mobile might cause issues, so let's simplify */}
         <motion.div
           style={{ y }}
           className="relative w-full [@media(max-width:500px)]:h-full min-h-[150vh]"
@@ -53,7 +51,7 @@ export default function Section() {
             alt="image"
             style={{
               objectFit: "cover",
-              zIndex: -1, // Make sure image stays behind content
+              zIndex: -1,
             }}
           />
         </motion.div>
