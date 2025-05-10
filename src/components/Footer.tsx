@@ -21,10 +21,10 @@ const Footer = () => {
       className=" relative h-[420px]"
     >
       <div className="relative  h-[calc(100vh+420px)] -top-[100vh] bg-[#ececec]  flex-col justify-start">
-        <div className="h-[420px] text-[#161310] p-14 sticky top-[calc(100vh-420px)] text-[#1c1a17]">
+        <div className="h-[420px] text-[#161310] p-14 sticky top-[calc(100vh-420px)]">
           <div className="h-full w-full flex justify-between pt-10">
             <div className="">
-              <h1 className="opacity-65">Socials:</h1>
+              <h1 className="opacity-65 font-semibold">Socials:</h1>
               <h1>
                 <a href="https://github.com/JonnyNewfarm">Github</a>
               </h1>
@@ -33,7 +33,7 @@ const Footer = () => {
                 <a href="">LinkedIn</a>
               </h1>
 
-              <h1 className="opacity-65 mt-4">Contact:</h1>
+              <h1 className="opacity-65 mt-4 font-semibold">Contact:</h1>
               <h1>jonasnygaard96@gmail.com</h1>
               <h1>+47 48 26 30 11</h1>
             </div>
@@ -41,22 +41,22 @@ const Footer = () => {
 
           <div className="flex justify-between w-full">
             <div className="">
-              <h1 className="opacity-65">Code by:</h1>
+              <h1 className="opacity-65 font-semibold">Code by:</h1>
               <h1>Jonas Nygaard</h1>
             </div>
 
             <div className="hidden md:block">
-              <h1 className="opacity-65 ">Design by:</h1>
+              <h1 className="opacity-65 font-semibold ">Design by:</h1>
               <h1>Jonas Nygaard</h1>
             </div>
 
             <div className="">
-              <h1 className="opacity-65">My time:</h1>
+              <h1 className="opacity-65 font-semibold">My time:</h1>
               <h1>{time}</h1>
             </div>
 
             <div className="hidden md:block">
-              <h1 className="opacity-65">Location:</h1>
+              <h1 className="opacity-65 font-semibold">Location:</h1>
               <h1>Oslo, Norway</h1>
             </div>
           </div>
