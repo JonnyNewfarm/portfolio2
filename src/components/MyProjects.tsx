@@ -25,10 +25,10 @@ const MyProjects = () => {
   return (
     <main
       id="my-work"
-      className="min-h-screen bg-[#ecebeb] flex sm:items-center flex-col justify-center relative"
+      className="min-h-screen bg-[#ececec] flex sm:items-center flex-col justify-center relative"
     >
       <div className="w-full flex flex-col px-10 gap-y-28 py-10 sm:hidden">
-        <h1 className="font-semibold text-lg text-black/90">My work</h1>
+        <h1 className="font-semibold text-lg text-[#1c1a17]">My work</h1>
         {projects.map((project, index) => {
           return (
             <MyProjectCard

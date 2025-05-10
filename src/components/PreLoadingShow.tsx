@@ -41,7 +41,7 @@ const PreLoadingShow = () => {
       variants={slideUpAnimation}
       initial="initial"
       exit="exit"
-      className="h-screen w-screen bg-[#161310] fixed top-0 left-0 z-[999] text-[#ecebeb] flex justify-center items-center"
+      className="h-screen w-screen bg-[#1c1a17] fixed top-0 left-0 z-[999] text-[#ececec] flex justify-center items-center"
     >
       <motion.p
         className="font-semibold text-3xl sm:text-5xl"

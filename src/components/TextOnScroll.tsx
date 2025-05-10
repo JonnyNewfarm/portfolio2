@@ -47,8 +47,8 @@ export default function StickyScrollParagraphs() {
   }, [step, canScroll]);
 
   return (
-    <div className="relative h-[250vh] bg-[#ecebeb]">
-      <div className="sticky top-0 h-screen flex items-center justify-center bg-[#ecebeb] text-[#161310] text-2xl px-6 sm:text-3xl lg:text-5xl md:text-4xl z-10">
+    <div className="relative h-[250vh] bg-[#ececec]">
+      <div className="sticky top-0 h-screen flex items-center justify-center bg-[#ececec] text-[#1c1a17] text-2xl px-6 sm:text-3xl lg:text-5xl md:text-4xl z-10">
         <AnimatePresence mode="wait">
           {step === 0 ? (
             <motion.p

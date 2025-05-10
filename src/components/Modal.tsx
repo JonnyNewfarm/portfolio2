@@ -75,7 +75,7 @@ const Modal = ({ modal, projects }: ModalProps) => {
               className="h-full w-full flex items-center justify-center"
               style={{ backgroundColor: project.color }}
             >
-              <div className="bg-black/60 text-lg absolute flex justify-center items-center text-white py-3 px-6">
+              <div className="bg-[#1c1a17] text-lg absolute flex justify-center items-center text-white py-3 px-6">
                 <h1>Live link</h1>
               </div>
               <Image

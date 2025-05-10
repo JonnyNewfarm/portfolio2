@@ -75,7 +75,11 @@ const Hero = () => {
   }, []);
 
   return (
-    <div id="home" ref={container} className="bg-[#ecebeb] h-screen relative ">
+    <div
+      id="home"
+      ref={container}
+      className="bg-[#ececec] h-screen relative text-[#1c1a17] "
+    >
       <div className="absolute top-[16vh]  left-0 w-full h-full flex justify-center pointer-events-none">
         {images.map((image, i) => (
           <motion.div
@@ -161,13 +165,13 @@ const Hero = () => {
         >
           <p
             ref={firstParagraph}
-            className="text-[clamp(7rem,10vw,10rem)] text-[#161310] m-2.5 uppercase"
+            className="text-[clamp(7rem,10vw,10rem)] text-[#1c1a17] m-2.5 uppercase"
           >
             developer & designer -
           </p>
           <p
             ref={secondParagraph}
-            className="text-[clamp(7rem,10vw,10rem)] text-[#161310] m-2.5 uppercase absolute translate-x-full left-0"
+            className="text-[clamp(7rem,10vw,10rem)] text-[#1c1a17] m-2.5 uppercase absolute translate-x-full left-0"
           >
             developer & designer -
           </p>

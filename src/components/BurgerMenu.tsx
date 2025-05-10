@@ -14,7 +14,7 @@ const BurgerMenu = () => {
       >
         <span
           className={`text-lg font-normal px-2 py-2 rounded flex items-center gap-2 ${
-            isOpen ? "text-white" : "text-black"
+            isOpen ? "text-white" : "text-[#1c1a17]"
           }`}
         >
           <span className="h-1.5 w-1.5 rounded-full bg-black inline-block" />

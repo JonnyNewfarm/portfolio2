@@ -20,15 +20,17 @@ export default function Home() {
   }, 2000);
   return (
     <ScrollSection>
-      <AnimatePresence mode="wait">
-        {loading && <PreLoadingShow />}
-      </AnimatePresence>
-      <Hero />
+      <div className="border-b-[1px] border-[#161310]">
+        <AnimatePresence mode="wait">
+          {loading && <PreLoadingShow />}
+        </AnimatePresence>
+        <Hero />
 
-      <TextOnScroll />
-      <Contact />
+        <TextOnScroll />
+        <Contact />
 
-      <MyProjects />
+        <MyProjects />
+      </div>
     </ScrollSection>
   );
 }
