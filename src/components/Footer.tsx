@@ -10,9 +10,9 @@ const Footer = () => {
       setTime(now.toLocaleTimeString());
     };
 
-    update(); // initial call
-    const interval = setInterval(update, 1000); // update every second
-    return () => clearInterval(interval); // cleanup
+    update();
+    const interval = setInterval(update, 1000);
+    return () => clearInterval(interval);
   }, []);
 
   return (
