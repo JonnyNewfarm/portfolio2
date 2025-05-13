@@ -21,7 +21,9 @@ const Navbar = () => {
             <h1 className="text-[#1c1a17] opacity-70 m-0 leading-none">
               Name:
             </h1>
-            <p className="text-[#1c1a17] m-0 leading-tight">Jonas Nygaard</p>
+            <p className="text-[#1c1a17] m-0 leading-tight">
+              Jonas Nygaard, Newfarm Studio
+            </p>
           </div>
           <div className="tracking-tighter">
             <h1 className="text-[#1c1a17] opacity-70 m-0 leading-none">
