@@ -42,12 +42,12 @@ const Footer = () => {
           <div className="flex justify-between w-full">
             <div className="">
               <h1 className="opacity-75 font-semibold">Code by:</h1>
-              <h1>Jonas Nygaard</h1>
+              <h1>Newfarm Studio</h1>
             </div>
 
             <div className="hidden md:block">
               <h1 className="opacity-75 font-semibold ">Design by:</h1>
-              <h1>Jonas Nygaard</h1>
+              <h1>Newfarm Studio</h1>
             </div>
 
             <div className="">
