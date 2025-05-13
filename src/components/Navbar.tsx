@@ -11,7 +11,7 @@ const Navbar = () => {
           className=" lg:hidden flex items-center gap-x-1 font-normal text-xl fixed left-6 top-7"
         >
           <FaRegCopyright />
-          Code by Jonas
+          Newfarm Studio
         </a>
       </div>
       <BurgerMenu />
