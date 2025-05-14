@@ -4,12 +4,12 @@ import { useRef } from "react";
 
 export default function FlowerRotate() {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true });
+  const isInView = useInView(ref);
 
   return (
     <div
       ref={ref}
-      className="absolute top-[55%] left-1/2 transform  -translate-x-1/2 w-[70px] h-[70px] pointer-events-none z-10"
+      className="absolute top-[55%] left-1/2 transform mr-3  -translate-x-1/2 w-[70px] h-[70px] pointer-events-none z-10"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -25,7 +25,7 @@ export default function FlowerRotate() {
             strokeWidth="2"
             initial={{ pathLength: 0 }}
             animate={isInView ? { pathLength: 1 } : { pathLength: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.6 }}
           />
           <motion.path
             d="M53.408,286.664c-.244-82.658,2.3-83.751,2.3-83.751l29.859,83.751V202.913"
@@ -34,7 +34,7 @@ export default function FlowerRotate() {
             strokeWidth="2"
             initial={{ pathLength: 0 }}
             animate={isInView ? { pathLength: 1 } : { pathLength: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
           />
         </g>
       </svg>

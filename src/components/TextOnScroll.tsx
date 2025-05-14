@@ -9,15 +9,15 @@ export default function StickyScrollParagraphs() {
   const isInView = useInView(ref, { once: true });
 
   return (
-    <div className="relative min-h-[60vh] bg-[#ececec] flex items-center justify-center px-6 overflow-hidden">
+    <div className="relative min-h-[80vh] md:min-h-[60vh] bg-[#ececec] flex items-center justify-center px-6 overflow-hidden">
       <motion.div
         ref={ref}
-        initial={false} // prevent initial animation from resetting layout
+        initial={false}
         animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 150 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
+        transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
         className="max-w-5xl flex flex-col md:flex-row items-center text-center md:text-left justify-center gap-12 md:gap-30 text-[#1c1a17]"
       >
-        <p className="flex-1 text-2xl sm:text-3xl lg:text-2xl xl:text-3 md:text-2xl px-4">
+        <p className="flex-1 text-xl sm:text-3xl lg:text-2xl xl:text-3 md:text-2xl px-4">
           Hi, I&apos;m Jonas, a 28-year-old designer and developer with a
           passion for creating seamless, user-friendly digital experiences. I
           like to work in JavaScript and TypeScript.

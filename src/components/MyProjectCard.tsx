@@ -21,7 +21,7 @@ const MyProjectCard = ({ title, src, link }: MyProjectCardProps) => {
             />
           </div>
         </a>
-        <h1 className="text-[#1c1a17] text-xl py-4 font-semibold">{title}</h1>
+        <h1 className="text-[#1c1a17] text-lg py-4 font-semibold">{title}</h1>
       </div>
 
       <p className="mt-4">Design & Development</p>
