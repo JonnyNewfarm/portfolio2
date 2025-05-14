@@ -17,7 +17,7 @@ export default function Home() {
     setLoading(false);
     document.body.style.cursor = "default";
     window.scrollTo(0, 0);
-  }, 2000);
+  }, 1500);
   return (
     <ScrollSection>
       <div className="border-b-[1px] border-[#161310]">

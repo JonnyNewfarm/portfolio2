@@ -90,7 +90,7 @@ const Hero = () => {
             }}
             transition={{
               delay: 2,
-              duration: 1,
+              duration: 0.8,
               times: [0, 0.4, 1],
               ease: "easeInOut",
             }}
