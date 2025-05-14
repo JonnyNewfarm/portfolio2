@@ -12,13 +12,13 @@ export default function StickyScrollParagraphs() {
     <div className="relative min-h-[60vh] bg-[#ececec] flex items-center justify-center px-6">
       <motion.div
         ref={ref}
-        initial={{ opacity: 0, x: 200 }}
+        initial={{ opacity: 0, x: 150 }}
         animate={isInView ? { opacity: 1, x: 0 } : {}}
         transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-        className="max-w-5xl flex flex-col md:flex-row items-center text-center md:text-left justify-center gap-12 md:gap-30 text-[#1c1a17]"
+        className="max-w-5xl flex flex-col md:pt-30 md:flex-row items-center text-center md:text-left justify-center gap-12 md:gap-30 text-[#1c1a17]"
       >
         <p className="flex-1 text-2xl sm:text-3xl lg:text-2xl xl:text-3 md:text-2xl px-4">
-          Hi, I&apos;mm Jonas, a 28-year-old designer and developer with a
+          Hi, I&apos;m Jonas, a 28-year-old designer and developer with a
           passion for creating seamless, user-friendly digital experiences. I
           like to work in JavaScript and TypeScript.
         </p>
