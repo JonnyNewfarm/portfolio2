@@ -14,7 +14,7 @@ export default function StickyScrollParagraphs() {
         ref={ref}
         initial={{ opacity: 0, x: 200 }}
         animate={isInView ? { opacity: 1, x: 0 } : {}}
-        transition={{ duration: 0.4, delay: 0.2, ease: "easeOut" }}
+        transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
         className="max-w-5xl flex flex-col md:flex-row items-center text-center md:text-left justify-center gap-12 md:gap-30 text-[#1c1a17]"
       >
         <p className="flex-1 text-2xl sm:text-3xl lg:text-2xl xl:text-3 md:text-2xl px-4">
