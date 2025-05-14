@@ -9,13 +9,13 @@ export default function StickyScrollParagraphs() {
   const isInView = useInView(ref, { once: true });
 
   return (
-    <div className="relative min-h-[100vh] md:min-h-[40vh] bg-[#ececec] flex items-center justify-center px-6">
+    <div className="relative min-h-[60vh] bg-[#ececec] flex items-center justify-center px-6 overflow-hidden">
       <motion.div
         ref={ref}
-        initial={{ opacity: 0, x: 150 }}
-        animate={isInView ? { opacity: 1, x: 0 } : {}}
-        transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-        className="max-w-5xl flex flex-col md:pt-30 md:flex-row items-center text-center md:text-left justify-center gap-12 md:gap-30 text-[#1c1a17]"
+        initial={false} // prevent initial animation from resetting layout
+        animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 150 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="max-w-5xl flex flex-col md:flex-row items-center text-center md:text-left justify-center gap-12 md:gap-30 text-[#1c1a17]"
       >
         <p className="flex-1 text-2xl sm:text-3xl lg:text-2xl xl:text-3 md:text-2xl px-4">
           Hi, I&apos;m Jonas, a 28-year-old designer and developer with a
@@ -26,7 +26,7 @@ export default function StickyScrollParagraphs() {
         <div>
           <Link
             href={"/about"}
-            className="px-6  py-2 border text-lg border-[#1c1a17] text-[#1c1a17] hover:bg-[#1c1a17] hover:text-white transition"
+            className="px-6 py-2 border text-lg border-[#1c1a17] text-[#1c1a17] hover:bg-[#1c1a17] hover:text-white transition"
           >
             About Me
           </Link>
