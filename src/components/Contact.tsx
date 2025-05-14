@@ -34,7 +34,7 @@ export default function Section() {
     >
       <div
         id="contact"
-        className="relative scroll-mt-28 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[80vw] sm:w-[60vw] md:w-[50vw] lg:w-[40vw] px-4 py-14 sm:px-10 sm:py-16 flex flex-col h-[75vh] bg-[#ececec] z-50"
+        className="absolute scroll-mt-28 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[80vw] sm:w-[60vw] md:w-[50vw] lg:w-[40vw] px-4 py-14 sm:px-10 sm:py-16 flex flex-col h-[75vh] bg-[#ececec] z-50"
       >
         <h1 className="text-center text-xl sm:text-3xl">
           I’m always open to discuss new projects and collaboration
