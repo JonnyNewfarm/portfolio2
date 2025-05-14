@@ -9,7 +9,7 @@ export default function StickyScrollParagraphs() {
   const isInView = useInView(ref, { once: true });
 
   return (
-    <div className="relative min-h-[60vh] bg-[#ececec] flex items-center justify-center px-6">
+    <div className="relative min-h-[100vh] md:min-h-[40vh] bg-[#ececec] flex items-center justify-center px-6">
       <motion.div
         ref={ref}
         initial={{ opacity: 0, x: 150 }}
