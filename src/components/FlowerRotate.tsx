@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 export default function FlowerRotate() {
   return (
-    <div className="absolute top-[55%] right-4 w-full flex justify-center pointer-events-none z-0">
+    <div className="absolute top-[55%] right-4 w-full flex bg-red-50 justify-center pointer-events-none z-0">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="89.294"
