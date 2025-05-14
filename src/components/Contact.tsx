@@ -30,7 +30,7 @@ export default function Section() {
           I’m always open to discuss new projects and collaboration
           opportunities. Let’s work together to create something exceptional.
         </h1>
-        <FlowerRotate scrollYProgress={scrollYProgress} />
+        <FlowerRotate />
 
         <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2  text-sm sm:text-base">
           <h1>jonasnygaard96@gmail.com</h1>

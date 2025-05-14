@@ -1,87 +1,37 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useRef } from "react";
+import { motion, useInView } from "framer-motion";
+import Link from "next/link";
 
 export default function StickyScrollParagraphs() {
-  const [step, setStep] = useState(0);
-  const [canScroll, setCanScroll] = useState(true);
-  const triggerRef = useRef<HTMLDivElement>(null);
-  const lastScrollY = useRef(0);
-
-  useEffect(() => {
-    const onScroll = () => {
-      if (!triggerRef.current || !canScroll) return;
-
-      const rect = triggerRef.current.getBoundingClientRect();
-      const triggerPoint = window.innerHeight / 2;
-      const scrollingDown = window.scrollY > lastScrollY.current;
-      const scrollingUp = window.scrollY < lastScrollY.current;
-
-      if (scrollingDown && rect.top <= triggerPoint && step === 0) {
-        setCanScroll(false);
-        setStep(1);
-        setTimeout(() => setCanScroll(true), 1000);
-      }
-
-      if (scrollingUp && rect.top > triggerPoint && step === 1) {
-        setCanScroll(false);
-        setStep(0);
-        setTimeout(() => setCanScroll(true), 1000);
-      }
-
-      lastScrollY.current = window.scrollY;
-    };
-
-    if (!canScroll) {
-      document.body.style.overflow = "auto";
-    } else {
-      document.body.style.overflowX = "hidden";
-    }
-
-    window.addEventListener("scroll", onScroll);
-    return () => {
-      document.body.style.overflow = "auto";
-      window.removeEventListener("scroll", onScroll);
-    };
-  }, [step, canScroll]);
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true });
 
   return (
-    <div className="relative h-[250vh] bg-[#ececec]">
-      <div className="sticky top-0 h-screen flex items-center justify-center bg-[#ececec] text-[#1c1a17] text-2xl px-6 sm:text-3xl lg:text-5xl md:text-4xl z-10">
-        <AnimatePresence mode="wait">
-          {step === 0 ? (
-            <motion.p
-              key="p-a"
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -40 }}
-              transition={{ duration: 0.3 }}
-              className="max-w-4xl px-4 text-center"
-            >
-              Hi, Im Jonas, a 28-year-old designer and developer with a passion
-              for creating seamless, user-friendly digital experiences. I like
-              to work in JavaScript and TypeScript.
-            </motion.p>
-          ) : (
-            <motion.p
-              key="p-b"
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -40 }}
-              transition={{ duration: 0.3 }}
-              className="max-w-4xl px-4 text-center"
-            >
-              I work extensively with libraries like React and Next.js to build
-              dynamic, responsive websites and applications. I’m always excited
-              to blend design with development to bring innovative ideas to
-              life.
-            </motion.p>
-          )}
-        </AnimatePresence>
-      </div>
+    <div className="relative min-h-[60vh] bg-[#ececec] flex items-center justify-center px-6">
+      <motion.div
+        ref={ref}
+        initial={{ opacity: 0, x: 200 }}
+        animate={isInView ? { opacity: 1, x: 0 } : {}}
+        transition={{ duration: 0.4, delay: 0.2, ease: "easeOut" }}
+        className="max-w-5xl flex flex-col md:flex-row items-center text-center md:text-left justify-center gap-12 md:gap-30 text-[#1c1a17]"
+      >
+        <p className="flex-1 text-2xl sm:text-3xl lg:text-2xl xl:text-3 md:text-2xl px-4">
+          Hi, I'm Jonas, a 28-year-old designer and developer with a passion for
+          creating seamless, user-friendly digital experiences. I like to work
+          in JavaScript and TypeScript.
+        </p>
 
-      <div ref={triggerRef} className="absolute top-[120vh] h-1 w-full" />
+        <div>
+          <Link
+            href={"/about"}
+            className="px-6  py-2 border text-lg border-[#1c1a17] text-[#1c1a17] hover:bg-[#1c1a17] hover:text-white transition"
+          >
+            About Me
+          </Link>
+        </div>
+      </motion.div>
     </div>
   );
 }

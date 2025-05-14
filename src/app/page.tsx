@@ -27,9 +27,8 @@ export default function Home() {
         <Hero />
 
         <TextOnScroll />
-        <Contact />
-
         <MyProjects />
+        <Contact />
       </div>
     </ScrollSection>
   );
