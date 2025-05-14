@@ -1,15 +1,26 @@
 "use client";
 import { motion } from "framer-motion";
+import { useRef, useEffect } from "react";
 
 export default function FlowerRotate() {
+  const svgRef = useRef<SVGSVGElement | null>(null);
+
+  useEffect(() => {
+    const node = svgRef.current;
+    if (node && node.parentNode) {
+      const parent = node.parentNode;
+      parent.removeChild(node);
+      parent.appendChild(node);
+    }
+  }, []);
+
   return (
-    <div className="absolute top-[55%] left-1/2  -translate-x-1/2  w-[70px] h-[70px] flex justify-center pointer-events-none z-0">
+    <div className="absolute top-[55%] left-1/2 transform -translate-x-1/2 w-[70px] h-[70px] pointer-events-none z-0">
       <svg
+        ref={svgRef}
         xmlns="http://www.w3.org/2000/svg"
-        width="100%" // Keep it responsive but smaller
-        height="100%" // Same as width to maintain aspect ratio
         viewBox="0 0 89.294 86.555"
-        style={{ width: "100%", height: "auto" }} // Ensure it's smaller
+        className="w-full h-auto"
       >
         <g transform="translate(3.223 -200.66)">
           <motion.path
@@ -19,7 +30,8 @@ export default function FlowerRotate() {
             stroke="#1c1a17"
             strokeWidth="2"
             initial={{ pathLength: 0 }}
-            whileInView={{ pathLength: 1 }} // Ensure animation is triggered properly
+            whileInView={{ pathLength: 1 }}
+            viewport={{ once: true, amount: 0.1 }}
             transition={{ duration: 0.5 }}
           />
           <motion.path
@@ -29,6 +41,7 @@ export default function FlowerRotate() {
             strokeWidth="2"
             initial={{ pathLength: 0 }}
             whileInView={{ pathLength: 1 }}
+            viewport={{ once: true, amount: 0.1 }}
             transition={{ duration: 0.5, delay: 0.4 }}
           />
         </g>
