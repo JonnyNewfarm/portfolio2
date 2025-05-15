@@ -40,7 +40,7 @@ const MyProjects = () => {
           );
         })}
       </div>
-      <div className="w-full p-8 sm:p-10 md:p-40 lg:px-40 hidden sm:block">
+      <div className="w-full h-full -mt-40 p-8 sm:p-10 md:p-40   hidden sm:block">
         <h1 className="ml-12 mb-2 font-semibold text-lg">My work</h1>
         <div className="w-full flex flex-col justify-center items-center ">
           {projects.map((project, index) => {
