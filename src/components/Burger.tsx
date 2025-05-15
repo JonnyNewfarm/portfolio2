@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 
 const Burger = () => {
@@ -7,16 +8,17 @@ const Burger = () => {
         <div className="flex flex-col text-2xl text-white gap-3">
           <div className="flex gap-y-6 flex-col">
             <h1 className="text-3xl font-semibold">Navigation</h1>
-            <a className="hover-underline" href={"#home"}>
+            <Link className="hover-underline" href={"/"}>
               Home
-            </a>
-            <a className="hover-underline" href={"#my-work"}>
+            </Link>
+            <Link className="hover-underline" href={"/my-work"}>
               My work
-            </a>
+            </Link>
 
-            <a className="hover-underline" href={"#contact"}>
+            <Link className="hover-underline" href={"/contact"}>
               Contact
-            </a>
+            </Link>
+            <Link href={"/about"}>About</Link>
           </div>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import React from "react";
 import BurgerMenu from "./BurgerMenu";
 import { FaRegCopyright } from "react-icons/fa";
+import Link from "next/link";
 
 const Navbar = () => {
   return (
@@ -43,9 +44,10 @@ const Navbar = () => {
               Navigation:
             </h1>
             <div className="flex gap-x-1 text-[#1c1a17] m-0 leading-tight">
-              <a href={"#home"}>Home,</a>
-              <a href={"#my-work"}>My work,</a>
-              <a href={"#contact"}>Contact</a>
+              <a href={"/"}>Home,</a>
+              <Link href={"/my-work"}>My work,</Link>
+              <a href={"/contact"}>Contact,</a>
+              <Link href={"/about"}>About</Link>
             </div>
           </div>
         </div>

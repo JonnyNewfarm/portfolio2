@@ -16,7 +16,7 @@ export default function StickyScrollParagraphs() {
             ref={ref}
             initial={false}
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 150 }}
-            transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
+            transition={{ duration: 0.4, ease: "easeOut", delay: 0.1 }}
             className="flex-1 text-xl sm:text-xl lg:text-2xl xl:text-3 md:text-2xl px-4"
           >
             Hi, I&apos;m Jonas, a 28-year-old designer and developer with a
@@ -27,7 +27,7 @@ export default function StickyScrollParagraphs() {
             ref={ref}
             initial={false}
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 150 }}
-            transition={{ duration: 0.6, ease: "easeOut", delay: 0.4 }}
+            transition={{ duration: 0.4, ease: "easeOut", delay: 0.2 }}
             className="flex-1 mt-6 text-sm  sm:text-lg  xl:text-xl px-10 md:px-36"
           >
             I work extensively with libraries like React and Next.js to build
@@ -39,7 +39,7 @@ export default function StickyScrollParagraphs() {
           ref={ref}
           initial={false}
           animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 150 }}
-          transition={{ duration: 0.6, ease: "easeOut", delay: 0.4 }}
+          transition={{ duration: 0.4, ease: "easeOut", delay: 0.2 }}
           className=""
         >
           <Link
