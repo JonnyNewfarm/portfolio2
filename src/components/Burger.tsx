@@ -11,7 +11,7 @@ const Burger = () => {
             <Link className="hover-underline" href={"/"}>
               Home
             </Link>
-            <Link className="hover-underline" href={"/my-work"}>
+            <Link className="hover-underline" href={"/projects"}>
               My work
             </Link>
 

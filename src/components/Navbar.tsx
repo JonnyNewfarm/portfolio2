@@ -45,7 +45,7 @@ const Navbar = () => {
             </h1>
             <div className="flex gap-x-1 text-[#1c1a17] m-0 leading-tight">
               <a href={"/"}>Home,</a>
-              <Link href={"/my-work"}>My work,</Link>
+              <Link href={"/projects"}>My work,</Link>
               <a href={"/contact"}>Contact,</a>
               <Link href={"/about"}>About</Link>
             </div>

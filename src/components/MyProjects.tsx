@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Project from "./Project";
 import Modal from "./Modal";
 import MyProjectCard from "./MyProjectCard";
+import Link from "next/link";
 
 const MyProjects = () => {
   const projects = [
@@ -28,7 +29,7 @@ const MyProjects = () => {
       className="min-h-[40vh] bg-[#ececec] flex sm:items-center flex-col justify-center relative"
     >
       <div className="w-full flex flex-col px-10 gap-y-28 py-10 sm:hidden">
-        <h1 className="font-semibold text-lg text-[#1c1a17]">My work</h1>
+        <h1 className="font-semibold text-lg ml-2 text-[#1c1a17]">My work</h1>
         {projects.map((project, index) => {
           return (
             <MyProjectCard
@@ -39,6 +40,15 @@ const MyProjects = () => {
             />
           );
         })}
+
+        <div className="w-full flex  justify-center">
+          <Link
+            href={"/projects"}
+            className="border-[1px] mb-10 border-black py-2 px-4 uppercase hover:bg-[#1c1a17] hover:text-[#ececec]"
+          >
+            More work
+          </Link>
+        </div>
       </div>
       <div className="w-full h-full -mt-40 p-8 sm:p-10 md:p-40   hidden sm:block">
         <h1 className="ml-12 mb-2 font-semibold text-lg">My work</h1>
@@ -54,6 +64,14 @@ const MyProjects = () => {
               />
             );
           })}
+          <div className="w-full flex  justify-center">
+            <Link
+              href={"/projects"}
+              className="border-[1px] mb-10 hover:bg-[#1c1a17] hover:text-[#ececec] border-black py-2 px-4 uppercase"
+            >
+              More work
+            </Link>
+          </div>
         </div>
       </div>
 
