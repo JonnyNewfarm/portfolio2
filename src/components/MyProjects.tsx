@@ -29,7 +29,9 @@ const MyProjects = () => {
       className="min-h-[40vh] bg-[#ececec] flex sm:items-center flex-col justify-center relative"
     >
       <div className="w-full flex flex-col px-10 gap-y-28 py-10 sm:hidden">
-        <h1 className="font-semibold text-lg ml-2 text-[#1c1a17]">My work</h1>
+        <h1 className="font-semibold text-lg ml-2 text-[#1c1a17]">
+          Recent Projects
+        </h1>
         {projects.map((project, index) => {
           return (
             <MyProjectCard
@@ -51,7 +53,7 @@ const MyProjects = () => {
         </div>
       </div>
       <div className="w-full h-full -mt-40 p-8 sm:p-10 md:p-40   hidden sm:block">
-        <h1 className="ml-12 mb-2 font-semibold text-lg">My work</h1>
+        <h1 className="ml-12 mb-2 font-semibold text-lg">Recent Projects</h1>
         <div className="w-full flex flex-col justify-center items-center ">
           {projects.map((project, index) => {
             return (
