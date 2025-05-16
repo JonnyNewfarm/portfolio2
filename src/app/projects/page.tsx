@@ -8,6 +8,12 @@ import MyProjectCard from "@/components/MyProjectCard";
 const Page = () => {
   const projects = [
     {
+      title: "Kerimov Designs",
+      src: "project3.png",
+      color: "#5e5e5d",
+      link: "https://kerimovdesigns.vercel.app/",
+    },
+    {
       title: "Custom Canvas",
       src: "canvas-screen.png",
       color: "#504f4e",
@@ -18,24 +24,6 @@ const Page = () => {
       src: "lunnettes-screen.png",
       color: "#161310",
       link: "https://lunnettes-shop.vercel.app/",
-    },
-    {
-      title: "Project 3",
-      src: "canvas-screen.png",
-      color: "#333",
-      link: "#",
-    },
-    {
-      title: "Project 4",
-      src: "lunnettes-screen.png",
-      color: "#222",
-      link: "#",
-    },
-    {
-      title: "Project 5",
-      src: "canvas-screen.png",
-      color: "#111",
-      link: "#",
     },
   ];
 

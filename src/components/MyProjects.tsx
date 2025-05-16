@@ -8,16 +8,16 @@ import Link from "next/link";
 const MyProjects = () => {
   const projects = [
     {
+      title: "Kerimov Designs",
+      src: "project3.png",
+      color: "#5e5e5d",
+      link: "https://kerimovdesigns.vercel.app/",
+    },
+    {
       title: "Custom Canvas",
       src: "canvas-screen.png",
       color: "#504f4e",
       link: "https://createcanvas.vercel.app/",
-    },
-    {
-      title: "Lunnettes",
-      src: "lunnettes-screen.png",
-      color: "#161310",
-      link: "https://lunnettes-shop.vercel.app/",
     },
   ];
 
