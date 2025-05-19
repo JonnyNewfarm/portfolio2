@@ -9,7 +9,7 @@ export default function FlowerRotate() {
   return (
     <div
       ref={ref}
-      className="absolute top-[55%] left-1/2 transform mr-3  -translate-x-1/2 w-[70px] h-[70px] pointer-events-none z-10"
+      className="absolute top-[55%] left-1/2 transform pr-2  -translate-x-1/2 w-[70px] h-[70px] pointer-events-none z-10"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

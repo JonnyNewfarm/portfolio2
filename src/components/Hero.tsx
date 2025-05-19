@@ -89,7 +89,7 @@ const Hero = () => {
               opacity: [0, 1, 1],
             }}
             transition={{
-              delay: 1.7,
+              delay: 0.1,
               duration: 0.8,
               times: [0, 0.4, 1],
               ease: "easeInOut",
@@ -122,7 +122,7 @@ const Hero = () => {
           opacity: [0, 1, 1],
         }}
         transition={{
-          delay: 1.7,
+          delay: 0.1,
           duration: 1,
           times: [0, 0.4, 1],
           ease: "easeInOut",
@@ -155,7 +155,7 @@ const Hero = () => {
             opacity: [0, 1, 1],
           }}
           transition={{
-            delay: 2,
+            delay: 0.1,
             duration: 1,
             times: [0, 0.4, 1],
             ease: "easeInOut",

@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
-import { motion, useMotionValue } from "framer-motion";
 import MyProjectCard from "@/components/MyProjectCard";
 
 const Page = () => {
@@ -10,115 +9,126 @@ const Page = () => {
     {
       title: "Kerimov Designs",
       src: "project3.png",
-      color: "#5e5e5d",
       link: "https://kerimovdesigns.vercel.app/",
+      stack:
+        "React, Next.js, Prisma, TailwindCSS, MongoDB, Uploadthing, NextAuth",
     },
     {
       title: "Custom Canvas",
       src: "canvas-screen.png",
-      color: "#504f4e",
       link: "https://createcanvas.vercel.app/",
+      stack: "React, TypeScript, Prisma, Neon, Upstash, Stripe, KindeAuth",
     },
     {
       title: "Lunnettes",
       src: "lunnettes-screen.png",
-      color: "#161310",
       link: "https://lunnettes-shop.vercel.app/",
+      stack: "React, Next.js, Stripe, MongoDB, Prisma, Stripe, NextAuth",
     },
   ];
 
-  const [selectedProject, setSelectedProject] = useState(projects[0]);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const y = useMotionValue(0);
+  const [selected, setSelected] = useState(projects[0]);
+  const [hovered, setHovered] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    setMousePos({ x: e.clientX, y: e.clientY });
+  };
 
   return (
-    <div>
-      <div className="w-full flex flex-col px-10 bg-[#ececec] gap-y-28 py-10 md:hidden border-b border-[#161310]">
-        <div>
-          <h1 className="font-semibold text-2xl mt-10 text-[#1c1a17]">
-            My projects
-          </h1>
-          <h1>Code/Design/Fullstack</h1>
-        </div>
-        {projects.map((project, index) => {
-          return (
-            <MyProjectCard
-              key={index}
-              src={project.src}
-              title={project.title}
-              link={project.link}
-            />
-          );
-        })}
+    <div className="w-full bg-[#ececec]">
+      {/* Mobile View */}
+      <div className="md:hidden flex flex-col px-10 py-10 gap-y-20 border-b border-[#161310]">
+        <h1 className="text-2xl font-semibold text-[#1c1a17] mt-10 uppercase">
+          My projects
+        </h1>
+        <h2>Code/Design/Fullstack</h2>
+        {projects.map((p, i) => (
+          <MyProjectCard key={i} src={p.src} title={p.title} link={p.link} />
+        ))}
       </div>
-      <div className="w-full min-h-screen hidden md:block bg-[#ececec] border-b border-[#161310]">
-        <div className="max-w-7xl h-20 flex  ">
-          <div className="mt-16 w-full">
-            <h1 className="text-6xl ml-20 mb-5 text-[#1c1a17]">My projects</h1>
-            <h2 className="text-xl ml-20 mb-2 text-[#1c1a17] mt-2">
-              Code/Design/Fullstack
+
+      {/* Desktop View */}
+      <div className="hidden md:flex min-h-screen border-b border-[#161310]">
+        <div
+          className="max-w-7xl w-full mx-auto px-10 py-20 flex gap-16 relative"
+          onMouseMove={handleMouseMove}
+        >
+          {/* Left: List of titles */}
+          <div className="w-1/3 flex flex-col gap-4">
+            <h1 className="text-5xl font-semibold text-[#1c1a17] mb-6 uppercase">
+              My projects
+            </h1>
+            <h2 className="text-lg text-[#1c1a17] mb-8">
+              Code / Design / Fullstack
             </h2>
-            <hr />
-          </div>
-        </div>
 
-        <div className="min-h-screen bg-[#ececec]  flex justify-center w-full items-center px-8 py-16">
-          <div className="flex w-full max-w-7xl lg:px-16 xl:p-18 justify-between">
-            <div>
-              <div className="pl-4">
-                <h1 className="mb-2 ml-4 font-semibold">Scrollable</h1>
+            {projects.map((project, i) => (
+              <div key={i} className="flex flex-col">
                 <div
-                  ref={containerRef}
-                  className="w-64 h-[450px] overflow-y-auto p-4 pt-16"
-                  style={{ scrollbarWidth: "none" }}
+                  className={`cursor-pointer text-xl text-[#1c1a17] transition-all duration-200 flex justify-between ${
+                    selected.title === project.title
+                      ? "font-semibold"
+                      : "opacity-70"
+                  }`}
+                  onMouseEnter={() => {
+                    setSelected(project);
+                    setHovered(true);
+                  }}
+                  onMouseLeave={() => setHovered(false)}
+                  onClick={() => window.open(project.link, "_blank")}
                 >
-                  <motion.div
-                    drag="y"
-                    dragConstraints={{
-                      top: -projects.length * 170 + 600,
-                      bottom: 0,
-                    }}
-                    style={{ y }}
-                    className="flex flex-col gap-y-20"
-                  >
-                    {projects.map((project) => (
-                      <div
-                        key={project.title}
-                        onMouseEnter={() => setSelectedProject(project)}
-                        className={`cursor-pointer transition-transform ${
-                          selectedProject.src === project.src
-                            ? "scale-105"
-                            : "scale-100"
-                        }`}
-                      >
-                        <MyProjectCard
-                          title={project.title}
-                          src={project.src}
-                          link={project.link}
-                        />
-                      </div>
-                    ))}
-                  </motion.div>
+                  <span>{project.title}</span>
+                  <span className="text-sm opacity-50">Fullstack</span>
                 </div>
+                {i < projects.length - 1 && (
+                  <hr className="my-3 border-[#1c1a17]/30" />
+                )}
               </div>
-            </div>
-
-            <div className="flex flex-col items-center">
-              <a
-                href={selectedProject.link}
-                className="bg-[#1c1a17] mt-6 p-4 md:w-[400px] lg:w-[550px]"
-              >
-                <div className="relative aspect-[16/10] w-full">
-                  <Image
-                    src={`/projects/${selectedProject.src}`}
-                    alt={selectedProject.title}
-                    fill
-                    className="object-contain"
-                  />
-                </div>
-              </a>
-            </div>
+            ))}
           </div>
+
+          {/* Right: Image Preview + Stack */}
+          <div className="w-2/3 flex flex-col items-center justify-center">
+            <a
+              href={selected.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block w-full aspect-video bg-[#1c1a17] p-4"
+            >
+              <div className="relative w-full h-full">
+                <Image
+                  src={`/projects/${selected.src}`}
+                  alt={selected.title}
+                  fill
+                  className="object-contain"
+                />
+              </div>
+            </a>
+            <p className="mt-4 text-center text-[#1c1a17] text-lg opacity-75">
+              {selected.stack}
+            </p>
+          </div>
+
+          {/* Tooltip */}
+          {hovered && (
+            <div
+              style={{
+                position: "fixed",
+                top: mousePos.y + 12,
+                left: mousePos.x + 12,
+                backgroundColor: "#1c1a17",
+                color: "#fff",
+                padding: "5px 10px",
+
+                fontSize: "16px",
+                pointerEvents: "none",
+                zIndex: 9999,
+              }}
+            >
+              Live link
+            </div>
+          )}
         </div>
       </div>
     </div>
