@@ -30,7 +30,9 @@ const Footer = () => {
               </h1>
 
               <h1>
-                <a href="">LinkedIn</a>
+                <a href="https://www.linkedin.com/in/jonas-nygaard-0aa767366/">
+                  LinkedIn
+                </a>
               </h1>
 
               <h1 className="opacity-75 mt-4 font-semibold">Contact:</h1>

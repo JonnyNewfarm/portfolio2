@@ -57,6 +57,9 @@ const Page = () => {
             <p>jonasnygaard96@gmail.com</p>
             <p>+47 48 26 30 11</p>
             <p>Oslo, Norway</p>
+            <a href="https://www.linkedin.com/in/jonas-nygaard-0aa767366/">
+              LinkedIn
+            </a>
           </div>
         </div>
 
