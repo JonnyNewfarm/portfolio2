@@ -6,7 +6,6 @@ import TextOnScroll from "@/components/TextOnScroll";
 import ScrollSection from "@/components/SmoothScroll";
 import MyProjects from "@/components/MyProjects";
 import Contact from "@/components/Contact";
-import { useState } from "react";
 
 export default function Home() {
   return (
