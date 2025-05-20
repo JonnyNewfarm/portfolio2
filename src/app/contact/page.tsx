@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import SmoothScroll from "@/components/SmoothScroll";
+import { motion } from "framer-motion";
 
 const Page = () => {
   const [form, setForm] = useState({
@@ -40,16 +41,55 @@ const Page = () => {
         {/* Left Side */}
         <div className="flex flex-col justify-between w-full lg:w-1/2 p-10 lg:p-20 border-b border-[#1c1a17] lg:border-b-0 lg:border-r">
           <div className="flex flex-col gap-y-6">
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl mt-10 leading-tight">
+            <motion.h1
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{
+                scale: [0, 1],
+                opacity: [0, 1, 1],
+              }}
+              transition={{
+                delay: 0.1,
+                duration: 0.7,
+                times: [0, 0.4, 1],
+                ease: "easeInOut",
+              }}
+              className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl mt-10 leading-tight"
+            >
               Let&apos;s turn your <br /> vision into reality
-            </h1>
-            <p className="text-lg max-w-md mt-4">
+            </motion.h1>
+            <motion.p
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{
+                scale: [0, 1],
+                opacity: [0, 1, 1],
+              }}
+              transition={{
+                delay: 0.2,
+                duration: 0.7,
+                times: [0, 0.4, 1],
+                ease: "easeInOut",
+              }}
+              className="text-lg max-w-md mt-4"
+            >
               Got an idea or project in mind? Don&apos;t hesitate to reach out.
               I&apos;m always open to building something great together.
-            </p>
+            </motion.p>
           </div>
 
-          <div className="flex flex-col gap-y-2 mt-4 lg:mt-4">
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{
+              scale: [0, 1],
+              opacity: [0, 1, 1],
+            }}
+            transition={{
+              delay: 0.3,
+              duration: 0.7,
+              times: [0, 0.4, 1],
+              ease: "easeInOut",
+            }}
+            className="flex flex-col gap-y-2 mt-4 lg:mt-4"
+          >
             <h2 className="opacity-70 text-sm uppercase tracking-wide mb-1">
               Contact details
             </h2>
@@ -57,15 +97,29 @@ const Page = () => {
             <p>jonasnygaard96@gmail.com</p>
             <p>+47 48 26 30 11</p>
             <p>Oslo, Norway</p>
-            <a href="https://www.linkedin.com/in/jonas-nygaard-0aa767366/">
+            <a
+              className="underline"
+              href="https://www.linkedin.com/in/jonas-nygaard-0aa767366/"
+            >
               LinkedIn
             </a>
-          </div>
+          </motion.div>
         </div>
 
         {/* Right Side */}
         <div className="w-full lg:w-1/2 p-10 lg:p-20 flex items-center justify-center">
-          <form
+          <motion.form
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{
+              scale: [0, 1],
+              opacity: [0, 1, 1],
+            }}
+            transition={{
+              delay: 0.4,
+              duration: 0.7,
+              times: [0, 0.4, 1],
+              ease: "easeInOut",
+            }}
             onSubmit={handleSubmit}
             className="w-full max-w-xl flex flex-col gap-6"
           >
@@ -109,7 +163,7 @@ const Page = () => {
             >
               Send
             </button>
-          </form>
+          </motion.form>
         </div>
       </div>
     </SmoothScroll>

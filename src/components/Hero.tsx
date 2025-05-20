@@ -90,7 +90,7 @@ const Hero = () => {
             }}
             transition={{
               delay: 0.1,
-              duration: 0.8,
+              duration: 1,
               times: [0, 0.4, 1],
               ease: "easeInOut",
             }}
@@ -150,12 +150,13 @@ const Hero = () => {
 
       <div className="absolute z-30 top-[63vh] [@media(max-width:400px)]:top-[63vh] sm:top-[75vh]  md:top-[75vh] lg:top-[66vh]   w-screen overflow-hidden">
         <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
+          initial={{ scale: 0.9, opacity: 0 }}
           animate={{
             opacity: [0, 1, 1],
           }}
           transition={{
-            delay: 0.1,
+            delay: 0.5,
+
             duration: 1,
             times: [0, 0.4, 1],
             ease: "easeInOut",
