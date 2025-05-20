@@ -127,7 +127,7 @@ const Hero = () => {
           times: [0, 0.4, 1],
           ease: "easeInOut",
         }}
-        className="xl:w-[400px] w-[300px] h-[120px] gap-x-4 [@media(max-width:400px)]:bottom-[4vh] bottom-[8vh] sm:bottom-[22vh]  lg:top-1/3 xl:h-[150px] lg:flex flex-row items-center p-2 absolute border-r-[1px] border-b-[1px] border-t-[1px] border-black hidden"
+        className="xl:w-[400px] w-[300px] h-[120px] gap-x-4 [@media(max-width:400px)]:bottom-[4vh] bottom-[8vh] sm:bottom-[22vh]  lg:top-1/3 xl:h-[150px] lg:flex flex-row items-center p-2 absolute hidden"
         href="https://createcanvas.vercel.app/"
       >
         <div className="w-[200px] relative h-[200px]">

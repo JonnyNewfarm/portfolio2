@@ -52,7 +52,6 @@ const Page = () => {
     const scrollHeight = container.scrollHeight / 2;
 
     gsap.killTweensOf(scrollRef.current);
-
     gsap.set(scrollRef.current, { y: 0 });
 
     const anim = gsap.to(scrollRef.current, {
@@ -63,9 +62,7 @@ const Page = () => {
       modifiers: {
         y: (y) => {
           const val = parseFloat(y);
-          if (val <= -scrollHeight) {
-            return "0px";
-          }
+          if (val <= -scrollHeight) return "0px";
           return y;
         },
       },
@@ -86,66 +83,47 @@ const Page = () => {
         <div className="md:hidden flex flex-col px-10 py-10 gap-y-8 border-b border-[#161310]">
           <motion.h1
             initial={{ scale: 0.8, opacity: 0 }}
-            animate={{
-              scale: [0, 1],
-              opacity: [0, 1, 1],
-            }}
-            transition={{
-              delay: 0.1,
-              duration: 0.7,
-              times: [0, 0.4, 1],
-              ease: "easeInOut",
-            }}
+            animate={{ scale: [0, 1], opacity: [0, 1] }}
+            transition={{ delay: 0.1, duration: 0.7, ease: "easeInOut" }}
             className="text-2xl font-semibold text-[#1c1a17] mt-10 uppercase"
           >
             My projects
           </motion.h1>
           <motion.h2
             initial={{ scale: 0.8, opacity: 0 }}
-            animate={{
-              scale: [0, 1],
-              opacity: [0, 1, 1],
-            }}
-            transition={{
-              delay: 0.2,
-              duration: 0.7,
-              times: [0, 0.4, 1],
-              ease: "easeInOut",
-            }}
+            animate={{ scale: [0, 1], opacity: [0, 1] }}
+            transition={{ delay: 0.2, duration: 0.7, ease: "easeInOut" }}
             className="text-base text-[#1c1a17]"
           >
             Code / Design / Fullstack
           </motion.h2>
+
           {projects.map((p, i) => (
             <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{
-                scale: [0, 1],
-                opacity: [0, 1, 1],
-              }}
-              transition={{
-                delay: 0.3,
-                duration: 0.7,
-                times: [0, 0.4, 1],
-                ease: "easeInOut",
-              }}
               key={i}
-              className="flex flex-col gap-4"
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: [0, 1], opacity: [0, 1] }}
+              transition={{ delay: 0.3 + i * 0.1, duration: 0.6 }}
+              className="block"
             >
-              <div className="mb-2 font-semibold text-[#1c1a17]">{p.title}</div>
+              <div className="mb-2 font-semibold  text-[#1c1a17]">
+                {p.title}
+              </div>
               <Image
                 src={`/projects/${p.src}`}
                 alt={p.title}
                 width={300}
                 height={170}
-                className="object-contain"
+                className="object-contain mb-4"
               />
-              <p className="text-sm text-[#1c1a17] opacity-70">{p.stack}</p>
+              <p className="text-sm text-[#1c1a17] opacity-70 mb-2">
+                {p.stack}
+              </p>
               <a
                 href={p.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block mt-2 px-4 py-2 border text-center border-[#1c1a17] text-[#1c1a17] text-sm uppercase w-[50%] font-medium tracking-wide hover:bg-[#1c1a17] hover:text-white transition-colors"
+                className="inline-block px-4 py-2 border-[1px] border-[#1c1a17] text-[#1c1a17] text-sm"
               >
                 Live Link
               </a>
@@ -159,36 +137,18 @@ const Page = () => {
             onMouseMove={handleMouseMove}
           >
             <div className="w-1/3 flex flex-col">
-              <div className="mb-10">
-                <motion.h1
-                  initial={{ scale: 0.8, opacity: 0 }}
-                  animate={{
-                    scale: [0, 1],
-                    opacity: [0, 1, 1],
-                  }}
-                  transition={{
-                    delay: 0.1,
-                    duration: 0.7,
-                    times: [0, 0.4, 1],
-                    ease: "easeInOut",
-                  }}
-                  className="text-5xl uppercase mb-2 text-[#1c1a17]"
-                >
-                  My Projects
-                </motion.h1>
-              </div>
+              <motion.h1
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: [0, 1], opacity: [0, 1] }}
+                transition={{ delay: 0.1, duration: 0.7 }}
+                className="text-5xl uppercase mb-4 text-[#1c1a17]"
+              >
+                My Projects
+              </motion.h1>
               <motion.h2
                 initial={{ scale: 0.8, opacity: 0 }}
-                animate={{
-                  scale: [0, 1],
-                  opacity: [0, 1, 1],
-                }}
-                transition={{
-                  delay: 0.2,
-                  duration: 0.7,
-                  times: [0, 0.4, 1],
-                  ease: "easeInOut",
-                }}
+                animate={{ scale: [0, 1], opacity: [0, 1] }}
+                transition={{ delay: 0.2, duration: 0.7 }}
                 className="text-lg text-[#1c1a17] opacity-70 mb-10"
               >
                 Code / Design / Fullstack
@@ -196,18 +156,10 @@ const Page = () => {
 
               {projects.map((project, i) => (
                 <motion.div
-                  initial={{ scale: 0.8, opacity: 0 }}
-                  animate={{
-                    scale: [0, 1],
-                    opacity: [0, 1, 1],
-                  }}
-                  transition={{
-                    delay: 0.3,
-                    duration: 0.7,
-                    times: [0, 0.4, 1],
-                    ease: "easeInOut",
-                  }}
                   key={i}
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  animate={{ scale: [0, 1], opacity: [0, 1] }}
+                  transition={{ delay: 0.3 + i * 0.1, duration: 0.7 }}
                   className="flex flex-col group"
                 >
                   <div
@@ -236,20 +188,24 @@ const Page = () => {
                   )}
                 </motion.div>
               ))}
+
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, ease: "easeOut", delay: 0.6 }}
+                className="mt-6"
+              >
+                <h3 className="text-lg mt-5  text-[#1c1a17] mb-2">Stack</h3>
+                <p className="text-sm text-[#1c1a17] opacity-70 leading-relaxed">
+                  {selected.stack}
+                </p>
+              </motion.div>
             </div>
 
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
-              animate={{
-                scale: [0, 1],
-                opacity: [0, 1, 1],
-              }}
-              transition={{
-                delay: 0.4,
-                duration: 0.7,
-                times: [0, 0.4, 1],
-                ease: "easeInOut",
-              }}
+              animate={{ scale: [0, 1], opacity: [0, 1] }}
+              transition={{ delay: 0.4, duration: 0.7 }}
               className="w-2/3 max-w-4xl overflow-hidden border-l border-[#1c1a17]/20"
               style={{ height: "620px", position: "relative" }}
             >
