@@ -3,6 +3,7 @@ import { Montserrat } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { Toaster } from "react-hot-toast";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -30,6 +31,27 @@ export default function RootLayout({
           <Navbar />
           {children}
           <Footer />
+          <Toaster
+            toastOptions={{
+              style: {
+                background: "#1c1a17",
+                color: "#ececec",
+                border: "1px solid #ececec",
+              },
+              success: {
+                iconTheme: {
+                  primary: "#4ade80",
+                  secondary: "#1c1a17",
+                },
+              },
+              error: {
+                iconTheme: {
+                  primary: "#f87171",
+                  secondary: "#1c1a17",
+                },
+              },
+            }}
+          />
         </div>
       </body>
     </html>
