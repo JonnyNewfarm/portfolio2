@@ -1,6 +1,5 @@
 "use client";
 import Image from "next/image";
-import wnb from "../../public/wnb.jpg";
 import { useScroll, useTransform, motion } from "framer-motion";
 import { useRef, useEffect } from "react";
 import FlowerRotate from "./FlowerRotate";
@@ -15,14 +14,13 @@ export default function Section() {
 
   const y = useTransform(scrollYProgress, [0, 1], ["-10vh", "10vh"]);
 
-  // Ensuring SVG animation renders on mobile
   useEffect(() => {
     const svg = document.querySelector("svg");
     if (svg) {
       svg.style.visibility = "hidden";
       setTimeout(() => {
         svg.style.visibility = "visible";
-      }, 100); // Delay to ensure proper rendering on mobile
+      }, 100);
     }
   }, []);
 
@@ -53,7 +51,7 @@ export default function Section() {
       <div className="fixed top-[-10vh] left-0 w-full h-full">
         <motion.div style={{ y }} className="relative w-full min-h-[150vh]">
           <Image
-            src={wnb}
+            src="/wnb.jpg"
             priority
             quality={100}
             fill

@@ -27,15 +27,6 @@ const Page = () => {
       link: "https://createcanvas.vercel.app/",
       stack: "React, TypeScript, Prisma, Neon, Upstash, Stripe, KindeAuth",
     },
-    {
-      title: "Lunnettes",
-      src: "lunnettes-screen.png",
-      src2: "lunnettes2.png",
-      src3: "lunnettes3.png",
-      src4: "lunnettes4.png",
-      link: "https://lunnettes-shop.vercel.app/",
-      stack: "React, Next.js, Stripe, MongoDB, Prisma, Stripe, NextAuth",
-    },
   ];
 
   const [selected, setSelected] = useState(projects[0]);

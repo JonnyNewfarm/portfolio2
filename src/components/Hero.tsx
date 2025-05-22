@@ -4,9 +4,6 @@ import Image from "next/image";
 import React, { useLayoutEffect, useRef } from "react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useScroll, useTransform, motion } from "motion/react";
-import para1 from "../../public/jonny27.jpg";
-import para2 from "../../public/jonas1.jpg";
-import para3 from "../../public/jonas2.jpg";
 
 const Hero = () => {
   const container = useRef(null);
@@ -19,26 +16,6 @@ const Hero = () => {
 
   const md = useTransform(scrollYProgress, [0, 1], [0, -200]);
   const lg = useTransform(scrollYProgress, [0, 1], [0, -250]);
-
-  const images = [
-    {
-      img: para1,
-      style: "h-[40vh] mb-16 sm:h-[45vh] sm:w-[30vh] w-[30vh] z-[1]",
-      value: 0,
-    },
-    {
-      img: para2,
-      style:
-        "left-[55.5vw] hidden  top-[25vh] md:top-[20vh] w-[20vh] h-[30vh] sm:h-[30vh] sm:w-[20vh] z-[2]",
-      value: md,
-    },
-    {
-      img: para3,
-      style:
-        "left-[5vw] sm:left-[10vw] hidden  lg:left-[32vw] xl:left-[35.5vw] top-[33vh]   sm:h-[21vh] sm:w-[20vh] z-[3]",
-      value: lg,
-    },
-  ];
 
   const firstParagraph = useRef(null);
   const secondParagraph = useRef(null);
@@ -81,33 +58,29 @@ const Hero = () => {
       className="bg-[#ececec] h-screen relative text-[#1c1a17] "
     >
       <div className="absolute top-[16vh]  left-0 w-full h-full flex justify-center pointer-events-none">
-        {images.map((image, i) => (
-          <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{
-              scale: [0, 1],
-              opacity: [0, 1, 1],
-            }}
-            transition={{
-              delay: 0.1,
-              duration: 1,
-              times: [0, 0.4, 1],
-              ease: "easeInOut",
-            }}
-            key={i}
-            style={{ y: image.value }}
-            className={` absolute object-cover ${image.style}`}
-          >
-            <Image
-              className="object-contain"
-              fill
-              priority
-              quality={100}
-              alt="image"
-              src={image.img}
-            />
-          </motion.div>
-        ))}
+        <motion.div
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{
+            scale: [0, 1],
+            opacity: [0, 1, 1],
+          }}
+          transition={{
+            delay: 0.1,
+            duration: 1,
+            times: [0, 0.4, 1],
+            ease: "easeInOut",
+          }}
+          className={` absolute object-cover h-[40vh] mb-16 sm:h-[45vh] sm:w-[30vh] w-[30vh] z-[1]`}
+        >
+          <Image
+            className="object-contain"
+            fill
+            priority
+            quality={100}
+            alt="image"
+            src={"/jonny27.jpg"}
+          />
+        </motion.div>
       </div>
 
       <div className="absolute top-[60vh] sm:top-[65vh] w-full flex flex-col items-center lg:hidden">
