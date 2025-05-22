@@ -3,19 +3,11 @@ import gsap from "gsap";
 import Image from "next/image";
 import React, { useLayoutEffect, useRef } from "react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useScroll, useTransform, motion } from "motion/react";
+import { motion } from "motion/react";
 
 const Hero = () => {
   const container = useRef(null);
   const direction = useRef(-1);
-
-  const { scrollYProgress } = useScroll({
-    target: container,
-    offset: ["start end", "end start"],
-  });
-
-  const md = useTransform(scrollYProgress, [0, 1], [0, -200]);
-  const lg = useTransform(scrollYProgress, [0, 1], [0, -250]);
 
   const firstParagraph = useRef(null);
   const secondParagraph = useRef(null);
