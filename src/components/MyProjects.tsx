@@ -9,7 +9,7 @@ const MyProjects = () => {
   const projects = [
     {
       title: "Kerimov Designs",
-      src: "project3.png",
+      src: "kerimov-designs.png",
       color: "#5e5e5d",
       link: "https://kerimovdesigns.vercel.app/",
     },
