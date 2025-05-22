@@ -7,13 +7,13 @@ const Navbar = () => {
   return (
     <div className="bg-[#ececec]   font-extrabold text-[16px] text-[#1c1a17] px-20 py-3 flex items-center sticky top-0 z-50 w-full justify-between">
       <div>
-        <a
-          href="#home"
+        <Link
+          href="/"
           className=" lg:hidden flex items-center gap-x-1 font-normal text-xl fixed left-6 top-7"
         >
           <FaRegCopyright />
           Newfarm Studio
-        </a>
+        </Link>
       </div>
       <BurgerMenu />
       <div className="w-full h-full hidden lg:block">
@@ -44,9 +44,9 @@ const Navbar = () => {
               Navigation:
             </h1>
             <div className="flex gap-x-1 text-[#1c1a17] m-0 leading-tight">
-              <a href={"/"}>Home,</a>
+              <Link href={"/"}>Home,</Link>
               <Link href={"/projects"}>My work,</Link>
-              <a href={"/contact"}>Contact,</a>
+              <Link href={"/contact"}>Contact,</Link>
               <Link href={"/about"}>About</Link>
             </div>
           </div>
