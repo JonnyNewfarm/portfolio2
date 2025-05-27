@@ -10,8 +10,8 @@ const Page = () => {
   const projects = [
     {
       title: "Kerimov Designs",
-      src: "kerimov-designs.png",
-      src2: "kerimov-designs2.png",
+      src: "arkay1.png",
+      src2: "arkay2.png",
       src3: "kermiov-desgins3.png",
       src4: "kermiov-desgins4.png",
       link: "https://kerimovdesigns.vercel.app/",
