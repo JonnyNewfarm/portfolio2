@@ -23,16 +23,6 @@ export default function StickyScrollParagraphs() {
             passion for creating seamless, user-friendly digital experiences. I
             like to work in JavaScript and TypeScript.
           </motion.p>
-          <motion.p
-            ref={ref}
-            initial={false}
-            animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 150 }}
-            transition={{ duration: 0.4, ease: "easeOut", delay: 0.2 }}
-            className="flex-1 mt-6 text-sm  sm:text-lg  xl:text-xl px-4 md:px-4 md:pr-40"
-          >
-            I work extensively with libraries like React and Next.js to build
-            dynamic, responsive websites and applications.
-          </motion.p>
         </div>
 
         <motion.div
