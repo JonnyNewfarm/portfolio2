@@ -16,7 +16,7 @@ const Page = () => {
       src4: "kermiov-desgins4.png",
       link: "https://kerimovdesigns.vercel.app/",
       stack:
-        "React, Next.js, Prisma, TailwindCSS, MongoDB, Uploadthing, NextAuth",
+        "React, Next.js, Prisma, TailwindCSS, MongoDB, Uploadthing, NextAuth.",
     },
     {
       title: "Custom Canvas",
@@ -25,7 +25,17 @@ const Page = () => {
       src3: "customcanvas3.png",
       src4: "customcanvas4.png",
       link: "https://createcanvas.vercel.app/",
-      stack: "React, TypeScript, Prisma, Neon, Upstash, Stripe, KindeAuth",
+      stack: "React, TypeScript, Prisma, Neon, Upstash, Stripe, KindeAuth.",
+    },
+
+    {
+      title: "Quote Battle",
+      src: "quote1.png",
+      src2: "quote2.png",
+      src3: "quote3.png",
+      src4: "quote4.png",
+      link: "https://quotes-bay-one.vercel.app/",
+      stack: "Python, Flask, React, TypeScript, Tailwind.",
     },
   ];
 
