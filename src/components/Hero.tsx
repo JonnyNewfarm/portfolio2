@@ -101,7 +101,7 @@ const Hero = () => {
           <Image
             fill
             className="object-contain"
-            src="/projects/arkay1.png"
+            src="/projects/kerimov1.png"
             alt=""
           />
         </div>

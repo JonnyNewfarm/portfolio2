@@ -9,13 +9,13 @@ const MyProjects = () => {
   const projects = [
     {
       title: "Kerimov Designs",
-      src: "arkay1.png",
+      src: "kerimov1.png",
       color: "#5e5e5d",
       link: "https://kerimovdesigns.vercel.app/",
     },
     {
       title: "Custom Canvas",
-      src: "canvas-screen.png",
+      src: "canvas1.png",
       color: "#504f4e",
       link: "https://createcanvas.vercel.app/",
     },

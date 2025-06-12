@@ -10,20 +10,20 @@ const Page = () => {
   const projects = [
     {
       title: "Kerimov Designs",
-      src: "arkay1.png",
-      src2: "arkay2.png",
-      src3: "kermiov-desgins3.png",
-      src4: "kermiov-desgins4.png",
+      src: "kerimov1.png",
+      src2: "kerimov2.png",
+      src3: "kerimov3.png",
+      src4: "kerimov4.png",
       link: "https://kerimovdesigns.vercel.app/",
       stack:
         "React, Next.js, Prisma, TailwindCSS, MongoDB, Uploadthing, NextAuth.",
     },
     {
       title: "Custom Canvas",
-      src: "canvas-screen.png",
-      src2: "customcanvas2.png",
-      src3: "customcanvas3.png",
-      src4: "customcanvas4.png",
+      src: "canvas1.png",
+      src2: "canvas2.png",
+      src3: "canvas3.png",
+      src4: "canvas4.png",
       link: "https://createcanvas.vercel.app/",
       stack: "React, TypeScript, Prisma, Neon, Upstash, Stripe, KindeAuth.",
     },
