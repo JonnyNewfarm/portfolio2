@@ -95,13 +95,13 @@ const Hero = () => {
         target="_blank"
         rel="noopener noreferrer"
         className="xl:w-[400px] w-[300px] h-[120px] gap-x-4 [@media(max-width:400px)]:bottom-[4vh] bottom-[8vh] sm:bottom-[22vh]  lg:top-1/3 xl:h-[150px] lg:flex flex-row items-center p-2 absolute hidden"
-        href="https://kerimovdesigns.vercel.app/"
+        href="https://www.jobscriptor.com/"
       >
         <div className="w-[200px] relative h-[200px]">
           <Image
             fill
             className="object-contain"
-            src="/projects/kerimov1.png"
+            src="/projects/jobscriptor1.png"
             alt=""
           />
         </div>

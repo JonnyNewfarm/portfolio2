@@ -1,7 +1,10 @@
 import Link from "next/link";
 import React from "react";
 
-const Burger = () => {
+
+
+
+
   return (
     <div className="z-40 fixed right-0 top-0 h-[100vh] p-20 bg-[#1c1a17] text-white">
       <div className="flex justify-center items-center h-full">

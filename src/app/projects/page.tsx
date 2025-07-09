@@ -9,6 +9,16 @@ import { motion } from "framer-motion";
 const Page = () => {
   const projects = [
     {
+      title: "Job Scriptor",
+      src: "jobscriptor1.png",
+      src2: "jobscriptor2.png",
+      src3: "jobscriptor3.png",
+      src4: "jobscriptor4.png",
+      link: "https://www.jobscriptor.com/",
+      stack:
+        "React, Next.js, Prisma, TailwindCSS, Neon, NextAuth, OpenAI, Stripe.",
+    },
+    {
       title: "Kerimov Designs",
       src: "kerimov1.png",
       src2: "kerimov2.png",
