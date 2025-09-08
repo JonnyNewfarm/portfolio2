@@ -17,7 +17,7 @@ const MyProjects = () => {
       title: "Kerimov Designs",
       src: "kerimov1.png",
       color: "#5e5e5d",
-      link: "https://kerimovdesigns.vercel.app/",
+      link: "https://kerimovdesigns.com/",
     },
   ];
 
@@ -69,7 +69,7 @@ const MyProjects = () => {
           <div className="w-full flex  justify-center">
             <Link
               href={"/projects"}
-              className="border-[1px] mb-10 hover:bg-[#1c1a17] hover:text-[#ececec] border-black py-2 px-4 uppercase"
+              className="border-[2px] mb-10 rounded-[2px] hover:scale-105 transition-transform ease-in-out font-semibold  border-[#1c1a17] py-2 px-4 uppercase"
             >
               More work
             </Link>

@@ -10,7 +10,7 @@ export default function StickyScrollParagraphs() {
 
   return (
     <div className="relative min-h-[80vh] md:min-h-screen bg-[#ececec] flex items-center justify-center px-6 overflow-hidden">
-      <div className="max-w-5xl  px-0 flex flex-col  items-start text-left  justify-start gap-12 text-[#1c1a17]">
+      <div className="max-w-5xl  px-0 flex flex-col  items-start text-left  justify-start gap-8 text-[#1c1a17]">
         <div className="w-full h-full">
           <motion.p
             ref={ref}
@@ -34,7 +34,7 @@ export default function StickyScrollParagraphs() {
         >
           <Link
             href={"/about"}
-            className="px-6 py-2 ml-4 whitespace-nowrap border text-lg border-[#1c1a17] text-[#1c1a17] hover:bg-[#1c1a17] hover:text-[#ececec] transition"
+            className="px-6 py-2 hover:scale-105 transition-transform ease-in-out ml-4 whitespace-nowrap  text-lg border-[#1c1a17] border-2 font-semibold rounded-[2px] text-[#1c1a17]  "
           >
             About Me
           </Link>
