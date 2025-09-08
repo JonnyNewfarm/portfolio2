@@ -28,7 +28,7 @@ const MyProjects = () => {
       id="my-work"
       className="min-h-[40vh] bg-[#ececec] flex sm:items-center flex-col justify-center relative"
     >
-      <div className="w-full flex flex-col px-10 gap-y-28 py-10 sm:hidden">
+      <div className="w-full flex flex-col px-10 gap-y-26  sm:hidden">
         <h1 className="font-semibold text-lg ml-2 text-[#1c1a17]">
           Recent Projects
         </h1>
@@ -46,7 +46,7 @@ const MyProjects = () => {
         <div className="w-full flex  justify-center">
           <Link
             href={"/projects"}
-            className="border-[1px] mb-10 border-black py-2 px-4 uppercase hover:bg-[#1c1a17] hover:text-[#ececec]"
+            className="border-[2px] mb-12 -mt-8 rounded-[2px] hover:scale-105 transition-transform ease-in-out font-semibold  border-[#1c1a17] py-2 px-4 uppercase"
           >
             More work
           </Link>

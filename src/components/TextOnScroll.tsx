@@ -34,7 +34,7 @@ export default function StickyScrollParagraphs() {
         >
           <Link
             href={"/about"}
-            className="px-6 py-2 hover:scale-105 transition-transform ease-in-out ml-4 whitespace-nowrap  text-lg border-[#1c1a17] border-2 font-semibold rounded-[2px] text-[#1c1a17]  "
+            className="px-6 py-2 hover:scale-103 transition-transform ease-in-out ml-4 whitespace-nowrap  text-lg border-[#1c1a17] border-2 font-semibold rounded-[2px] text-[#1c1a17]  "
           >
             About Me
           </Link>
