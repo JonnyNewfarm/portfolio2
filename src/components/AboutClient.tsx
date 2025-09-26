@@ -8,8 +8,8 @@ const AboutClient = () => {
   return (
     <ScrollSection>
       <div className="bg-[#ececec] flex justify-center min-h-screen w-full border-b border-[#161310]">
-        <div className="flex flex-col-reverse mt-20 md:flex-row items-center w-full max-w-7xl">
-          <div className="flex flex-col w-full md:w-1/2 px-6 md:px-10 py-10">
+        <div className="flex flex-col-reverse mt-10 md:flex-row items-center w-full max-w-7xl">
+          <div className="flex flex-col w-full md:w-1/2 px-6 md:px-10 ">
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{
@@ -64,7 +64,7 @@ const AboutClient = () => {
                   times: [0, 0.4, 1],
                   ease: "easeInOut",
                 }}
-                className="flex flex-col lg:flex-row divide-y lg:divide-y-0 lg:divide-x divide-[#161310] text-sm"
+                className="flex flex-col lg:flex-row divide-y lg:divide-y-0 lg:divide-x divide-stone-400/50 text-sm"
               >
                 <div className="flex-1 px-4 py-4">
                   <h2 className="text-lg mb-2">Design</h2>
@@ -112,7 +112,7 @@ const AboutClient = () => {
           >
             <div className="relative w-full h-[80%]">
               <Image
-                src="/jonny27.jpg"
+                src="/jonnyzoo.jpg"
                 alt="Image of Jonas"
                 fill
                 className="object-contain"

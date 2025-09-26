@@ -51,13 +51,12 @@ const Hero = () => {
     >
       <div className="absolute top-[16vh]  left-0 w-full h-full flex justify-center pointer-events-none">
         <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
+          initial={{ scale: 0.9, opacity: 0 }}
           animate={{
             scale: [0, 1],
             opacity: [0, 1, 1],
           }}
           transition={{
-            delay: 0.1,
             duration: 1,
             times: [0, 0.4, 1],
             ease: "easeInOut",
@@ -75,10 +74,22 @@ const Hero = () => {
         </motion.div>
       </div>
 
-      <div className="absolute top-[60vh] sm:top-[65vh] w-full flex flex-col items-center lg:hidden">
+      <motion.div
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{
+          scale: [0, 1],
+          opacity: [0, 1, 1],
+        }}
+        transition={{
+          duration: 1,
+          times: [0, 0.4, 1],
+          ease: "easeInOut",
+        }}
+        className="absolute top-[60vh] sm:top-[65vh] w-full flex flex-col items-center lg:hidden"
+      >
         <h1 className="text-xl">Jonas Nygaard,</h1>
         <h1 className="text-xl">Freelance developer</h1>
-      </div>
+      </motion.div>
 
       <motion.a
         initial={{ scale: 0.8, opacity: 0 }}
@@ -101,7 +112,7 @@ const Hero = () => {
           <Image
             fill
             className="object-contain"
-            src="/projects/jobscriptor1.png"
+            src="/projects/jobscriptor-1.jpg"
             alt=""
           />
         </div>

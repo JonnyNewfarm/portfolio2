@@ -10,10 +10,10 @@ const ProjectsClient = () => {
   const projects = [
     {
       title: "Job Scriptor",
-      src: "jobscriptor1.png",
-      src2: "jobscriptor2.png",
-      src3: "jobscriptor3.png",
-      src4: "jobscriptor4.png",
+      src: "jobscriptor-1.jpg",
+      src2: "jobscriptor-2.jpg",
+      src3: "jobscriptor-3.jpg",
+      src4: "jobscriptor-4.jpg",
       link: "https://www.jobscriptor.com/",
       stack:
         "React, Next.js, Prisma, TailwindCSS, Neon, NextAuth, OpenAI, Stripe.",
@@ -28,33 +28,17 @@ const ProjectsClient = () => {
       stack:
         "React, Next.js, Prisma, TailwindCSS, MongoDB, Uploadthing, NextAuth.",
     },
-    {
-      title: "Custom Canvas",
-      src: "canvas1.png",
-      src2: "canvas2.png",
-      src3: "canvas3.png",
-      src4: "canvas4.png",
-      link: "https://createcanvas.vercel.app/",
-      stack: "React, TypeScript, Prisma, Neon, Upstash, Stripe, KindeAuth.",
-    },
-
-    {
-      title: "Quote Battle",
-      src: "quote1.png",
-      src2: "quote2.png",
-      src3: "quote3.png",
-      src4: "quote4.png",
-      link: "https://quotes-bay-one.vercel.app/",
-      stack: "Python, Flask, React, TypeScript, Tailwind.",
-    },
   ];
 
   const [selected, setSelected] = useState(projects[0]);
   const [hovered, setHovered] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [isPaused, setIsPaused] = useState(false);
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const animRef = useRef<gsap.core.Tween | null>(null);
 
   useEffect(() => {
     if (!scrollRef.current || !containerRef.current) return;
@@ -65,7 +49,7 @@ const ProjectsClient = () => {
     gsap.killTweensOf(scrollRef.current);
     gsap.set(scrollRef.current, { y: 0 });
 
-    const anim = gsap.to(scrollRef.current, {
+    animRef.current = gsap.to(scrollRef.current, {
       y: -scrollHeight,
       duration: 15,
       ease: "linear",
@@ -80,9 +64,21 @@ const ProjectsClient = () => {
     });
 
     return () => {
-      anim.kill();
+      animRef.current?.kill();
+      animRef.current = null;
     };
   }, [selected]);
+
+  const handlePauseToggle = () => {
+    if (animRef.current) {
+      if (isPaused) {
+        animRef.current.resume();
+      } else {
+        animRef.current.pause();
+      }
+      setIsPaused(!isPaused);
+    }
+  };
 
   const handleMouseMove = (e: React.MouseEvent) => {
     setMousePos({ x: e.clientX, y: e.clientY });
@@ -91,7 +87,7 @@ const ProjectsClient = () => {
   return (
     <SmoothScroll>
       <div className="w-full bg-[#ececec]">
-        <div className="md:hidden flex flex-col px-10 py-10 gap-y-8 border-b border-[#161310]">
+        <div className="md:hidden flex flex-col  text-start px-10 py-10  border-b border-[#161310]">
           <motion.h1
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: [0, 1], opacity: [0, 1] }}
@@ -109,37 +105,39 @@ const ProjectsClient = () => {
             Code / Design / Fullstack
           </motion.h2>
 
-          {projects.map((p, i) => (
-            <motion.div
-              key={i}
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: [0, 1], opacity: [0, 1] }}
-              transition={{ delay: 0.3 + i * 0.1, duration: 0.6 }}
-              className="block"
-            >
-              <div className="mb-2 font-semibold  text-[#1c1a17]">
-                {p.title}
-              </div>
-              <Image
-                src={`/projects/${p.src}`}
-                alt={p.title}
-                width={300}
-                height={170}
-                className="object-contain mb-4"
-              />
-              <p className="text-sm text-[#1c1a17] opacity-70 mb-2">
-                {p.stack}
-              </p>
-              <a
-                href={p.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block px-4 py-2 border-[2px] font-semibold rounded-[2px] border-[#1c1a17] text-[#1c1a17] text-sm"
+          <div className="w-full flex justify-center  gap-y-6 flex-col">
+            {projects.map((p, i) => (
+              <motion.div
+                key={i}
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: [0, 1], opacity: [0, 1] }}
+                transition={{ delay: 0.3 + i * 0.1, duration: 0.6 }}
+                className="block "
               >
-                Live Link
-              </a>
-            </motion.div>
-          ))}
+                <div className="mb-2 font-semibold  text-[#1c1a17]">
+                  {p.title}
+                </div>
+                <Image
+                  src={`/projects/${p.src}`}
+                  alt={p.title}
+                  width={300}
+                  height={170}
+                  className="object-contain mb-4"
+                />
+                <p className="text-sm text-[#1c1a17] opacity-70 mb-2">
+                  {p.stack}
+                </p>
+                <a
+                  href={p.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block px-4 py-2 border-[2px] font-semibold rounded-[2px] border-[#1c1a17] text-[#1c1a17] text-sm"
+                >
+                  Live Link
+                </a>
+              </motion.div>
+            ))}
+          </div>
         </div>
 
         <div className="hidden md:flex min-h-screen border-b border-[#161310]">
@@ -206,11 +204,20 @@ const ProjectsClient = () => {
                 transition={{ duration: 0.5, ease: "easeOut", delay: 0.6 }}
                 className="mt-6"
               >
-                <h3 className="text-lg mt-5  text-[#1c1a17] mb-2">Stack</h3>
+                <h3 className="text-lg mt-5 text-[#1c1a17] font-semibold">
+                  Stack
+                </h3>
                 <p className="text-sm text-[#1c1a17] opacity-70 leading-relaxed">
                   {selected.stack}
                 </p>
               </motion.div>
+
+              <button
+                onClick={handlePauseToggle}
+                className="px-6 py-2 hover:scale-[1.03] transition-transform ease-in-out whitespace-nowrap text-lg border-[#1c1a17] border mt-2 cursor-pointer  rounded-[2px] text-[#1c1a17]"
+              >
+                {isPaused ? "Resume" : "Pause"}
+              </button>
             </div>
 
             <motion.div
