@@ -53,7 +53,7 @@ const Hero = () => {
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{
-            scale: [0, 1],
+            scale: [0.8, 1],
             opacity: [0, 1, 1],
           }}
           transition={{
@@ -77,7 +77,7 @@ const Hero = () => {
       <motion.div
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{
-          scale: [0, 1],
+          scale: [0.8, 1],
           opacity: [0, 1, 1],
         }}
         transition={{
@@ -94,7 +94,7 @@ const Hero = () => {
       <motion.a
         initial={{ scale: 0.8, opacity: 0 }}
         animate={{
-          scale: [0, 1],
+          scale: [0.8, 1],
           opacity: [0, 1, 1],
         }}
         transition={{

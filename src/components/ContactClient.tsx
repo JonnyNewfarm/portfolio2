@@ -86,7 +86,7 @@ const ContactClient = () => {
           <div className="flex flex-col gap-y-6">
             <motion.h1
               initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: [0, 1], opacity: [0, 1, 1] }}
+              animate={{ scale: [0.8, 1], opacity: [0, 1, 1] }}
               transition={{
                 delay: 0.1,
                 duration: 0.7,
@@ -99,7 +99,7 @@ const ContactClient = () => {
             </motion.h1>
             <motion.p
               initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: [0, 1], opacity: [0, 1, 1] }}
+              animate={{ scale: [0.8, 1], opacity: [0, 1, 1] }}
               transition={{
                 delay: 0.2,
                 duration: 0.7,
@@ -115,7 +115,7 @@ const ContactClient = () => {
 
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: [0, 1], opacity: [0, 1, 1] }}
+            animate={{ scale: [0.8, 1], opacity: [0, 1, 1] }}
             transition={{
               delay: 0.3,
               duration: 0.7,
@@ -143,7 +143,7 @@ const ContactClient = () => {
         <div className="w-full lg:w-1/2 p-10 lg:p-20 flex items-center justify-center">
           <motion.form
             initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: [0, 1], opacity: [0, 1, 1] }}
+            animate={{ scale: [0.8, 1], opacity: [0, 1, 1] }}
             transition={{
               delay: 0.4,
               duration: 0.7,

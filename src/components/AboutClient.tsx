@@ -13,7 +13,7 @@ const AboutClient = () => {
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{
-                scale: [0, 1],
+                scale: [0.8, 1],
                 opacity: [0, 1, 1],
               }}
               transition={{
@@ -38,7 +38,7 @@ const AboutClient = () => {
               <motion.h1
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{
-                  scale: [0, 1],
+                  scale: [0.8, 1],
                   opacity: [0, 1, 1],
                 }}
                 transition={{
@@ -55,7 +55,7 @@ const AboutClient = () => {
               <motion.div
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{
-                  scale: [0, 1],
+                  scale: [0.8, 1],
                   opacity: [0, 1, 1],
                 }}
                 transition={{
@@ -99,7 +99,7 @@ const AboutClient = () => {
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{
-              scale: [0, 1],
+              scale: [0.8, 1],
               opacity: [0, 1, 1],
             }}
             transition={{

@@ -5,6 +5,7 @@ import Image from "next/image";
 import { gsap } from "gsap";
 import SmoothScroll from "@/components/SmoothScroll";
 import { motion } from "framer-motion";
+import { CiPause1, CiPlay1 } from "react-icons/ci";
 
 const ProjectsClient = () => {
   const projects = [
@@ -87,10 +88,10 @@ const ProjectsClient = () => {
   return (
     <SmoothScroll>
       <div className="w-full bg-[#ececec]">
-        <div className="md:hidden flex flex-col  text-start px-10 py-10  border-b border-[#161310]">
+        <div className="md:hidden flex flex-col  text-start px-6 py-10  border-b border-[#161310]">
           <motion.h1
             initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: [0, 1], opacity: [0, 1] }}
+            animate={{ scale: [0.6, 1], opacity: [0, 1] }}
             transition={{ delay: 0.1, duration: 0.7, ease: "easeInOut" }}
             className="text-2xl font-semibold text-[#1c1a17] mt-10 uppercase"
           >
@@ -98,31 +99,31 @@ const ProjectsClient = () => {
           </motion.h1>
           <motion.h2
             initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: [0, 1], opacity: [0, 1] }}
+            animate={{ scale: [0.6, 1], opacity: [0, 1] }}
             transition={{ delay: 0.2, duration: 0.7, ease: "easeInOut" }}
-            className="text-base text-[#1c1a17]"
+            className="text-base text-[#1c1a17] mb-3"
           >
             Code / Design / Fullstack
           </motion.h2>
 
-          <div className="w-full flex justify-center  gap-y-6 flex-col">
+          <div className="w-full flex justify-center gap-y-9 flex-col">
             {projects.map((p, i) => (
               <motion.div
                 key={i}
                 initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: [0, 1], opacity: [0, 1] }}
+                animate={{ scale: [0.6, 1], opacity: [0, 1] }}
                 transition={{ delay: 0.3 + i * 0.1, duration: 0.6 }}
-                className="block "
+                className="block"
               >
-                <div className="mb-2 font-semibold  text-[#1c1a17]">
+                <div className="mb-2 font-semibold text-[#1c1a17]">
                   {p.title}
                 </div>
                 <Image
                   src={`/projects/${p.src}`}
                   alt={p.title}
-                  width={300}
-                  height={170}
-                  className="object-contain mb-4"
+                  width={600}
+                  height={400}
+                  className="w-full max-w-md mx-auto object-contain mb-4"
                 />
                 <p className="text-sm text-[#1c1a17] opacity-70 mb-2">
                   {p.stack}
@@ -148,26 +149,47 @@ const ProjectsClient = () => {
             <div className="w-1/3 flex flex-col">
               <motion.h1
                 initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: [0, 1], opacity: [0, 1] }}
+                animate={{ scale: [0.6, 1], opacity: [0, 1] }}
                 transition={{ delay: 0.1, duration: 0.7 }}
                 className="text-5xl uppercase mb-4 text-[#1c1a17]"
               >
                 My Projects
               </motion.h1>
-              <motion.h2
+              <motion.div
                 initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: [0, 1], opacity: [0, 1] }}
-                transition={{ delay: 0.2, duration: 0.7 }}
-                className="text-lg text-[#1c1a17] opacity-70 mb-10"
+                animate={{ scale: [0.6, 1], opacity: [0, 1] }}
+                transition={{ delay: 0.1, duration: 0.7 }}
+                className="w-full flex items-center justify-between mb-10 gap-y-3"
               >
-                Code / Design / Fullstack
-              </motion.h2>
+                <motion.h2
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  animate={{ scale: [0.6, 1], opacity: [0, 1] }}
+                  transition={{ delay: 0.2, duration: 0.7 }}
+                  className="text-lg text-[#1c1a17] opacity-70 "
+                >
+                  Code / Design / Fullstack
+                </motion.h2>
+                <button
+                  onClick={handlePauseToggle}
+                  className=" hover:scale-[1.03] transition-transform ease-in-out whitespace-nowrap text-lg border-stone-700/80   cursor-pointer text-[#1c1a17] flex items-center gap-1.5"
+                >
+                  {isPaused ? (
+                    <>
+                      <CiPlay1 /> Resume
+                    </>
+                  ) : (
+                    <>
+                      <CiPause1 /> Pause
+                    </>
+                  )}
+                </button>
+              </motion.div>
 
               {projects.map((project, i) => (
                 <motion.div
                   key={i}
                   initial={{ scale: 0.8, opacity: 0 }}
-                  animate={{ scale: [0, 1], opacity: [0, 1] }}
+                  animate={{ scale: [0.6, 1], opacity: [0, 1] }}
                   transition={{ delay: 0.3 + i * 0.1, duration: 0.7 }}
                   className="flex flex-col group"
                 >
@@ -211,18 +233,11 @@ const ProjectsClient = () => {
                   {selected.stack}
                 </p>
               </motion.div>
-
-              <button
-                onClick={handlePauseToggle}
-                className="px-6 py-2 hover:scale-[1.03] transition-transform ease-in-out whitespace-nowrap text-lg border-[#1c1a17] border mt-2 cursor-pointer  rounded-[2px] text-[#1c1a17]"
-              >
-                {isPaused ? "Resume" : "Pause"}
-              </button>
             </div>
 
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: [0, 1], opacity: [0, 1] }}
+              animate={{ scale: [0.6, 1], opacity: [0, 1] }}
               transition={{ delay: 0.4, duration: 0.7 }}
               className="w-2/3 max-w-4xl overflow-hidden border-l border-[#1c1a17]/20"
               style={{ height: "620px", position: "relative" }}
