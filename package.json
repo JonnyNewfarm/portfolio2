@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@react-three/drei": "10.6.1",
+    "@react-three/drei": "^9.56.9",
     "@react-three/fiber": "^9.1.2",
     "@react-three/flex": "1.0.1",
     "framer-motion": "^10.16.4",
@@ -30,9 +30,9 @@
     "@tailwindcss/postcss": "^4",
     "@types/node": "20.17.48",
     "@types/react": "18.2.14",
-    "@types/react-dom": "18.2.6",
-    "eslint": "^9",
-    "eslint-config-next": "15.3.0",
+    "@types/react-dom": "18.2.4",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^15.4.0-canary.51",
     "tailwindcss": "^4",
     "typescript": "5.8.3"
   }
