@@ -7,6 +7,20 @@ html, body {
   
 }
 
+html.dark {
+  background-color: #3c3a3a; /* your dark background */
+  color: #ffffff;            /* default text color */
+}
+
+html.dark .nav-link::after {
+  background-color: white; /* underline in dark mode */
+}
+
+html.dark body {
+  background-color: #3c3a3a; /* make sure body also flips */
+  color: #ffffff;
+}
+
 html {
   font-family: var(--font-m), sans-serif !important;
 }
