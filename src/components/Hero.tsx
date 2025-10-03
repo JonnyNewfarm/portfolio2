@@ -393,7 +393,7 @@ export default function HeroSection() {
   return (
     <section
       ref={ref}
-      className="h-[180vh] md:h-[200vh] bg-[#ececec] dark:bg-[#3c3a3a] text-black dark:text-white"
+      className="h-[180vh] md:h-[200vh] bg-[#ececec]  text-black"
     >
       <div
         style={{
