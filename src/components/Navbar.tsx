@@ -7,40 +7,29 @@ import { useRouter } from "next/navigation";
 const Navbar = () => {
   const router = useRouter();
 
-  const routes = [
-    {
-      label: "Home",
-      url: "/",
-    },
-
-    {
-      label: "My Work",
-      url: "/projects",
-    },
-
-    {
-      label: "Contact",
-      url: "/contact",
-    },
-
-    {
-      label: "About",
-      url: "/about",
-    },
+  const routes: { label: string; url: string }[] = [
+    { label: "Home", url: "/" },
+    { label: "My Work", url: "/projects" },
+    { label: "Contact", url: "/contact" },
+    { label: "About", url: "/about" },
   ];
+
   return (
-    <div className="bg-[#ececec]   font-extrabold text-[16px] text-[#1c1a17] px-20 py-3 flex items-center sticky top-0 z-50 w-full justify-between">
+    <div className="bg-[#ececec] font-extrabold text-[16px] text-[#1c1a17] px-20 py-3 flex items-center sticky top-0 z-50 w-full justify-between">
       <div className="flex gap-x-1 text-[#1c1a17] m-0 leading-tight"></div>
+
       <div>
         <Link
           href="/"
-          className=" lg:hidden flex items-center gap-x-1 font-normal text-xl fixed left-6 top-7"
+          className="lg:hidden flex items-center gap-x-1 font-normal text-xl fixed left-6 top-7"
         >
           <FaRegCopyright />
           Newfarm Studio
         </Link>
       </div>
+
       <BurgerMenu />
+
       <div className="w-full h-full hidden lg:block">
         <div className="flex items-center justify-between">
           <div className="tracking-tighter">
@@ -49,12 +38,14 @@ const Navbar = () => {
             </h1>
             <p className="text-[#1c1a17] m-0 leading-tight">Newfarm Studio</p>
           </div>
+
           <div className="tracking-tighter">
             <h1 className="text-[#1c1a17] opacity-70 m-0 leading-none">
               Name:
             </h1>
             <p className="text-[#1c1a17] m-0 leading-tight">Jonas Nygaard</p>
           </div>
+
           <div className="tracking-tighter">
             <h1 className="text-[#1c1a17] opacity-70 m-0 leading-none">
               Occupation:
@@ -76,8 +67,9 @@ const Navbar = () => {
                     onClick={(e) => {
                       e.preventDefault();
 
-                      if ((document as any).startViewTransition) {
-                        (document as any).startViewTransition(() => {
+                      if (document.startViewTransition) {
+                        // ✅ TS knows startViewTransition returns a ViewTransition
+                        document.startViewTransition(() => {
                           router.push(route.url);
                         });
                       } else {
@@ -98,45 +90,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-
-const pageAnimation = () => {
-  document.documentElement.animate(
-    [
-      {
-        opacity: 1,
-        scale: 1,
-        transform: "translateY(0)",
-      },
-
-      {
-        opacity: 0.5,
-        scale: 0.9,
-        transform: "translateY(-100px)",
-      },
-    ],
-    {
-      duration: 1000,
-      easing: "cubic-bezier(0.76, 0, 0.24, 1)",
-      fill: "forwards",
-      pseudoElement: "::view-transition-old(root)",
-    }
-  );
-
-  document.documentElement.animate(
-    [
-      {
-        transform: "translateY(100%)",
-      },
-
-      {
-        transform: "translateY(0)",
-      },
-    ],
-    {
-      duration: 1000,
-      easing: "cubic-bezier(0.76, 0, 0.24, 1)",
-      fill: "forwards",
-      pseudoElement: "::view-transition-old(root)",
-    }
-  );
-};
