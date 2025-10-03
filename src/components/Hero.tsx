@@ -1,163 +1,354 @@
 "use client";
-import gsap from "gsap";
-import Image from "next/image";
-import React, { useLayoutEffect, useRef } from "react";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { motion } from "motion/react";
 
-const Hero = () => {
-  const container = useRef(null);
-  const direction = useRef(-1);
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { Text, RoundedBox, useGLTF } from "@react-three/drei";
+import { useScroll, MotionValue } from "framer-motion";
+import { useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import * as THREE from "three";
 
-  const firstParagraph = useRef(null);
-  const secondParagraph = useRef(null);
-  const slider = useRef(null);
-  let xPercent = 0;
+// ---------------- Cartoon Model ----------------
+function CartoonModel() {
+  const { scene } = useGLTF("/me-cartoon.glb");
+  const group = useRef<THREE.Group>(null);
 
-  const animation = () => {
-    if (xPercent < -100) xPercent = 0;
-    if (xPercent > 0) xPercent = -100;
+  useFrame(() => {
+    if (!group.current) return;
 
-    gsap.set(firstParagraph.current, { xPercent });
-    gsap.set(secondParagraph.current, { xPercent });
-    requestAnimationFrame(animation);
-    xPercent += 0.04 * direction.current;
-  };
+    const hip = group.current.getObjectByName("Hips");
+    if (hip) hip.rotation.x = -Math.PI / 3.8;
 
-  useLayoutEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
+    const leftLeg = group.current.getObjectByName("LeftLeg");
+    const rightLeg = group.current.getObjectByName("RightLeg");
+    const spine = group.current.getObjectByName("Spine");
 
-    gsap.to(slider.current, {
-      scrollTrigger: {
-        trigger: document.documentElement,
-        scrub: 0.25,
-        start: 0,
-        end: window.innerHeight,
-        onUpdate: (event) => {
-          direction.current = event.direction * -1;
-        },
-      },
-      x: "-200px",
-    });
+    if (leftLeg) leftLeg.rotation.x = -Math.PI / 2;
+    if (rightLeg) rightLeg.rotation.x = -Math.PI / 3;
+    if (spine) spine.rotation.x = Math.PI / 4;
 
-    requestAnimationFrame(animation);
-  }, []);
+    group.current.rotation.y = Math.PI;
+  });
 
   return (
-    <div
-      id="home"
-      ref={container}
-      className="bg-[#ececec] h-screen relative text-[#1c1a17] "
-    >
-      <div className="absolute top-[16vh]  left-0 w-full h-full flex justify-center pointer-events-none">
-        <motion.div
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{
-            scale: [0.8, 1],
-            opacity: [0, 1, 1],
-          }}
-          transition={{
-            duration: 1,
-            times: [0, 0.4, 1],
-            ease: "easeInOut",
-          }}
-          className={` absolute object-cover h-[40vh] mb-16 sm:h-[45vh] sm:w-[30vh] w-[30vh] z-[1]`}
-        >
-          <Image
-            className="object-contain"
-            fill
-            priority
-            quality={100}
-            alt="image"
-            src={"/jonny27.jpg"}
-          />
-        </motion.div>
-      </div>
-
-      <motion.div
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{
-          scale: [0.8, 1],
-          opacity: [0, 1, 1],
-        }}
-        transition={{
-          duration: 1,
-          times: [0, 0.4, 1],
-          ease: "easeInOut",
-        }}
-        className="absolute top-[60vh] sm:top-[65vh] w-full flex flex-col items-center lg:hidden"
-      >
-        <h1 className="text-xl">Jonas Nygaard,</h1>
-        <h1 className="text-xl">Freelance developer</h1>
-      </motion.div>
-
-      <motion.a
-        initial={{ scale: 0.8, opacity: 0 }}
-        animate={{
-          scale: [0.8, 1],
-          opacity: [0, 1, 1],
-        }}
-        transition={{
-          delay: 0.1,
-          duration: 1,
-          times: [0, 0.4, 1],
-          ease: "easeInOut",
-        }}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="xl:w-[400px] w-[300px] h-[120px] gap-x-4 [@media(max-width:400px)]:bottom-[4vh] bottom-[8vh] sm:bottom-[22vh]  lg:top-1/3 xl:h-[150px] lg:flex flex-row items-center p-2 absolute hidden"
-        href="https://www.jobscriptor.com/"
-      >
-        <div className="w-[200px] relative h-[200px]">
-          <Image
-            fill
-            className="object-contain"
-            src="/projects/jobscriptor-1.jpg"
-            alt=""
-          />
-        </div>
-        <div className="w-[200px] tracking-tighter text-[13px] text-sm">
-          <h1 className="text-lg">Latest work</h1>
-          <h1 className="tracking-tighter -mt-1.5">Design & Development, </h1>
-          <h1 className="-mt-1.5 mb-2">by Jonas Nygaard</h1>
-          <div className="text-sm whitespace-nowrap font-semibold">
-            Live link
-          </div>
-        </div>
-      </motion.a>
-
-      <div className="absolute z-30 top-[63vh] [@media(max-width:400px)]:top-[63vh] sm:top-[75vh]  md:top-[75vh] lg:top-[66vh]   w-screen overflow-hidden">
-        <motion.div
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{
-            opacity: [0, 1, 1],
-          }}
-          transition={{
-            delay: 0.5,
-
-            duration: 1,
-            times: [0, 0.4, 1],
-            ease: "easeInOut",
-          }}
-          ref={slider}
-          className="relative flex whitespace-nowrap    w-max will-change-transform"
-        >
-          <p
-            ref={firstParagraph}
-            className="text-[clamp(7rem,10vw,10rem)] text-[#1c1a17] m-2.5 uppercase"
-          >
-            developer & designer -
-          </p>
-          <p
-            ref={secondParagraph}
-            className="text-[clamp(7rem,10vw,10rem)] text-[#1c1a17] m-2.5 uppercase absolute translate-x-full left-0"
-          >
-            developer & designer -
-          </p>
-        </motion.div>
-      </div>
-    </div>
+    <primitive
+      ref={group}
+      object={scene}
+      position={[0, -0.45, 2.7]}
+      scale={1.49}
+    />
   );
-};
+}
 
-export default Hero;
+// ---------------- Chair ----------------
+function Chair() {
+  return (
+    <group>
+      {/* Seat */}
+      <RoundedBox
+        args={[1, 0.12, 0.6]}
+        radius={0.05}
+        smoothness={4}
+        position={[0, 0.7, 2.8]}
+        castShadow
+        receiveShadow
+      >
+        <meshStandardMaterial color="#555555" roughness={0.6} metalness={0.2} />
+      </RoundedBox>
+
+      {/* Backrest */}
+      <RoundedBox
+        args={[1, 1, 0.12]}
+        radius={0.05}
+        smoothness={4}
+        position={[0, 1.2, 3.05]}
+        rotation={[-0.01, 0, 0]}
+        castShadow
+        receiveShadow
+      >
+        <meshStandardMaterial color="#555555" roughness={0.6} metalness={0.2} />
+      </RoundedBox>
+
+      {/* Legs */}
+      {[-0.45, 0.45].map((x) =>
+        [-0.25, 0.25].map((z, i) => (
+          <mesh
+            key={`${x}-${z}-${i}`}
+            position={[x, 0.35, z + 2.8]}
+            castShadow
+            receiveShadow
+          >
+            <cylinderGeometry args={[0.05, 0.05, 0.7]} />
+            <meshStandardMaterial
+              color="#444444"
+              roughness={0.5}
+              metalness={0.3}
+            />
+          </mesh>
+        ))
+      )}
+
+      {/* Cushion */}
+      <RoundedBox
+        args={[0.9, 0.02, 0.55]}
+        radius={0.02}
+        smoothness={4}
+        position={[0, 0.76, 2.8]}
+        castShadow
+        receiveShadow
+      >
+        <meshStandardMaterial color="#666666" roughness={0.7} metalness={0.1} />
+      </RoundedBox>
+    </group>
+  );
+}
+
+// ---------------- Desk ----------------
+function Desk() {
+  return (
+    <group position={[0, 0, 1.2]}>
+      {/* Keyboard */}
+      <RoundedBox
+        args={[0.8, 0.06, 0.3]}
+        radius={0.02}
+        smoothness={4}
+        position={[0, 1, 0]}
+        castShadow
+        receiveShadow
+      >
+        <meshStandardMaterial color="#e6e6e6" roughness={0.6} metalness={0.1} />
+      </RoundedBox>
+
+      {/* Mouse */}
+      <RoundedBox
+        args={[0.18, 0.05, 0.1]}
+        radius={0.03}
+        smoothness={4}
+        position={[0.5, 1, 0]}
+        castShadow
+        receiveShadow
+      >
+        <meshStandardMaterial color="#f5f5f5" roughness={0.6} metalness={0.1} />
+      </RoundedBox>
+
+      {/* Desk Top */}
+      <RoundedBox
+        args={[3, 0.12, 1.5]}
+        radius={0.05}
+        smoothness={4}
+        position={[0, 0.95, 0]}
+        castShadow
+        receiveShadow
+      >
+        <meshStandardMaterial color="#8B4513" roughness={0.6} metalness={0.1} />
+      </RoundedBox>
+
+      {/* Legs */}
+      {[-1.4, 1.4].map((x) =>
+        [-0.7, 0.7].map((z, i) => (
+          <RoundedBox
+            key={`${x}-${z}-${i}`}
+            args={[0.15, 0.75, 0.15]}
+            radius={0.03}
+            smoothness={3}
+            position={[x, 0.53, z]}
+            castShadow
+            receiveShadow
+          >
+            <meshStandardMaterial
+              color="#4B3621"
+              roughness={0.5}
+              metalness={0.2}
+            />
+          </RoundedBox>
+        ))
+      )}
+
+      {/* Monitor */}
+      <group position={[0, 0.96, -0.6]}>
+        <mesh position={[0, 0.4, 0]} castShadow receiveShadow>
+          <cylinderGeometry args={[0.03, 0.03, 0.8]} />
+          <meshStandardMaterial
+            color="#333333"
+            roughness={0.5}
+            metalness={0.3}
+          />
+        </mesh>
+
+        <mesh position={[0, 0, 0]} castShadow receiveShadow>
+          <cylinderGeometry args={[0.15, 0.15, 0.03]} />
+          <meshStandardMaterial
+            color="#222222"
+            roughness={0.5}
+            metalness={0.3}
+          />
+        </mesh>
+
+        <RoundedBox
+          args={[1.82, 1.2, 0.1]}
+          radius={0.02}
+          smoothness={3}
+          position={[0, 0.8, 0]}
+          castShadow
+          receiveShadow
+        >
+          <meshStandardMaterial color="black" roughness={0.4} metalness={0.3} />
+        </RoundedBox>
+
+        <RoundedBox
+          args={[1.7, 1.09, 0.13]}
+          radius={0.02}
+          smoothness={3}
+          position={[0, 0.8, 0]}
+        >
+          <meshStandardMaterial color="white" roughness={0.4} metalness={0.3} />
+        </RoundedBox>
+      </group>
+    </group>
+  );
+}
+
+// ---------------- Screen UI ----------------
+function ScreenUI({
+  scrollYProgress,
+}: {
+  scrollYProgress: MotionValue<number>;
+}) {
+  const router = useRouter();
+  const groupRef = useRef<THREE.Group>(null);
+  const [nextPage, setNextPage] = useState(false);
+
+  useFrame(() => {
+    const progress = scrollYProgress.get();
+    if (!groupRef.current) return;
+
+    groupRef.current.position.z = -0.55 + (1 - progress) * 0.2;
+    groupRef.current.rotation.y = Math.sin(progress * Math.PI) * 0.02;
+  });
+
+  return (
+    <group ref={groupRef} position={[0, 1.5, 6]}>
+      {nextPage ? (
+        <group>
+          <Text position={[-0.2, 0.65, 1.3]} fontSize={0.14} color="black">
+            Navigation
+          </Text>
+          <Text
+            position={[0.6, 0.65, 1.3]}
+            fontSize={0.1}
+            color="black"
+            onClick={() => setNextPage(false)}
+          >
+            Back
+          </Text>
+          <Text
+            position={[-0.4, 0.3, 1.3]}
+            fontSize={0.14}
+            color="black"
+            onClick={() => router.push("/")}
+          >
+            Home
+          </Text>
+          <Text
+            position={[0.45, 0.3, 1.3]}
+            fontSize={0.14}
+            color="black"
+            onClick={() => router.push("/projects")}
+          >
+            My Work
+          </Text>
+          <Text
+            position={[-0.4, 0, 1.3]}
+            fontSize={0.14}
+            color="black"
+            onClick={() => router.push("/about")}
+          >
+            About
+          </Text>
+          <Text
+            position={[0.42, 0, 1.3]}
+            fontSize={0.14}
+            color="black"
+            onClick={() => router.push("/contact")}
+          >
+            Contact
+          </Text>
+        </group>
+      ) : (
+        <group>
+          <Text position={[-0.13, 0.6, 1.3]} fontSize={0.13} color="black">
+            Hey — I’m Jonas
+          </Text>
+          <Text position={[0.1, 0.4, 1.3]} fontSize={0.13} color="black">
+            Designer and developer
+          </Text>
+          <Text position={[-0.12, 0.2, 1.3]} fontSize={0.13} color="black">
+            Based in Norway
+          </Text>
+          <Text
+            position={[-0.48, -0.03, 1.3]}
+            fontSize={0.14}
+            color="black"
+            onClick={() => setNextPage(true)}
+          >
+            Next
+          </Text>
+        </group>
+      )}
+    </group>
+  );
+}
+
+// ---------------- Camera Controller ----------------
+function CameraController({
+  scrollYProgress,
+}: {
+  scrollYProgress: MotionValue<number>;
+}) {
+  const { camera } = useThree();
+
+  useFrame(() => {
+    const progress = scrollYProgress.get();
+    camera.position.lerp(new THREE.Vector3(2.1, 1.6, 6 - progress * 3), 0.2);
+    camera.lookAt(new THREE.Vector3(0, 0.8, -0.7));
+  });
+
+  return null;
+}
+
+// ---------------- Hero Section ----------------
+export default function HeroSection() {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end start"],
+  });
+
+  return (
+    <section ref={ref} style={{ height: "240vh", background: "#ececec" }}>
+      <div
+        style={{
+          position: "sticky",
+          top: 0,
+          height: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Canvas shadows>
+          <ambientLight intensity={0.8} />
+          <directionalLight position={[5, 5, 5]} intensity={1} />
+          <Desk />
+          <CartoonModel />
+          <Chair />
+          <ScreenUI scrollYProgress={scrollYProgress} />
+          <CameraController scrollYProgress={scrollYProgress} />
+        </Canvas>
+
+        <div className="absolute left-5 bottom-12 md:bottom-20 md:left-20">
+          <h1>Scroll to zoom</h1>
+        </div>
+      </div>
+    </section>
+  );
+}

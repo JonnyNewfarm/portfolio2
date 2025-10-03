@@ -43,12 +43,12 @@ const MyProjects = () => {
           );
         })}
 
-        <div className="w-full flex  justify-center">
+        <div className="w-full flex justify-center">
           <Link
             href={"/projects"}
-            className="border-[2px] mb-12 rounded-[2px] hover:scale-105 transition-transform ease-in-out font-semibold  border-stone-800 py-2 px-4 uppercase"
+            className="border-[1px] mb-12 rounded-[2px] hover:scale-105 transition-transform ease-in-out   border-stone-900 py-2 px-4 uppercase"
           >
-            More work
+            All work
           </Link>
         </div>
       </div>
@@ -66,12 +66,12 @@ const MyProjects = () => {
               />
             );
           })}
-          <div className="w-full flex  justify-center">
+          <div className="w-full flex justify-center">
             <Link
               href={"/projects"}
-              className="border-[2px] mb-10 rounded-[2px] hover:scale-105 transition-transform ease-in-out font-semibold  border-stone-800 py-2 px-4 uppercase"
+              className="border-[1px] mb-10 rounded-[3px] hover:scale-105 transition-transform ease-in-out   border-stone-800 py-2 px-4 uppercase"
             >
-              More work
+              All Work
             </Link>
           </div>
         </div>

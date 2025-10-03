@@ -49,7 +49,7 @@ export default function StickyScrollParagraphs() {
         </motion.p>
 
         <motion.div variants={item}>
-          <div className="px-6 py-2 hover:scale-105 hover:transition-transform hover:ease-in-out ml-4 whitespace-nowrap text-md border-stone-700 border-2 font-semibold rounded-[2px] text-[#1c1a17]">
+          <div className="px-6 py-2 hover:scale-105 hover:transition-transform hover:ease-in-out ml-4 whitespace-nowrap text-md border-stone-700 border rounded-[2px] text-[#1c1a17]">
             <Link href="/about">About Me</Link>
           </div>
         </motion.div>

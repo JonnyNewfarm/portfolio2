@@ -1,11 +1,36 @@
-import React from "react";
+"use client";
 import BurgerMenu from "./BurgerMenu";
 import { FaRegCopyright } from "react-icons/fa";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const Navbar = () => {
+  const router = useRouter();
+
+  const routes = [
+    {
+      label: "Home",
+      url: "/",
+    },
+
+    {
+      label: "My Work",
+      url: "/projects",
+    },
+
+    {
+      label: "Contact",
+      url: "/contact",
+    },
+
+    {
+      label: "About",
+      url: "/about",
+    },
+  ];
   return (
     <div className="bg-[#ececec]   font-extrabold text-[16px] text-[#1c1a17] px-20 py-3 flex items-center sticky top-0 z-50 w-full justify-between">
+      <div className="flex gap-x-1 text-[#1c1a17] m-0 leading-tight"></div>
       <div>
         <Link
           href="/"
@@ -44,10 +69,26 @@ const Navbar = () => {
               Navigation:
             </h1>
             <div className="flex gap-x-1 text-[#1c1a17] m-0 leading-tight">
-              <Link href={"/"}>Home,</Link>
-              <Link href={"/projects"}>My work,</Link>
-              <Link href={"/contact"}>Contact,</Link>
-              <Link href={"/about"}>About</Link>
+              {routes.map((route) => (
+                <li style={{ listStyle: "none" }} key={route.label}>
+                  <Link
+                    href={route.url}
+                    onClick={(e) => {
+                      e.preventDefault();
+
+                      if ((document as any).startViewTransition) {
+                        (document as any).startViewTransition(() => {
+                          router.push(route.url);
+                        });
+                      } else {
+                        router.push(route.url);
+                      }
+                    }}
+                  >
+                    {route.label} {route.label === "About" ? "" : ","}
+                  </Link>
+                </li>
+              ))}
             </div>
           </div>
         </div>
@@ -57,3 +98,45 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
+const pageAnimation = () => {
+  document.documentElement.animate(
+    [
+      {
+        opacity: 1,
+        scale: 1,
+        transform: "translateY(0)",
+      },
+
+      {
+        opacity: 0.5,
+        scale: 0.9,
+        transform: "translateY(-100px)",
+      },
+    ],
+    {
+      duration: 1000,
+      easing: "cubic-bezier(0.76, 0, 0.24, 1)",
+      fill: "forwards",
+      pseudoElement: "::view-transition-old(root)",
+    }
+  );
+
+  document.documentElement.animate(
+    [
+      {
+        transform: "translateY(100%)",
+      },
+
+      {
+        transform: "translateY(0)",
+      },
+    ],
+    {
+      duration: 1000,
+      easing: "cubic-bezier(0.76, 0, 0.24, 1)",
+      fill: "forwards",
+      pseudoElement: "::view-transition-old(root)",
+    }
+  );
+};
