@@ -87,7 +87,7 @@ const ProjectsClient = () => {
 
   return (
     <SmoothScroll>
-      <div className="w-full bg-[#ececec]">
+      <div className="w-full min-h-screen h-full bg-[#ececec]">
         <div className="md:hidden flex flex-col  text-start px-6 py-10  border-b border-[#161310]">
           <motion.h1
             initial={{ scale: 0.8, opacity: 0 }}

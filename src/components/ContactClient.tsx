@@ -81,7 +81,7 @@ const ContactClient = () => {
 
   return (
     <SmoothScroll>
-      <div className="min-h-screen w-full border-b border-stone-500 bg-[#ececec] text-[#1c1a17] flex flex-col lg:flex-row">
+      <div className="min-h-screen h-full w-full border-b border-stone-500 bg-[#ececec] text-[#1c1a17] flex flex-col lg:flex-row">
         <div className="flex flex-col justify-between w-full lg:w-1/2 p-10 lg:p-20 border-b border-stone-400/20 lg:border-b-0 lg:border-r lg:border-stone-400/20">
           <div className="flex flex-col gap-y-6">
             <motion.h1

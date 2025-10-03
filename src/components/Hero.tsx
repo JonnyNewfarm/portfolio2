@@ -308,8 +308,8 @@ function CameraController({
 
   useFrame(() => {
     const progress = scrollYProgress.get();
-    camera.position.lerp(new THREE.Vector3(2.1, 1.6, 6 - progress * 3), 0.2);
-    camera.lookAt(new THREE.Vector3(0, 0.8, -0.7));
+    camera.position.lerp(new THREE.Vector3(2.1, 1.6, 5.6 - progress * 3), 0.2);
+    camera.lookAt(new THREE.Vector3(0.2, 0.8, 0));
   });
 
   return null;
@@ -324,7 +324,11 @@ export default function HeroSection() {
   });
 
   return (
-    <section ref={ref} style={{ height: "240vh", background: "#ececec" }}>
+    <section
+      ref={ref}
+      className="h-[180vh] md:h-[170vh]"
+      style={{ background: "#ececec" }}
+    >
       <div
         style={{
           position: "sticky",

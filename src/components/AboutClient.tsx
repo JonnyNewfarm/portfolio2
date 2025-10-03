@@ -7,7 +7,7 @@ import Image from "next/image";
 const AboutClient = () => {
   return (
     <ScrollSection>
-      <div className="bg-[#ececec] flex justify-center min-h-screen w-full border-b border-[#161310]">
+      <div className="bg-[#ececec] flex justify-center min-h-screen h-full w-full border-b border-[#161310]">
         <div className="flex flex-col-reverse mt-10 md:flex-row items-center w-full max-w-7xl">
           <div className="flex flex-col w-full md:w-1/2 px-6 md:px-10 ">
             <motion.div
