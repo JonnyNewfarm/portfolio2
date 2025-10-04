@@ -31,7 +31,7 @@ const Footer = () => {
             <div className="flex  justify-between">
               <div className="">
                 <div className="flex gap-x-10">
-                  <div className="hidden md:block">
+                  <div className="">
                     <div className="flex flex-col justify-start text-2xl font-light">
                       <h1 className="opacity-70">Navigation</h1>
                       <Link href={"/"}>Home</Link>

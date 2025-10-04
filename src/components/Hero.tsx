@@ -4,6 +4,7 @@ import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
 import { Text, RoundedBox, useGLTF } from "@react-three/drei";
 import { useScroll, MotionValue, AnimatePresence } from "framer-motion";
 import { motion } from "framer-motion-3d";
+import { useTransform, motion as regMotion } from "framer-motion";
 
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -163,7 +164,7 @@ function ComputerTower() {
 // ---------------- Tablet ----------------
 
 export function Tablet() {
-  const images = ["/desktop1.JPG", "/desktop2.JPG", "/desktop3.JPG"];
+  const images = ["/desk1-01.webp", "/desk1-02.webp", "/desk1-03.webp"];
   const textures = useLoader(THREE.TextureLoader, images);
 
   const [imageIndex, setImageIndex] = useState(0);
@@ -171,12 +172,11 @@ export function Tablet() {
   const [fade, setFade] = useState(0);
   const [pauseTime, setPauseTime] = useState(0);
 
-  const fadeSpeed = 0.6; // speed of fade
-  const pauseDuration = 5; // seconds to pause after fade
+  const fadeSpeed = 0.6;
+  const pauseDuration = 5;
 
   useFrame((state, delta) => {
     if (fade < 1) {
-      // Fade in/out
       setFade((prev) => Math.min(prev + delta * fadeSpeed, 1));
     } else {
       // Once fade is done, start pause
@@ -535,10 +535,12 @@ function CameraController({
 // ---------------- Hero Section ----------------
 export default function HeroSection() {
   const ref = useRef<HTMLDivElement>(null);
+
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end start"],
   });
+  const opacity = useTransform(scrollYProgress, [0.25, 0.35], [1, 0]); // fades later and slower
 
   return (
     <section
@@ -567,9 +569,11 @@ export default function HeroSection() {
           <CameraController scrollYProgress={scrollYProgress} />
         </Canvas>
 
-        <div className="absolute z-50 text-lg font-semibold text-stone-800 left-5 bottom-12 md:bottom-20 md:left-20 ">
-          <h1>Scroll to zoom,</h1>
-          <h1>Navigate on the screen.</h1>
+        <div className="absolute z-50 text-lg font-semibold text-stone-800 left-5 bottom-12 md:bottom-20 md:left-20">
+          <regMotion.h1 style={{ opacity }}>Scroll to zoom,</regMotion.h1>
+          <regMotion.h1 style={{ opacity }}>
+            Navigate on the screen.
+          </regMotion.h1>
         </div>
       </div>
     </section>
