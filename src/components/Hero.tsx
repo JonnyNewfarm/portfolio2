@@ -220,6 +220,84 @@ export function Tablet() {
   );
 }
 
+// ---------------- Screen Hint ----------------
+function ScreenHint({
+  scrollYProgress,
+}: {
+  scrollYProgress: MotionValue<number>;
+}) {
+  const textRef = useRef<any>(null);
+  const cylinderRef = useRef<any>(null);
+  const arrowRef = useRef<any>(null);
+
+  // Map scroll progress to opacity
+  const opacity = useTransform(
+    scrollYProgress,
+    [0.05, 0.15, 0.8, 0.95],
+    [0, 1, 1, 0]
+  );
+
+  useFrame(() => {
+    const o = opacity.get();
+
+    // Update Text material opacity
+    if (textRef.current) {
+      textRef.current.material.transparent = true;
+      textRef.current.material.opacity = o;
+    }
+
+    // Update cylinder opacity
+    if (cylinderRef.current) {
+      cylinderRef.current.material.transparent = true;
+      cylinderRef.current.material.opacity = o;
+    }
+
+    // Update arrow opacity
+    if (arrowRef.current) {
+      arrowRef.current.material.transparent = true;
+      arrowRef.current.material.opacity = o;
+    }
+  });
+
+  return (
+    <group position={[0.6, 2.9, 0.2]}>
+      {/* Cylinder */}
+      <mesh
+        ref={cylinderRef}
+        position={[0.08, -0.19, 0]}
+        rotation={[-Math.PI / 5 - 6, 2.4, 4.2]}
+      >
+        <cylinderGeometry args={[0.023, 0.023, 0.23, 50]} />
+        <meshStandardMaterial color="#4B3621" />
+      </mesh>
+
+      {/* Text */}
+      <mesh rotation={[-Math.PI / 9 - -0.2, 0.2, 0]}>
+        <Text
+          ref={textRef}
+          fontSize={0.13}
+          anchorX="center"
+          anchorY="middle"
+          position={[0, 0.017, 0]}
+          color="black"
+        >
+          Navigate on the screen
+        </Text>
+      </mesh>
+
+      {/* Arrow pointing down */}
+      <mesh
+        ref={arrowRef}
+        rotation={[-Math.PI / 5 - 6, 2.3, 4.2]}
+        position={[0, -0.33, 0]}
+      >
+        <coneGeometry args={[0.05, 0.15, 16]} />
+        <meshStandardMaterial color="black" />
+      </mesh>
+    </group>
+  );
+}
+
 function CoffeeMug() {
   return (
     <group position={[-0.76, 1.08, 1.12]} rotation={[0, Math.PI / 5, 0]}>
@@ -533,8 +611,8 @@ function ScreenUI({
               Based in Norway.
             </Text>
             <Text
-              position={[-0.48, -0.03, 1.3]}
-              fontSize={0.14}
+              position={[-0.48, -0.04, 1.31]}
+              fontSize={0.15}
               color="black"
               onClick={() => setNextPage(true)}
             >
@@ -599,14 +677,13 @@ export default function HeroSection() {
           <Chair />
           <ComputerTower />
           <ScreenUI scrollYProgress={scrollYProgress} />
+          <ScreenHint scrollYProgress={scrollYProgress} />
+
           <CameraController scrollYProgress={scrollYProgress} />
         </Canvas>
 
-        <div className="absolute z-50 text-lg font-semibold text-stone-800 left-5 bottom-12 md:bottom-20 md:left-20">
-          <regMotion.h1 style={{ opacity }}>Scroll to zoom,</regMotion.h1>
-          <regMotion.h1 style={{ opacity }}>
-            Navigate on the screen.
-          </regMotion.h1>
+        <div className="absolute z-50 text-2xl  md:text-3xl font-semibold text-stone-800 left-5 bottom-12 md:bottom-20 md:left-20">
+          <regMotion.h1 style={{ opacity }}>Scroll to zoom</regMotion.h1>
         </div>
       </div>
     </section>
