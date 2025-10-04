@@ -15,21 +15,23 @@ function CartoonModel() {
   const { scene } = useGLTF("/me-cartoon.glb");
   const group = useRef<THREE.Group>(null);
 
-  useFrame(() => {
+  useFrame((state) => {
     if (!group.current) return;
 
     const hip = group.current.getObjectByName("Hips");
-    if (hip) hip.rotation.x = -Math.PI / 3.8;
-
     const leftLeg = group.current.getObjectByName("LeftLeg");
     const rightLeg = group.current.getObjectByName("RightLeg");
     const spine = group.current.getObjectByName("Spine");
 
+    if (hip) hip.rotation.x = -Math.PI / 3.8;
     if (leftLeg) leftLeg.rotation.x = -Math.PI / 2;
     if (rightLeg) rightLeg.rotation.x = -Math.PI / 3;
     if (spine) spine.rotation.x = Math.PI / 4;
 
-    group.current.rotation.y = Math.PI;
+    // Gentle breathing motion
+    const t = state.clock.getElapsedTime();
+    group.current.position.y = -0.45 + Math.sin(t * 1.2) * 0.004; // very small bob
+    group.current.rotation.y = Math.PI + Math.sin(t * 0.3) * 0.008; // tiny sway
   });
 
   return (
@@ -213,6 +215,36 @@ export function Tablet() {
           transparent
           opacity={fade}
         />
+      </mesh>
+    </group>
+  );
+}
+
+function CoffeeMug() {
+  return (
+    <group position={[-0.76, 1.08, 1.12]} rotation={[0, Math.PI / 5, 0]}>
+      {/* Mug Body */}
+      <mesh castShadow receiveShadow>
+        <cylinderGeometry args={[0.1, 0.1, 0.12, 32]} />
+        <meshStandardMaterial color="#ffffff" roughness={0.4} metalness={0.1} />
+      </mesh>
+
+      {/* Hollow interior */}
+      <mesh position={[0, 0.005, 0]}>
+        <cylinderGeometry args={[0.085, 0.085, 0.12, 32]} />
+        <meshStandardMaterial color="#c4c4c4" roughness={0.6} />
+      </mesh>
+
+      {/* Coffee liquid */}
+      <mesh position={[0, 0.065, 0]}>
+        <cylinderGeometry args={[0.083, 0.083, 0.01, 32]} />
+        <meshStandardMaterial color="#4b2e05" roughness={0.5} metalness={0.2} />
+      </mesh>
+
+      {/* Handle */}
+      <mesh position={[0.11, 0.02, 0]} rotation={[0, 0, Math.PI / 2]}>
+        <torusGeometry args={[0.045, 0.012, 16, 32, Math.PI]} />
+        <meshStandardMaterial color="#ffffff" roughness={0.4} metalness={0.1} />
       </mesh>
     </group>
   );
@@ -561,6 +593,7 @@ export default function HeroSection() {
           <ambientLight intensity={0.8} />
           <directionalLight position={[5, 5, 5]} intensity={1} />
           <Desk />
+          <CoffeeMug />
           <Tablet />
           <CartoonModel />
           <Chair />

@@ -4,38 +4,50 @@ import { motion } from "framer-motion";
 
 const PreLoadingShow = () => {
   const [index, setIndex] = useState(0);
+  const [percentage, setPercentage] = useState(0);
   const texts = ["Hello world.", "Welcome to my page."];
 
   useEffect(() => {
-    if (index == texts.length - 1) return;
+    if (index === texts.length - 1) return;
 
-    setTimeout(
-      () => {
-        setIndex(index + 1);
-      },
-      index == 0 ? 1000 : 150
+    const timeout = setTimeout(
+      () => setIndex(index + 1),
+      index === 0 ? 1000 : 150
     );
+
+    return () => clearTimeout(timeout);
   }, [index]);
 
+  useEffect(() => {
+    const startTime = Date.now();
+    const duration = 3000; // 3 seconds
+
+    const interval = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      let progress = (elapsed / duration) * 100;
+      if (progress >= 100) {
+        progress = 100;
+        clearInterval(interval);
+      }
+      setPercentage(Math.floor(progress));
+    }, 16); // ~60fps for smooth animation
+
+    return () => clearInterval(interval);
+  }, []);
+
   const opacity = {
-    initial: {
-      opacity: 0,
-    },
-    enter: {
-      opacity: 0.75,
-      transition: { duration: 1, delay: 0.2 },
-    },
+    initial: { opacity: 0 },
+    enter: { opacity: 0.75, transition: { duration: 1, delay: 0.2 } },
   };
 
   const slideUpAnimation = {
-    initial: {
-      top: 0,
-    },
+    initial: { top: 0 },
     exit: {
       top: "-100vh",
       transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1], delay: 0.2 },
     },
   };
+
   return (
     <motion.div
       variants={slideUpAnimation}
@@ -51,6 +63,11 @@ const PreLoadingShow = () => {
       >
         {texts[index]}
       </motion.p>
+
+      {/* Percentage loader */}
+      <div className="absolute bottom-4 right-4 text-lg sm:text-2xl font-mono text-gray-300">
+        {percentage}%
+      </div>
     </motion.div>
   );
 };

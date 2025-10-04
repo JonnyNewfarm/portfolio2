@@ -1,15 +1,34 @@
 "use client";
 
 import Hero from "@/components/Hero";
-import HeroSectionWithLoader from "@/components/HeroWrapper";
-
+import PreLoadingShow from "@/components/PreLoadingShow";
 import ScrollSection from "@/components/SmoothScroll";
+import { useEffect, useState } from "react";
 
 export default function Home() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Check if preloader has already been shown in this session
+    const preloaderShown = sessionStorage.getItem("preloaderShown");
+
+    if (preloaderShown) {
+      setIsLoading(false); // skip preloader
+    } else {
+      const timer = setTimeout(() => {
+        setIsLoading(false);
+        sessionStorage.setItem("preloaderShown", "true"); // mark as shown
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
   return (
     <ScrollSection>
-      <div className=" relative">
-        <HeroSectionWithLoader />
+      {isLoading && <PreLoadingShow />}
+      <div className="relative">
+        <Hero />
       </div>
     </ScrollSection>
   );
