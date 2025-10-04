@@ -1,10 +1,12 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
 const Footer = () => {
-  const [time, setTime] = useState("");
   const pathname = usePathname();
+
+  const [time, setTime] = useState("");
 
   useEffect(() => {
     const update = () => {
@@ -16,56 +18,60 @@ const Footer = () => {
     const interval = setInterval(update, 1000);
     return () => clearInterval(interval);
   }, []);
-
-  // hide footer on homepage
-  if (pathname === "/") {
-    return null;
-  }
+  if (pathname === "/") return null;
 
   return (
     <div
       style={{ clipPath: "polygon(0% 0, 100% 0%, 100% 100%, 0 100%)" }}
-      className="relative h-[420px]"
+      className=" relative h-[420px] bg-[#ececec] text-stone-800 "
     >
-      <div className="relative h-[calc(100vh+420px)] -top-[100vh] bg-[#ececec] flex-col justify-start">
-        <div className="h-[420px] text-[#161310] p-14 sticky top-[calc(100vh-420px)]">
-          <div className="h-full w-full flex justify-between pt-10">
-            <div>
-              <h1 className="opacity-75 font-semibold">Socials:</h1>
-              <h1>
-                <a href="https://github.com/JonnyNewfarm">Github</a>
-              </h1>
-              <h1>
-                <a href="https://www.linkedin.com/in/jonas-nygaard-0aa767366/">
-                  LinkedIn
+      <div className="relative h-[calc(100vh+420px)] -top-[100vh] flex-col justify-start">
+        <div className="h-[420px]  p-14 sticky top-[calc(100vh-420px)] flex flex-col justify-between">
+          <div className="w-full h-full flex flex-col justify-between">
+            <div className="flex  justify-between">
+              <div className="">
+                <div className="flex gap-x-10">
+                  <div className="hidden md:block">
+                    <div className="flex flex-col justify-start text-2xl font-light">
+                      <h1 className="opacity-70">Navigation</h1>
+                      <Link href={"/"}>Home</Link>
+                      <Link href={"/projects"}>My Work</Link>
+                      <Link href={"/contact"}>Contact</Link>
+                      <Link href={"/about"}>About</Link>
+                    </div>
+                  </div>
+                  <div></div>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-between">
+              <div>
+                <h1 className="opacity-65">Created by:</h1>
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex underline items-center gap-x-1"
+                  href="https://www.jonasnygaard.com/"
+                >
+                  Newfarm Studio
                 </a>
-              </h1>
+              </div>
 
-              <h1 className="opacity-75 mt-4 font-semibold">Contact:</h1>
-              <h1>jonasnygaard96@gmail.com</h1>
-              <h1>+47 48 26 30 11</h1>
-            </div>
-          </div>
+              <div className="hidden md:block">
+                <h1 className="opacity-65">Email:</h1>
+                <h1>jonasnygaard96@gmail.com</h1>
+              </div>
 
-          <div className="flex justify-between w-full">
-            <div>
-              <h1 className="opacity-75 font-semibold">Code by:</h1>
-              <h1>Newfarm Studio</h1>
-            </div>
+              <div className="hidden md:block">
+                <h1 className="opacity-65">My time:</h1>
+                <h1>{time}</h1>
+              </div>
 
-            <div className="hidden md:block">
-              <h1 className="opacity-75 font-semibold">Design by:</h1>
-              <h1>Newfarm Studio</h1>
-            </div>
-
-            <div>
-              <h1 className="opacity-75 font-semibold">My time:</h1>
-              <h1>{time}</h1>
-            </div>
-
-            <div className="hidden md:block">
-              <h1 className="opacity-75 font-semibold">Location:</h1>
-              <h1>Oslo, Norway</h1>
+              <div>
+                <h1 className="opacity-65">Location:</h1>
+                <h1>Oslo, Norway</h1>
+              </div>
             </div>
           </div>
         </div>

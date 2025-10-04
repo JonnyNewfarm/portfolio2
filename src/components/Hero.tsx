@@ -1,6 +1,6 @@
 "use client";
 
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
 import { Text, RoundedBox, useGLTF } from "@react-three/drei";
 import { useScroll, MotionValue, AnimatePresence } from "framer-motion";
 import { motion } from "framer-motion-3d";
@@ -104,21 +104,163 @@ function Chair() {
   );
 }
 
-// ---------------- Desk ----------------
+// ---------------- Computer Tower ----------------
+function ComputerTower() {
+  return (
+    <group rotation={[0, Math.PI / -2, 0]} position={[1.5, -0.12, 0.7]}>
+      {/* Tower Body */}
+      <RoundedBox
+        args={[0.5, 0.9, 0.25]}
+        radius={0.03}
+        smoothness={4}
+        castShadow
+        receiveShadow
+      >
+        <meshStandardMaterial color="#222222" roughness={0.6} metalness={0.3} />
+      </RoundedBox>
+
+      {/* Power Button */}
+      <mesh position={[0.29, 0.3, 0]}>
+        <cylinderGeometry args={[0.015, 0.015, 0.01, 32]} />
+        <meshStandardMaterial
+          color="#00ff99"
+          emissive="#00ff99"
+          emissiveIntensity={0.4}
+        />
+      </mesh>
+
+      {/* USB Ports */}
+      {[0.05, -0.05].map((y, i) => (
+        <mesh key={i} position={[0.29, -0.15, 0]}>
+          <boxGeometry args={[0.05, 0.015, 0.01]} />
+          <meshStandardMaterial color="gray" />
+        </mesh>
+      ))}
+
+      {/* Cable going to the monitor */}
+      <mesh>
+        <tubeGeometry
+          args={[
+            new THREE.CatmullRomCurve3([
+              new THREE.Vector3(0.25, 0.35, 0.05), // back of tower (high)
+              new THREE.Vector3(0.25, -0.1, 0.05), // drop to floor
+              new THREE.Vector3(0.0, -0.1, 0.05), // run along floor under desk
+              new THREE.Vector3(0.0, 0.9, -0.2), // rise up back of desk
+              new THREE.Vector3(0.0, 1.7, 0.6), // into monitor
+            ]),
+            80, // segments (more = smoother)
+            0.015, // radius
+            8, // radial segments
+            false,
+          ]}
+        />
+        <meshStandardMaterial color="#000000" roughness={0.9} />
+      </mesh>
+    </group>
+  );
+}
+
+// ---------------- Tablet ----------------
+
+export function Tablet() {
+  const images = ["/desktop1.JPG", "/desktop2.JPG", "/desktop3.JPG"];
+  const textures = useLoader(THREE.TextureLoader, images);
+
+  const [imageIndex, setImageIndex] = useState(0);
+  const [nextImageIndex, setNextImageIndex] = useState(1);
+  const [fade, setFade] = useState(0);
+  const [pauseTime, setPauseTime] = useState(0);
+
+  const fadeSpeed = 0.6; // speed of fade
+  const pauseDuration = 5; // seconds to pause after fade
+
+  useFrame((state, delta) => {
+    if (fade < 1) {
+      // Fade in/out
+      setFade((prev) => Math.min(prev + delta * fadeSpeed, 1));
+    } else {
+      // Once fade is done, start pause
+      setPauseTime((prev) => prev + delta);
+
+      if (pauseTime >= pauseDuration) {
+        // Swap images after pause
+        setImageIndex(nextImageIndex);
+        setNextImageIndex((nextImageIndex + 1) % textures.length);
+        setFade(0);
+        setPauseTime(0);
+      }
+    }
+  });
+
+  return (
+    <group position={[1.2, 1.16, 1.35]} rotation={[-0.2, 0.1, 0]}>
+      {/* Photo Frame Body */}
+      <RoundedBox
+        args={[0.42, 0.3, 0]}
+        radius={0.02}
+        smoothness={8}
+        castShadow
+        receiveShadow
+      >
+        <meshStandardMaterial color="#21261f" roughness={0.6} metalness={0.2} />
+      </RoundedBox>
+
+      {/* Next Image */}
+      <mesh position={[0, 0.015, 0.03]}>
+        <planeGeometry args={[0.36, 0.21]} />
+        <meshStandardMaterial
+          map={textures[nextImageIndex]}
+          transparent
+          opacity={fade}
+        />
+      </mesh>
+    </group>
+  );
+}
+
 function Desk() {
   return (
     <group position={[0, 0, 1.2]}>
       {/* Keyboard */}
-      <RoundedBox
-        args={[0.8, 0.06, 0.3]}
-        radius={0.02}
-        smoothness={4}
-        position={[0, 1, 0]}
-        castShadow
-        receiveShadow
-      >
-        <meshStandardMaterial color="#e6e6e6" roughness={0.6} metalness={0.1} />
-      </RoundedBox>
+      <group position={[0, 1, 0]}>
+        {/* Keyboard Base */}
+        <RoundedBox
+          args={[0.8, 0.06, 0.3]}
+          radius={0.02}
+          smoothness={4}
+          castShadow
+          receiveShadow
+        >
+          <meshStandardMaterial
+            color="#e6e6e6"
+            roughness={0.6}
+            metalness={0.1}
+          />
+        </RoundedBox>
+
+        {/* Keys */}
+        {Array.from({ length: 5 }).map((_, row) =>
+          Array.from({ length: 14 }).map((_, col) => (
+            <RoundedBox
+              key={`${row}-${col}`}
+              args={[0.05, 0.03, 0.05]}
+              radius={0.005}
+              smoothness={2}
+              position={[
+                -0.34 + col * 0.05, // X spacing
+                0.035, // slightly above base
+                -0.13 + row * 0.06, // Z spacing
+              ]}
+            >
+              <meshStandardMaterial
+                color="#ffffff"
+                roughness={0.5}
+                metalness={0.1}
+              />
+            </RoundedBox>
+          ))
+        )}
+      </group>
 
       {/* Desk Lamp with Light */}
       <group position={[1.1, 1.05, -0.5]}>
@@ -174,17 +316,25 @@ function Desk() {
       </group>
 
       {/* Mouse */}
+      <group position={[0.5, 1, 0]}>
+        {/* Body */}
+        <mesh castShadow receiveShadow scale={[0.7, 0.5, 2]}>
+          <sphereGeometry args={[0.12, 36, 32]} />
+          <meshStandardMaterial color="gray" roughness={0.6} metalness={0.1} />
+        </mesh>
 
-      <RoundedBox
-        args={[0.18, 0.05, 0.1]}
-        radius={0.03}
-        smoothness={4}
-        position={[0.5, 1, 0]}
-        castShadow
-        receiveShadow
-      >
-        <meshStandardMaterial color="#f5f5f5" roughness={0.6} metalness={0.1} />
-      </RoundedBox>
+        {/* Scroll Wheel */}
+        <mesh position={[0, 0.03, 0.05]} rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[0.01, 0.01, 0.04, 16]} />
+          <meshStandardMaterial color="black" roughness={0.4} metalness={0.2} />
+        </mesh>
+
+        {/* Left/Right Button Divider */}
+        <mesh position={[0, 0.015, 0]} rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[0.001, 0.001, 0.18, 8]} />
+          <meshStandardMaterial color="black" />
+        </mesh>
+      </group>
 
       {/* Desk Top */}
       <RoundedBox
@@ -393,7 +543,7 @@ export default function HeroSection() {
   return (
     <section
       ref={ref}
-      className="h-[180vh] md:h-[200vh] bg-[#ececec]  text-black"
+      className="h-[195vh] md:h-[200vh] bg-[#ececec]  text-black"
     >
       <div
         style={{
@@ -409,13 +559,15 @@ export default function HeroSection() {
           <ambientLight intensity={0.8} />
           <directionalLight position={[5, 5, 5]} intensity={1} />
           <Desk />
+          <Tablet />
           <CartoonModel />
           <Chair />
+          <ComputerTower />
           <ScreenUI scrollYProgress={scrollYProgress} />
           <CameraController scrollYProgress={scrollYProgress} />
         </Canvas>
 
-        <div className="absolute left-5 bottom-12 md:bottom-20 md:left-20">
+        <div className="absolute z-50 text-lg font-semibold text-stone-800 left-5 bottom-12 md:bottom-20 md:left-20 ">
           <h1>Scroll to zoom,</h1>
           <h1>Navigate on the screen.</h1>
         </div>
