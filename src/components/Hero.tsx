@@ -6,7 +6,7 @@ import { useScroll, MotionValue, AnimatePresence } from "framer-motion";
 import { motion } from "framer-motion-3d";
 import { useTransform, motion as regMotion } from "framer-motion";
 
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import * as THREE from "three";
 
@@ -181,11 +181,9 @@ export function Tablet() {
     if (fade < 1) {
       setFade((prev) => Math.min(prev + delta * fadeSpeed, 1));
     } else {
-      // Once fade is done, start pause
       setPauseTime((prev) => prev + delta);
 
       if (pauseTime >= pauseDuration) {
-        // Swap images after pause
         setImageIndex(nextImageIndex);
         setNextImageIndex((nextImageIndex + 1) % textures.length);
         setFade(0);
@@ -220,7 +218,6 @@ export function Tablet() {
   );
 }
 
-// ---------------- Screen Hint ----------------
 function ScreenHint({
   scrollYProgress,
 }: {
@@ -230,7 +227,6 @@ function ScreenHint({
   const cylinderRef = useRef<any>(null);
   const arrowRef = useRef<any>(null);
 
-  // Map scroll progress to opacity
   const opacity = useTransform(
     scrollYProgress,
     [0.05, 0.15, 0.8, 0.95],
@@ -240,19 +236,16 @@ function ScreenHint({
   useFrame(() => {
     const o = opacity.get();
 
-    // Update Text material opacity
     if (textRef.current) {
       textRef.current.material.transparent = true;
       textRef.current.material.opacity = o;
     }
 
-    // Update cylinder opacity
     if (cylinderRef.current) {
       cylinderRef.current.material.transparent = true;
       cylinderRef.current.material.opacity = o;
     }
 
-    // Update arrow opacity
     if (arrowRef.current) {
       arrowRef.current.material.transparent = true;
       arrowRef.current.material.opacity = o;
@@ -260,7 +253,7 @@ function ScreenHint({
   });
 
   return (
-    <group position={[0.6, 2.9, 0.2]}>
+    <group position={[0.39, 2.9, 0.43]}>
       {/* Cylinder */}
       <mesh
         ref={cylinderRef}
@@ -327,6 +320,209 @@ function CoffeeMug() {
     </group>
   );
 }
+function FloorLamp() {
+  const bulbRef = useRef<THREE.Mesh>(null);
+  const lightRef = useRef<THREE.SpotLight>(null);
+
+  useFrame(({ clock }) => {
+    const t = clock.getElapsedTime();
+
+    // Animate glow flicker subtly
+    if (bulbRef.current) {
+      const material = bulbRef.current.material as THREE.MeshStandardMaterial;
+      if (material) {
+        material.emissiveIntensity = 0.9 + Math.sin(t * 3) * 0.05;
+      }
+    }
+
+    if (lightRef.current) {
+      lightRef.current.intensity = 4.8 + Math.sin(t * 3) * 0.05;
+    }
+  });
+
+  return (
+    <group position={[1.6, 0, 0.66]}>
+      {/* Base */}
+      <mesh castShadow receiveShadow position={[0.7, 0, -0.4]}>
+        <cylinderGeometry args={[0.18, 0.26, 0.07, 32]} />
+        <meshStandardMaterial color="#444" roughness={0.4} metalness={0.8} />
+      </mesh>
+
+      {/* Curved Stand */}
+      <motion.mesh
+        rotation={[0, Math.PI / -2.2, 0]}
+        castShadow
+        receiveShadow
+        position={[0.6, 0.46, 0]}
+      >
+        <tubeGeometry
+          args={[
+            new THREE.CatmullRomCurve3([
+              new THREE.Vector3(0, -0.3, -0.09),
+              new THREE.Vector3(-0.3, 2.5, -0.021),
+              new THREE.Vector3(0.06, 2.46, 0.24),
+              new THREE.Vector3(0.24, 2.06, 0.33),
+            ]),
+            80,
+            0.016,
+            13,
+            false,
+          ]}
+        />
+        <meshStandardMaterial color="#444" roughness={0.5} metalness={0.7} />
+      </motion.mesh>
+
+      {/* Outer Lampshade */}
+      <mesh
+        position={[0.25, 2.42, 0.25]}
+        rotation={[Math.PI / 36, 0, -0.06]}
+        castShadow
+      >
+        <cylinderGeometry args={[0.35, 0.4, 0.3, 48, 1, true]} />
+        <meshStandardMaterial
+          color="#bec4be"
+          roughness={0.7}
+          metalness={0.1}
+          side={THREE.DoubleSide}
+        />
+      </mesh>
+
+      {/* Inner Lampshade */}
+      <mesh position={[0.25, 2.42, 0.33]} rotation={[Math.PI / 10, 0, 0]}>
+        <cylinderGeometry args={[0.33, 0.38, 0.28, 48, 1, true]} />
+        <meshStandardMaterial
+          color="#fff2d8"
+          emissive="#fff6e0"
+          emissiveIntensity={0.2}
+          side={THREE.BackSide}
+        />
+      </mesh>
+
+      {/* Light Bulb */}
+      <mesh ref={bulbRef} position={[0.25, 2.35, 0.25]}>
+        <sphereGeometry args={[0.07, 32, 32]} />
+        <meshStandardMaterial
+          color="#fffbe0"
+          emissive="#fff3c0"
+          emissiveIntensity={1.2}
+          roughness={0.3}
+          metalness={0.1}
+        />
+      </mesh>
+
+      {/* Light Source */}
+      <spotLight
+        ref={lightRef}
+        position={[0.25, 2.35, 0.25]}
+        angle={Math.PI / 5}
+        penumbra={0.8}
+        intensity={5}
+        color="#fff1c1"
+        castShadow
+        shadow-mapSize-width={2048}
+        shadow-mapSize-height={2048}
+        target-position={[0, 0.8, 0]}
+      />
+    </group>
+  );
+}
+
+function Bookshelf() {
+  const bookColors = ["#e63946", "#f1faee", "#a8dadc", "#457b9d", "#1d3557"];
+
+  return (
+    <group position={[2.1, 0.33, -0.3]}>
+      {/* Shelves */}
+      {[0, 0.8, 1.6].map((y, i) => (
+        <RoundedBox
+          key={i}
+          args={[0.8, 0.05, 0.3]}
+          radius={0.02}
+          smoothness={3}
+          position={[0, y + 0.05, 0]}
+        >
+          <meshStandardMaterial
+            color="#8B4513"
+            roughness={0.6}
+            metalness={0.1}
+          />
+        </RoundedBox>
+      ))}
+
+      {/* Many Books */}
+      {Array.from({ length: 18 }).map((_, i) => {
+        const color = bookColors[i % bookColors.length];
+        const shelfLevel = Math.floor(i / 6); // 6 books per shelf
+        const y = 0.05 + shelfLevel * 0.8;
+        const x = -0.35 + Math.random() * 0.7;
+        const z = -0.1 + Math.random() * 0.22;
+        const height = 0.15 + Math.random() * 0.25;
+        const width = 0.04 + Math.random() * 0.025;
+        const depth = 0.1 + Math.random() * 0.04;
+        const tilt = (Math.random() - 0.5) * 0.12;
+
+        return (
+          <mesh
+            key={i}
+            position={[x, y + height / 2, z]}
+            rotation={[0, tilt, 0]}
+          >
+            <boxGeometry args={[width, height, depth]} />
+            <meshStandardMaterial
+              color={color}
+              roughness={0.6}
+              metalness={0.2}
+            />
+          </mesh>
+        );
+      })}
+
+      {/* Horizontal stacks */}
+      {Array.from({ length: 3 }).map((_, i) => {
+        const y = 0.05 + i * 0.8;
+        return (
+          <mesh
+            key={`stack-${i}`}
+            position={[0.25, y + 0.07, -0.05]}
+            rotation={[0, 0.05, 0]}
+          >
+            <boxGeometry args={[0.12, 0.03, 0.2]} />
+            <meshStandardMaterial
+              color="#d4a373"
+              roughness={0.6}
+              metalness={0.1}
+            />
+          </mesh>
+        );
+      })}
+
+      {/* Decorative items */}
+      {/* Plant */}
+      <mesh position={[-0.25, 0.05 + 0.05, 0.08]}>
+        <cylinderGeometry args={[0.04, 0.04, 0.05, 16]} />
+        <meshStandardMaterial color="#2a7b3a" roughness={0.7} />
+      </mesh>
+
+      {/* Photo frame */}
+      <mesh position={[0.3, 0.05 + 0.07, 0.1]} rotation={[0, -0.05, 0]}>
+        <boxGeometry args={[0.08, 0.06, 0.01]} />
+        <meshStandardMaterial color="#f0e6d2" roughness={0.6} />
+      </mesh>
+
+      {/* Candle */}
+      <mesh position={[0, 0.05 + 0.04, -0.08]}>
+        <cylinderGeometry args={[0.025, 0.025, 0.06, 16]} />
+        <meshStandardMaterial color="#f4d35e" roughness={0.6} metalness={0.1} />
+      </mesh>
+
+      {/* Figurine */}
+      <mesh position={[-0.15, 0.05 + 0.08, -0.05]}>
+        <sphereGeometry args={[0.04, 16, 16]} />
+        <meshStandardMaterial color="#555555" roughness={0.5} metalness={0.2} />
+      </mesh>
+    </group>
+  );
+}
 
 function Desk() {
   return (
@@ -356,11 +552,7 @@ function Desk() {
               args={[0.05, 0.03, 0.05]}
               radius={0.005}
               smoothness={2}
-              position={[
-                -0.34 + col * 0.05, // X spacing
-                0.035, // slightly above base
-                -0.13 + row * 0.06, // Z spacing
-              ]}
+              position={[-0.34 + col * 0.05, 0.035, -0.13 + row * 0.06]}
             >
               <meshStandardMaterial
                 color="#ffffff"
@@ -384,44 +576,17 @@ function Desk() {
           />
         </mesh>
 
-        {/* Lamp Stand */}
-        <mesh position={[0, 0.3, 0]} castShadow receiveShadow>
-          <cylinderGeometry args={[0.02, 0.02, 0.6, 32]} />
-          <meshStandardMaterial
-            color="#222222"
-            roughness={0.5}
-            metalness={0.7}
-          />
-        </mesh>
-
-        {/* Rounded Lamp Shade */}
-        <mesh
-          position={[0, 0.75, 0]}
-          rotation={[-Math.PI / 2, 0, 0]}
-          castShadow
-          receiveShadow
-        >
-          <sphereGeometry
-            args={[0.12, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2]}
-          />
-          <meshStandardMaterial
-            color="#ffeb3b"
-            roughness={0.4}
-            metalness={0.2}
-          />
-        </mesh>
-
         {/* Warm Lamp Light */}
         <spotLight
-          position={[0, 0.75, 0]} // same as lamp shade
+          position={[0, 0.75, 0]}
           angle={Math.PI / 6}
           penumbra={0.3}
-          intensity={1.2}
+          intensity={3.4}
           color={"#fff1c1"}
           castShadow
           shadow-mapSize-width={1024}
           shadow-mapSize-height={1024}
-          target-position={[0, 0.5, 0]} // point slightly down to desk
+          target-position={[0, 0.5, 0]}
         />
       </group>
 
@@ -463,7 +628,7 @@ function Desk() {
         [-0.7, 0.7].map((z, i) => (
           <mesh
             key={`${x}-${z}-${i}`}
-            position={[x, 0.53, z]} // half of height
+            position={[x, 0.53, z]}
             castShadow
             receiveShadow
           >
@@ -521,7 +686,6 @@ function Desk() {
   );
 }
 
-// ---------------- Screen UI ----------------
 function ScreenUI({
   scrollYProgress,
 }: {
@@ -625,7 +789,6 @@ function ScreenUI({
   );
 }
 
-// ---------------- Camera Controller ----------------
 function CameraController({
   scrollYProgress,
 }: {
@@ -642,7 +805,6 @@ function CameraController({
   return null;
 }
 
-// ---------------- Hero Section ----------------
 export default function HeroSection() {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -670,15 +832,16 @@ export default function HeroSection() {
         <Canvas shadows>
           <ambientLight intensity={0.8} />
           <directionalLight position={[5, 5, 5]} intensity={1} />
+          <FloorLamp />
           <Desk />
           <CoffeeMug />
+          <Bookshelf />
           <Tablet />
           <CartoonModel />
           <Chair />
           <ComputerTower />
           <ScreenUI scrollYProgress={scrollYProgress} />
           <ScreenHint scrollYProgress={scrollYProgress} />
-
           <CameraController scrollYProgress={scrollYProgress} />
         </Canvas>
 
