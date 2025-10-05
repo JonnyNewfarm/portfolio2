@@ -87,13 +87,13 @@ const ProjectsClient = () => {
 
   return (
     <SmoothScroll>
-      <div className="w-full min-h-screen h-full bg-[#ececec]">
-        <div className="md:hidden flex flex-col  text-start px-6 py-10  border-b border-[#161310]">
+      <div className="w-full min-h-screen h-full bg-[#ececec] dark:bg-[#2e2b2b] text-[#161310] dark:text-stone-300">
+        <div className="md:hidden flex flex-col  text-start px-6 py-10  border-b border-[#161310] dark:border-stone-300">
           <motion.h1
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: [0.6, 1], opacity: [0, 1] }}
             transition={{ delay: 0.1, duration: 0.7, ease: "easeInOut" }}
-            className="text-2xl font-semibold text-[#1c1a17] mt-10 uppercase"
+            className="text-2xl font-semibold  mt-10 uppercase"
           >
             My projects
           </motion.h1>
@@ -101,7 +101,7 @@ const ProjectsClient = () => {
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: [0.6, 1], opacity: [0, 1] }}
             transition={{ delay: 0.2, duration: 0.7, ease: "easeInOut" }}
-            className="text-base text-[#1c1a17] mb-3"
+            className="text-base  mb-3"
           >
             Code / Design / Fullstack
           </motion.h2>
@@ -115,9 +115,7 @@ const ProjectsClient = () => {
                 transition={{ delay: 0.3 + i * 0.1, duration: 0.6 }}
                 className="block"
               >
-                <div className="mb-2 font-semibold text-[#1c1a17]">
-                  {p.title}
-                </div>
+                <div className="mb-2 font-semibold ">{p.title}</div>
                 <Image
                   src={`/projects/${p.src}`}
                   alt={p.title}
@@ -125,14 +123,12 @@ const ProjectsClient = () => {
                   height={400}
                   className="w-full max-w-md mx-auto object-contain mb-4"
                 />
-                <p className="text-sm text-[#1c1a17] opacity-70 mb-2">
-                  {p.stack}
-                </p>
+                <p className="text-sm  opacity-70 mb-2">{p.stack}</p>
                 <a
                   href={p.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block px-4 py-2 border-[2px] font-semibold rounded-[2px] border-[#1c1a17] text-[#1c1a17] text-sm"
+                  className="inline-block px-4 py-2 border-[2px] font-semibold rounded-[2px] border-[#1c1a17] dark:border-stone-300 text-sm"
                 >
                   Live Link
                 </a>
@@ -141,7 +137,7 @@ const ProjectsClient = () => {
           </div>
         </div>
 
-        <div className="hidden md:flex min-h-screen border-b border-[#161310]">
+        <div className="hidden md:flex min-h-screen border-b border-[#161310] dark:border-stone-300">
           <div
             className="max-w-7xl w-full mx-auto px-10 py-24 flex gap-20 relative"
             onMouseMove={handleMouseMove}
@@ -151,7 +147,7 @@ const ProjectsClient = () => {
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: [0.6, 1], opacity: [0, 1] }}
                 transition={{ delay: 0.1, duration: 0.7 }}
-                className="text-5xl uppercase mb-4 text-[#1c1a17]"
+                className="text-5xl uppercase mb-4 "
               >
                 My Projects
               </motion.h1>
@@ -165,13 +161,13 @@ const ProjectsClient = () => {
                   initial={{ scale: 0.8, opacity: 0 }}
                   animate={{ scale: [0.6, 1], opacity: [0, 1] }}
                   transition={{ delay: 0.2, duration: 0.7 }}
-                  className="text-lg text-[#1c1a17] opacity-70 "
+                  className="text-lg  opacity-70 "
                 >
                   Code / Design / Fullstack
                 </motion.h2>
                 <button
                   onClick={handlePauseToggle}
-                  className=" hover:scale-[1.03] transition-transform ease-in-out whitespace-nowrap text-lg border-stone-700/80   cursor-pointer text-[#1c1a17] flex items-center gap-1.5"
+                  className=" hover:scale-[1.03] transition-transform ease-in-out whitespace-nowrap text-lg border-stone-700/80 dark:border-stone-300/80   cursor-pointer  flex items-center gap-1.5"
                 >
                   {isPaused ? (
                     <>
@@ -196,8 +192,8 @@ const ProjectsClient = () => {
                   <div
                     className={`cursor-pointer text-xl flex items-center justify-between gap-4 transition-all duration-200 ${
                       selected.title === project.title
-                        ? "text-[#1c1a17]"
-                        : "opacity-60 hover:opacity-100 text-[#1c1a17]"
+                        ? ""
+                        : "opacity-60 hover:opacity-100"
                     }`}
                     onMouseEnter={() => {
                       setSelected(project);
@@ -208,7 +204,7 @@ const ProjectsClient = () => {
                   >
                     <div className="flex items-center gap-3">
                       {selected.title === project.title && (
-                        <div className="w-1 h-1 rounded-full bg-[#1c1a17]" />
+                        <div className="w-1 h-1 rounded-full bg-[#1c1a17] dark:bg-stone-300" />
                       )}
                       <span>{project.title}</span>
                     </div>
@@ -226,10 +222,8 @@ const ProjectsClient = () => {
                 transition={{ duration: 0.5, ease: "easeOut", delay: 0.6 }}
                 className="mt-6"
               >
-                <h3 className="text-lg mt-5 text-[#1c1a17] font-semibold">
-                  Stack
-                </h3>
-                <p className="text-sm text-[#1c1a17] opacity-70 leading-relaxed">
+                <h3 className="text-lg mt-5  font-semibold">Stack</h3>
+                <p className="text-sm opacity-70 leading-relaxed">
                   {selected.stack}
                 </p>
               </motion.div>
@@ -239,8 +233,8 @@ const ProjectsClient = () => {
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: [0.6, 1], opacity: [0, 1] }}
               transition={{ delay: 0.4, duration: 0.7 }}
-              className="w-2/3 max-w-4xl overflow-hidden border-l border-[#1c1a17]/20"
-              style={{ height: "620px", position: "relative" }}
+              className="w-2/3 max-w-4xl max-h-[600px] overflow-hidden border-l border-[#1c1a17]/20 dark:border-stone-300/20 dark:bg-white/70"
+              style={{ position: "relative" }}
             >
               <div
                 ref={containerRef}

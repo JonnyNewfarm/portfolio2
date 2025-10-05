@@ -129,7 +129,9 @@ function ComputerTower() {
         <meshStandardMaterial
           color="#00ff99"
           emissive="#00ff99"
-          emissiveIntensity={0.4}
+          emissiveIntensity={
+            document.documentElement.classList.contains("dark") ? 2 : 0.4
+          } // boost glow
         />
       </mesh>
 
@@ -146,11 +148,11 @@ function ComputerTower() {
         <tubeGeometry
           args={[
             new THREE.CatmullRomCurve3([
-              new THREE.Vector3(0.25, 0.35, 0.05), // back of tower (high)
+              new THREE.Vector3(0.21, 0.35, 0.05), // back of tower (high)
               new THREE.Vector3(0.25, -0.1, 0.05), // drop to floor
               new THREE.Vector3(0.0, -0.1, 0.05), // run along floor under desk
               new THREE.Vector3(0.0, 0.9, -0.2), // rise up back of desk
-              new THREE.Vector3(0.0, 1.7, 0.6), // into monitor
+              new THREE.Vector3(-0.51, 1.5, 0.63), // into monitor
             ]),
             80, // segments (more = smoother)
             0.015, // radius
@@ -273,7 +275,7 @@ function ScreenHint({
       {/* Text */}
       <Text
         ref={textRef}
-        fontSize={0.13}
+        fontSize={0.138}
         anchorX="center"
         anchorY="middle"
         position={[0, 0.017, 0]}
@@ -296,7 +298,7 @@ function ScreenHint({
 
 function CoffeeMug() {
   return (
-    <group position={[-0.76, 1.08, 1.12]} rotation={[0, Math.PI / 5, 0]}>
+    <group position={[-0.78, 1.09, 1.1]} rotation={[0, Math.PI / 5, 0]}>
       {/* Mug Body */}
       <mesh castShadow receiveShadow>
         <cylinderGeometry args={[0.1, 0.1, 0.12, 32]} />
@@ -330,16 +332,15 @@ function FloorLamp() {
 
   useFrame(({ clock }) => {
     const t = clock.getElapsedTime();
-
     const isDark = document.documentElement.classList.contains("dark");
 
     if (bulbRef.current) {
       const material = bulbRef.current.material as THREE.MeshStandardMaterial;
-      material.emissiveIntensity = isDark ? 0.9 + Math.sin(t * 3) * 0.05 : 0.05;
+      material.emissiveIntensity = isDark ? 5 + Math.sin(t * 3) * 0.3 : 0.05;
     }
 
     if (lightRef.current) {
-      lightRef.current.intensity = isDark ? 4.8 + Math.sin(t * 3) * 0.05 : 0;
+      lightRef.current.intensity = isDark ? 20 + Math.sin(t * 3) * 0.6 : 0;
     }
   });
 
@@ -517,6 +518,7 @@ function Bookshelf() {
 
 function Desk() {
   const lightRef = useRef<THREE.SpotLight>(null);
+  const isDark = document.documentElement.classList.contains("dark");
 
   useFrame(() => {
     const isDark = document.documentElement.classList.contains("dark");
@@ -582,6 +584,9 @@ function Desk() {
           angle={Math.PI / 6}
           penumbra={0.3}
           color="#fff1c1"
+          intensity={
+            document.documentElement.classList.contains("dark") ? 10 : 1
+          } // boost
           castShadow
         />
       </group>
@@ -659,7 +664,7 @@ function Desk() {
         </mesh>
 
         <RoundedBox
-          args={[1.82, 1.2, 0.1]}
+          args={[2.03, 1.32, 0.1]}
           radius={0.02}
           smoothness={3}
           position={[0, 0.8, 0]}
@@ -670,13 +675,24 @@ function Desk() {
         </RoundedBox>
 
         <RoundedBox
-          args={[1.7, 1.09, 0.13]}
+          args={[1.9, 1.19, 0.13]}
           radius={0.02}
           smoothness={3}
           position={[0, 0.8, 0]}
         >
           <meshStandardMaterial color="white" roughness={0.4} metalness={0.3} />
         </RoundedBox>
+
+        <mesh position={[0, 0.8, 0.07]}>
+          <planeGeometry args={[1.9, 1.19]} />
+          <meshStandardMaterial
+            color={isDark ? "#f5f5f5" : "#fafafa"}
+            emissive={isDark ? "#fff6d0" : "#ffffff"}
+            emissiveIntensity={isDark ? 3 : 0.2}
+            transparent
+            opacity={0.95}
+          />
+        </mesh>
       </group>
     </group>
   );
@@ -714,7 +730,7 @@ function ScreenUI({
             </Text>
             <Text
               position={[0.6, 0.65, 1.3]}
-              fontSize={0.1}
+              fontSize={0.126}
               color="black"
               onClick={() => setNextPage(false)}
             >
@@ -722,7 +738,7 @@ function ScreenUI({
             </Text>
             <Text
               position={[-0.4, 0.3, 1.3]}
-              fontSize={0.14}
+              fontSize={0.168}
               color="black"
               onClick={() => router.push("/")}
             >
@@ -730,7 +746,7 @@ function ScreenUI({
             </Text>
             <Text
               position={[0.45, 0.3, 1.3]}
-              fontSize={0.14}
+              fontSize={0.168}
               color="black"
               onClick={() => router.push("/projects")}
             >
@@ -738,7 +754,7 @@ function ScreenUI({
             </Text>
             <Text
               position={[-0.4, 0, 1.3]}
-              fontSize={0.14}
+              fontSize={0.168}
               color="black"
               onClick={() => router.push("/about")}
             >
@@ -746,7 +762,7 @@ function ScreenUI({
             </Text>
             <Text
               position={[0.42, 0, 1.3]}
-              fontSize={0.14}
+              fontSize={0.168}
               color="black"
               onClick={() => router.push("/contact")}
             >
@@ -761,18 +777,18 @@ function ScreenUI({
             exit={{ opacity: 0, y: 0.2 }}
             transition={{ duration: 0.6, ease: "easeInOut" }}
           >
-            <Text position={[-0.13, 0.6, 1.3]} fontSize={0.13} color="black">
+            <Text position={[-0.13, 0.6, 1.3]} fontSize={0.151} color="black">
               Hey — I’m Jonas,
             </Text>
-            <Text position={[0.1, 0.4, 1.3]} fontSize={0.13} color="black">
+            <Text position={[0.1, 0.4, 1.3]} fontSize={0.151} color="black">
               Designer and developer
             </Text>
-            <Text position={[-0.12, 0.2, 1.3]} fontSize={0.13} color="black">
+            <Text position={[-0.12, 0.2, 1.3]} fontSize={0.151} color="black">
               Based in Norway.
             </Text>
             <Text
-              position={[-0.48, -0.04, 1.31]}
-              fontSize={0.15}
+              position={[-0.46, -0.04, 1.31]}
+              fontSize={0.223}
               color="black"
               onClick={() => setNextPage(true)}
             >

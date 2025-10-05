@@ -81,8 +81,8 @@ const ContactClient = () => {
 
   return (
     <SmoothScroll>
-      <div className="min-h-screen h-full w-full border-b border-stone-500 bg-[#ececec] text-[#1c1a17] flex flex-col lg:flex-row">
-        <div className="flex flex-col justify-between w-full lg:w-1/2 p-10 lg:p-20 border-b border-stone-400/20 lg:border-b-0 lg:border-r lg:border-stone-400/20">
+      <div className="min-h-screen h-full w-full border-b border-b-stone-700/80 dark:border-stone-300/80 bg-[#ececec] dark:bg-[#2e2b2b] text-[#161310] dark:text-stone-300 flex flex-col lg:flex-row">
+        <div className="flex flex-col justify-between w-full lg:w-1/2 p-10 lg:p-20 border-b border-stone-400/20 dark:border-stone-200/20 lg:border-b-0 lg:border-r lg:border-stone-400/20">
           <div className="flex flex-col gap-y-6">
             <motion.h1
               initial={{ scale: 0.8, opacity: 0 }}
@@ -156,7 +156,7 @@ const ContactClient = () => {
           >
             <div>
               <input
-                className="border-b border-stone-700 px-4 py-4 bg-transparent outline-none w-full"
+                className="border-b border-stone-700 dark:border-stone-300 px-4 py-4 bg-transparent outline-none w-full"
                 placeholder="Name"
                 name="name"
                 type="text"
@@ -173,7 +173,7 @@ const ContactClient = () => {
 
             <div>
               <input
-                className="border-b border-stone-700 px-4 py-4 bg-transparent outline-none w-full"
+                className="border-b border-stone-700 dark:border-stone-300 px-4 py-4 bg-transparent outline-none w-full"
                 placeholder="Email"
                 name="email"
                 type="email"
@@ -190,7 +190,7 @@ const ContactClient = () => {
 
             <div>
               <input
-                className="border-b border-stone-700 px-4 py-4 bg-transparent outline-none w-full"
+                className="border-b border-stone-700 dark:border-stone-300 px-4 py-4 bg-transparent outline-none w-full"
                 placeholder="Organization (optional)"
                 name="organization"
                 type="text"
@@ -201,7 +201,7 @@ const ContactClient = () => {
 
             <div>
               <textarea
-                className="border-b border-stone-700 px-4 py-4 bg-transparent min-h-[150px] resize-none outline-none w-full"
+                className="border-b border-stone-700 dark:border-stone-300 px-4 py-4 bg-transparent min-h-[150px] resize-none outline-none w-full"
                 placeholder="Message"
                 name="message"
                 value={form.message}
@@ -217,7 +217,7 @@ const ContactClient = () => {
 
             <button
               type="submit"
-              className="self-start cursor-pointer mt-4 border-2 font-semibold rounded-[2px] text-stone-700 border-stone-700 px-6 py-2 hover:scale-103 transition-transform ease-in-out"
+              className="self-start cursor-pointer mt-4 border-2 font-semibold rounded-[2px] text-stone-700 dark:text-stone-300 border-stone-700 dark:border-stone-300 px-6 py-2 hover:scale-103 transition-transform ease-in-out"
             >
               Send
             </button>
