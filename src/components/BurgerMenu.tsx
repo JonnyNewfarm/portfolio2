@@ -41,10 +41,10 @@ const BurgerMenu = () => {
       >
         <span
           className={`text-lg font-normal px-2 py-2 rounded flex items-center gap-2 ${
-            isOpen ? "text-white" : "text-[#1c1a17]"
+            isOpen ? "text-white" : "text-[#1c1a17] dark:text-white"
           }`}
         >
-          <span className="h-1.5 w-1.5 rounded-full bg-stone-700 inline-block" />
+          <span className="h-1.5 w-1.5 rounded-full bg-stone-700 dark:bg-stone-300 inline-block" />
           {isOpen ? "Close" : "Menu"}
         </span>
       </div>

@@ -1,24 +1,24 @@
-"use client";
-import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
 export default function DarkModeBtn() {
-  const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
+  const [isDark, setIsDark] = useState(false);
 
-  // Only render after mounting
   useEffect(() => {
-    setMounted(true);
+    // Check the current theme
+    setIsDark(document.documentElement.classList.contains("dark"));
   }, []);
 
-  if (!mounted) return null; // prevents server/client mismatch
+  const toggleTheme = () => {
+    document.documentElement.classList.toggle("dark");
+    setIsDark((prev) => !prev);
+  };
 
   return (
     <button
-      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      className="px-3 py-1 rounded bg-gray-200 dark:bg-gray-800"
+      onClick={toggleTheme}
+      className="px-4 py-2  border rounded-[3px] border-stone-900 dark:border-stone-300 text-stone-900 dark:text-stone-100"
     >
-      {theme === "dark" ? "Light" : "Dark"}
+      {isDark ? "Light mode" : "Dark mode"}
     </button>
   );
 }

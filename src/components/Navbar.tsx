@@ -15,7 +15,7 @@ const Navbar = () => {
   ];
 
   return (
-    <div className="bg-[#ececec] font-extrabold text-[16px] text-[#1c1a17] px-20 py-3 flex items-center sticky top-0 z-50 w-full justify-between">
+    <div className="bg-[#ececec] dark:bg-[#2e2b2b] text-[#1c1a17] dark:text-stone-300 font-extrabold text-[16px]  px-20 py-3 flex items-center sticky top-0 z-50 w-full justify-between">
       <div className="flex gap-x-1 text-[#1c1a17] m-0 leading-tight"></div>
 
       <div>
@@ -33,33 +33,23 @@ const Navbar = () => {
       <div className="w-full h-full hidden lg:block">
         <div className="flex items-center justify-between">
           <div className="tracking-tighter">
-            <h1 className="text-[#1c1a17] opacity-70 m-0 leading-none">
-              Brand:
-            </h1>
-            <p className="text-[#1c1a17] m-0 leading-tight">Newfarm Studio</p>
+            <h1 className=" opacity-70 m-0 leading-none">Brand:</h1>
+            <p className=" m-0 leading-tight">Newfarm Studio</p>
           </div>
 
           <div className="tracking-tighter">
-            <h1 className="text-[#1c1a17] opacity-70 m-0 leading-none">
-              Name:
-            </h1>
-            <p className="text-[#1c1a17] m-0 leading-tight">Jonas Nygaard</p>
+            <h1 className=" opacity-70 m-0 leading-none">Name:</h1>
+            <p className=" m-0 leading-tight">Jonas Nygaard</p>
           </div>
 
           <div className="tracking-tighter">
-            <h1 className="text-[#1c1a17] opacity-70 m-0 leading-none">
-              Occupation:
-            </h1>
-            <p className="text-[#1c1a17] m-0 leading-tight">
-              Designer & Developer
-            </p>
+            <h1 className=" opacity-70 m-0 leading-none">Occupation:</h1>
+            <p className=" m-0 leading-tight">Designer & Developer</p>
           </div>
 
           <div className="tracking-tighter">
-            <h1 className="text-[#1c1a17] opacity-70 m-0 leading-none">
-              Navigation:
-            </h1>
-            <div className="flex gap-x-1 text-[#1c1a17] m-0 leading-tight">
+            <h1 className=" opacity-70 m-0 leading-none">Navigation:</h1>
+            <div className="flex gap-x-1 m-0 leading-tight">
               {routes.map((route) => (
                 <li style={{ listStyle: "none" }} key={route.label}>
                   <Link

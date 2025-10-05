@@ -9,6 +9,7 @@ import { useTransform, motion as regMotion } from "framer-motion";
 import { useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import * as THREE from "three";
+import DarkModeBtn from "./DarkModeBtn";
 
 // ---------------- Cartoon Model ----------------
 function CartoonModel() {
@@ -235,20 +236,25 @@ function ScreenHint({
 
   useFrame(() => {
     const o = opacity.get();
+    const isDark = document.documentElement.classList.contains("dark");
+    const color = new THREE.Color(isDark ? "#ffffff" : "#000000");
 
     if (textRef.current) {
       textRef.current.material.transparent = true;
       textRef.current.material.opacity = o;
-    }
-
-    if (cylinderRef.current) {
-      cylinderRef.current.material.transparent = true;
-      cylinderRef.current.material.opacity = o;
+      textRef.current.material.color.copy(color);
     }
 
     if (arrowRef.current) {
       arrowRef.current.material.transparent = true;
       arrowRef.current.material.opacity = o;
+      arrowRef.current.material.color.copy(color);
+    }
+
+    if (cylinderRef.current) {
+      cylinderRef.current.material.transparent = true;
+      cylinderRef.current.material.opacity = o;
+      cylinderRef.current.material.color.copy(color);
     }
   });
 
@@ -265,27 +271,24 @@ function ScreenHint({
       </mesh>
 
       {/* Text */}
-      <mesh rotation={[-Math.PI / 9 - -0.2, 0.2, 0]}>
-        <Text
-          ref={textRef}
-          fontSize={0.13}
-          anchorX="center"
-          anchorY="middle"
-          position={[0, 0.017, 0]}
-          color="black"
-        >
-          Navigate on the screen
-        </Text>
-      </mesh>
+      <Text
+        ref={textRef}
+        fontSize={0.13}
+        anchorX="center"
+        anchorY="middle"
+        position={[0, 0.017, 0]}
+      >
+        Navigate on the screen
+      </Text>
 
-      {/* Arrow pointing down */}
+      {/* Arrow */}
       <mesh
         ref={arrowRef}
         rotation={[-Math.PI / 5 - 6, 2.3, 4.2]}
         position={[0, -0.33, 0]}
       >
         <coneGeometry args={[0.05, 0.15, 16]} />
-        <meshStandardMaterial color="black" />
+        <meshStandardMaterial />
       </mesh>
     </group>
   );
@@ -320,6 +323,7 @@ function CoffeeMug() {
     </group>
   );
 }
+
 function FloorLamp() {
   const bulbRef = useRef<THREE.Mesh>(null);
   const lightRef = useRef<THREE.SpotLight>(null);
@@ -327,16 +331,15 @@ function FloorLamp() {
   useFrame(({ clock }) => {
     const t = clock.getElapsedTime();
 
-    // Animate glow flicker subtly
+    const isDark = document.documentElement.classList.contains("dark");
+
     if (bulbRef.current) {
       const material = bulbRef.current.material as THREE.MeshStandardMaterial;
-      if (material) {
-        material.emissiveIntensity = 0.9 + Math.sin(t * 3) * 0.05;
-      }
+      material.emissiveIntensity = isDark ? 0.9 + Math.sin(t * 3) * 0.05 : 0.05;
     }
 
     if (lightRef.current) {
-      lightRef.current.intensity = 4.8 + Math.sin(t * 3) * 0.05;
+      lightRef.current.intensity = isDark ? 4.8 + Math.sin(t * 3) * 0.05 : 0;
     }
   });
 
@@ -372,7 +375,7 @@ function FloorLamp() {
         <meshStandardMaterial color="#444" roughness={0.5} metalness={0.7} />
       </motion.mesh>
 
-      {/* Outer Lampshade */}
+      {/* Lampshade */}
       <mesh
         position={[0.25, 2.42, 0.25]}
         rotation={[Math.PI / 36, 0, -0.06]}
@@ -387,36 +390,24 @@ function FloorLamp() {
         />
       </mesh>
 
-      {/* Inner Lampshade */}
-      <mesh position={[0.25, 2.42, 0.33]} rotation={[Math.PI / 10, 0, 0]}>
-        <cylinderGeometry args={[0.33, 0.38, 0.28, 48, 1, true]} />
-        <meshStandardMaterial
-          color="#fff2d8"
-          emissive="#fff6e0"
-          emissiveIntensity={0.2}
-          side={THREE.BackSide}
-        />
-      </mesh>
-
-      {/* Light Bulb */}
+      {/* Bulb */}
       <mesh ref={bulbRef} position={[0.25, 2.35, 0.25]}>
         <sphereGeometry args={[0.07, 32, 32]} />
         <meshStandardMaterial
           color="#fffbe0"
           emissive="#fff3c0"
-          emissiveIntensity={1.2}
           roughness={0.3}
           metalness={0.1}
         />
       </mesh>
 
-      {/* Light Source */}
+      {/* SpotLight */}
       <spotLight
         ref={lightRef}
+        intensity={60}
         position={[0.25, 2.35, 0.25]}
         angle={Math.PI / 5}
         penumbra={0.8}
-        intensity={5}
         color="#fff1c1"
         castShadow
         shadow-mapSize-width={2048}
@@ -525,6 +516,14 @@ function Bookshelf() {
 }
 
 function Desk() {
+  const lightRef = useRef<THREE.SpotLight>(null);
+
+  useFrame(() => {
+    const isDark = document.documentElement.classList.contains("dark");
+    if (lightRef.current) {
+      lightRef.current.intensity = isDark ? 3.4 : 0;
+    }
+  });
   return (
     <group position={[0, 0, 1.2]}>
       {/* Keyboard */}
@@ -578,15 +577,12 @@ function Desk() {
 
         {/* Warm Lamp Light */}
         <spotLight
-          position={[0, 0.75, 0]}
+          ref={lightRef}
+          position={[1.1, 1.8, -0.5]}
           angle={Math.PI / 6}
           penumbra={0.3}
-          intensity={3.4}
-          color={"#fff1c1"}
+          color="#fff1c1"
           castShadow
-          shadow-mapSize-width={1024}
-          shadow-mapSize-height={1024}
-          target-position={[0, 0.5, 0]}
         />
       </group>
 
@@ -807,6 +803,7 @@ function CameraController({
 
 export default function HeroSection() {
   const ref = useRef<HTMLDivElement>(null);
+  const [darkMode, setDarkMode] = useState(false); // toggle dark mode
 
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -817,7 +814,7 @@ export default function HeroSection() {
   return (
     <section
       ref={ref}
-      className="h-[185vh] md:h-[200vh] bg-[#ececec]  text-black"
+      className="h-[185vh] md:h-[200vh] bg-[#ececec] dark:bg-[#2e2b2b] text-black dark:text-stone-300"
     >
       <div
         style={{
@@ -832,6 +829,7 @@ export default function HeroSection() {
         <Canvas shadows>
           <ambientLight intensity={0.8} />
           <directionalLight position={[5, 5, 5]} intensity={1} />
+
           <FloorLamp />
           <Desk />
           <CoffeeMug />
@@ -845,8 +843,14 @@ export default function HeroSection() {
           <CameraController scrollYProgress={scrollYProgress} />
         </Canvas>
 
-        <div className="absolute z-50 text-2xl  md:text-3xl font-semibold text-stone-800 left-5 bottom-12 md:bottom-20 md:left-20">
+        <div className="absolute z-50 text-2xl  md:text-3xl font-semibold  left-5 bottom-14 md:bottom-20 md:left-20">
           <regMotion.h1 style={{ opacity }}>Scroll to zoom</regMotion.h1>
+        </div>
+        <div className="absolute hidden md:block  md:-translate-y-1/2 md:top-1/2 right-5 z-50">
+          <DarkModeBtn />
+        </div>
+        <div className="absolute  md:hidden  bottom-12 right-5 z-50">
+          <DarkModeBtn />
         </div>
       </div>
     </section>

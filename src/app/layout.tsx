@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import { Toaster } from "react-hot-toast";
 import Footer from "@/components/Footer";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -26,12 +27,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en">
       <body className={`font-sans ${montserrat.variable}`}>
         <div className="w-full min-h-screen">
-          <Navbar />
-          {children}
-          <Footer />
+          <ThemeProvider>
+            <Navbar />
+            {children}
+            <Footer />
+          </ThemeProvider>
           <Toaster
             toastOptions={{
               style: {

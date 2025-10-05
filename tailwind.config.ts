@@ -1,23 +1,22 @@
-import type { Config } from 'tailwindcss'
-
-const config: Config = {
-  darkMode: "class", 
+/** @type {import('tailwindcss').Config} */
+const config = {
+  darkMode: 'class',
   content: [
-    './app/**/*.{ts,tsx}',
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
+    "./src/**/*.{ts,tsx,js,jsx}",
   ],
   theme: {
     extend: {
-      fontFamily: {
-        sans: ['var(--font-m)', 'sans-serif'],
+      keyframes: {
+        'border-spin': {
+          '100%': { transform: 'rotate(-360deg)' },
+        },
       },
-      screens: {
-        'max-xs': { max: '399px' }, 
+      animation: {
+        'border-spin': 'border-spin 7s linear infinite',
       },
     },
   },
   plugins: [],
-}
+};
 
-export default config
+module.exports = config;
