@@ -30,8 +30,8 @@ function CartoonModel() {
 
     // Gentle breathing motion
     const t = state.clock.getElapsedTime();
-    group.current.position.y = -0.45 + Math.sin(t * 1.2) * 0.004; // very small bob
-    group.current.rotation.y = Math.PI + Math.sin(t * 0.3) * 0.008; // tiny sway
+    group.current.position.y = -0.45 + Math.sin(t * 1.2) * 0.008; // very small bob
+    group.current.rotation.y = Math.PI + Math.sin(t * 0.3) * 0.009; // tiny sway
   });
 
   return (
@@ -655,7 +655,7 @@ export default function HeroSection() {
   return (
     <section
       ref={ref}
-      className="h-[195vh] md:h-[200vh] bg-[#ececec]  text-black"
+      className="h-[185vh] md:h-[200vh] bg-[#ececec]  text-black"
     >
       <div
         style={{
