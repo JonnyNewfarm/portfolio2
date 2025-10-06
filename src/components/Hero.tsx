@@ -59,81 +59,131 @@ function CartoonModel({
 }
 
 // ---------------- Chair ----------------
+
 function Chair() {
+  const wood = useLoader(THREE.TextureLoader, "/fabrics/fabric-3.jpeg");
+  wood.wrapS = wood.wrapT = THREE.RepeatWrapping;
+  wood.repeat.set(1, 1);
+  wood.colorSpace = THREE.SRGBColorSpace;
+
+  const seat = useLoader(THREE.TextureLoader, "/fabrics/chair-seat.jpeg");
+  seat.wrapS = seat.wrapT = THREE.RepeatWrapping;
+  seat.repeat.set(1, 1);
+  seat.colorSpace = THREE.SRGBColorSpace;
+
   return (
-    <group>
+    <group position={[0, 0, 0]}>
       {/* Seat */}
       <RoundedBox
-        args={[1, 0.12, 0.6]}
-        radius={0.05}
+        args={[0.89, 0.11, 0.56]}
+        radius={0.04}
         smoothness={4}
-        position={[0, 0.7, 2.8]}
+        position={[0, 0.7, 2.73]}
         castShadow
         receiveShadow
       >
-        <meshStandardMaterial color="#555555" roughness={0.6} metalness={0.2} />
+        <meshStandardMaterial map={seat} roughness={0.8} metalness={0.1} />
       </RoundedBox>
+      {/* Bars under seat (front to back support) */}
+      {[-0.38, 0.4].map((x, i) => (
+        <mesh
+          key={`under-bar-${i}`}
+          position={[x, 0.61, 2.8]} // slightly below the seat
+          rotation={[0, 0, 0]}
+          castShadow
+          receiveShadow
+        >
+          {/* connects front and back legs */}
+          <boxGeometry args={[0.08, 0.05, 0.55]} />
+          <meshStandardMaterial map={wood} roughness={0.5} metalness={0.2} />
+        </mesh>
+      ))}
 
-      {/* Backrest */}
+      {[-0.38, 0.416].map((x, i) => (
+        <mesh
+          key={`under-bar-${i}`}
+          position={[x, 0.36, 2.8]} // slightly below the seat
+          rotation={[0, 0, 0]}
+          castShadow
+          receiveShadow
+        >
+          {/* connects front and back legs */}
+          <boxGeometry args={[0.04, 0.03, 0.47]} />
+          <meshStandardMaterial map={wood} roughness={0.5} metalness={0.2} />
+        </mesh>
+      ))}
+      {/* Backrest (wood) */}
       <RoundedBox
-        args={[1, 1, 0.12]}
+        args={[1.015, 0.4, 0.08]}
         radius={0.05}
         smoothness={4}
-        position={[0, 1.2, 3.05]}
-        rotation={[-0.01, 0, 0]}
+        position={[-0.04, 1.39, 3.039]}
+        rotation={[0.1, 0, 0]}
         castShadow
         receiveShadow
       >
-        <meshStandardMaterial color="#555555" roughness={1.3} metalness={0.2} />
+        <meshStandardMaterial map={wood} roughness={0.6} metalness={0.1} />
       </RoundedBox>
 
-      {/* Legs */}
-      {[-0.45, 0.45].map((x) =>
-        [-0.25, 0.25].map((z, i) => (
+      {/* Back support bars */}
+      {[-0.412, 0.388].map((x, i) => (
+        <mesh
+          key={i}
+          position={[x, 1.086, 3.055]}
+          rotation={[0, 0, 0.07]}
+          castShadow
+          receiveShadow
+        >
+          <boxGeometry args={[0.025, 0.9, 0.07]} />
+          <meshStandardMaterial map={wood} roughness={0.6} metalness={0.1} />
+        </mesh>
+      ))}
+
+      {/* Legs (planky instead of round) */}
+      {[-0.4, 0.4].map((x, i) =>
+        [-0.25, 0.25].map((z, j) => (
           <mesh
-            key={`${x}-${z}-${i}`}
-            position={[x, 0.29, z + 2.8]}
+            key={`${x}-${z}-${i}-${j}`}
+            position={[x, 0.35, z + 2.8]}
+            rotation={[-0.13, 0, 0]}
             castShadow
             receiveShadow
           >
-            <cylinderGeometry args={[0.05, 0.05, 0.8]} />
-            <meshStandardMaterial
-              color="#444444"
-              roughness={0.5}
-              metalness={0.3}
-            />
+            {/* rectangular beams instead of cylinders */}
+            <boxGeometry args={[0.032, 0.78, 0.08]} />
+            <meshStandardMaterial map={wood} roughness={0.5} metalness={0.2} />
           </mesh>
         ))
       )}
 
-      {/* Cushion */}
-      <RoundedBox
-        args={[0.9, 0.02, 0.55]}
-        radius={0.02}
-        smoothness={4}
-        position={[0, 0.76, 2.8]}
-        castShadow
-        receiveShadow
-      >
-        <meshStandardMaterial color="#666666" roughness={0.7} metalness={0.1} />
-      </RoundedBox>
+      {/* Side bars */}
+      {[-0.28, 0.257].map((y, i) => (
+        <mesh key={i} position={[0, 0.57, y + 2.8]} castShadow receiveShadow>
+          <boxGeometry args={[0.86, 0.03, 0.05]} />
+          <meshStandardMaterial map={wood} roughness={0.5} metalness={0.2} />
+        </mesh>
+      ))}
     </group>
   );
 }
 
 // ---------------- Computer Tower ----------------
 function ComputerTower() {
+  const CompTower = useLoader(THREE.TextureLoader, "/fabrics/plastic.webp");
+  CompTower.wrapS = CompTower.wrapT = THREE.RepeatWrapping;
+  CompTower.repeat.set(1, 1);
+  CompTower.colorSpace = THREE.SRGBColorSpace;
   return (
     <group rotation={[0, Math.PI / -2, 0]} position={[1.5, -0.12, 0.7]}>
       {/* Tower Body */}
       <RoundedBox
         args={[0.5, 0.9, 0.25]}
         radius={0.03}
-        smoothness={4}
+        smoothness={6}
         castShadow
         receiveShadow
       >
-        <meshStandardMaterial color="#222222" roughness={0.6} metalness={0.3} />
+        <meshStandardMaterial map={CompTower} roughness={0.6} metalness={0.3} />
       </RoundedBox>
 
       {/* Power Button */}
@@ -310,12 +360,16 @@ function ScreenHint({
 }
 
 function CoffeeMug() {
+  const cup = useLoader(THREE.TextureLoader, "/fabrics/chair-seat.jpeg");
+  cup.wrapS = cup.wrapT = THREE.RepeatWrapping;
+  cup.repeat.set(1, 1);
+  cup.colorSpace = THREE.SRGBColorSpace;
   return (
-    <group position={[-0.78, 1.09, 1.1]} rotation={[0, Math.PI / 5, 0]}>
+    <group position={[-0.79, 1.13, 1.25]} rotation={[0, Math.PI / 5, 0]}>
       {/* Mug Body */}
       <mesh castShadow receiveShadow>
         <cylinderGeometry args={[0.1, 0.1, 0.12, 32]} />
-        <meshStandardMaterial color="#ffffff" roughness={0.4} metalness={0.1} />
+        <meshStandardMaterial map={cup} roughness={0.4} metalness={0.1} />
       </mesh>
 
       {/* Hollow interior */}
@@ -342,6 +396,9 @@ function CoffeeMug() {
 function FloorLamp() {
   const bulbRef = useRef<THREE.Mesh>(null);
   const lightRef = useRef<THREE.SpotLight>(null);
+  const texture = useLoader(THREE.TextureLoader, "/fabrics/fabric-1.webp");
+  texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set(2, 2);
 
   useFrame(({ clock }) => {
     const t = clock.getElapsedTime();
@@ -397,8 +454,9 @@ function FloorLamp() {
       >
         <cylinderGeometry args={[0.35, 0.4, 0.3, 48, 1, true]} />
         <meshStandardMaterial
+          map={texture}
           color="#bec4be"
-          roughness={0.7}
+          roughness={1.0}
           metalness={0.1}
           side={THREE.DoubleSide}
         />
@@ -532,6 +590,9 @@ function Bookshelf() {
 function Desk() {
   const lightRef = useRef<THREE.SpotLight>(null);
   const isDark = document.documentElement.classList.contains("dark");
+  const texture = useLoader(THREE.TextureLoader, "/fabrics/wood-1.webp");
+  texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set(2, 2);
 
   useFrame(() => {
     const isDark = document.documentElement.classList.contains("dark");
@@ -627,34 +688,49 @@ function Desk() {
 
       {/* Desk Top */}
       <RoundedBox
-        args={[3, 0.12, 1.5]}
+        args={[3, 0.1, 1.5]}
         radius={0.05}
         smoothness={4}
         position={[0, 0.95, 0]}
         castShadow
         receiveShadow
       >
-        <meshStandardMaterial color="#8B4513" roughness={0.6} metalness={0.1} />
+        <meshStandardMaterial map={texture} roughness={0.6} metalness={0.1} />
       </RoundedBox>
 
       {/* Legs */}
-      {[-1.4, 1.4].map((x) =>
-        [-0.7, 0.7].map((z, i) => (
+      {[-1.39, 1.39].map((x) =>
+        [-0.68, 0.62].map((z, i) => (
           <mesh
             key={`${x}-${z}-${i}`}
-            position={[x, 0.53, z]}
+            position={[x, 0.43, z]}
             castShadow
             receiveShadow
           >
-            <cylinderGeometry args={[0.08, 0.08, 0.75, 32]} />
+            <cylinderGeometry
+              args={[0.056, 0.032, 0.99, 32]}
+            ></cylinderGeometry>
             <meshStandardMaterial
-              color="#4B3621"
+              map={texture}
               roughness={0.5}
               metalness={0.2}
             />
           </mesh>
         ))
       )}
+
+      {[-1.36, 1.39].map((x) => (
+        <mesh
+          key={`bar-${x}`}
+          position={[x, 0.73, 0]} // middle height
+          rotation={[36, 36, -0.06]} // rotate along Z-axis
+          castShadow
+          receiveShadow
+        >
+          <cylinderGeometry args={[0.026, 0.02, 1.4, 13]} />
+          <meshStandardMaterial map={texture} roughness={0.5} metalness={0.2} />
+        </mesh>
+      ))}
 
       {/* Monitor */}
       <group position={[0, 0.96, -0.6]}>
@@ -753,7 +829,7 @@ function ScreenUI({
             </Text>
             <Text
               position={[-0.4, 0.3, 1.3]}
-              fontSize={0.182}
+              fontSize={0.195}
               color="black"
               onClick={() => router.push("/")}
               onPointerOver={() => (document.body.style.cursor = "pointer")}
@@ -763,7 +839,7 @@ function ScreenUI({
             </Text>
             <Text
               position={[0.45, 0.3, 1.3]}
-              fontSize={0.182}
+              fontSize={0.195}
               color="black"
               onClick={() => router.push("/projects")}
               onPointerOver={() => (document.body.style.cursor = "pointer")}
@@ -773,7 +849,7 @@ function ScreenUI({
             </Text>
             <Text
               position={[-0.4, 0, 1.3]}
-              fontSize={0.182}
+              fontSize={0.195}
               color="black"
               onClick={() => router.push("/about")}
               onPointerOver={() => (document.body.style.cursor = "pointer")}
@@ -783,7 +859,7 @@ function ScreenUI({
             </Text>
             <Text
               position={[0.42, 0, 1.3]}
-              fontSize={0.182}
+              fontSize={0.195}
               color="black"
               onClick={() => router.push("/contact")}
               onPointerOver={() => (document.body.style.cursor = "pointer")}
@@ -800,18 +876,18 @@ function ScreenUI({
             exit={{ opacity: 0, y: 0.2 }}
             transition={{ duration: 0.6, ease: "easeInOut" }}
           >
-            <Text position={[-0.15, 0.6, 1.3]} fontSize={0.156} color="black">
+            <Text position={[-0.15, 0.6, 1.3]} fontSize={0.163} color="black">
               Hey — I’m Jonas,
             </Text>
-            <Text position={[0.12, 0.4, 1.3]} fontSize={0.156} color="black">
+            <Text position={[0.12, 0.4, 1.3]} fontSize={0.163} color="black">
               Designer and developer
             </Text>
-            <Text position={[-0.12, 0.2, 1.3]} fontSize={0.156} color="black">
+            <Text position={[-0.12, 0.2, 1.3]} fontSize={0.163} color="black">
               Based in Norway.
             </Text>
             <Text
               position={[-0.46, -0.04, 1.31]}
-              fontSize={0.248}
+              fontSize={0.269}
               color="black"
               onClick={() => setNextPage(true)}
               onPointerOver={() => (document.body.style.cursor = "pointer")}
@@ -835,7 +911,7 @@ function CameraController({
 
   useFrame(() => {
     const progress = scrollYProgress.get();
-    camera.position.lerp(new THREE.Vector3(2.1, 1.6, 5.6 - progress * 3), 0.2);
+    camera.position.lerp(new THREE.Vector3(2.1, 1.6, 5.3 - progress * 3), 0.2);
     camera.lookAt(new THREE.Vector3(0.2, 0.8, 0));
   });
 
@@ -844,7 +920,6 @@ function CameraController({
 
 export default function HeroSection() {
   const ref = useRef<HTMLDivElement>(null);
-  const [darkMode, setDarkMode] = useState(false); // toggle dark mode
 
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -855,7 +930,7 @@ export default function HeroSection() {
   return (
     <section
       ref={ref}
-      className="h-[180vh] md:h-[200vh] bg-[#ececec] dark:bg-[#2e2b2b] text-black dark:text-stone-300"
+      className="h-[167vh] md:h-[170vh] bg-[#ececec] dark:bg-[#2e2b2b] text-black dark:text-stone-300"
     >
       <div
         style={{
