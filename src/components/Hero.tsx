@@ -6,13 +6,17 @@ import { useScroll, MotionValue, AnimatePresence } from "framer-motion";
 import { motion } from "framer-motion-3d";
 import { useTransform, motion as regMotion } from "framer-motion";
 
-import { useMemo, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import * as THREE from "three";
 import DarkModeBtn from "./DarkModeBtn";
 
 // ---------------- Cartoon Model ----------------
-function CartoonModel() {
+function CartoonModel({
+  scrollYProgress,
+}: {
+  scrollYProgress: MotionValue<number>;
+}) {
   const { scene } = useGLTF("/me-cartoon.glb");
   const group = useRef<THREE.Group>(null);
 
@@ -23,16 +27,25 @@ function CartoonModel() {
     const leftLeg = group.current.getObjectByName("LeftLeg");
     const rightLeg = group.current.getObjectByName("RightLeg");
     const spine = group.current.getObjectByName("Spine");
+    const rightArm = group.current.getObjectByName("RightArm"); // find your arm bone
 
     if (hip) hip.rotation.x = -Math.PI / 3.8;
     if (leftLeg) leftLeg.rotation.x = -Math.PI / 2;
     if (rightLeg) rightLeg.rotation.x = -Math.PI / 3;
     if (spine) spine.rotation.x = Math.PI / 4;
+    if (rightArm) rightArm.rotation.x = Math.PI / 1.9;
+    if (rightArm) rightArm.rotation.z = -Math.PI / 6.9;
+    if (rightArm) rightArm.rotation.y = -Math.PI / 3.9;
 
     // Gentle breathing motion
     const t = state.clock.getElapsedTime();
-    group.current.position.y = -0.45 + Math.sin(t * 1.2) * 0.008; // very small bob
-    group.current.rotation.y = Math.PI + Math.sin(t * 0.3) * 0.009; // tiny sway
+    group.current.position.y = -0.45 + Math.sin(t * 1.2) * 0.008;
+    group.current.rotation.y = Math.PI + Math.sin(t * 0.3) * 0.009;
+
+    // ---- Arm lift based on scroll ----
+    const progress = scrollYProgress.get(); // 0 -> 1
+    const targetRotation = (-Math.PI / -2) * progress; // lift up to 90°
+    if (rightArm) rightArm.rotation.y = targetRotation;
   });
 
   return (
@@ -275,7 +288,7 @@ function ScreenHint({
       {/* Text */}
       <Text
         ref={textRef}
-        fontSize={0.138}
+        fontSize={0.146}
         anchorX="center"
         anchorY="middle"
         position={[0, 0.017, 0]}
@@ -664,7 +677,7 @@ function Desk() {
         </mesh>
 
         <RoundedBox
-          args={[2.03, 1.32, 0.1]}
+          args={[2.29, 1.353, 0.099]}
           radius={0.02}
           smoothness={3}
           position={[0, 0.8, 0]}
@@ -675,10 +688,10 @@ function Desk() {
         </RoundedBox>
 
         <RoundedBox
-          args={[1.9, 1.19, 0.13]}
+          args={[2.17, 1.24, 0.141]}
           radius={0.02}
           smoothness={3}
-          position={[0, 0.8, 0]}
+          position={[0.015, 0.8, 0]}
         >
           <meshStandardMaterial color="white" roughness={0.4} metalness={0.3} />
         </RoundedBox>
@@ -725,46 +738,56 @@ function ScreenUI({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.6, ease: "easeInOut" }}
           >
-            <Text position={[-0.23, 0.65, 1.3]} fontSize={0.14} color="black">
+            <Text position={[-0.23, 0.65, 1.3]} fontSize={0.151} color="black">
               Navigation
             </Text>
             <Text
               position={[0.6, 0.65, 1.3]}
-              fontSize={0.126}
+              fontSize={0.132}
               color="black"
               onClick={() => setNextPage(false)}
+              onPointerOver={() => (document.body.style.cursor = "pointer")}
+              onPointerOut={() => (document.body.style.cursor = "default")}
             >
               Back
             </Text>
             <Text
               position={[-0.4, 0.3, 1.3]}
-              fontSize={0.168}
+              fontSize={0.182}
               color="black"
               onClick={() => router.push("/")}
+              onPointerOver={() => (document.body.style.cursor = "pointer")}
+              onPointerOut={() => (document.body.style.cursor = "default")}
             >
               Home
             </Text>
             <Text
               position={[0.45, 0.3, 1.3]}
-              fontSize={0.168}
+              fontSize={0.182}
               color="black"
               onClick={() => router.push("/projects")}
+              onPointerOver={() => (document.body.style.cursor = "pointer")}
+              onPointerOut={() => (document.body.style.cursor = "default")}
             >
               My Work
             </Text>
             <Text
               position={[-0.4, 0, 1.3]}
-              fontSize={0.168}
+              fontSize={0.182}
               color="black"
               onClick={() => router.push("/about")}
+              onPointerOver={() => (document.body.style.cursor = "pointer")}
+              onPointerOut={() => (document.body.style.cursor = "default")}
             >
               About
             </Text>
             <Text
               position={[0.42, 0, 1.3]}
-              fontSize={0.168}
+              fontSize={0.182}
               color="black"
               onClick={() => router.push("/contact")}
+              onPointerOver={() => (document.body.style.cursor = "pointer")}
+              onPointerOut={() => (document.body.style.cursor = "default")}
             >
               Contact
             </Text>
@@ -777,20 +800,22 @@ function ScreenUI({
             exit={{ opacity: 0, y: 0.2 }}
             transition={{ duration: 0.6, ease: "easeInOut" }}
           >
-            <Text position={[-0.13, 0.6, 1.3]} fontSize={0.151} color="black">
+            <Text position={[-0.15, 0.6, 1.3]} fontSize={0.156} color="black">
               Hey — I’m Jonas,
             </Text>
-            <Text position={[0.1, 0.4, 1.3]} fontSize={0.151} color="black">
+            <Text position={[0.12, 0.4, 1.3]} fontSize={0.156} color="black">
               Designer and developer
             </Text>
-            <Text position={[-0.12, 0.2, 1.3]} fontSize={0.151} color="black">
+            <Text position={[-0.12, 0.2, 1.3]} fontSize={0.156} color="black">
               Based in Norway.
             </Text>
             <Text
               position={[-0.46, -0.04, 1.31]}
-              fontSize={0.223}
+              fontSize={0.248}
               color="black"
               onClick={() => setNextPage(true)}
+              onPointerOver={() => (document.body.style.cursor = "pointer")}
+              onPointerOut={() => (document.body.style.cursor = "default")}
             >
               Next
             </Text>
@@ -830,7 +855,7 @@ export default function HeroSection() {
   return (
     <section
       ref={ref}
-      className="h-[185vh] md:h-[200vh] bg-[#ececec] dark:bg-[#2e2b2b] text-black dark:text-stone-300"
+      className="h-[180vh] md:h-[200vh] bg-[#ececec] dark:bg-[#2e2b2b] text-black dark:text-stone-300"
     >
       <div
         style={{
@@ -851,7 +876,7 @@ export default function HeroSection() {
           <CoffeeMug />
           <Bookshelf />
           <Tablet />
-          <CartoonModel />
+          <CartoonModel scrollYProgress={scrollYProgress} />
           <Chair />
           <ComputerTower />
           <ScreenUI scrollYProgress={scrollYProgress} />
