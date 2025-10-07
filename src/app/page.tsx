@@ -9,15 +9,14 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check if preloader has already been shown in this session
     const preloaderShown = sessionStorage.getItem("preloaderShown");
 
     if (preloaderShown) {
-      setIsLoading(false); // skip preloader
+      setIsLoading(false);
     } else {
       const timer = setTimeout(() => {
         setIsLoading(false);
-        sessionStorage.setItem("preloaderShown", "true"); // mark as shown
+        sessionStorage.setItem("preloaderShown", "true");
       }, 3000);
 
       return () => clearTimeout(timer);

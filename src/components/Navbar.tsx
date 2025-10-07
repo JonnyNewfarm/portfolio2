@@ -15,9 +15,7 @@ const Navbar = () => {
   ];
 
   return (
-    <div className="bg-[#ececec] dark:bg-[#2e2b2b] text-[#1c1a17] dark:text-stone-300 font-extrabold text-[16px]  px-20 py-3 flex items-center sticky top-0 z-50 w-full justify-between">
-      <div className="flex gap-x-1 text-[#1c1a17] m-0 leading-tight"></div>
-
+    <div className="bg-transparent text-[#1c1a17] dark:text-stone-300 font-extrabold text-[16px]  px-20 py-3 flex items-center fixed top-0 z-50 w-full justify-between">
       <div>
         <Link
           href="/"
@@ -54,17 +52,43 @@ const Navbar = () => {
                 <li style={{ listStyle: "none" }} key={route.label}>
                   <Link
                     href={route.url}
-                    onClick={(e) => {
+                    onClick={async (e) => {
                       e.preventDefault();
 
-                      if (document.startViewTransition) {
-                        // ✅ TS knows startViewTransition returns a ViewTransition
-                        document.startViewTransition(() => {
-                          router.push(route.url);
-                        });
-                      } else {
-                        router.push(route.url);
-                      }
+                      // Detect current mode (Tailwind uses the `dark` class on <html>)
+                      const isDarkMode =
+                        document.documentElement.classList.contains("dark");
+                      const transitionColor = isDarkMode
+                        ? "#1c1a17"
+                        : "#f5f5f5";
+
+                      // Create overlay
+                      const overlay = document.createElement("div");
+                      overlay.style.position = "fixed";
+                      overlay.style.inset = "0";
+                      overlay.style.background = transitionColor;
+                      overlay.style.zIndex = "99999";
+                      overlay.style.opacity = "0";
+                      overlay.style.transition = "opacity 0.4s ease";
+                      document.body.appendChild(overlay);
+
+                      // Fade in overlay
+                      requestAnimationFrame(() => {
+                        overlay.style.opacity = "1";
+                      });
+
+                      // Wait for fade in
+                      await new Promise((resolve) => setTimeout(resolve, 400));
+
+                      // Navigate
+                      router.push(route.url);
+
+                      // Wait for next page render
+                      await new Promise((resolve) => setTimeout(resolve, 300));
+
+                      // Fade out overlay
+                      overlay.style.opacity = "0";
+                      setTimeout(() => overlay.remove(), 300);
                     }}
                   >
                     {route.label} {route.label === "About" ? "" : ","}

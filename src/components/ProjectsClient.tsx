@@ -87,7 +87,7 @@ const ProjectsClient = () => {
 
   return (
     <SmoothScroll>
-      <div className="w-full min-h-screen h-full bg-[#ececec] dark:bg-[#2e2b2b] text-[#161310] dark:text-stone-300">
+      <div className="w-full min-h-screen h-full md:pt-6 bg-[#ececec] dark:bg-[#2e2b2b] text-[#161310] dark:text-stone-300">
         <div className="md:hidden flex flex-col  text-start px-6 py-10  border-b border-[#161310] dark:border-stone-300">
           <motion.h1
             initial={{ scale: 0.8, opacity: 0 }}
@@ -233,14 +233,14 @@ const ProjectsClient = () => {
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: [0.6, 1], opacity: [0, 1] }}
               transition={{ delay: 0.4, duration: 0.7 }}
-              className="w-2/3 max-w-4xl max-h-[600px] overflow-hidden border-l border-[#1c1a17]/20 dark:border-stone-300/20 dark:bg-white/70"
+              className="w-2/3 max-w-4xl h-[75vh] overflow-hidden border-l border-[#1c1a17]/20 dark:border-stone-300/20 dark:bg-white/95"
               style={{ position: "relative" }}
             >
               <div
                 ref={containerRef}
+                className="h-screen"
                 style={{
                   overflow: "hidden",
-                  height: "620px",
                   position: "relative",
                 }}
               >
