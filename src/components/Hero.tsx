@@ -11,7 +11,6 @@ import { useRouter } from "next/navigation";
 import * as THREE from "three";
 import DarkModeBtn from "./DarkModeBtn";
 
-// ---------------- Cartoon Model ----------------
 function CartoonModel({
   scrollYProgress,
 }: {
@@ -58,8 +57,6 @@ function CartoonModel({
   );
 }
 
-// ---------------- Chair ----------------
-
 function Chair() {
   const wood = useLoader(THREE.TextureLoader, "/fabrics/fabric-3.jpeg");
   wood.wrapS = wood.wrapT = THREE.RepeatWrapping;
@@ -88,7 +85,7 @@ function Chair() {
       {[-0.38, 0.4].map((x, i) => (
         <mesh
           key={`under-bar-${i}`}
-          position={[x, 0.61, 2.8]} // slightly below the seat
+          position={[x, 0.61, 2.8]}
           rotation={[0, 0, 0]}
           castShadow
           receiveShadow
@@ -102,7 +99,7 @@ function Chair() {
       {[-0.38, 0.416].map((x, i) => (
         <mesh
           key={`under-bar-${i}`}
-          position={[x, 0.36, 2.8]} // slightly below the seat
+          position={[x, 0.36, 2.8]}
           rotation={[0, 0, 0]}
           castShadow
           receiveShadow
@@ -167,7 +164,6 @@ function Chair() {
   );
 }
 
-// ---------------- Computer Tower ----------------
 function ComputerTower() {
   const CompTower = useLoader(THREE.TextureLoader, "/fabrics/plastic.webp");
   CompTower.wrapS = CompTower.wrapT = THREE.RepeatWrapping;
@@ -228,8 +224,6 @@ function ComputerTower() {
     </group>
   );
 }
-
-// ---------------- Tablet ----------------
 
 export function Tablet() {
   const images = ["/desk1-01.webp", "/desk1-02.webp", "/desk1-03.webp"];
@@ -398,14 +392,14 @@ function WindowOnWall() {
   frameTexture.wrapS = frameTexture.wrapT = THREE.RepeatWrapping;
   frameTexture.repeat.set(1, 1);
 
-  const [isDark, setIsDark] = useState(false);
+  const [isDark, setIsDark] = useState(
+    document.documentElement.classList.contains("dark")
+  );
 
-  // Detect if dark mode class is active
   useEffect(() => {
     const checkDarkMode = () =>
       setIsDark(document.documentElement.classList.contains("dark"));
 
-    checkDarkMode();
     const observer = new MutationObserver(checkDarkMode);
     observer.observe(document.documentElement, {
       attributes: true,
@@ -415,18 +409,22 @@ function WindowOnWall() {
     return () => observer.disconnect();
   }, []);
 
-  const bgTexture = useLoader(
-    THREE.TextureLoader,
-    isDark ? "/views-dark.jpeg" : "/views-light.jpeg"
-  );
-  bgTexture.colorSpace = THREE.SRGBColorSpace;
-  bgTexture.repeat.x = -1;
+  const [lightView, darkView] = useLoader(THREE.TextureLoader, [
+    "/views-light.jpeg",
+    "/views-dark.jpeg",
+  ]);
 
-  // ✅ Set wrapping *and* update texture
-  bgTexture.wrapS = THREE.RepeatWrapping;
-  bgTexture.wrapT = THREE.RepeatWrapping;
-  bgTexture.needsUpdate = true;
-  const openAngle = Math.PI / 2.7; // ~22.5° inward
+  useMemo(() => {
+    [lightView, darkView].forEach((tex) => {
+      tex.colorSpace = THREE.SRGBColorSpace;
+      tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+      tex.repeat.x = -1;
+    });
+  }, [lightView, darkView]);
+
+  const bgTexture = isDark ? darkView : lightView;
+
+  const openAngle = Math.PI / 2.7;
   const paneWidth = 0.5;
 
   return (
@@ -444,6 +442,7 @@ function WindowOnWall() {
         />
       </mesh>
 
+      {/* Left Pane */}
       <group position={[-paneWidth / 2, 0, 0]}>
         <group position={[-paneWidth / 2, 0, 0]} rotation={[0, openAngle, 0]}>
           <mesh position={[paneWidth / 2, 0, 0]}>
@@ -481,13 +480,14 @@ function WindowOnWall() {
         </group>
       </group>
 
+      {/* Right Pane */}
       <group position={[paneWidth / 2, 0, 0]}>
         <mesh position={[0 / 2, 0, -0.01]}>
           <boxGeometry args={[paneWidth, 1, 0.02]} />
           <meshPhysicalMaterial
             color="#a0c4ff"
-            transparent={true}
-            opacity={0.32} // adjust for how frosted you want it
+            transparent
+            opacity={0.32}
             roughness={0.8}
             metalness={0.1}
           />
@@ -514,7 +514,7 @@ function WindowOnWall() {
         ))}
       </group>
 
-      {/* === OUTER FRAME === */}
+      {/* Outer Frame */}
       {(
         [
           [-0.5, 0, 0],
@@ -533,8 +533,8 @@ function WindowOnWall() {
         </mesh>
       ))}
 
+      {/* Handle */}
       <group position={[paneWidth / 2 + 0.03, 0, 0]}>
-        {/* Handle Base */}
         <mesh position={[0.0, 0, 0.045]} rotation={[Math.PI / 2, 0, 0]}>
           <cylinderGeometry args={[0.015, 0.015, 0.06, 16]} />
           <meshStandardMaterial
@@ -553,7 +553,6 @@ function WindowOnWall() {
           />
         </mesh>
 
-        {/* Grip Ring */}
         <mesh position={[0, 0, 0.07]} rotation={[0, 0, Math.PI / 2]}>
           <torusGeometry args={[0.025, 0.006, 16, 32]} />
           <meshStandardMaterial
@@ -566,6 +565,7 @@ function WindowOnWall() {
     </group>
   );
 }
+
 function FloorLamp() {
   const bulbRef = useRef<THREE.Mesh>(null);
   const lightRef = useRef<THREE.SpotLight>(null);
@@ -667,7 +667,7 @@ interface GLBPlantProps {
   position?: [number, number, number];
   scale?: [number, number, number];
   rotation?: [number, number, number];
-  url: string; // path to your glb
+  url: string;
 }
 
 export function GLBPlant({
@@ -735,7 +735,7 @@ function Bookshelf() {
         const shelfLevel = Math.floor(i / 6);
         const y = 0.05 + shelfLevel * 0.8;
 
-        const height = 0.15 + Math.random() * 0.15; // shorter books
+        const height = 0.15 + Math.random() * 0.15;
         const width = 0.03 + Math.random() * 0.02;
         const depth = 0.08 + Math.random() * 0.03;
 
@@ -745,7 +745,6 @@ function Bookshelf() {
         const x = -0.35 + Math.random() * 0.7;
         const z = -0.1 + Math.random() * 0.22;
 
-        // Pick a color from the array (loop around if more books than colors)
         const color = bookColors[i % bookColors.length];
 
         return (
@@ -903,8 +902,8 @@ function Desk() {
       {[-1.36, 1.39].map((x) => (
         <mesh
           key={`bar-${x}`}
-          position={[x, 0.73, 0]} // middle height
-          rotation={[36, 36, -0.06]} // rotate along Z-axis
+          position={[x, 0.73, 0]}
+          rotation={[36, 36, -0.06]}
           castShadow
           receiveShadow
         >
@@ -1119,54 +1118,6 @@ export function WallShade({
   );
 }
 
-function RoomCorner() {
-  const lineRefs = useRef<any[]>([]);
-
-  useFrame(() => {
-    const isDark = document.documentElement.classList.contains("dark");
-    const color = new THREE.Color(isDark ? "#4d4c4c" : "#d6d2d2");
-
-    lineRefs.current.forEach((line) => {
-      if (line?.material?.color) line.material.color.copy(color);
-    });
-  });
-
-  return (
-    <group position={[-2.6, 0, 0]}>
-      {/* Lines */}
-      {[
-        // all line points
-        [
-          [0, 0, 0],
-          [0, 3.6, 0],
-        ],
-        [
-          [0, 0, 0],
-          [16, 0, 0],
-        ],
-        [
-          [0, 0, 0],
-          [0, 0, 5],
-        ],
-        [
-          [0, 3.6, 0],
-          [16, 3.6, 0],
-        ],
-        [
-          [0, 3.6, 0],
-          [0, 3.9, 3],
-        ],
-      ].map((points, i) => (
-        <Line
-          key={i}
-          ref={(el) => (lineRefs.current[i] = el)}
-          points={points}
-          lineWidth={1}
-        />
-      ))}
-    </group>
-  );
-}
 function CameraController({
   scrollYProgress,
 }: {
@@ -1186,7 +1137,7 @@ function CameraController({
 function Floor() {
   const texture = useLoader(THREE.TextureLoader, "/fabrics/floor-2.webp");
   texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-  texture.repeat.set(2, 2); // repeat for larger floor area
+  texture.repeat.set(2, 2);
   texture.colorSpace = THREE.SRGBColorSpace;
 
   return (
@@ -1311,6 +1262,18 @@ export default function HeroSection() {
     target: ref,
     offset: ["start start", "end start"],
   });
+
+  const [isMdUp, setIsMdUp] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(min-width: 768px)"); // md breakpoint
+    setIsMdUp(mediaQuery.matches);
+
+    const handler = (e: MediaQueryListEvent) => setIsMdUp(e.matches);
+    mediaQuery.addEventListener("change", handler);
+
+    return () => mediaQuery.removeEventListener("change", handler);
+  }, []);
   const opacity = useTransform(scrollYProgress, [0.25, 0.35], [1, 0]); // fades later and slower
 
   return (
@@ -1341,7 +1304,7 @@ export default function HeroSection() {
             position={[2.22, 0.2, 2.1]} // adjust to match bookshelf
             scale={[1.22, 1.22, 1.22]}
           />
-          <WindowOnWall />
+          {isMdUp && <WindowOnWall />}
           <Wall />
           <Wall2 />
 
