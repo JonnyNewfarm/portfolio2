@@ -16,7 +16,7 @@ export default function DarkModeBtn() {
   return (
     <button
       onClick={toggleTheme}
-      className="px-4 py-2 cursor-pointer  border rounded-[3px] border-stone-900 dark:border-stone-300 text-stone-900 dark:text-stone-100"
+      className="px-4 py-2 text-stone-100 md:dark:text-stone-100 md:text-stone-900 cursor-pointer  border rounded-[3px] border-stone-100 md:dark:border-stone-100 md:border-stone-900"
     >
       {isDark ? "Light mode" : "Dark mode"}
     </button>

@@ -1,12 +1,12 @@
 "use client";
 
 import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
-import { Text, RoundedBox, useGLTF } from "@react-three/drei";
+import { Text, RoundedBox, useGLTF, Line, Sphere } from "@react-three/drei";
 import { useScroll, MotionValue, AnimatePresence } from "framer-motion";
 import { motion } from "framer-motion-3d";
 import { useTransform, motion as regMotion } from "framer-motion";
 
-import { useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import * as THREE from "three";
 import DarkModeBtn from "./DarkModeBtn";
@@ -174,7 +174,7 @@ function ComputerTower() {
   CompTower.repeat.set(1, 1);
   CompTower.colorSpace = THREE.SRGBColorSpace;
   return (
-    <group rotation={[0, Math.PI / -2, 0]} position={[1.5, -0.12, 0.7]}>
+    <group rotation={[0, Math.PI / -2, 0]} position={[1.65, 0.3, 0.9]}>
       {/* Tower Body */}
       <RoundedBox
         args={[0.5, 0.9, 0.25]}
@@ -393,6 +393,179 @@ function CoffeeMug() {
   );
 }
 
+function WindowOnWall() {
+  const frameTexture = useLoader(THREE.TextureLoader, "/fabrics/wood-1.webp");
+  frameTexture.wrapS = frameTexture.wrapT = THREE.RepeatWrapping;
+  frameTexture.repeat.set(1, 1);
+
+  const [isDark, setIsDark] = useState(false);
+
+  // Detect if dark mode class is active
+  useEffect(() => {
+    const checkDarkMode = () =>
+      setIsDark(document.documentElement.classList.contains("dark"));
+
+    checkDarkMode();
+    const observer = new MutationObserver(checkDarkMode);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  const bgTexture = useLoader(
+    THREE.TextureLoader,
+    isDark ? "/views-dark.jpeg" : "/views-light.jpeg"
+  );
+  bgTexture.colorSpace = THREE.SRGBColorSpace;
+  bgTexture.repeat.x = -1;
+
+  // ✅ Set wrapping *and* update texture
+  bgTexture.wrapS = THREE.RepeatWrapping;
+  bgTexture.wrapT = THREE.RepeatWrapping;
+  bgTexture.needsUpdate = true;
+  const openAngle = Math.PI / 2.7; // ~22.5° inward
+  const paneWidth = 0.5;
+
+  return (
+    <group
+      position={[-2.54, 1.9, 2.9]}
+      rotation={[0.03, -Math.PI / 2.01, 0.05]}
+    >
+      <mesh position={[0, 0, -0.0051]}>
+        <planeGeometry args={[1, 1]} />
+        <meshBasicMaterial
+          map={bgTexture}
+          side={THREE.DoubleSide}
+          transparent
+          opacity={1}
+        />
+      </mesh>
+
+      <group position={[-paneWidth / 2, 0, 0]}>
+        <group position={[-paneWidth / 2, 0, 0]} rotation={[0, openAngle, 0]}>
+          <mesh position={[paneWidth / 2, 0, 0]}>
+            <boxGeometry args={[0.5, 1, 0.05]} />
+            <meshPhysicalMaterial
+              color="#a0d8ff"
+              transparent
+              opacity={0.6}
+              roughness={0.1}
+              metalness={0.1}
+              transmission={0.9}
+              clearcoat={0.1}
+            />
+          </mesh>
+
+          {(
+            [
+              [paneWidth / 1, 0, 0],
+              [paneWidth / 1, 0, 0],
+              [0, 0.5, 0],
+              [0, -0.5, 0],
+            ] as [number, number, number][]
+          ).map((pos, i) => (
+            <mesh key={`L${i}`} position={pos}>
+              <boxGeometry
+                args={i < 2 ? [0.03, 1, 0.05] : [paneWidth, 0.04, 0.05]}
+              />
+              <meshStandardMaterial
+                map={frameTexture}
+                roughness={0.6}
+                metalness={0.2}
+              />
+            </mesh>
+          ))}
+        </group>
+      </group>
+
+      <group position={[paneWidth / 2, 0, 0]}>
+        <mesh position={[0 / 2, 0, -0.01]}>
+          <boxGeometry args={[paneWidth, 1, 0.02]} />
+          <meshPhysicalMaterial
+            color="#a0c4ff"
+            transparent={true}
+            opacity={0.32} // adjust for how frosted you want it
+            roughness={0.8}
+            metalness={0.1}
+          />
+        </mesh>
+
+        {(
+          [
+            [-paneWidth / 2, 0, 0],
+            [paneWidth / 2, 0, 0],
+            [0, 0.5, 0],
+            [0, -0.5, 0],
+          ] as [number, number, number][]
+        ).map((pos, i) => (
+          <mesh key={`R${i}`} position={pos}>
+            <boxGeometry
+              args={i < 2 ? [0.03, 1, 0.05] : [paneWidth, 0.03, 0.05]}
+            />
+            <meshStandardMaterial
+              map={frameTexture}
+              roughness={0.6}
+              metalness={0.2}
+            />
+          </mesh>
+        ))}
+      </group>
+
+      {/* === OUTER FRAME === */}
+      {(
+        [
+          [-0.5, 0, 0],
+          [0.5, 0, 0],
+          [0, 0.5, 0],
+          [0, -0.5, 0],
+        ] as [number, number, number][]
+      ).map((pos, i) => (
+        <mesh key={`O${i}`} position={pos}>
+          <boxGeometry args={i < 2 ? [0.05, 1.05, 0.05] : [1.05, 0.05, 0.05]} />
+          <meshStandardMaterial
+            map={frameTexture}
+            roughness={0.6}
+            metalness={0.2}
+          />
+        </mesh>
+      ))}
+
+      <group position={[paneWidth / 2 + 0.03, 0, 0]}>
+        {/* Handle Base */}
+        <mesh position={[0.0, 0, 0.045]} rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[0.015, 0.015, 0.06, 16]} />
+          <meshStandardMaterial
+            color="#888888"
+            metalness={0.8}
+            roughness={0.3}
+          />
+        </mesh>
+
+        <mesh position={[-0.318, -0.548, 0]}>
+          <boxGeometry args={[1.1, 0.04, 0.15]} />
+          <meshStandardMaterial
+            map={frameTexture}
+            roughness={0.5}
+            metalness={0.2}
+          />
+        </mesh>
+
+        {/* Grip Ring */}
+        <mesh position={[0, 0, 0.07]} rotation={[0, 0, Math.PI / 2]}>
+          <torusGeometry args={[0.025, 0.006, 16, 32]} />
+          <meshStandardMaterial
+            color="#aaaaaa"
+            metalness={0.9}
+            roughness={0.2}
+          />
+        </mesh>
+      </group>
+    </group>
+  );
+}
 function FloorLamp() {
   const bulbRef = useRef<THREE.Mesh>(null);
   const lightRef = useRef<THREE.SpotLight>(null);
@@ -476,10 +649,10 @@ function FloorLamp() {
       {/* SpotLight */}
       <spotLight
         ref={lightRef}
-        intensity={60}
-        position={[0.25, 2.35, 0.25]}
+        intensity={10}
+        position={[3, 2.4, 0.21]}
         angle={Math.PI / 5}
-        penumbra={0.8}
+        penumbra={0.3}
         color="#fff1c1"
         castShadow
         shadow-mapSize-width={2048}
@@ -490,11 +663,56 @@ function FloorLamp() {
   );
 }
 
-function Bookshelf() {
-  const bookColors = ["#e63946", "#f1faee", "#a8dadc", "#457b9d", "#1d3557"];
+interface GLBPlantProps {
+  position?: [number, number, number];
+  scale?: [number, number, number];
+  rotation?: [number, number, number];
+  url: string; // path to your glb
+}
+
+export function GLBPlant({
+  position = [0, 0, 0],
+  scale = [1, 1, 1],
+  rotation = [0, 0, 0],
+  url,
+}: GLBPlantProps) {
+  const group = useRef<THREE.Group>(null);
+  const { scene } = useGLTF(url);
 
   return (
-    <group position={[2.1, 0.33, -0.3]}>
+    <primitive
+      ref={group}
+      object={scene}
+      position={position}
+      scale={scale}
+      rotation={rotation}
+    />
+  );
+}
+const bookColors = [
+  "#ff6b6b", // red
+  "#4ecdc4", // teal
+  "#ffe66d", // yellow
+  "#1a535c", // dark teal
+  "#ff9f1c", // orange
+  "#2a9d8f", // green
+  "#e63946", // pinkish
+  "#8d99ae", // gray
+  "#f4a261", // tan
+  "#264653", // navy
+];
+
+function Bookshelf() {
+  const textures = useLoader(THREE.TextureLoader, [
+    "/fabrics/fabric-1.webp",
+    "/fabrics/wood-1.webp",
+  ]);
+
+  const bookTexture = textures[0];
+  const shelfTexture = textures[1];
+
+  return (
+    <group position={[3, 0.33, 0.6]}>
       {/* Shelves */}
       {[0, 0.8, 1.6].map((y, i) => (
         <RoundedBox
@@ -505,33 +723,40 @@ function Bookshelf() {
           position={[0, y + 0.05, 0]}
         >
           <meshStandardMaterial
-            color="#8B4513"
+            map={shelfTexture}
             roughness={0.6}
             metalness={0.1}
           />
         </RoundedBox>
       ))}
 
-      {/* Many Books */}
+      {/* Books */}
       {Array.from({ length: 18 }).map((_, i) => {
-        const color = bookColors[i % bookColors.length];
-        const shelfLevel = Math.floor(i / 6); // 6 books per shelf
+        const shelfLevel = Math.floor(i / 6);
         const y = 0.05 + shelfLevel * 0.8;
+
+        const height = 0.15 + Math.random() * 0.15; // shorter books
+        const width = 0.03 + Math.random() * 0.02;
+        const depth = 0.08 + Math.random() * 0.03;
+
+        const tiltY = Math.random() < 0.3 ? (Math.random() - 0.5) * 0.3 : 0;
+        const tiltX = (Math.random() - 0.5) * 0.02;
+
         const x = -0.35 + Math.random() * 0.7;
         const z = -0.1 + Math.random() * 0.22;
-        const height = 0.15 + Math.random() * 0.25;
-        const width = 0.04 + Math.random() * 0.025;
-        const depth = 0.1 + Math.random() * 0.04;
-        const tilt = (Math.random() - 0.5) * 0.12;
+
+        // Pick a color from the array (loop around if more books than colors)
+        const color = bookColors[i % bookColors.length];
 
         return (
           <mesh
             key={i}
             position={[x, y + height / 2, z]}
-            rotation={[0, tilt, 0]}
+            rotation={[tiltX, tiltY, 0]}
           >
             <boxGeometry args={[width, height, depth]} />
             <meshStandardMaterial
+              map={bookTexture}
               color={color}
               roughness={0.6}
               metalness={0.2}
@@ -539,50 +764,6 @@ function Bookshelf() {
           </mesh>
         );
       })}
-
-      {/* Horizontal stacks */}
-      {Array.from({ length: 3 }).map((_, i) => {
-        const y = 0.05 + i * 0.8;
-        return (
-          <mesh
-            key={`stack-${i}`}
-            position={[0.25, y + 0.07, -0.05]}
-            rotation={[0, 0.05, 0]}
-          >
-            <boxGeometry args={[0.12, 0.03, 0.2]} />
-            <meshStandardMaterial
-              color="#d4a373"
-              roughness={0.6}
-              metalness={0.1}
-            />
-          </mesh>
-        );
-      })}
-
-      {/* Decorative items */}
-      {/* Plant */}
-      <mesh position={[-0.25, 0.05 + 0.05, 0.08]}>
-        <cylinderGeometry args={[0.04, 0.04, 0.05, 16]} />
-        <meshStandardMaterial color="#2a7b3a" roughness={0.7} />
-      </mesh>
-
-      {/* Photo frame */}
-      <mesh position={[0.3, 0.05 + 0.07, 0.1]} rotation={[0, -0.05, 0]}>
-        <boxGeometry args={[0.08, 0.06, 0.01]} />
-        <meshStandardMaterial color="#f0e6d2" roughness={0.6} />
-      </mesh>
-
-      {/* Candle */}
-      <mesh position={[0, 0.05 + 0.04, -0.08]}>
-        <cylinderGeometry args={[0.025, 0.025, 0.06, 16]} />
-        <meshStandardMaterial color="#f4d35e" roughness={0.6} metalness={0.1} />
-      </mesh>
-
-      {/* Figurine */}
-      <mesh position={[-0.15, 0.05 + 0.08, -0.05]}>
-        <sphereGeometry args={[0.04, 16, 16]} />
-        <meshStandardMaterial color="#555555" roughness={0.5} metalness={0.2} />
-      </mesh>
     </group>
   );
 }
@@ -597,7 +778,7 @@ function Desk() {
   useFrame(() => {
     const isDark = document.documentElement.classList.contains("dark");
     if (lightRef.current) {
-      lightRef.current.intensity = isDark ? 3.4 : 0;
+      lightRef.current.intensity = isDark ? 3.1 : 0;
     }
   });
   return (
@@ -654,12 +835,12 @@ function Desk() {
         {/* Warm Lamp Light */}
         <spotLight
           ref={lightRef}
-          position={[1.1, 1.8, -0.5]}
-          angle={Math.PI / 6}
+          position={[1.12, 1.8, -0.46]}
+          angle={Math.PI / 5.56}
           penumbra={0.3}
           color="#fff1c1"
           intensity={
-            document.documentElement.classList.contains("dark") ? 10 : 1
+            document.documentElement.classList.contains("dark") ? 16 : 1
           } // boost
           castShadow
         />
@@ -902,6 +1083,90 @@ function ScreenUI({
   );
 }
 
+interface WallShadeProps {
+  position: [number, number, number];
+  rotation?: [number, number, number];
+  intensity?: number; // 0 to 1
+}
+
+export function WallShade({
+  position,
+  rotation = [0, 0, 0],
+  intensity = 0.08,
+}: WallShadeProps) {
+  const meshRef = useRef<THREE.Mesh>(null);
+
+  useFrame(() => {
+    if (!meshRef.current) return;
+    const isDark = document.documentElement.classList.contains("dark");
+    const color = new THREE.Color(isDark ? "#000000" : "#111111");
+    (meshRef.current.material as THREE.MeshStandardMaterial).color.copy(color);
+    (meshRef.current.material as THREE.MeshStandardMaterial).opacity =
+      intensity;
+  });
+
+  return (
+    <mesh ref={meshRef} position={position} rotation={rotation}>
+      <planeGeometry args={[1, 1]} />
+      <meshStandardMaterial
+        transparent
+        opacity={intensity}
+        roughness={1}
+        metalness={0}
+        side={THREE.DoubleSide}
+      />
+    </mesh>
+  );
+}
+
+function RoomCorner() {
+  const lineRefs = useRef<any[]>([]);
+
+  useFrame(() => {
+    const isDark = document.documentElement.classList.contains("dark");
+    const color = new THREE.Color(isDark ? "#4d4c4c" : "#d6d2d2");
+
+    lineRefs.current.forEach((line) => {
+      if (line?.material?.color) line.material.color.copy(color);
+    });
+  });
+
+  return (
+    <group position={[-2.6, 0, 0]}>
+      {/* Lines */}
+      {[
+        // all line points
+        [
+          [0, 0, 0],
+          [0, 3.6, 0],
+        ],
+        [
+          [0, 0, 0],
+          [16, 0, 0],
+        ],
+        [
+          [0, 0, 0],
+          [0, 0, 5],
+        ],
+        [
+          [0, 3.6, 0],
+          [16, 3.6, 0],
+        ],
+        [
+          [0, 3.6, 0],
+          [0, 3.9, 3],
+        ],
+      ].map((points, i) => (
+        <Line
+          key={i}
+          ref={(el) => (lineRefs.current[i] = el)}
+          points={points}
+          lineWidth={1}
+        />
+      ))}
+    </group>
+  );
+}
 function CameraController({
   scrollYProgress,
 }: {
@@ -918,6 +1183,127 @@ function CameraController({
   return null;
 }
 
+function Floor() {
+  const texture = useLoader(THREE.TextureLoader, "/fabrics/floor-2.webp");
+  texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set(2, 2); // repeat for larger floor area
+  texture.colorSpace = THREE.SRGBColorSpace;
+
+  return (
+    <mesh
+      rotation={[-Math.PI / 2, 0, 0]}
+      position={[2.42, -0, 4]}
+      receiveShadow
+    >
+      <planeGeometry args={[10, 8]} />
+      <meshStandardMaterial map={texture} roughness={0.6} metalness={0.1} />
+    </mesh>
+  );
+}
+
+function Wall() {
+  const texture = useLoader(THREE.TextureLoader, "/fabrics/wall-4.webp");
+  texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set(4, 4);
+  texture.colorSpace = THREE.SRGBColorSpace;
+
+  const meshRef = useRef<THREE.Mesh>(null);
+
+  const shape = new THREE.Shape();
+  shape.moveTo(0, 0);
+  shape.lineTo(0, 3.32);
+  shape.lineTo(0.6, 3.39);
+  shape.lineTo(3.1, 3.7);
+  shape.lineTo(3, 0);
+  shape.lineTo(0, 0);
+
+  const geometry = new THREE.ShapeGeometry(shape);
+
+  useFrame(() => {
+    if (!meshRef.current) return;
+    const isDark = document.documentElement.classList.contains("dark");
+    const color = new THREE.Color(isDark ? "#7d7c7c" : "white");
+    (meshRef.current.material as THREE.MeshStandardMaterial).color.copy(color);
+  });
+
+  return (
+    <mesh
+      ref={meshRef}
+      rotation={[0, -Math.PI / 2, 0]}
+      scale={[2, 1.43, 1]}
+      position={[-2.6, 0, 0]}
+    >
+      <primitive object={geometry} />
+      <meshStandardMaterial
+        map={texture}
+        roughness={0.7}
+        metalness={0.05}
+        side={THREE.DoubleSide}
+      />
+    </mesh>
+  );
+}
+
+function CoffeeSteam() {
+  const particles = Array.from({ length: 10 });
+  return (
+    <group position={[-0.79, 1.2, 1.25]}>
+      {particles.map((_, i) => (
+        <Sphere key={i} args={[0.0026, 8, 8]} position={[0, i * 0.05, 0]}>
+          <meshStandardMaterial
+            color="#ffffff"
+            transparent
+            opacity={0.1 + i * 0.05}
+          />
+        </Sphere>
+      ))}
+    </group>
+  );
+}
+
+function Wall2() {
+  const texture = useLoader(THREE.TextureLoader, "/fabrics/wall-4.webp");
+  texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set(4, 4);
+  texture.colorSpace = THREE.SRGBColorSpace;
+
+  const meshRef = useRef<THREE.Mesh>(null);
+
+  // Define a simple rectangular wall
+  const shape = new THREE.Shape();
+  shape.moveTo(0, 0);
+  shape.lineTo(0, 3.6);
+  shape.lineTo(4, 3.6);
+  shape.lineTo(4, 0);
+  shape.lineTo(0, 0);
+
+  const geometry = new THREE.ShapeGeometry(shape);
+
+  useFrame(() => {
+    if (!meshRef.current) return;
+    const isDark = document.documentElement.classList.contains("dark");
+    const color = new THREE.Color(isDark ? "#757474" : "#f7f7f5");
+    (meshRef.current.material as THREE.MeshStandardMaterial).color.copy(color);
+  });
+
+  return (
+    <mesh
+      ref={meshRef}
+      rotation={[0, Math.PI, 0]}
+      scale={[2.56, 1.32, 1]}
+      position={[7.5, 0, 0]}
+    >
+      <primitive object={geometry} />
+      <meshStandardMaterial
+        map={texture}
+        roughness={0.7}
+        metalness={0.05}
+        side={THREE.DoubleSide}
+      />
+    </mesh>
+  );
+}
+
 export default function HeroSection() {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -930,7 +1316,7 @@ export default function HeroSection() {
   return (
     <section
       ref={ref}
-      className="h-[167vh] md:h-[170vh] bg-[#ececec] dark:bg-[#2e2b2b] text-black dark:text-stone-300"
+      className="h-[167vh] md:h-[170vh] bg-[#c6c0c0] dark:bg-[#757474] text-black dark:text-stone-300"
     >
       <div
         style={{
@@ -943,13 +1329,25 @@ export default function HeroSection() {
         }}
       >
         <Canvas shadows>
+          <fog attach="fog" args={["#e0e0e0", 4, 14]} />
+
           <ambientLight intensity={0.8} />
           <directionalLight position={[5, 5, 5]} intensity={1} />
-
           <FloorLamp />
           <Desk />
-          <CoffeeMug />
           <Bookshelf />
+          <GLBPlant
+            url="/fabrics/glb-plant.glb"
+            position={[2.22, 0.2, 2.1]} // adjust to match bookshelf
+            scale={[1.22, 1.22, 1.22]}
+          />
+          <WindowOnWall />
+          <Wall />
+          <Wall2 />
+
+          <Floor />
+          <CoffeeSteam />
+          <CoffeeMug />
           <Tablet />
           <CartoonModel scrollYProgress={scrollYProgress} />
           <Chair />
@@ -959,7 +1357,7 @@ export default function HeroSection() {
           <CameraController scrollYProgress={scrollYProgress} />
         </Canvas>
 
-        <div className="absolute z-50 text-2xl  md:text-3xl font-semibold  left-5 bottom-14  md:left-20">
+        <div className="absolute  z-50 text-2xl text-stone-100  md:text-3xl font-semibold  left-5 bottom-14  md:left-20">
           <regMotion.h1 style={{ opacity }}>Scroll to zoom</regMotion.h1>
         </div>
         <div className="absolute hidden md:block  md:-translate-y-1/2 md:top-1/2 right-5 z-50">
