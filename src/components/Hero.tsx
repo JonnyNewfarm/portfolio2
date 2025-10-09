@@ -388,10 +388,6 @@ function CoffeeMug() {
 }
 
 function WindowOnWall() {
-  const frameTexture = useLoader(THREE.TextureLoader, "/fabrics/wood-1.webp");
-  frameTexture.wrapS = frameTexture.wrapT = THREE.RepeatWrapping;
-  frameTexture.repeat.set(1, 1);
-
   const [isDark, setIsDark] = useState(
     document.documentElement.classList.contains("dark")
   );
@@ -410,8 +406,8 @@ function WindowOnWall() {
   }, []);
 
   const [lightView, darkView] = useLoader(THREE.TextureLoader, [
-    "/views-light.jpeg",
-    "/views-dark.jpeg",
+    "/light-scene.webp",
+    "/dark-scene.webp",
   ]);
 
   useMemo(() => {
@@ -471,7 +467,7 @@ function WindowOnWall() {
                 args={i < 2 ? [0.03, 1, 0.05] : [paneWidth, 0.04, 0.05]}
               />
               <meshStandardMaterial
-                map={frameTexture}
+                color={"black"}
                 roughness={0.6}
                 metalness={0.2}
               />
@@ -506,7 +502,7 @@ function WindowOnWall() {
               args={i < 2 ? [0.03, 1, 0.05] : [paneWidth, 0.03, 0.05]}
             />
             <meshStandardMaterial
-              map={frameTexture}
+              color={"black"}
               roughness={0.6}
               metalness={0.2}
             />
@@ -526,7 +522,7 @@ function WindowOnWall() {
         <mesh key={`O${i}`} position={pos}>
           <boxGeometry args={i < 2 ? [0.05, 1.05, 0.05] : [1.05, 0.05, 0.05]} />
           <meshStandardMaterial
-            map={frameTexture}
+            color={"black"}
             roughness={0.6}
             metalness={0.2}
           />
@@ -547,7 +543,7 @@ function WindowOnWall() {
         <mesh position={[-0.318, -0.548, 0]}>
           <boxGeometry args={[1.1, 0.04, 0.15]} />
           <meshStandardMaterial
-            map={frameTexture}
+            color={"black"}
             roughness={0.5}
             metalness={0.2}
           />
@@ -1127,7 +1123,7 @@ function CameraController({
 
   useFrame(() => {
     const progress = scrollYProgress.get();
-    camera.position.lerp(new THREE.Vector3(2.1, 1.6, 5.3 - progress * 3), 0.2);
+    camera.position.lerp(new THREE.Vector3(2.1, 1.6, 5.6 - progress * 3), 0.2);
     camera.lookAt(new THREE.Vector3(0.2, 0.8, 0));
   });
 
@@ -1143,10 +1139,10 @@ function Floor() {
   return (
     <mesh
       rotation={[-Math.PI / 2, 0, 0]}
-      position={[2.42, -0, 4]}
+      position={[2.4, -0, 2.7]}
       receiveShadow
     >
-      <planeGeometry args={[10, 8]} />
+      <planeGeometry args={[10, 6]} />
       <meshStandardMaterial map={texture} roughness={0.6} metalness={0.1} />
     </mesh>
   );
@@ -1299,11 +1295,8 @@ export default function HeroSection() {
           <FloorLamp />
           <Desk />
           <Bookshelf />
-          <GLBPlant
-            url="/fabrics/glb-plant.glb"
-            position={[2.22, 0.2, 2.1]} // adjust to match bookshelf
-            scale={[1.22, 1.22, 1.22]}
-          />
+
+          {isMdUp && <Bookshelf />}
           {isMdUp && <WindowOnWall />}
           <Wall />
           <Wall2 />
