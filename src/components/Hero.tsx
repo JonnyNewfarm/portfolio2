@@ -408,7 +408,7 @@ function WindowOnWall() {
 
   const [lightView, darkView] = useLoader(THREE.TextureLoader, [
     "/light-window.webp",
-    "/dark-window2.webp",
+    "/dark-win.webp",
   ]);
 
   // Configure textures only once
