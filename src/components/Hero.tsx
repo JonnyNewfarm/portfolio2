@@ -6,7 +6,7 @@ import { useScroll, MotionValue, AnimatePresence } from "framer-motion";
 import { motion } from "framer-motion-3d";
 import { useTransform, motion as regMotion } from "framer-motion";
 
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import * as THREE from "three";
 import DarkModeBtn from "./DarkModeBtn";
@@ -136,7 +136,7 @@ function Chair() {
         </mesh>
       ))}
 
-      {/* Legs (planky instead of round) */}
+      {/* Legs  */}
       {[-0.4, 0.4].map((x, i) =>
         [-0.25, 0.25].map((z, j) => (
           <mesh
@@ -146,16 +146,16 @@ function Chair() {
             castShadow
             receiveShadow
           >
-            {/* rectangular beams instead of cylinders */}
-            <boxGeometry args={[0.032, 0.78, 0.08]} />
+            {/* rectangular bea */}
+            <boxGeometry args={[0.032, 0.72, 0.08]} />
             <meshStandardMaterial map={wood} roughness={0.5} metalness={0.2} />
           </mesh>
         ))
       )}
 
       {/* Side bars */}
-      {[-0.28, 0.257].map((y, i) => (
-        <mesh key={i} position={[0, 0.57, y + 2.8]} castShadow receiveShadow>
+      {[-0.26, 0.256].map((y, i) => (
+        <mesh key={i} position={[0.0, 0.57, y + 2.78]} castShadow receiveShadow>
           <boxGeometry args={[0.86, 0.03, 0.05]} />
           <meshStandardMaterial map={wood} roughness={0.5} metalness={0.2} />
         </mesh>
@@ -184,7 +184,7 @@ function ComputerTower() {
 
       {/* Power Button */}
       <mesh position={[0.29, 0.3, 0]}>
-        <cylinderGeometry args={[0.015, 0.015, 0.01, 32]} />
+        <cylinderGeometry args={[0.015, 0.015, 0.01, 2]} />
         <meshStandardMaterial
           color="#00ff99"
           emissive="#00ff99"
@@ -406,10 +406,9 @@ function WindowOnWall() {
     return () => observer.disconnect();
   }, []);
 
-  // Load both textures
   const [lightView, darkView] = useLoader(THREE.TextureLoader, [
     "/light-window.webp",
-    "/dark-window.webp",
+    "/dark-window2.webp",
   ]);
 
   // Configure textures only once
@@ -420,7 +419,6 @@ function WindowOnWall() {
       tex.colorSpace = THREE.SRGBColorSpace;
       tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
       tex.repeat.x = -1;
-      // Important: compensate for mirroring so it stays visible
       tex.offset.x = 1;
       tex.needsUpdate = true;
     };
@@ -429,7 +427,6 @@ function WindowOnWall() {
     setupTexture(darkView);
   }, [lightView, darkView]);
 
-  // Always show light scene by default
   const bgTexture = isDark ? darkView : lightView;
 
   const openAngle = Math.PI / 2.7;
@@ -587,7 +584,7 @@ function FloorLamp() {
   return (
     <group position={[1.6, 0, 0.66]}>
       {/* Base */}
-      <mesh castShadow receiveShadow position={[0.7, 0, -0.4]}>
+      <mesh receiveShadow position={[0.7, 0, -0.4]}>
         <cylinderGeometry args={[0.18, 0.26, 0.07, 32]} />
         <meshStandardMaterial color="#444" roughness={0.4} metalness={0.8} />
       </mesh>
@@ -646,14 +643,14 @@ function FloorLamp() {
       {/* SpotLight */}
       <spotLight
         ref={lightRef}
-        intensity={10}
+        intensity={0.6}
         position={[3, 2.4, 0.21]}
         angle={Math.PI / 5}
         penumbra={0.3}
         color="#fff1c1"
-        castShadow
-        shadow-mapSize-width={2048}
-        shadow-mapSize-height={2048}
+        castShadow={false}
+        shadow-mapSize-width={100}
+        shadow-mapSize-height={100}
         target-position={[0, 0.8, 0]}
       />
     </group>
@@ -786,7 +783,7 @@ function Desk() {
           args={[0.8, 0.06, 0.3]}
           radius={0.02}
           smoothness={4}
-          castShadow
+          castShadow={false}
           receiveShadow
         >
           <meshStandardMaterial
@@ -836,16 +833,16 @@ function Desk() {
           penumbra={0.3}
           color="#fff1c1"
           intensity={
-            document.documentElement.classList.contains("dark") ? 16 : 1
+            document.documentElement.classList.contains("dark") ? 2 : 1
           } // boost
-          castShadow
+          castShadow={false}
         />
       </group>
 
       {/* Mouse */}
       <group position={[0.5, 1, 0]}>
         {/* Body */}
-        <mesh castShadow receiveShadow scale={[0.7, 0.5, 2]}>
+        <mesh castShadow={false} receiveShadow scale={[0.7, 0.5, 2]}>
           <sphereGeometry args={[0.12, 36, 32]} />
           <meshStandardMaterial color="gray" roughness={0.6} metalness={0.1} />
         </mesh>
@@ -869,7 +866,7 @@ function Desk() {
         radius={0.05}
         smoothness={4}
         position={[0, 0.95, 0]}
-        castShadow
+        castShadow={false}
         receiveShadow
       >
         <meshStandardMaterial map={texture} roughness={0.6} metalness={0.1} />
@@ -901,7 +898,7 @@ function Desk() {
           key={`bar-${x}`}
           position={[x, 0.73, 0]}
           rotation={[36, 36, -0.06]}
-          castShadow
+          castShadow={false}
           receiveShadow
         >
           <cylinderGeometry args={[0.026, 0.02, 1.4, 13]} />
@@ -911,7 +908,7 @@ function Desk() {
 
       {/* Monitor */}
       <group position={[0, 0.96, -0.6]}>
-        <mesh position={[0, 0.4, 0]} castShadow receiveShadow>
+        <mesh position={[0, 0.4, 0]} castShadow={false} receiveShadow>
           <cylinderGeometry args={[0.03, 0.03, 0.8]} />
           <meshStandardMaterial
             color="#333333"
@@ -920,7 +917,7 @@ function Desk() {
           />
         </mesh>
 
-        <mesh position={[0, 0, 0]} castShadow receiveShadow>
+        <mesh position={[0, 0, 0]} castShadow={false} receiveShadow={false}>
           <cylinderGeometry args={[0.15, 0.15, 0.03]} />
           <meshStandardMaterial
             color="#222222"
@@ -1290,18 +1287,18 @@ export default function HeroSection() {
       >
         <Canvas shadows>
           <fog attach="fog" args={["#e0e0e0", 4, 14]} />
-
           <ambientLight intensity={0.8} />
           <directionalLight position={[5, 5, 5]} intensity={1} />
           <FloorLamp />
           <Desk />
-          <Bookshelf />
-
-          {isMdUp && <Bookshelf />}
-          {isMdUp && <WindowOnWall />}
+          <Suspense fallback={null}>
+            <Bookshelf />
+          </Suspense>
+          <Suspense fallback={null}>
+            <WindowOnWall />
+          </Suspense>
           <Wall />
           <Wall2 />
-
           <Floor />
           <CoffeeSteam />
           <CoffeeMug />
