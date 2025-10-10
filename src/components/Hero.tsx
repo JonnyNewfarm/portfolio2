@@ -768,6 +768,9 @@ function Desk() {
   texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
   texture.repeat.set(2, 2);
 
+  const screenTexture = useLoader(THREE.TextureLoader, "/screen-5.webp");
+  screenTexture.colorSpace = THREE.SRGBColorSpace;
+
   useFrame(() => {
     const isDark = document.documentElement.classList.contains("dark");
     if (lightRef.current) {
@@ -942,10 +945,12 @@ function Desk() {
           radius={0.02}
           smoothness={3}
           position={[0.015, 0.8, 0]}
-        >
-          <meshStandardMaterial color="white" roughness={0.4} metalness={0.3} />
-        </RoundedBox>
+        ></RoundedBox>
 
+        <mesh position={[0.0179, 0.8, 0.072]}>
+          <planeGeometry args={[2.17, 1.253]} />
+          <meshBasicMaterial map={screenTexture} toneMapped={false} />
+        </mesh>
         <mesh position={[0, 0.8, 0.07]}>
           <planeGeometry args={[1.9, 1.19]} />
           <meshStandardMaterial
@@ -1002,7 +1007,7 @@ function ScreenUI({
               Back
             </Text>
             <Text
-              position={[-0.4, 0.3, 1.3]}
+              position={[-0.4, 0.37, 1.3]}
               fontSize={0.195}
               color="black"
               onClick={() => router.push("/")}
@@ -1012,7 +1017,7 @@ function ScreenUI({
               Home
             </Text>
             <Text
-              position={[0.45, 0.3, 1.3]}
+              position={[0.45, 0.37, 1.3]}
               fontSize={0.195}
               color="black"
               onClick={() => router.push("/projects")}
@@ -1022,7 +1027,7 @@ function ScreenUI({
               My Work
             </Text>
             <Text
-              position={[-0.4, 0, 1.3]}
+              position={[-0.4, 0.07, 1.3]}
               fontSize={0.195}
               color="black"
               onClick={() => router.push("/about")}
@@ -1032,7 +1037,7 @@ function ScreenUI({
               About
             </Text>
             <Text
-              position={[0.42, 0, 1.3]}
+              position={[0.42, 0.07, 1.3]}
               fontSize={0.195}
               color="black"
               onClick={() => router.push("/contact")}
@@ -1062,6 +1067,7 @@ function ScreenUI({
             <Text
               position={[-0.46, -0.04, 1.31]}
               fontSize={0.269}
+              fontweight={900}
               color="black"
               onClick={() => setNextPage(true)}
               onPointerOver={() => (document.body.style.cursor = "pointer")}
