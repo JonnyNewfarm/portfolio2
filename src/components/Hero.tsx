@@ -57,6 +57,75 @@ function CartoonModel({
   );
 }
 
+function WallShelfWithCandle() {
+  const flameRef = useRef<THREE.Mesh>(null);
+  const lightRef = useRef<THREE.PointLight>(null);
+
+  useFrame(({ clock }) => {
+    const t = clock.getElapsedTime();
+    const flicker = Math.sin(t * 10) * 0.1 + Math.random() * 0.15;
+
+    if (flameRef.current) {
+      const mat = flameRef.current.material as THREE.MeshStandardMaterial;
+      mat.emissiveIntensity = 1.5 + flicker * 2;
+      flameRef.current.scale.y = 1 + flicker * 0.6;
+    }
+
+    if (lightRef.current) {
+      lightRef.current.intensity = 3 + flicker * 2;
+    }
+  });
+
+  return (
+    <group position={[-0.79, 2.73, 0.15]} rotation={[0, 0, 0]}>
+      {/* Shelf board */}
+      <RoundedBox args={[1.2, 0.06, 0.3]} radius={0.02} position={[0, 0, 0]}>
+        <meshStandardMaterial
+          color={"#3d3936"}
+          roughness={0.6}
+          metalness={0.2}
+        />
+      </RoundedBox>
+
+      {/* Candle base */}
+      <mesh position={[0, 0.2, 0]}>
+        <cylinderGeometry args={[0.03, 0.04, 0.4, 8]} />{" "}
+        <meshStandardMaterial color="#fffaf0" roughness={0.7} />
+      </mesh>
+
+      {/* Wick */}
+      <mesh position={[0, 0.43, 0]}>
+        {" "}
+        <cylinderGeometry args={[0.005, 0.005, 0.03, 8]} />
+        <meshStandardMaterial color="black" />
+      </mesh>
+
+      {/* Flame */}
+      <mesh ref={flameRef} position={[0, 0.5, 0]}>
+        {" "}
+        <sphereGeometry args={[0.02, 2, 1]} />
+        <meshStandardMaterial
+          color="#ffcc33"
+          emissive="#ff8800"
+          emissiveIntensity={1}
+          transparent
+          opacity={0.9}
+        />
+      </mesh>
+
+      {/* Light emitted by candle */}
+      <pointLight
+        ref={lightRef}
+        position={[0, 0.6, 0]}
+        color="#ffb347"
+        intensity={0}
+        distance={1.2}
+        decay={0}
+      />
+    </group>
+  );
+}
+
 function Chair() {
   const wood = useLoader(THREE.TextureLoader, "/fabrics/fabric-3.jpeg");
   wood.wrapS = wood.wrapT = THREE.RepeatWrapping;
@@ -111,7 +180,7 @@ function Chair() {
       ))}
       {/* Backrest (wood) */}
       <RoundedBox
-        args={[1.015, 0.4, 0.08]}
+        args={[1.015, 0.36, 0.08]}
         radius={0.05}
         smoothness={4}
         position={[-0.04, 1.39, 3.039]}
@@ -165,21 +234,21 @@ function Chair() {
 }
 
 function ComputerTower() {
-  const CompTower = useLoader(THREE.TextureLoader, "/fabrics/plastic.webp");
-  CompTower.wrapS = CompTower.wrapT = THREE.RepeatWrapping;
-  CompTower.repeat.set(1, 1);
-  CompTower.colorSpace = THREE.SRGBColorSpace;
   return (
     <group rotation={[0, Math.PI / -2, 0]} position={[1.65, 0.3, 0.9]}>
       {/* Tower Body */}
       <RoundedBox
-        args={[0.5, 0.9, 0.25]}
+        args={[0.5, 0.7, 0.2]}
         radius={0.03}
         smoothness={6}
         castShadow
         receiveShadow
       >
-        <meshStandardMaterial map={CompTower} roughness={0.6} metalness={0.3} />
+        <meshStandardMaterial
+          color={"#706360"}
+          roughness={0.6}
+          metalness={0.3}
+        />
       </RoundedBox>
 
       {/* Power Button */}
@@ -207,15 +276,15 @@ function ComputerTower() {
         <tubeGeometry
           args={[
             new THREE.CatmullRomCurve3([
-              new THREE.Vector3(0.21, 0.35, 0.05), // back of tower (high)
+              new THREE.Vector3(0.16, 0.37, 0.05), // back of tower (high)
               new THREE.Vector3(0.25, -0.1, 0.05), // drop to floor
               new THREE.Vector3(0.0, -0.1, 0.05), // run along floor under desk
               new THREE.Vector3(0.0, 0.9, -0.2), // rise up back of desk
               new THREE.Vector3(-0.51, 1.5, 0.63), // into monitor
             ]),
-            80, // segments (more = smoother)
-            0.015, // radius
-            8, // radial segments
+            39, // segments (more = smoother)
+            0.0065, // radius
+            2, // radial segments
             false,
           ]}
         />
@@ -392,7 +461,6 @@ function WindowOnWall() {
     document.documentElement.classList.contains("dark")
   );
 
-  // Watch for theme change
   useEffect(() => {
     const checkDarkMode = () =>
       setIsDark(document.documentElement.classList.contains("dark"));
@@ -411,7 +479,6 @@ function WindowOnWall() {
     "/dark-win.webp",
   ]);
 
-  // Configure textures only once
   useEffect(() => {
     if (!lightView || !darkView) return;
 
@@ -477,7 +544,7 @@ function WindowOnWall() {
                 args={i < 2 ? [0.03, 1, 0.05] : [paneWidth, 0.04, 0.05]}
               />
               <meshStandardMaterial
-                color="black"
+                color="#656b66"
                 roughness={0.6}
                 metalness={0.2}
               />
@@ -510,7 +577,7 @@ function WindowOnWall() {
               args={i < 2 ? [0.03, 1, 0.05] : [paneWidth, 0.03, 0.05]}
             />
             <meshStandardMaterial
-              color="black"
+              color="#656b66"
               roughness={0.6}
               metalness={0.2}
             />
@@ -527,7 +594,11 @@ function WindowOnWall() {
       ].map((pos, i) => (
         <mesh key={`O${i}`} position={pos as [number, number, number]}>
           <boxGeometry args={i < 2 ? [0.05, 1.05, 0.05] : [1.05, 0.05, 0.05]} />
-          <meshStandardMaterial color="black" roughness={0.6} metalness={0.2} />
+          <meshStandardMaterial
+            color="#656b66"
+            roughness={0.6}
+            metalness={0.2}
+          />
         </mesh>
       ))}
 
@@ -535,22 +606,22 @@ function WindowOnWall() {
       <group position={[paneWidth / 2 + 0.03, 0, 0]}>
         <mesh position={[0.0, 0, 0.045]} rotation={[Math.PI / 2, 0, 0]}>
           <cylinderGeometry args={[0.015, 0.015, 0.06, 16]} />
-          <meshStandardMaterial
-            color="#888888"
-            metalness={0.8}
-            roughness={0.3}
-          />
+          <meshStandardMaterial color="white" metalness={0.8} roughness={0.3} />
         </mesh>
 
-        <mesh position={[-0.318, -0.548, 0]}>
-          <boxGeometry args={[1.1, 0.04, 0.15]} />
-          <meshStandardMaterial color="black" roughness={0.5} metalness={0.2} />
+        <mesh position={[-0.3, -0.55, 0]}>
+          <boxGeometry args={[1.07, 0.04, 0.15]} />
+          <meshStandardMaterial
+            color="#8a918d"
+            roughness={0.5}
+            metalness={0.2}
+          />
         </mesh>
 
         <mesh position={[0, 0, 0.07]} rotation={[0, 0, Math.PI / 2]}>
           <torusGeometry args={[0.025, 0.006, 16, 32]} />
           <meshStandardMaterial
-            color="#aaaaaa"
+            color="#8a9991"
             metalness={0.9}
             roughness={0.2}
           />
@@ -865,8 +936,8 @@ function Desk() {
 
       {/* Desk Top */}
       <RoundedBox
-        args={[3, 0.1, 1.5]}
-        radius={0.05}
+        args={[3, 0.07, 1.5]}
+        radius={0.01}
         smoothness={4}
         position={[0, 0.95, 0]}
         castShadow={false}
@@ -885,7 +956,7 @@ function Desk() {
             receiveShadow
           >
             <cylinderGeometry
-              args={[0.056, 0.032, 0.99, 32]}
+              args={[0.056, 0.022, 0.99, 32]}
             ></cylinderGeometry>
             <meshStandardMaterial
               map={texture}
@@ -1027,7 +1098,7 @@ function ScreenUI({
               My Work
             </Text>
             <Text
-              position={[-0.4, 0.07, 1.3]}
+              position={[-0.41, 0.085, 1.3]}
               fontSize={0.195}
               color="black"
               onClick={() => router.push("/about")}
@@ -1037,7 +1108,7 @@ function ScreenUI({
               About
             </Text>
             <Text
-              position={[0.42, 0.07, 1.3]}
+              position={[0.42, 0.085, 1.3]}
               fontSize={0.195}
               color="black"
               onClick={() => router.push("/contact")}
@@ -1305,6 +1376,7 @@ export default function HeroSection() {
           </Suspense>
           <Wall />
           <Wall2 />
+          <WallShelfWithCandle />
           <Floor />
           <CoffeeSteam />
           <CoffeeMug />
