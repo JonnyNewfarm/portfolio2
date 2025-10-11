@@ -1,7 +1,7 @@
 "use client";
 
 import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
-import { Text, RoundedBox, useGLTF, Line, Sphere } from "@react-three/drei";
+import { Text, RoundedBox, useGLTF, Sphere } from "@react-three/drei";
 import { useScroll, MotionValue, AnimatePresence } from "framer-motion";
 import { motion } from "framer-motion-3d";
 import { useTransform, motion as regMotion } from "framer-motion";
@@ -26,7 +26,7 @@ function CartoonModel({
     const leftLeg = group.current.getObjectByName("LeftLeg");
     const rightLeg = group.current.getObjectByName("RightLeg");
     const spine = group.current.getObjectByName("Spine");
-    const rightArm = group.current.getObjectByName("RightArm"); // find your arm bone
+    const rightArm = group.current.getObjectByName("RightArm");
 
     if (hip) hip.rotation.x = -Math.PI / 3.8;
     if (leftLeg) leftLeg.rotation.x = -Math.PI / 2;
@@ -41,9 +41,9 @@ function CartoonModel({
     group.current.position.y = -0.45 + Math.sin(t * 1.2) * 0.008;
     group.current.rotation.y = Math.PI + Math.sin(t * 0.3) * 0.009;
 
-    // ---- Arm lift based on scroll ----
-    const progress = scrollYProgress.get(); // 0 -> 1
-    const targetRotation = (-Math.PI / -2) * progress; // lift up to 90°
+    // Arm lift based on scroll
+    const progress = scrollYProgress.get();
+    const targetRotation = (-Math.PI / -2) * progress;
     if (rightArm) rightArm.rotation.y = targetRotation;
   });
 
@@ -60,21 +60,6 @@ function CartoonModel({
 function WallShelfWithCandle() {
   const flameRef = useRef<THREE.Mesh>(null);
   const lightRef = useRef<THREE.PointLight>(null);
-
-  useFrame(({ clock }) => {
-    const t = clock.getElapsedTime();
-    const flicker = Math.sin(t * 10) * 0.1 + Math.random() * 0.15;
-
-    if (flameRef.current) {
-      const mat = flameRef.current.material as THREE.MeshStandardMaterial;
-      mat.emissiveIntensity = 1.5 + flicker * 2;
-      flameRef.current.scale.y = 1 + flicker * 0.6;
-    }
-
-    if (lightRef.current) {
-      lightRef.current.intensity = 3 + flicker * 2;
-    }
-  });
 
   return (
     <group position={[-0.79, 2.73, 0.15]} rotation={[0, 0, 0]}>
@@ -118,9 +103,9 @@ function WallShelfWithCandle() {
         ref={lightRef}
         position={[0, 0.6, 0]}
         color="#ffb347"
-        intensity={0}
-        distance={1.2}
-        decay={0}
+        intensity={0.8}
+        distance={1.4}
+        decay={0.6}
       />
     </group>
   );
@@ -282,7 +267,7 @@ function ComputerTower() {
               new THREE.Vector3(0.0, 0.9, -0.2), // rise up back of desk
               new THREE.Vector3(-0.51, 1.5, 0.63), // into monitor
             ]),
-            39, // segments (more = smoother)
+            39, // segments (smoother curve)
             0.0065, // radius
             2, // radial segments
             false,
@@ -295,7 +280,7 @@ function ComputerTower() {
 }
 
 export function Tablet() {
-  const images = ["/desk1-01.webp", "/desk1-02.webp", "/desk1-03.webp"];
+  const images = ["/desk1-01.webp", "/desk1-03.webp"];
   const textures = useLoader(THREE.TextureLoader, images);
 
   const [imageIndex, setImageIndex] = useState(0);
@@ -606,13 +591,17 @@ function WindowOnWall() {
       <group position={[paneWidth / 2 + 0.03, 0, 0]}>
         <mesh position={[0.0, 0, 0.045]} rotation={[Math.PI / 2, 0, 0]}>
           <cylinderGeometry args={[0.015, 0.015, 0.06, 16]} />
-          <meshStandardMaterial color="white" metalness={0.8} roughness={0.3} />
+          <meshStandardMaterial
+            color="#656b66"
+            metalness={0.8}
+            roughness={0.3}
+          />
         </mesh>
 
         <mesh position={[-0.3, -0.55, 0]}>
           <boxGeometry args={[1.07, 0.04, 0.15]} />
           <meshStandardMaterial
-            color="#8a918d"
+            color="#656b66"
             roughness={0.5}
             metalness={0.2}
           />
@@ -621,7 +610,7 @@ function WindowOnWall() {
         <mesh position={[0, 0, 0.07]} rotation={[0, 0, Math.PI / 2]}>
           <torusGeometry args={[0.025, 0.006, 16, 32]} />
           <meshStandardMaterial
-            color="#8a9991"
+            color="#656b66"
             metalness={0.9}
             roughness={0.2}
           />
@@ -644,11 +633,11 @@ function FloorLamp() {
 
     if (bulbRef.current) {
       const material = bulbRef.current.material as THREE.MeshStandardMaterial;
-      material.emissiveIntensity = isDark ? 5 + Math.sin(t * 3) * 0.3 : 0.05;
+      material.emissiveIntensity = isDark ? 2 + Math.sin(t * 3) * 0.3 : 0.05;
     }
 
     if (lightRef.current) {
-      lightRef.current.intensity = isDark ? 20 + Math.sin(t * 3) * 0.6 : 0;
+      lightRef.current.intensity = isDark ? 15 + Math.sin(t * 3) * 0.6 : 0;
     }
   });
 
@@ -715,14 +704,12 @@ function FloorLamp() {
       <spotLight
         ref={lightRef}
         intensity={0.6}
-        position={[3, 2.4, 0.21]}
+        position={[3, 2.4, 0.6]}
         angle={Math.PI / 5}
         penumbra={0.3}
         color="#fff1c1"
         castShadow={false}
-        shadow-mapSize-width={100}
-        shadow-mapSize-height={100}
-        target-position={[0, 0.8, 0]}
+        target-position={[0, 0.6, 0]}
       />
     </group>
   );
@@ -735,25 +722,6 @@ interface GLBPlantProps {
   url: string;
 }
 
-export function GLBPlant({
-  position = [0, 0, 0],
-  scale = [1, 1, 1],
-  rotation = [0, 0, 0],
-  url,
-}: GLBPlantProps) {
-  const group = useRef<THREE.Group>(null);
-  const { scene } = useGLTF(url);
-
-  return (
-    <primitive
-      ref={group}
-      object={scene}
-      position={position}
-      scale={scale}
-      rotation={rotation}
-    />
-  );
-}
 const bookColors = [
   "#ff6b6b", // red
   "#4ecdc4", // teal
@@ -761,10 +729,8 @@ const bookColors = [
   "#1a535c", // dark teal
   "#ff9f1c", // orange
   "#2a9d8f", // green
-  "#e63946", // pinkish
   "#8d99ae", // gray
   "#f4a261", // tan
-  "#264653", // navy
 ];
 
 function Bookshelf() {
@@ -936,7 +902,7 @@ function Desk() {
 
       {/* Desk Top */}
       <RoundedBox
-        args={[3, 0.07, 1.5]}
+        args={[3, 0.06, 1.5]}
         radius={0.01}
         smoothness={4}
         position={[0, 0.95, 0]}
@@ -1027,7 +993,7 @@ function Desk() {
           <meshStandardMaterial
             color={isDark ? "#f5f5f5" : "#fafafa"}
             emissive={isDark ? "#fff6d0" : "#ffffff"}
-            emissiveIntensity={isDark ? 3 : 0.2}
+            emissiveIntensity={isDark ? 2 : 0.2}
             transparent
             opacity={0.95}
           />
@@ -1334,17 +1300,6 @@ export default function HeroSection() {
     offset: ["start start", "end start"],
   });
 
-  const [isMdUp, setIsMdUp] = useState(false);
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(min-width: 768px)"); // md breakpoint
-    setIsMdUp(mediaQuery.matches);
-
-    const handler = (e: MediaQueryListEvent) => setIsMdUp(e.matches);
-    mediaQuery.addEventListener("change", handler);
-
-    return () => mediaQuery.removeEventListener("change", handler);
-  }, []);
   const opacity = useTransform(scrollYProgress, [0.25, 0.35], [1, 0]); // fades later and slower
 
   return (
