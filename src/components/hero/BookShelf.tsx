@@ -1,30 +1,17 @@
 "use client";
 
-import { useLoader } from "@react-three/fiber";
 import { RoundedBox } from "@react-three/drei";
 
-import * as THREE from "three";
-
 const bookColors = [
-  "#ff6b6b", // red
-  "#4ecdc4", // teal
-  "#ffe66d", // yellow
-  "#1a535c", // dark teal
-  "#ff9f1c", // orange
-  "#2a9d8f", // green
+  "#591616", // red
+  "#b6b897", // yellow
+  "#d6ccba", // orange
+  "#5d6957", // green
   "#8d99ae", // gray
-  "#f4a261", // tan
+  "#a65f3d", // tan
 ];
 
 export default function Bookshelf() {
-  const textures = useLoader(THREE.TextureLoader, [
-    "/fabrics/fabric-1.webp",
-    "/fabrics/wood-1.webp",
-  ]);
-
-  const bookTexture = textures[0];
-  const shelfTexture = textures[1];
-
   return (
     <group position={[3, 0.33, 0.6]}>
       {/* Shelves */}
@@ -37,7 +24,7 @@ export default function Bookshelf() {
           position={[0, y + 0.05, 0]}
         >
           <meshStandardMaterial
-            map={shelfTexture}
+            color={"#616057"}
             roughness={0.6}
             metalness={0.1}
           />
@@ -45,19 +32,20 @@ export default function Bookshelf() {
       ))}
 
       {/* Books */}
-      {Array.from({ length: 18 }).map((_, i) => {
+      {Array.from({ length: 17 }).map((_, i) => {
         const shelfLevel = Math.floor(i / 6);
         const y = 0.05 + shelfLevel * 0.8;
 
-        const height = 0.15 + Math.random() * 0.15;
-        const width = 0.03 + Math.random() * 0.02;
-        const depth = 0.08 + Math.random() * 0.03;
+        // Make books more uniform in size
+        const height = 0.18 + Math.random() * 0.05; // 0.18–0.23
+        const width = 0.035 + Math.random() * 0.01; // 0.035–0.045
+        const depth = 0.133 + Math.random() * 0.01; // 0.09–0.105
 
-        const tiltY = Math.random() < 0.3 ? (Math.random() - 0.5) * 0.3 : 0;
-        const tiltX = (Math.random() - 0.5) * 0.02;
+        const tiltY = Math.random() < 0.2 ? (Math.random() - 0.5) * 0.2 : 0;
+        const tiltX = (Math.random() - 0.5) * 0.01;
 
-        const x = -0.35 + Math.random() * 0.7;
-        const z = -0.1 + Math.random() * 0.22;
+        const x = -0.28 + Math.random() * 0.6;
+        const z = -0.015 + Math.random() * 0.09;
 
         const color = bookColors[i % bookColors.length];
 
@@ -67,9 +55,8 @@ export default function Bookshelf() {
             position={[x, y + height / 2, z]}
             rotation={[tiltX, tiltY, 0]}
           >
-            <boxGeometry args={[width, height, depth]} />
+            <boxGeometry sm args={[width, height, depth]} />
             <meshStandardMaterial
-              map={bookTexture}
               color={color}
               roughness={0.6}
               metalness={0.2}

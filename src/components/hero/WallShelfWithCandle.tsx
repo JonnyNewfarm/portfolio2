@@ -51,7 +51,7 @@ export default function WallShelfWithCandle() {
         ref={lightRef}
         position={[0, 0.6, 0]}
         color="#ffb347"
-        intensity={0.4}
+        intensity={0.2}
         distance={1.4}
         decay={0.6}
       />

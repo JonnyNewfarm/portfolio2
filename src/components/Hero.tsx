@@ -74,7 +74,7 @@ export default function HeroSection() {
           <Preload all />
         </Canvas>
 
-        <div className="absolute  z-50 text-2xl text-stone-100  md:text-3xl font-semibold  left-5 bottom-14  md:left-20">
+        <div className="absolute  z-50 text-xl  text-[#e6ebe6] uppercase  md:text-3xl font-semibold  left-5 bottom-14  md:left-20">
           <regMotion.h1 style={{ opacity }}>Scroll to zoom</regMotion.h1>
         </div>
         <div className="absolute hidden md:block  md:-translate-y-1/2 md:top-1/2 right-5 z-50">

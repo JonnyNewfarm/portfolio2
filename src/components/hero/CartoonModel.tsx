@@ -62,8 +62,8 @@ export default function CartoonModel({
     <primitive
       ref={group}
       object={scene}
-      position={[0, -0.45, 2.7]}
-      scale={1.49}
+      position={[0, -0.6, 2.7]}
+      scale={1.48}
     />
   );
 }
