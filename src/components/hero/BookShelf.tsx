@@ -55,7 +55,7 @@ export default function Bookshelf() {
             position={[x, y + height / 2, z]}
             rotation={[tiltX, tiltY, 0]}
           >
-            <boxGeometry sm args={[width, height, depth]} />
+            <boxGeometry args={[width, height, depth]} />
             <meshStandardMaterial
               color={color}
               roughness={0.6}
