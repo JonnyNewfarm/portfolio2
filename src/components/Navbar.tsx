@@ -55,14 +55,12 @@ const Navbar = () => {
                     onClick={async (e) => {
                       e.preventDefault();
 
-                      // Detect current mode (Tailwind uses the `dark` class on <html>)
                       const isDarkMode =
                         document.documentElement.classList.contains("dark");
                       const transitionColor = isDarkMode
                         ? "#1c1a17"
                         : "#f5f5f5";
 
-                      // Create overlay
                       const overlay = document.createElement("div");
                       overlay.style.position = "fixed";
                       overlay.style.inset = "0";
@@ -72,21 +70,16 @@ const Navbar = () => {
                       overlay.style.transition = "opacity 0.4s ease";
                       document.body.appendChild(overlay);
 
-                      // Fade in overlay
                       requestAnimationFrame(() => {
                         overlay.style.opacity = "1";
                       });
 
-                      // Wait for fade in
                       await new Promise((resolve) => setTimeout(resolve, 400));
 
-                      // Navigate
                       router.push(route.url);
 
-                      // Wait for next page render
                       await new Promise((resolve) => setTimeout(resolve, 300));
 
-                      // Fade out overlay
                       overlay.style.opacity = "0";
                       setTimeout(() => overlay.remove(), 300);
                     }}

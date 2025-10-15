@@ -47,21 +47,8 @@ body::-webkit-scrollbar {
   
 }
 
-#hover-div:hover h1 {
-  transform: translateX(-10px);
-}
 
 
-#hover-div:hover p {
-  transform: translateX(10px);
-}
-
-#modal-slider {
-  transition: top 0.5s cubic-bezier(0.76, 0, 0.24, 1);
-}
-
-
-/* globals.css */
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation-duration: 0.3s;
@@ -86,14 +73,3 @@ body::-webkit-scrollbar {
   to { opacity: 1; }
 }
 
-@font-face {
-  font-family: 'Bupnle';
-  src: url('/fonts/Bupnle.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
-
-
-.bupnle {
-  font-family: 'Bupnle', sans-serif;
-}
