@@ -7,7 +7,7 @@ const PreLoadingShow = () => {
   const [percentage, setPercentage] = useState(0);
 
   useEffect(() => {
-    const timer = setTimeout(() => setShowSecond(true), 1200);
+    const timer = setTimeout(() => setShowSecond(true), 1000);
     return () => clearTimeout(timer);
   }, []);
 
