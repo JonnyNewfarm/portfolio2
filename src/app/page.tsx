@@ -18,14 +18,16 @@ export default function Home() {
         setIsLoading(false);
         sessionStorage.setItem("preloaderShown", "true");
       }, 3000);
-
       return () => clearTimeout(timer);
     }
   }, []);
 
+  if (isLoading) {
+    return <PreLoadingShow />; // preloader runs by itself
+  }
+
   return (
     <ScrollSection>
-      {isLoading && <PreLoadingShow />}
       <div className="relative">
         <Hero />
       </div>

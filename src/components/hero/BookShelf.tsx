@@ -1,6 +1,9 @@
 "use client";
 
 import { RoundedBox } from "@react-three/drei";
+import * as THREE from "three";
+
+import { useLoader } from "@react-three/fiber";
 
 const bookColors = [
   "#591616", // red
@@ -12,6 +15,8 @@ const bookColors = [
 ];
 
 export default function Bookshelf() {
+  const letterTexture = useLoader(THREE.TextureLoader, "/letter.webp");
+  letterTexture.colorSpace = THREE.SRGBColorSpace;
   return (
     <group position={[3, 0.33, 0.6]}>
       {/* Shelves */}
@@ -64,6 +69,15 @@ export default function Bookshelf() {
           </mesh>
         );
       })}
+
+      <mesh
+        position={[-1.4, 2.9, -0.55]} // in front of shelves
+        rotation={[0, 0, 0]}
+        scale={[1, 1, 1]}
+      >
+        <planeGeometry args={[0.35, 0.55]} />
+        <meshStandardMaterial map={letterTexture} />
+      </mesh>
     </group>
   );
 }
