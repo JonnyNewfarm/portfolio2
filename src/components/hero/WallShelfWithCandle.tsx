@@ -12,7 +12,7 @@ export default function WallShelfWithCandle() {
   return (
     <group position={[-0.79, 2.73, 0.15]} rotation={[0, 0, 0]}>
       {/* Shelf board */}
-      <RoundedBox args={[1.2, 0.06, 0.3]} radius={0.02} position={[0, 0, 0]}>
+      <RoundedBox args={[0.9, 0.06, 0.3]} radius={0.02} position={[0, 0, 0]}>
         <meshStandardMaterial
           color={"#3d3936"}
           roughness={0.6}

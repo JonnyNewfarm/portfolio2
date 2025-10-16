@@ -31,7 +31,7 @@ export default function ScreenUI({
       <AnimatePresence mode="wait">
         {nextPage ? (
           <motion.group
-            initial={{ opacity: 0, y: 0.1 }}
+            initial={{ opacity: 0, y: 0.04 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.6, ease: "easeInOut" }}
@@ -93,7 +93,7 @@ export default function ScreenUI({
         ) : (
           <motion.group
             key="intro"
-            initial={{ opacity: 0, y: -0.2 }}
+            initial={{ opacity: 0, y: -0.04 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 0.2 }}
             transition={{ duration: 0.6, ease: "easeInOut" }}

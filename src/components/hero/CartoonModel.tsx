@@ -30,12 +30,17 @@ export default function CartoonModel({
     bones.current.spine = group.current.getObjectByName("Spine");
     bones.current.rightArm = group.current.getObjectByName("RightArm");
 
-    // Set static rotations once
-    if (bones.current.hip) bones.current.hip.rotation.x = -Math.PI / 3.8;
+    if (bones.current.hip) {
+      bones.current.hip.rotation.x = -Math.PI / 3;
+      // Move hips slightly backward toward the seatback
+      bones.current.hip.position.z -= 0; // try between 0.03–0.1 for fine-tuning
+    }
+
     if (bones.current.leftLeg) bones.current.leftLeg.rotation.x = -Math.PI / 2;
     if (bones.current.rightLeg)
-      bones.current.rightLeg.rotation.x = -Math.PI / 3;
-    if (bones.current.spine) bones.current.spine.rotation.x = Math.PI / 4;
+      bones.current.rightLeg.rotation.x = -Math.PI / 2.5;
+    if (bones.current.spine) bones.current.spine.rotation.x = Math.PI / 2.7;
+
     if (bones.current.rightArm) {
       bones.current.rightArm.rotation.x = Math.PI / 2.3;
       bones.current.rightArm.rotation.z = -Math.PI / 13;
@@ -47,11 +52,10 @@ export default function CartoonModel({
 
     const t = state.clock.getElapsedTime();
 
-    // Smooth floating animation
     group.current.position.y = -0.45 + Math.sin(t * 1.2) * 0.008;
     group.current.rotation.y = Math.PI + Math.sin(t * 0.3) * 0.009;
 
-    // Scroll-based arm lift (cheap, per frame)
+    // Scroll-based arm lift
     const progress = scrollYProgress.get();
     if (bones.current.rightArm) {
       bones.current.rightArm.rotation.y = (Math.PI / 1.9) * progress;
@@ -59,11 +63,8 @@ export default function CartoonModel({
   });
 
   return (
-    <primitive
-      ref={group}
-      object={scene}
-      position={[0, -0.6, 2.7]}
-      scale={1.48}
-    />
+    <mesh position={[0.14, 0.011, 2.8]}>
+      <primitive ref={group} object={scene} scale={1.46} />
+    </mesh>
   );
 }

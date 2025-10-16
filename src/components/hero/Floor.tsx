@@ -11,10 +11,10 @@ export default function Floor() {
   return (
     <mesh
       rotation={[-Math.PI / 2, 0, 0]}
-      position={[1.62, -0, 2.08]}
+      position={[1.4, -0.3, 1.5]}
       receiveShadow
     >
-      <planeGeometry args={[8.43, 4.8]} />
+      <planeGeometry args={[11, 5.7]} />
       <meshStandardMaterial
         color={"#bfb9a8"}
         map={texture}

@@ -6,22 +6,24 @@ export default function ComputerTower() {
   return (
     <group rotation={[0, Math.PI / -2, 0]} position={[1.47, 0.3, 0.9]}>
       {/* Tower Body */}
-      <RoundedBox
-        args={[0.4, 0.6, 0.175]}
-        radius={0.03}
-        smoothness={2}
-        castShadow
-        receiveShadow
-      >
-        <meshStandardMaterial
-          color={"#706360"}
-          roughness={0.6}
-          metalness={0.3}
-        />
-      </RoundedBox>
+      <mesh position={[0, 0, 0.015]}>
+        <RoundedBox
+          args={[0.35, 0.55, 0.16]}
+          radius={0.03}
+          smoothness={2}
+          castShadow
+          receiveShadow
+        >
+          <meshStandardMaterial
+            color={"#706360"}
+            roughness={0.6}
+            metalness={0.3}
+          />
+        </RoundedBox>
+      </mesh>
 
       {/* Power Button */}
-      <mesh position={[0.29, 0.3, 0]}>
+      <mesh position={[0.295, 0.3, 0]}>
         <cylinderGeometry args={[0.015, 0.015, 0.01, 2]} />
         <meshStandardMaterial
           color="#00ff99"

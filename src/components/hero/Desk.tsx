@@ -108,9 +108,7 @@ export default function Desk() {
             castShadow
             receiveShadow
           >
-            <cylinderGeometry
-              args={[0.056, 0.022, 0.99, 10]}
-            ></cylinderGeometry>
+            <cylinderGeometry args={[0.05, 0.022, 0.99, 10]}></cylinderGeometry>
             <meshStandardMaterial
               map={texture}
               roughness={0.5}
@@ -175,6 +173,28 @@ export default function Desk() {
             emissiveIntensity={isDark ? 2 : 0.2}
             transparent
             opacity={0.95}
+          />
+        </mesh>
+      </group>
+      <group position={[1.0, 1.03, 0.3]} rotation={[0, Math.PI / 9, 0]}>
+        {/* Cup body */}
+        <mesh castShadow={false} receiveShadow>
+          <cylinderGeometry args={[0.07, 0.07, 0.12, 24, 1, true]} />
+          <meshStandardMaterial
+            color="#e0e0e0"
+            metalness={0.1}
+            roughness={0.5}
+          />
+        </mesh>
+
+        {/* Cup inner surface */}
+        <mesh position={[0, 0.001, 0]} scale={[0.95, 1, 0.95]}>
+          <cylinderGeometry args={[0.065, 0.065, 0.12, 24, 1, true]} />
+          <meshStandardMaterial
+            color="#fafafa"
+            metalness={0.05}
+            roughness={0.3}
+            side={THREE.BackSide}
           />
         </mesh>
       </group>

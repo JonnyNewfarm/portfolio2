@@ -17,7 +17,7 @@ export default function Chair() {
   seat.colorSpace = THREE.SRGBColorSpace;
 
   return (
-    <group position={[0, 0, 0]}>
+    <group position={[0, 0, 0.1]}>
       {/* Seat */}
       <RoundedBox
         args={[0.89, 0.11, 0.56]}
@@ -39,7 +39,7 @@ export default function Chair() {
           receiveShadow
         >
           {/* connects front and back legs */}
-          <boxGeometry args={[0.08, 0.05, 0.55]} />
+          <boxGeometry args={[0.08, 0.05, 0.5]} />
           <meshStandardMaterial map={wood} roughness={0.5} metalness={0.2} />
         </mesh>
       ))}
@@ -47,7 +47,7 @@ export default function Chair() {
       {[-0.38, 0.416].map((x, i) => (
         <mesh
           key={`under-bar-${i}`}
-          position={[x, 0.36, 2.8]}
+          position={[x, 0.43, 2.8]}
           rotation={[0, 0, 0]}
           castShadow
           receiveShadow
@@ -59,10 +59,10 @@ export default function Chair() {
       ))}
       {/* Backrest (wood) */}
       <RoundedBox
-        args={[1.015, 0.36, 0.08]}
+        args={[1.01, 0.34, 0.05]}
         radius={0.05}
         smoothness={1}
-        position={[-0.04, 1.39, 3.039]}
+        position={[-0.04, 1.45, 3.05]}
         rotation={[0.1, 0, 0]}
         castShadow
         receiveShadow
@@ -71,15 +71,15 @@ export default function Chair() {
       </RoundedBox>
 
       {/* Back support bars */}
-      {[-0.412, 0.388].map((x, i) => (
+      {[-0.438, 0.37].map((x, i) => (
         <mesh
           key={i}
-          position={[x, 1.086, 3.055]}
-          rotation={[0, 0, 0.07]}
+          position={[x, 1.06, 3.03]}
+          rotation={[0, 0, 0.1]}
           castShadow
           receiveShadow
         >
-          <boxGeometry args={[0.025, 0.9, 0.07]} />
+          <boxGeometry args={[0.04, 0.9, 0.04]} />
           <meshStandardMaterial map={wood} roughness={0.6} metalness={0.1} />
         </mesh>
       ))}
@@ -95,7 +95,7 @@ export default function Chair() {
             receiveShadow
           >
             {/* rectangular bea */}
-            <boxGeometry args={[0.032, 0.72, 0.08]} />
+            <boxGeometry args={[0.04, 0.72, 0.045]} />
             <meshStandardMaterial map={wood} roughness={0.5} metalness={0.2} />
           </mesh>
         ))
@@ -103,8 +103,13 @@ export default function Chair() {
 
       {/* Side bars */}
       {[-0.26, 0.256].map((y, i) => (
-        <mesh key={i} position={[0.0, 0.57, y + 2.78]} castShadow receiveShadow>
-          <boxGeometry args={[0.86, 0.03, 0.05]} />
+        <mesh
+          key={i}
+          position={[0.015, 0.6, y + 2.77]}
+          castShadow
+          receiveShadow
+        >
+          <boxGeometry args={[0.7, 0.03, 0.05]} />
           <meshStandardMaterial map={wood} roughness={0.5} metalness={0.2} />
         </mesh>
       ))}

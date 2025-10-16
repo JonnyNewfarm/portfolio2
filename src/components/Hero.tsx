@@ -15,7 +15,6 @@ import Wall from "./hero/Wall";
 import Wall2 from "./hero/Wall2";
 import WallShelfWithCandle from "./hero/WallShelfWithCandle";
 import Floor from "./hero/Floor";
-import Tablet from "./hero/Tablet";
 import CartoonModel from "./hero/CartoonModel";
 import Chair from "./hero/Chair";
 import ComputerTower from "./hero/ComputerTower";
@@ -64,7 +63,6 @@ export default function HeroSection() {
           <Wall2 />
           <WallShelfWithCandle />
           <Floor />
-          <Tablet />
           <CartoonModel scrollYProgress={scrollYProgress} />
           <Chair />
           <ComputerTower />
