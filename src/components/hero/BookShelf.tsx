@@ -78,7 +78,7 @@ export default function Bookshelf() {
         rotation={[0, 0, 0]}
         scale={[1, 1, 1]}
       >
-        <planeGeometry args={[0.35, 0.55]} />
+        <planeGeometry args={[0.3, 0.45]} />
         <meshStandardMaterial map={letterTexture} />
       </mesh>
 
@@ -87,7 +87,7 @@ export default function Bookshelf() {
         rotation={[0, 0, 0]}
         scale={[1, 1, 1]}
       >
-        <planeGeometry args={[0.35, 0.55]} />
+        <planeGeometry args={[0.3, 0.44]} />
         <meshStandardMaterial map={imgTexture} />
       </mesh>
     </group>

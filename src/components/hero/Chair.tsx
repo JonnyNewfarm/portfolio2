@@ -20,7 +20,7 @@ export default function Chair() {
     <group position={[0, 0, 0.15]}>
       {/* Seat */}
       <RoundedBox
-        args={[0.89, 0.097, 0.56]}
+        args={[0.89, 0.09, 0.56]}
         radius={0.04}
         smoothness={2.5}
         position={[0, 0.7, 2.73]}
@@ -62,7 +62,7 @@ export default function Chair() {
         args={[1.01, 0.34, 0.05]}
         radius={0.05}
         smoothness={1}
-        position={[-0.04, 1.45, 3.05]}
+        position={[-0.04, 1.45, 3.125]}
         rotation={[0.1, 0, 0]}
         castShadow
         receiveShadow
@@ -74,8 +74,8 @@ export default function Chair() {
       {[-0.438, 0.37].map((x, i) => (
         <mesh
           key={i}
-          position={[x, 1.06, 3.03]}
-          rotation={[0, 0, 0.1]}
+          position={[x, 1.06, 3.08]}
+          rotation={[0.15, 0, 0.1]}
           castShadow
           receiveShadow
         >

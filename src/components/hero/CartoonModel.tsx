@@ -39,7 +39,7 @@ export default function CartoonModel({
     if (bones.current.leftLeg) bones.current.leftLeg.rotation.x = -Math.PI / 2;
     if (bones.current.rightLeg)
       bones.current.rightLeg.rotation.x = -Math.PI / 2.5;
-    if (bones.current.spine) bones.current.spine.rotation.x = Math.PI / 2.8;
+    if (bones.current.spine) bones.current.spine.rotation.x = Math.PI / 2.9;
 
     if (bones.current.rightArm) {
       bones.current.rightArm.rotation.x = Math.PI / 2.3;
@@ -63,7 +63,7 @@ export default function CartoonModel({
   });
 
   return (
-    <mesh position={[0.14, 0.011, 2.81]}>
+    <mesh position={[0.14, 0.011, 2.889]}>
       <primitive ref={group} object={scene} scale={1.46} />
     </mesh>
   );
