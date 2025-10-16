@@ -31,7 +31,7 @@ export default function CartoonModel({
     bones.current.rightArm = group.current.getObjectByName("RightArm");
 
     if (bones.current.hip) {
-      bones.current.hip.rotation.x = -Math.PI / 3;
+      bones.current.hip.rotation.x = -Math.PI / 2.7;
       // Move hips slightly backward toward the seatback
       bones.current.hip.position.z -= 0; // try between 0.03–0.1 for fine-tuning
     }
@@ -39,7 +39,7 @@ export default function CartoonModel({
     if (bones.current.leftLeg) bones.current.leftLeg.rotation.x = -Math.PI / 2;
     if (bones.current.rightLeg)
       bones.current.rightLeg.rotation.x = -Math.PI / 2.5;
-    if (bones.current.spine) bones.current.spine.rotation.x = Math.PI / 2.7;
+    if (bones.current.spine) bones.current.spine.rotation.x = Math.PI / 2.8;
 
     if (bones.current.rightArm) {
       bones.current.rightArm.rotation.x = Math.PI / 2.3;

@@ -74,7 +74,7 @@ export default function Bookshelf() {
       {/* Letter and img on wall */}
 
       <mesh
-        position={[-1.9, 2.9, -0.55]}
+        position={[-1.9, 3.1, -0.55]}
         rotation={[0, 0, 0]}
         scale={[1, 1, 1]}
       >
@@ -83,7 +83,7 @@ export default function Bookshelf() {
       </mesh>
 
       <mesh
-        position={[-1.5, 2.9, -0.55]}
+        position={[-1.5, 3.08, -0.55]}
         rotation={[0, 0, 0]}
         scale={[1, 1, 1]}
       >

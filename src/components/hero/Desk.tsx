@@ -181,7 +181,7 @@ export default function Desk() {
         <mesh castShadow={false} receiveShadow>
           <cylinderGeometry args={[0.07, 0.07, 0.12, 24, 1, true]} />
           <meshStandardMaterial
-            color="#e0e0e0"
+            color="#b3aaa6"
             metalness={0.1}
             roughness={0.5}
           />
@@ -191,7 +191,7 @@ export default function Desk() {
         <mesh position={[0, 0.001, 0]} scale={[0.95, 1, 0.95]}>
           <cylinderGeometry args={[0.065, 0.065, 0.12, 24, 1, true]} />
           <meshStandardMaterial
-            color="#fafafa"
+            color="#dbd7d5"
             metalness={0.05}
             roughness={0.3}
             side={THREE.BackSide}
