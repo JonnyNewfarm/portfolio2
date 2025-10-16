@@ -11,7 +11,7 @@ export default function CartoonModel({
 }: {
   scrollYProgress: MotionValue<number>;
 }) {
-  const { scene } = useGLTF("/me-cartoon.glb");
+  const { scene } = useGLTF("/me-cartoon-draco.glb");
   const group = useRef<THREE.Group>(null);
 
   const bones = useRef<{
@@ -19,6 +19,8 @@ export default function CartoonModel({
     leftLeg?: THREE.Object3D;
     rightLeg?: THREE.Object3D;
     spine?: THREE.Object3D;
+    spine1?: THREE.Object3D;
+    spine2?: THREE.Object3D;
     rightArm?: THREE.Object3D;
   }>({});
 
@@ -29,17 +31,21 @@ export default function CartoonModel({
     bones.current.rightLeg = group.current.getObjectByName("RightLeg");
     bones.current.spine = group.current.getObjectByName("Spine");
     bones.current.rightArm = group.current.getObjectByName("RightArm");
+    bones.current.spine2 = group.current.getObjectByName("Spine2");
+    bones.current.spine1 = group.current.getObjectByName("Spine1");
 
     if (bones.current.hip) {
       bones.current.hip.rotation.x = -Math.PI / 2.7;
       // Move hips slightly backward toward the seatback
-      bones.current.hip.position.z -= 0; // try between 0.03–0.1 for fine-tuning
+      bones.current.hip.position.z -= 0.015; // try between 0.03–0.1 for fine-tuning
     }
 
     if (bones.current.leftLeg) bones.current.leftLeg.rotation.x = -Math.PI / 2;
     if (bones.current.rightLeg)
       bones.current.rightLeg.rotation.x = -Math.PI / 2.5;
-    if (bones.current.spine) bones.current.spine.rotation.x = Math.PI / 2.8;
+    if (bones.current.spine) bones.current.spine.rotation.x = Math.PI / 1.9;
+    if (bones.current.spine2) bones.current.spine2.rotation.x = -0.2;
+    if (bones.current.spine1) bones.current.spine1.rotation.x = -0.4;
 
     if (bones.current.rightArm) {
       bones.current.rightArm.rotation.x = Math.PI / 2.3;
@@ -63,7 +69,7 @@ export default function CartoonModel({
   });
 
   return (
-    <mesh position={[0.14, 0.011, 2.8]}>
+    <mesh position={[0.14, 0.011, 2.86]}>
       <primitive ref={group} object={scene} scale={1.46} />
     </mesh>
   );

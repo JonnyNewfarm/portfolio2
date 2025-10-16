@@ -17,10 +17,10 @@ export default function Chair() {
   seat.colorSpace = THREE.SRGBColorSpace;
 
   return (
-    <group position={[0, 0, 0.1]}>
+    <group position={[0, 0, 0.15]}>
       {/* Seat */}
       <RoundedBox
-        args={[0.89, 0.11, 0.56]}
+        args={[0.89, 0.097, 0.56]}
         radius={0.04}
         smoothness={2.5}
         position={[0, 0.7, 2.73]}
