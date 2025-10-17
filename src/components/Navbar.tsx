@@ -31,7 +31,7 @@ const Navbar = () => {
       <div className="w-full h-full hidden lg:block">
         <div className="flex items-center justify-between">
           <div className="tracking-tighter">
-            <h1 className=" opacity-70 m-0 leading-none">Brand:</h1>
+            <h1 className=" opacity-70 m-0 leading-none">By:</h1>
             <p className=" m-0 leading-tight">Newfarm Studio</p>
           </div>
 
