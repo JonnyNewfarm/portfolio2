@@ -12,12 +12,10 @@ export default function useDarkMode(): boolean {
     const check = () =>
       setIsDark(document.documentElement.classList.contains("dark"));
 
-    // run once to sync
     check();
 
     const obs = new MutationObserver((mutations) => {
       for (const m of mutations) {
-        // attributeFilter ensures only 'class' changes appear, but double-check
         if (m.type === "attributes" && (m.target as Element).classList) {
           check();
           break;

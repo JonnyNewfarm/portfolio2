@@ -4,7 +4,6 @@ export default function DarkModeBtn() {
   const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
-    // Check the current theme
     setIsDark(document.documentElement.classList.contains("dark"));
   }, []);
 

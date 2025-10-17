@@ -10,7 +10,7 @@ export default function useIsSmallScreen() {
   const [isSmall, setIsSmall] = useState(false);
 
   useEffect(() => {
-    const check = () => setIsSmall(window.innerWidth < 640); // sm: < 640px
+    const check = () => setIsSmall(window.innerWidth < 640);
     check();
     window.addEventListener("resize", check);
     return () => window.removeEventListener("resize", check);

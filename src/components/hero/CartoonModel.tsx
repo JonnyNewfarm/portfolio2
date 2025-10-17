@@ -32,8 +32,7 @@ export default function CartoonModel({
 
     if (bones.current.hip) {
       bones.current.hip.rotation.x = -Math.PI / 2.7;
-      // Move hips slightly backward toward the seatback
-      bones.current.hip.position.z -= 0; // try between 0.03–0.1 for fine-tuning
+      bones.current.hip.position.z -= 0;
     }
 
     if (bones.current.leftLeg) bones.current.leftLeg.rotation.x = -Math.PI / 2;
@@ -55,7 +54,6 @@ export default function CartoonModel({
     group.current.position.y = -0.45;
     group.current.rotation.y = Math.PI + Math.sin(t * 0.3) * 0.002;
 
-    // Scroll-based arm lift
     const progress = scrollYProgress.get();
     if (bones.current.rightArm) {
       bones.current.rightArm.rotation.y = (Math.PI / 1.9) * progress;

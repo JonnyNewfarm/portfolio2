@@ -16,6 +16,8 @@ const ProjectsClient = () => {
       src3: "jobscriptor-3.jpg",
       src4: "jobscriptor-4.jpg",
       link: "https://www.jobscriptor.com/",
+      about:
+        "Website featuring AI tools for writing resumes and cover letters, and for finding jobs that match your resume.",
       stack:
         "React, Next.js, Prisma, TailwindCSS, Neon, NextAuth, OpenAI, Stripe.",
     },
@@ -26,6 +28,7 @@ const ProjectsClient = () => {
       src3: "kerimov3.png",
       src4: "kerimov4.png",
       link: "https://kerimovdesigns.com",
+      about: "Portfolio website for graphic designer Rustam Kerimov.",
       stack:
         "React, Next.js, Prisma, TailwindCSS, MongoDB, Uploadthing, NextAuth.",
     },
@@ -195,12 +198,14 @@ const ProjectsClient = () => {
                         ? ""
                         : "opacity-60 hover:opacity-100"
                     }`}
-                    onMouseEnter={() => {
+                    onClick={() => {
                       setSelected(project);
-                      setHovered(true);
+                      setHovered(false);
+                      if (isPaused && animRef.current) {
+                        animRef.current.resume();
+                        setIsPaused(false);
+                      }
                     }}
-                    onMouseLeave={() => setHovered(false)}
-                    onClick={() => window.open(project.link, "_blank")}
                   >
                     <div className="flex items-center gap-3">
                       {selected.title === project.title && (
@@ -222,10 +227,23 @@ const ProjectsClient = () => {
                 transition={{ duration: 0.5, ease: "easeOut", delay: 0.6 }}
                 className="mt-6"
               >
-                <h3 className="text-lg mt-5  font-semibold">Stack</h3>
+                <div>
+                  <h1 className="text-lg mt-5 font-semibold">About</h1>
+                  <p>{selected.about}</p>
+                </div>
+                <h3 className="text-lg mt-5 font-semibold">Stack</h3>
                 <p className="text-sm opacity-70 leading-relaxed">
                   {selected.stack}
                 </p>
+
+                <a
+                  href={selected.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block hover:scale-105  transition-transform ease-in-out  mt-4 border-[2px] font-semibold px-4 py-2 border-[#1c1a17] dark:border-stone-300 text-sm"
+                >
+                  View Website
+                </a>
               </motion.div>
             </div>
 

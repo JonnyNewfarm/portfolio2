@@ -15,7 +15,6 @@ export default function Wall2() {
   const meshRef = useRef<THREE.Mesh>(null);
   const isDark = useDarkMode();
 
-  // Define a simple rectangular wall
   const shape = new THREE.Shape();
   shape.moveTo(0, 0);
   shape.lineTo(0, 3.6);
@@ -31,14 +30,9 @@ export default function Wall2() {
       try {
         if (!mat) return;
         if (mat.color) mat.color.set(colorHex);
-        if (mat.emissive) {
-          // if you want emissive changes too, adjust here
-          // mat.emissive.set(isDark ? "#111111" : "#000000")
-        }
-        // rarely needed but safe to set
+
         mat.needsUpdate = true;
       } catch (e) {
-        // defensive: some users put weird material types
         console.warn("Failed to set material color", e);
       }
     };

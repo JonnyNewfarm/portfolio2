@@ -5,7 +5,7 @@ import * as THREE from "three";
 interface WallShadeProps {
   position: [number, number, number];
   rotation?: [number, number, number];
-  intensity?: number; // 0 to 1
+  intensity?: number;
 }
 
 export default function WallShade({

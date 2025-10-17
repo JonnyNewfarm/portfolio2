@@ -15,7 +15,7 @@ export default function FloorLamp() {
 
   let last = 0;
   useFrame(({ clock }) => {
-    if (clock.getElapsedTime() - last < 0.05) return; // skip most frames
+    if (clock.getElapsedTime() - last < 0.05) return;
     last = clock.getElapsedTime();
     const t = clock.getElapsedTime();
     const isDark = document.documentElement.classList.contains("dark");

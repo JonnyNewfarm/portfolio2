@@ -31,7 +31,7 @@ export default function HeroSection() {
     offset: ["start start", "end start"],
   });
 
-  const opacity = useTransform(scrollYProgress, [0.2, 0.26], [1, 0]); // fades later and slower
+  const opacity = useTransform(scrollYProgress, [0.2, 0.26], [1, 0]);
 
   return (
     <section

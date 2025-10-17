@@ -23,7 +23,7 @@ export default function Home() {
   }, []);
 
   if (isLoading) {
-    return <PreLoadingShow />; // preloader runs by itself
+    return <PreLoadingShow />;
   }
 
   return (

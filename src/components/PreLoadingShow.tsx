@@ -68,7 +68,6 @@ const PreLoadingShow = () => {
             </motion.p>
           </div>
 
-          {/* Percentage */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{
