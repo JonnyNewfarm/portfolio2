@@ -113,7 +113,7 @@ const AboutClient = () => {
             }}
             className="w-full md:w-1/2 h-[50vh] md:h-screen flex justify-center items-center p-4 relative"
           >
-            <div className="relative w-full h-[80%]">
+            <div className="relative mt-16 md:mt-0 w-full h-[80%]">
               <Image
                 src="/jonnyzoo.jpg"
                 alt="Image of Jonas"
