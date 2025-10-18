@@ -7,9 +7,9 @@ import Image from "next/image";
 const AboutClient = () => {
   return (
     <ScrollSection>
-      <div className="bg-[#ececec] dark:bg-[#2e2b2b] text-[#161310] dark:text-stone-300 flex justify-center min-h-screen h-full w-full border-b md:pt-16 border-stone-700/80 dark:border-b-stone-300/80">
+      <div className="bg-[#ececec] dark:bg-[#2e2b2b] text-[#161310] dark:text-stone-300 flex justify-center min-h-screen h-full w-full border-b md:pt-16 border-stone-300 dark:border-b-stone-600">
         <div className="flex flex-col-reverse mt-10 md:flex-row items-center w-full max-w-7xl">
-          <div className="flex flex-col w-full md:w-1/2 px-6 md:px-10 ">
+          <div className="flex flex-col w-full md:w-3/4 px-6 md:px-10 ">
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{
@@ -25,12 +25,14 @@ const AboutClient = () => {
               className="mb-10"
             >
               <h1 className="mb-3 text-3xl">The Face Behind the Code</h1>
-              <p className="text-sm max-w-xl">
+              <p className="text-sm md:text-[16px] max-w-xl lg:max-w-2xl">
                 I&apos;m a 28-year-old frontend developer from Oslo with a
                 passion for clean design, solid code, and the space where those
                 two worlds meet. I&apos;ve worked on everything from portfolio
-                sites to fullstack apps — and I love bringing ideas to life on
-                the web.
+                sites to fullstack applications — and I love bringing ideas to
+                life on the web through smooth animations, interactive 3D
+                elements, and thoughtful user experiences built with tools like
+                Framer Motion and Three.js.
               </p>
             </motion.div>
 
@@ -77,19 +79,20 @@ const AboutClient = () => {
                 <div className="flex-1 px-4 py-4">
                   <h2 className="text-lg mb-2">Code</h2>
                   <p>
-                    I work a lot with React, Next.js, TypeScript, CSS/SASS and
-                    Tailwind. I care about clean code, performance, and
-                    accessibility.
+                    I like to work with React, Next.js, TypeScript, CSS/SASS,
+                    and Tailwind. I focus on writing clean, efficient code and
+                    building interfaces that feel smooth and responsive.
                   </p>
                 </div>
 
                 <div className="flex-1 px-4 py-4">
                   <h2 className="text-lg mb-2">Fullstack</h2>
                   <p>
-                    I&apos;ve built with stacks using Prisma, mongoose, MongoDB,
-                    SQL, neon, relational and non-relational databases, to
-                    mention some. I enjoy managing the full flow — from database
-                    to UI.
+                    I&apos;ve built applications using different tools and
+                    frameworks like Prisma, Mongoose, MongoDB, SQL, and Neon, to
+                    name a few. I enjoy working across the stack, connecting
+                    data with design, and making everything flow smoothly from
+                    the backend to the user interface.
                   </p>
                 </div>
               </motion.div>

@@ -60,7 +60,7 @@ export default function ScreenUI({
               Home
             </Text>
             <Text
-              position={[0.45, 0.37, 1.3]}
+              position={[0.53, 0.37, 1.3]}
               fontSize={0.21}
               color="black"
               onClick={() => router.push("/projects")}
@@ -80,7 +80,7 @@ export default function ScreenUI({
               About
             </Text>
             <Text
-              position={[0.42, 0.035, 1.3]}
+              position={[0.48, 0.035, 1.3]}
               fontSize={0.21}
               color="black"
               onClick={() => router.push("/contact")}

@@ -91,12 +91,12 @@ const ProjectsClient = () => {
   return (
     <SmoothScroll>
       <div className="w-full min-h-screen h-full md:pt-6 bg-[#ececec] dark:bg-[#2e2b2b] text-[#161310] dark:text-stone-300">
-        <div className="md:hidden flex flex-col  text-start px-6 py-10  border-b border-[#161310] dark:border-stone-300">
+        <div className="md:hidden flex flex-col  text-start px-6 py-10  border-b border-stone-300 dark:border-stone-600">
           <motion.h1
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: [0.6, 1], opacity: [0, 1] }}
             transition={{ delay: 0.1, duration: 0.7, ease: "easeInOut" }}
-            className="text-2xl font-semibold  mt-10 uppercase"
+            className="text-2xl  font-semibold  mt-16 uppercase"
           >
             My projects
           </motion.h1>
@@ -140,7 +140,7 @@ const ProjectsClient = () => {
           </div>
         </div>
 
-        <div className="hidden md:flex min-h-screen border-b border-[#161310] dark:border-stone-300">
+        <div className="hidden md:flex min-h-screen border-b border-stone-300 dark:border-stone-600">
           <div
             className="max-w-7xl w-full mx-auto px-10 py-24 flex gap-20 relative"
             onMouseMove={handleMouseMove}

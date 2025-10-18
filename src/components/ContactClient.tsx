@@ -81,7 +81,7 @@ const ContactClient = () => {
 
   return (
     <SmoothScroll>
-      <div className="min-h-screen h-full w-full border-b border-b-stone-700/80 dark:border-stone-300/80 bg-[#ececec] dark:bg-[#2e2b2b] text-[#161310] dark:text-stone-300 flex flex-col lg:flex-row">
+      <div className="min-h-screen h-full w-full border-b border-b-stone-300 dark:border-stone-600 bg-[#ececec] dark:bg-[#2e2b2b] text-[#161310] dark:text-stone-300 flex flex-col lg:flex-row">
         <div className="flex flex-col justify-between w-full lg:w-1/2 p-10 lg:p-20 border-b border-stone-400/20 dark:border-stone-200/20 lg:border-b-0 lg:border-r lg:border-stone-400/20">
           <div className="flex flex-col gap-y-6">
             <motion.h1
@@ -93,7 +93,7 @@ const ContactClient = () => {
                 times: [0, 0.4, 1],
                 ease: "easeInOut",
               }}
-              className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl mt-10 leading-tight"
+              className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl mt-16 leading-tight"
             >
               Let&apos;s turn your <br /> vision into reality
             </motion.h1>
