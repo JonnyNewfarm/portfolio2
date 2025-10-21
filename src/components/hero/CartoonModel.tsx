@@ -11,7 +11,7 @@ export default function CartoonModel({
 }: {
   scrollYProgress: MotionValue<number>;
 }) {
-  const { scene } = useGLTF("/cartoon-2-ultra.glb");
+  const { scene } = useGLTF("/cartoon-3-ultra.glb");
   const group = useRef<THREE.Group>(null);
 
   const bones = useRef<{
