@@ -1,8 +1,7 @@
 "use client";
 
 import { useLoader } from "@react-three/fiber";
-import { RoundedBox } from "@react-three/drei";
-
+import { RoundedBox, useGLTF } from "@react-three/drei";
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import useDarkMode from "@/hooks/useDarkMode";
@@ -14,6 +13,8 @@ export default function Desk() {
   texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
   texture.repeat.set(2, 2);
 
+  const { scene: cupScene } = useGLTF("/cup-draco.glb");
+
   useEffect(() => {
     const updateLight = () => {
       const isDark = document.documentElement.classList.contains("dark");
@@ -23,20 +24,18 @@ export default function Desk() {
     };
 
     updateLight();
-
     const observer = new MutationObserver(updateLight);
     observer.observe(document.documentElement, {
       attributes: true,
       attributeFilter: ["class"],
     });
-
     return () => observer.disconnect();
   }, []);
+
   return (
     <group position={[0, 0, 1.2]}>
       {/* Keyboard */}
       <group position={[-0.1, 1, 0]}>
-        {/* Keyboard Base */}
         <RoundedBox
           args={[0.8, 0.04, 0.3]}
           radius={0.02}
@@ -52,9 +51,8 @@ export default function Desk() {
         </RoundedBox>
       </group>
 
-      {/* Desk Lamp with Light */}
+      {/* Desk Lamp */}
       <group position={[1.1, 1.05, -0.5]}>
-        {/* Warm Lamp Light */}
         <spotLight
           ref={lightRef}
           position={[1.12, 1.8, -0.46]}
@@ -63,14 +61,13 @@ export default function Desk() {
           color="#fff1c1"
           intensity={
             document.documentElement.classList.contains("dark") ? 1.8 : 0
-          } // boost
+          }
           castShadow={false}
         />
       </group>
 
       {/* Mouse */}
       <group position={[0.5, 1, 0]}>
-        {/* Body */}
         <mesh castShadow={false} receiveShadow scale={[0.7, 0.5, 2]}>
           <sphereGeometry args={[0.12, 16, 16]} />
           <meshStandardMaterial
@@ -79,8 +76,6 @@ export default function Desk() {
             metalness={0.1}
           />
         </mesh>
-
-        {/* Scroll Wheel */}
         <mesh position={[0.01, 0.063, 0.055]} rotation={[Math.PI / 2, 0, 0]}>
           <cylinderGeometry args={[0.01, 0.01, 0.08, 6]} />
           <meshStandardMaterial color="black" roughness={0.4} metalness={0.2} />
@@ -108,7 +103,7 @@ export default function Desk() {
             castShadow
             receiveShadow
           >
-            <cylinderGeometry args={[0.05, 0.022, 0.99, 10]}></cylinderGeometry>
+            <cylinderGeometry args={[0.05, 0.022, 0.99, 10]} />
             <meshStandardMaterial
               map={texture}
               roughness={0.5}
@@ -135,18 +130,12 @@ export default function Desk() {
       <group position={[0, 0.96, -0.6]}>
         <mesh position={[0, 0.4, 0]} castShadow={false} receiveShadow>
           <cylinderGeometry args={[0.03, 0.03, 0.8]} />
-          <meshStandardMaterial
-            color="#333333"
-            roughness={0.5}
-            metalness={0.3}
-          />
+          <meshStandardMaterial color="#333" roughness={0.5} metalness={0.3} />
         </mesh>
-
         <mesh position={[0, 0, 0]} castShadow={false} receiveShadow={false}>
           <cylinderGeometry args={[0.15, 0.15, 0.03]} />
           <meshStandardMaterial color="black" roughness={0.5} metalness={0.3} />
         </mesh>
-
         <RoundedBox
           args={[2.29, 1.353, 0.099]}
           radius={0.02}
@@ -157,14 +146,12 @@ export default function Desk() {
         >
           <meshStandardMaterial color="black" roughness={0.4} metalness={0.3} />
         </RoundedBox>
-
         <RoundedBox
           args={[2.17, 1.24, 0.141]}
           radius={0.02}
           smoothness={2}
           position={[0.015, 0.8, 0]}
-        ></RoundedBox>
-
+        />
         <mesh position={[0, 0.8, 0.07]}>
           <planeGeometry args={[1.9, 1.19]} />
           <meshStandardMaterial
@@ -176,28 +163,16 @@ export default function Desk() {
           />
         </mesh>
       </group>
-      <group position={[1.0, 1.03, 0.3]} rotation={[0, Math.PI / 9, 0]}>
-        {/* Cup body */}
-        <mesh castShadow={false} receiveShadow>
-          <cylinderGeometry args={[0.07, 0.07, 0.12, 24, 1, true]} />
-          <meshStandardMaterial
-            color="#b3aaa6"
-            metalness={0.1}
-            roughness={0.5}
-          />
-        </mesh>
 
-        {/* Cup inner surface */}
-        <mesh position={[0, 0.001, 0]} scale={[0.95, 1, 0.95]}>
-          <cylinderGeometry args={[0.065, 0.065, 0.12, 24, 1, true]} />
-          <meshStandardMaterial
-            color="#dbd7d5"
-            metalness={0.05}
-            roughness={0.3}
-            side={THREE.BackSide}
-          />
-        </mesh>
+      <group
+        position={[1.25, 1.03, 0.7]}
+        rotation={[0, Math.PI / 9, 0]}
+        scale={1.8}
+      >
+        <primitive object={cupScene} />
       </group>
     </group>
   );
 }
+
+useGLTF.preload("/cup-draco.glb");
