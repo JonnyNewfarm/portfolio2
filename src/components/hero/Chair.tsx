@@ -59,7 +59,7 @@ export default function Chair() {
       ))}
       {/* Backrest (wood) */}
       <RoundedBox
-        args={[1.01, 0.34, 0.05]}
+        args={[1.01, 0.34, 0.08]}
         radius={0.05}
         smoothness={1}
         position={[-0.04, 1.45, 3.125]}

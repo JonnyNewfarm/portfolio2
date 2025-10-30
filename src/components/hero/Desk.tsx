@@ -14,6 +14,29 @@ export default function Desk() {
   texture.repeat.set(2, 2);
 
   const { scene: cupScene } = useGLTF("/cup-draco.glb");
+  const { scene: vaseScene } = useGLTF("/vase-optimized.glb");
+  const setVaseColor = (scene: THREE.Object3D, colorHex: string) => {
+    scene.traverse((child) => {
+      if ((child as THREE.Mesh).isMesh) {
+        const mesh = child as THREE.Mesh;
+        if (Array.isArray(mesh.material)) {
+          mesh.material.forEach((mat) => {
+            if ((mat as THREE.MeshStandardMaterial).color) {
+              (mat as THREE.MeshStandardMaterial).color = new THREE.Color(
+                colorHex
+              );
+            }
+          });
+        } else if ((mesh.material as THREE.MeshStandardMaterial).color) {
+          (mesh.material as THREE.MeshStandardMaterial).color = new THREE.Color(
+            colorHex
+          );
+        }
+      }
+    });
+  };
+
+  setVaseColor(vaseScene, "#bcd1d6");
 
   useEffect(() => {
     const updateLight = () => {
@@ -170,6 +193,14 @@ export default function Desk() {
         scale={1.8}
       >
         <primitive object={cupScene} />
+      </group>
+
+      <group
+        position={[1.36, 1.0, 0.08]}
+        rotation={[0, -Math.PI / 6, 0]}
+        scale={0.7}
+      >
+        <primitive object={vaseScene} />
       </group>
     </group>
   );
