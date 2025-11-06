@@ -109,29 +109,39 @@ const ProjectsClient = () => {
             Code / Design / Fullstack
           </motion.h2>
 
-          <div className="w-full flex justify-center gap-y-9 flex-col">
+          <div className="w-full flex flex-col gap-y-10">
             {projects.map((p, i) => (
               <motion.div
                 key={i}
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: [0.6, 1], opacity: [0, 1] }}
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: [0.9, 1], opacity: [0, 1] }}
                 transition={{ delay: 0.3 + i * 0.1, duration: 0.6 }}
-                className="block"
+                className="flex flex-col items-start"
               >
-                <div className="mb-2 font-semibold ">{p.title}</div>
-                <Image
-                  src={`/projects/${p.src}`}
-                  alt={p.title}
-                  width={600}
-                  height={400}
-                  className="w-full max-w-md mx-auto object-contain mb-4"
-                />
-                <p className="text-sm  opacity-70 mb-2">{p.stack}</p>
+                <h3 className="mb-3 font-semibold text-lg">{p.title}</h3>
+
                 <a
                   href={p.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block px-4 py-2 border-[2px] font-semibold rounded-[2px] border-[#1c1a17] dark:border-stone-300 text-sm"
+                  className="block w-full mb-4"
+                >
+                  <Image
+                    src={`/projects/${p.src}`}
+                    alt={p.title}
+                    width={600}
+                    height={400}
+                    className="w-full h-auto object-contain hover:opacity-90 transition-opacity"
+                  />
+                </a>
+
+                <p className="text-sm opacity-70 mb-3">{p.stack}</p>
+
+                <a
+                  href={p.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block px-4 py-2 border-[2px] font-semibold border-[#1c1a17] dark:border-stone-300 text-sm"
                 >
                   Live Link
                 </a>
