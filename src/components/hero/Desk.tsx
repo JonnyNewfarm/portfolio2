@@ -1,36 +1,74 @@
 "use client";
 
-import { useLoader } from "@react-three/fiber";
+import { useFrame, useLoader } from "@react-three/fiber";
 import { RoundedBox, useGLTF } from "@react-three/drei";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import * as THREE from "three";
-import useDarkMode from "@/hooks/useDarkMode";
 
 export default function Desk() {
   const lightRef = useRef<THREE.SpotLight>(null);
-  const isDark = useDarkMode();
   const texture = useLoader(THREE.TextureLoader, "/fabrics/wood-1.webp");
   texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
   texture.repeat.set(2, 2);
 
   const { scene: cupScene } = useGLTF("/cup-draco.glb");
+  const screenRef = useRef<THREE.Mesh>(null);
 
-  useEffect(() => {
-    const updateLight = () => {
-      const isDark = document.documentElement.classList.contains("dark");
-      if (lightRef.current) {
-        lightRef.current.intensity = isDark ? 3.1 : 0;
-      }
-    };
+  useFrame(({ clock }) => {
+    if (screenRef.current) {
+      (
+        screenRef.current.material as THREE.ShaderMaterial
+      ).uniforms.uTime.value = clock.getElapsedTime();
+    }
+  });
 
-    updateLight();
-    const observer = new MutationObserver(updateLight);
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["class"],
-    });
-    return () => observer.disconnect();
-  }, []);
+  const gradientMaterial = new THREE.ShaderMaterial({
+    uniforms: {
+      uTime: { value: 0 },
+      uColor1: { value: new THREE.Color("#e6eefc") },
+      uColor2: { value: new THREE.Color("#ccd7eb") },
+    },
+    vertexShader: `
+    varying vec2 vUv; 
+
+
+    void main() {
+      vUv = uv;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+  `,
+    fragmentShader: `
+    uniform float uTime;
+    uniform vec3 uColor1;
+    uniform vec3 uColor2;
+    varying vec2 vUv;
+
+    void main() {
+      vec2 uv = vUv;
+
+      // Create flowing, wavy pattern
+      float wave1 = sin(uv.x * 10.0 + uTime * 2.0);
+      float wave2 = cos(uv.y * 8.0 - uTime * 1.5);
+      float wave3 = sin((uv.x + uv.y) * 6.0 + uTime * 2.5);
+
+      float mixValue = 0.5 + 0.5 * (wave1 + wave2 + wave3) / 3.0;
+
+      // Smooth the edges for a soft blob effect
+      mixValue = smoothstep(0.3, 0.7, mixValue);
+
+      vec3 color = mix(uColor1, uColor2, mixValue);
+      gl_FragColor = vec4(color, 1.0);
+    }
+  `,
+  });
+
+  useFrame(({ clock }) => {
+    if (screenRef.current) {
+      (
+        screenRef.current.material as THREE.ShaderMaterial
+      ).uniforms.uTime.value = clock.getElapsedTime() * 0.6;
+    }
+  });
 
   return (
     <group position={[0, 0, 1.2]}>
@@ -137,7 +175,7 @@ export default function Desk() {
           <meshStandardMaterial color="black" roughness={0.5} metalness={0.3} />
         </mesh>
         <RoundedBox
-          args={[2.29, 1.353, 0.099]}
+          args={[2.26, 1.32, 0.07]}
           radius={0.02}
           smoothness={2}
           position={[0, 0.8, 0]}
@@ -147,21 +185,15 @@ export default function Desk() {
           <meshStandardMaterial color="black" roughness={0.4} metalness={0.3} />
         </RoundedBox>
         <RoundedBox
+          ref={screenRef}
           args={[2.17, 1.24, 0.141]}
           radius={0.02}
           smoothness={2}
           position={[0.015, 0.8, 0]}
+          castShadow={false}
+          receiveShadow={false}
+          material={gradientMaterial}
         />
-        <mesh position={[0, 0.8, 0.07]}>
-          <planeGeometry args={[1.9, 1.19]} />
-          <meshStandardMaterial
-            color={isDark ? "#f5f5f5" : "#fafafa"}
-            emissive={isDark ? "#fff6d0" : "#ffffff"}
-            emissiveIntensity={isDark ? 2 : 0.2}
-            transparent
-            opacity={0.95}
-          />
-        </mesh>
       </group>
 
       <group
