@@ -1,4 +1,4 @@
-# JonasNygaard.com
+# Jonasnygaard.com
 
 [https://www.jonasnygaard.com](https://www.jonasnygaard.com)
 
