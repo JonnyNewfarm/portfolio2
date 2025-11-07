@@ -1,15 +1,18 @@
 "use client";
 import { useLoader } from "@react-three/fiber";
-
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import useDarkMode from "@/hooks/useDarkMode";
 
 export default function Wall() {
-  const texture = useLoader(THREE.TextureLoader, "/fabrics/stone-wall2.webp");
-  texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-  texture.repeat.set(4, 4);
-  texture.colorSpace = THREE.SRGBColorSpace;
+  const wallTexture = useLoader(
+    THREE.TextureLoader,
+    "/fabrics/stone-wall2.webp"
+  );
+
+  wallTexture.wrapS = wallTexture.wrapT = THREE.RepeatWrapping;
+  wallTexture.repeat.set(4, 4);
+  wallTexture.colorSpace = THREE.SRGBColorSpace;
 
   const meshRef = useRef<THREE.Mesh | null>(null);
   const isDark = useDarkMode();
@@ -30,8 +33,6 @@ export default function Wall() {
       try {
         if (!mat) return;
         if (mat.color) mat.color.set(colorHex);
-        if (mat.emissive) {
-        }
         mat.needsUpdate = true;
       } catch (e) {
         console.warn("Failed to set material color", e);
@@ -49,19 +50,22 @@ export default function Wall() {
   }, [isDark]);
 
   return (
-    <mesh
-      ref={meshRef}
-      rotation={[0, -Math.PI / 2, 0]}
-      scale={[1.5, 1.43, 1]}
-      position={[-2.6, 0, 0]}
-    >
-      <shapeGeometry args={[shape]} />
-      <meshStandardMaterial
-        map={texture}
-        roughness={0.7}
-        metalness={0.05}
-        side={THREE.DoubleSide}
-      />
-    </mesh>
+    <>
+      {/* Wall Mesh */}
+      <mesh
+        ref={meshRef}
+        rotation={[0, -Math.PI / 2, 0]}
+        scale={[1.5, 1.43, 1]}
+        position={[-2.6, 0, 0]}
+      >
+        <shapeGeometry args={[shape]} />
+        <meshStandardMaterial
+          map={wallTexture}
+          roughness={0.7}
+          metalness={0.05}
+          side={THREE.DoubleSide}
+        />
+      </mesh>
+    </>
   );
 }

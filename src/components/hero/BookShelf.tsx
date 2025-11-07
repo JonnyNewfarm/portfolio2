@@ -2,7 +2,6 @@
 
 import { RoundedBox } from "@react-three/drei";
 import * as THREE from "three";
-
 import { useLoader } from "@react-three/fiber";
 
 const bookColors = [
@@ -16,10 +15,14 @@ const bookColors = [
 
 export default function Bookshelf() {
   const letterTexture = useLoader(THREE.TextureLoader, "/letter.webp");
-  letterTexture.colorSpace = THREE.SRGBColorSpace;
-
   const imgTexture = useLoader(THREE.TextureLoader, "/wall-img4.webp");
+  const paintingTexture = useLoader(THREE.TextureLoader, "/oil-painting.webp");
+  const carpetTexture = useLoader(THREE.TextureLoader, "/fabrics/carpet.webp");
+  carpetTexture.colorSpace = THREE.SRGBColorSpace;
+  letterTexture.colorSpace = THREE.SRGBColorSpace;
   imgTexture.colorSpace = THREE.SRGBColorSpace;
+  paintingTexture.colorSpace = THREE.SRGBColorSpace;
+
   return (
     <group position={[3, 0.33, 0.6]}>
       {/* Shelves */}
@@ -71,25 +74,85 @@ export default function Bookshelf() {
           </mesh>
         );
       })}
-      {/* Letter and img on wall */}
 
-      <mesh
-        position={[-1.9, 3.1, -0.55]}
-        rotation={[0, 0, 0]}
-        scale={[1, 1, 1]}
-      >
+      {/* Letter */}
+      <mesh position={[-1.9, 3.1, -0.55]}>
         <planeGeometry args={[0.3, 0.45]} />
         <meshStandardMaterial map={letterTexture} />
       </mesh>
 
-      <mesh
-        position={[-1.5, 3.08, -0.55]}
-        rotation={[0, 0, 0]}
-        scale={[1, 1, 1]}
-      >
+      {/* Wall image */}
+      <mesh position={[-1.5, 3.08, -0.55]}>
         <planeGeometry args={[0.3, 0.44]} />
         <meshStandardMaterial map={imgTexture} />
       </mesh>
+
+      <group position={[1.2, 1.4, 0]}>
+        {/* Threads */}
+        <mesh rotation={[1, 0, Math.PI / 1.1]} position={[-0.37, 0.95, -0.015]}>
+          <cylinderGeometry args={[0.005, 0.005, 0.47]} />
+          <meshStandardMaterial color="#3a3a3a" roughness={0.8} />
+        </mesh>
+        <mesh rotation={[0.3, 0, Math.PI / 4]} position={[-0.09, 0.95, 0]}>
+          <cylinderGeometry args={[0.005, 0.005, 0.47]} />
+          <meshStandardMaterial color="#3a3a3a" roughness={0.8} />
+        </mesh>
+
+        {/* Carpet */}
+        <mesh position={[0, 0.25, -0.5]}>
+          <planeGeometry args={[0.7, 1.3]} />
+          <meshStandardMaterial map={carpetTexture} side={THREE.DoubleSide} />
+        </mesh>
+      </group>
+
+      {/* Oil painting with frame */}
+      <group position={[-4, 3.35, -0.55]}>
+        {/* Painting */}
+        <mesh>
+          <planeGeometry args={[0.9, 0.5]} />
+          <meshStandardMaterial map={paintingTexture} />
+        </mesh>
+
+        {/* Frame */}
+        <group position={[0, 0, 0.01]}>
+          {/* Top frame */}
+          <mesh position={[0, 0.25 + 0.02 / 2, 0]}>
+            <boxGeometry args={[0.94, 0.04, 0.02]} />
+            <meshStandardMaterial
+              color={"#3e2f1c"}
+              metalness={0.3}
+              roughness={0.5}
+            />
+          </mesh>
+          {/* Bottom frame */}
+          <mesh position={[0, -0.25 - 0.02 / 2, 0]}>
+            <boxGeometry args={[0.94, 0.04, 0.02]} />
+            <meshStandardMaterial
+              color={"#3e2f1c"}
+              metalness={0.3}
+              roughness={0.5}
+            />
+          </mesh>
+          {/* Left frame */}
+          <mesh position={[-0.45 - 0.02 / 2, 0, 0]}>
+            <boxGeometry args={[0.04, 0.54, 0.02]} />
+            <meshStandardMaterial
+              color={"#3e2f1c"}
+              metalness={0.3}
+              roughness={0.5}
+            />
+          </mesh>
+          {/* Right frame */}
+          <mesh position={[0.45 + 0.02 / 2, 0, 0]}>
+            <boxGeometry args={[0.04, 0.54, 0.02]} />
+            <meshStandardMaterial
+              color={"#3e2f1c"}
+              metalness={0.3}
+              roughness={0.5}
+            />
+          </mesh>
+        </group>
+      </group>
     </group>
   );
 }
