@@ -17,12 +17,10 @@ import WallShelfWithCandle from "./hero/WallShelfWithCandle";
 import Floor from "./hero/Floor";
 import CartoonModel from "./hero/CartoonModel";
 import Chair from "./hero/Chair";
-import ComputerTower from "./hero/ComputerTower";
 import ScreenUI from "./hero/ScreenUI";
 import ScreenHint from "./hero/ScreenHint";
 import { CameraController } from "./hero/CameraController";
 import { Preload } from "@react-three/drei";
-import ComputerTowerWithPlant from "./hero/ComputerTower";
 import PlantOnStool from "./hero/ComputerTower";
 
 export default function HeroSection() {
@@ -74,7 +72,7 @@ export default function HeroSection() {
           <Preload all />
         </Canvas>
 
-        <div className="absolute  z-50 text-xl  text-[#e6ebe6] uppercase  md:text-3xl font-semibold  left-5 bottom-14  md:left-20">
+        <div className="absolute  z-50 text-xl  text-[#c6cfc8] uppercase  md:text-3xl font-semibold  left-5 bottom-14  md:left-20">
           <regMotion.h1 style={{ opacity }}>Scroll to zoom</regMotion.h1>
         </div>
         <div className="absolute hidden md:block  md:-translate-y-1/2 md:top-1/2 right-5 z-50">
