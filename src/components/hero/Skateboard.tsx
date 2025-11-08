@@ -1,0 +1,50 @@
+"use client";
+import { useGLTF } from "@react-three/drei";
+import { useRef } from "react";
+import * as THREE from "three";
+
+export default function Skateboard() {
+  const { scene } = useGLTF("/board3.glb");
+  const group = useRef<THREE.Group>(null);
+
+  return (
+    <>
+      {/* Skateboard */}
+      <mesh position={[2, 0.5, 1.6]}>
+        <primitive
+          ref={group}
+          object={scene}
+          scale={0.1}
+          rotation={[Math.PI / 0.1, 2.15, -2]}
+        />
+      </mesh>
+
+      {/* Stool  */}
+      <group rotation={[0, Math.PI / 6, 0]} position={[1.8, 0, 1.4]}>
+        {/* Top platform */}
+        <mesh position={[0, 0.25, 0]}>
+          <boxGeometry args={[0.5, 0.05, 0.3]} />
+          <meshStandardMaterial color="#e6ede9" />
+        </mesh>
+
+        {/* Four legs */}
+        <mesh position={[-0.19, 0.09, -0.14]}>
+          <boxGeometry args={[0.045, 0.25, 0.05]} />
+          <meshStandardMaterial color="#e6ede9" />
+        </mesh>
+        <mesh position={[0.2, 0.08, -0.11]}>
+          <boxGeometry args={[0.045, 0.25, 0.05]} />
+          <meshStandardMaterial color="#e6ede9" />
+        </mesh>
+        <mesh position={[-0.19, 0.12, 0.11]}>
+          <boxGeometry args={[0.045, 0.25, 0.05]} />
+          <meshStandardMaterial color="#e6ede9" />
+        </mesh>
+        <mesh position={[0.2, 0.13, 0.15]}>
+          <boxGeometry args={[0.05, 0.25, 0.05]} />
+          <meshStandardMaterial color="#e6ede9" />
+        </mesh>
+      </group>
+    </>
+  );
+}

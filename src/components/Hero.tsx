@@ -22,6 +22,8 @@ import ScreenHint from "./hero/ScreenHint";
 import { CameraController } from "./hero/CameraController";
 import { Preload } from "@react-three/drei";
 import PlantOnStool from "./hero/ComputerTower";
+import Skateboard from "./hero/Skateboard";
+import RecordPlayer from "./hero/RecordPlayer";
 
 export default function HeroSection() {
   const ref = useRef<HTMLDivElement>(null);
@@ -61,9 +63,12 @@ export default function HeroSection() {
           </Suspense>
           <Wall />
           <Wall2 />
+
           <WallShelfWithCandle />
           <Floor />
           <CartoonModel scrollYProgress={scrollYProgress} />
+          <Skateboard />
+          <RecordPlayer />
           <Chair />
           <PlantOnStool />
           <ScreenUI scrollYProgress={scrollYProgress} />
@@ -72,7 +77,7 @@ export default function HeroSection() {
           <Preload all />
         </Canvas>
 
-        <div className="absolute  z-50 text-xl  text-[#c6cfc8] uppercase  md:text-3xl font-semibold  left-5 bottom-14  md:left-20">
+        <div className="absolute   z-50 text-xl  text-[#c6cfc8] uppercase  md:text-5xl font-semibold  left-5 bottom-14  md:left-20">
           <regMotion.h1 style={{ opacity }}>Scroll to zoom</regMotion.h1>
         </div>
         <div className="absolute hidden md:block  md:-translate-y-1/2 md:top-1/2 right-5 z-50">
