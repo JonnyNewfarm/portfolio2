@@ -24,6 +24,7 @@ import { Preload } from "@react-three/drei";
 import PlantOnStool from "./hero/ComputerTower";
 import Skateboard from "./hero/Skateboard";
 import RecordPlayer from "./hero/RecordPlayer";
+import Bird from "./hero/Bird";
 
 export default function HeroSection() {
   const ref = useRef<HTMLDivElement>(null);

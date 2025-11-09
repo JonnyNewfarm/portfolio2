@@ -11,7 +11,7 @@ export default function Desk() {
   texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
   texture.repeat.set(2, 2);
 
-  const { scene: cupScene } = useGLTF("/cup-draco.glb");
+  const { scene: cupScene } = useGLTF("/flower-cup.glb");
   const screenRef = useRef<THREE.Mesh>(null);
 
   useFrame(({ clock }) => {
