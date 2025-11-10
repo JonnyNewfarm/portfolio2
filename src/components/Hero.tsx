@@ -21,9 +21,9 @@ import ScreenUI from "./hero/ScreenUI";
 import ScreenHint from "./hero/ScreenHint";
 import { CameraController } from "./hero/CameraController";
 import { Preload } from "@react-three/drei";
-import PlantOnStool from "./hero/ComputerTower";
 import Skateboard from "./hero/Skateboard";
 import RecordPlayer from "./hero/RecordPlayer";
+import ComputerTower from "./hero/ComputerTower";
 
 export default function HeroSection() {
   const ref = useRef<HTMLDivElement>(null);
@@ -72,7 +72,7 @@ export default function HeroSection() {
           </Suspense>
           <RecordPlayer />
           <Chair />
-          <PlantOnStool />
+          <ComputerTower />
           <ScreenUI scrollYProgress={scrollYProgress} />
           <ScreenHint scrollYProgress={scrollYProgress} />
           <CameraController scrollYProgress={scrollYProgress} />

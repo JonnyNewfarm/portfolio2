@@ -4,7 +4,7 @@ import { RoundedBox } from "@react-three/drei";
 
 export default function ComputerTower() {
   return (
-    <group rotation={[0, Math.PI / -2, 0]} position={[1.47, 0.3, 0.9]}>
+    <group rotation={[0, Math.PI / -2, 0]} position={[1, 0.1, 1.3]}>
       {/* Tower Body */}
       <mesh position={[0, 0, 0.015]}>
         <RoundedBox
@@ -30,7 +30,7 @@ export default function ComputerTower() {
           emissive="#00ff99"
           emissiveIntensity={
             document.documentElement.classList.contains("dark") ? 2 : 0.4
-          } // boost glow
+          }
         />
       </mesh>
 
