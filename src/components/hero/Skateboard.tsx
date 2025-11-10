@@ -10,7 +10,7 @@ export default function Skateboard() {
   return (
     <>
       {/* Skateboard */}
-      <mesh position={[2, 0.5, 1.6]}>
+      <mesh position={[4.12, 0.5, 1]}>
         <primitive
           ref={group}
           object={scene}
@@ -20,7 +20,7 @@ export default function Skateboard() {
       </mesh>
 
       {/* Stool  */}
-      <group rotation={[0, Math.PI / 6, 0]} position={[1.8, 0, 1.4]}>
+      <group rotation={[0, Math.PI / 6, 0]} position={[4.1, 0, 0.6]}>
         {/* Top platform */}
         <mesh position={[0, 0.25, 0]}>
           <boxGeometry args={[0.5, 0.05, 0.3]} />

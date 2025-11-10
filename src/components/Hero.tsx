@@ -24,7 +24,6 @@ import { Preload } from "@react-three/drei";
 import PlantOnStool from "./hero/ComputerTower";
 import Skateboard from "./hero/Skateboard";
 import RecordPlayer from "./hero/RecordPlayer";
-import Bird from "./hero/Bird";
 
 export default function HeroSection() {
   const ref = useRef<HTMLDivElement>(null);
@@ -68,7 +67,9 @@ export default function HeroSection() {
           <WallShelfWithCandle />
           <Floor />
           <CartoonModel scrollYProgress={scrollYProgress} />
-          <Skateboard />
+          <Suspense fallback={null}>
+            <Skateboard />
+          </Suspense>
           <RecordPlayer />
           <Chair />
           <PlantOnStool />

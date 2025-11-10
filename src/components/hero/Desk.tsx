@@ -122,7 +122,7 @@ export default function Desk() {
 
       {/* Desk Top */}
       <RoundedBox
-        args={[3, 0.06, 1.5]}
+        args={[2.75, 0.06, 1.5]}
         radius={0.01}
         smoothness={2.5}
         position={[0, 0.95, 0]}
@@ -133,7 +133,7 @@ export default function Desk() {
       </RoundedBox>
 
       {/* Legs */}
-      {[-1.39, 1.39].map((x) =>
+      {[-1.28, 1.28].map((x) =>
         [-0.68, 0.62].map((z, i) => (
           <mesh
             key={`${x}-${z}-${i}`}
@@ -151,7 +151,7 @@ export default function Desk() {
         ))
       )}
 
-      {[-1.36, 1.39].map((x) => (
+      {[-1.36, 1.27].map((x) => (
         <mesh
           key={`bar-${x}`}
           position={[x, 0.73, 0]}
@@ -159,7 +159,7 @@ export default function Desk() {
           castShadow={false}
           receiveShadow
         >
-          <cylinderGeometry args={[0.026, 0.02, 1.4, 13]} />
+          <cylinderGeometry args={[0.025, 0.02, 1.3, 13]} />
           <meshStandardMaterial map={texture} roughness={0.5} metalness={0.2} />
         </mesh>
       ))}
