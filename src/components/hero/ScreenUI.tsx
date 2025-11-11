@@ -4,10 +4,10 @@ import { useFrame } from "@react-three/fiber";
 import { Text } from "@react-three/drei";
 import { MotionValue, AnimatePresence } from "framer-motion";
 import { motion } from "framer-motion-3d";
-
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import * as THREE from "three";
+import MiniGame from "./MiniGame";
 
 export default function ScreenUI({
   scrollYProgress,
@@ -16,7 +16,9 @@ export default function ScreenUI({
 }) {
   const router = useRouter();
   const groupRef = useRef<THREE.Group>(null);
+
   const [nextPage, setNextPage] = useState(false);
+  const [playGame, setPlayGame] = useState(false);
 
   useFrame(() => {
     const progress = scrollYProgress.get();
@@ -29,8 +31,19 @@ export default function ScreenUI({
   return (
     <group ref={groupRef} position={[0, 1.5, 6]}>
       <AnimatePresence mode="wait">
-        {nextPage ? (
+        {playGame ? (
           <motion.group
+            key="game"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.6, ease: "easeInOut" }}
+          >
+            <MiniGame onExit={() => setPlayGame(false)} />
+          </motion.group>
+        ) : nextPage ? (
+          <motion.group
+            key="nav"
             initial={{ opacity: 0, y: 0.04 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
@@ -49,18 +62,20 @@ export default function ScreenUI({
             >
               Back
             </Text>
+
             <Text
-              position={[-0.4, 0.37, 1.3]}
+              position={[0.635, 0.035, 1.3]}
               fontSize={0.21}
               color="black"
-              onClick={() => router.push("/")}
+              onClick={() => setPlayGame(true)}
               onPointerOver={() => (document.body.style.cursor = "pointer")}
               onPointerOut={() => (document.body.style.cursor = "default")}
             >
-              Home
+              Game
             </Text>
+
             <Text
-              position={[0.53, 0.37, 1.3]}
+              position={[-0.25, 0.37, 1.3]}
               fontSize={0.21}
               color="black"
               onClick={() => router.push("/projects")}
@@ -70,7 +85,7 @@ export default function ScreenUI({
               My Work
             </Text>
             <Text
-              position={[-0.41, 0.033, 1.3]}
+              position={[0.67, 0.37, 1.3]}
               fontSize={0.21}
               color="black"
               onClick={() => router.push("/about")}
@@ -80,7 +95,7 @@ export default function ScreenUI({
               About
             </Text>
             <Text
-              position={[0.48, 0.035, 1.3]}
+              position={[-0.32, 0.033, 1.3]}
               fontSize={0.21}
               color="black"
               onClick={() => router.push("/contact")}
