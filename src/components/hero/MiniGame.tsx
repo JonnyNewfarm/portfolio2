@@ -132,7 +132,7 @@ export default function MiniGame({ onExit }: { onExit: () => void }) {
         Exit
       </Text>
 
-      <Text position={[0.5, 0.39, 0]} fontSize={0.14} color="black">
+      <Text position={[0.44, 0.39, 0]} fontSize={0.14} color="black">
         Score: {score}
       </Text>
 
