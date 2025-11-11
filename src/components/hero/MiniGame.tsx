@@ -151,15 +151,15 @@ export default function MiniGame({ onExit }: { onExit: () => void }) {
       {/* Borders */}
       <mesh position={[0, -0.55, 0]}>
         <boxGeometry args={[1.8, 0.01, 0.01]} />
-        <meshStandardMaterial color="#444" />
+        <meshStandardMaterial transparent opacity={0} />
       </mesh>
       <mesh position={[-0.9, 0, 0]}>
         <boxGeometry args={[0.01, 1.1, 0.01]} />
-        <meshStandardMaterial color="#444" />
+        <meshStandardMaterial transparent opacity={0} />
       </mesh>
       <mesh position={[0.9, 0, 0]}>
         <boxGeometry args={[0.01, 1.1, 0.01]} />
-        <meshStandardMaterial color="#444" />
+        <meshStandardMaterial transparent opacity={0} />
       </mesh>
     </group>
   );

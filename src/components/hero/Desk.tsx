@@ -207,4 +207,4 @@ export default function Desk() {
   );
 }
 
-useGLTF.preload("/cup-draco.glb");
+useGLTF.preload("/flower-cup.glb");
