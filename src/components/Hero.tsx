@@ -9,6 +9,7 @@ import { Suspense, useRef } from "react";
 import DarkModeBtn from "./DarkModeBtn";
 import FloorLamp from "./hero/FloorLamp";
 import Desk from "./hero/Desk";
+import Curtain from "./hero/Curtain";
 import Bookshelf from "./hero/BookShelf";
 import WindowOnWall from "./hero/WindowOnWall";
 import Wall from "./hero/Wall";
@@ -62,7 +63,9 @@ export default function HeroSection() {
             <WindowOnWall />
           </Suspense>
           <Wall />
+
           <Wall2 />
+          <Curtain />
 
           <WallShelfWithCandle />
           <Floor />

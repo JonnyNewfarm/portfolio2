@@ -62,7 +62,7 @@ export default function CartoonModel({
 
   return (
     <mesh position={[0.14, 0.011, 2.889]}>
-      <primitive ref={group} object={scene} scale={1.46} />
+      <primitive ref={group} object={scene} scale={1.41} />
     </mesh>
   );
 }
