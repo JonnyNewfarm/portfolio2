@@ -70,6 +70,7 @@ export default function HeroSection() {
           </Suspense>
           <WallShelfWithCandle />
           <Floor />
+
           <CartoonModel scrollYProgress={scrollYProgress} />
           <Suspense fallback={null}>
             <Skateboard />
