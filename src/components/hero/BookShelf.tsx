@@ -15,7 +15,7 @@ const bookColors = [
 
 export default function Bookshelf() {
   const letterTexture = useLoader(THREE.TextureLoader, "/letter.webp");
-  const imgTexture = useLoader(THREE.TextureLoader, "/wall-img4.webp");
+  const imgTexture = useLoader(THREE.TextureLoader, "/wall-img3.jpg");
   const paintingTexture = useLoader(THREE.TextureLoader, "/oil-painting.webp");
   const carpetTexture = useLoader(THREE.TextureLoader, "/fabrics/carpet.webp");
   carpetTexture.colorSpace = THREE.SRGBColorSpace;
@@ -60,18 +60,20 @@ export default function Bookshelf() {
         const color = bookColors[i % bookColors.length];
 
         return (
-          <mesh
+          <RoundedBox
             key={i}
+            args={[width, height, depth]}
+            radius={0.008}
+            smoothness={2}
             position={[x, y + height / 2, z]}
             rotation={[tiltX, tiltY, 0]}
           >
-            <boxGeometry args={[width, height, depth]} />
             <meshStandardMaterial
               color={color}
               roughness={0.6}
               metalness={0.2}
             />
-          </mesh>
+          </RoundedBox>
         );
       })}
 

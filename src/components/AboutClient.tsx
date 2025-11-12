@@ -115,7 +115,7 @@ const AboutClient = () => {
           >
             <div className="relative mt-16 md:mt-0 w-full h-[80%]">
               <Image
-                src="/jonnyzoo.jpg"
+                src="/jonas1.webp"
                 alt="Image of Jonas"
                 fill
                 className="object-contain"

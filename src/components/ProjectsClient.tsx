@@ -11,10 +11,10 @@ const ProjectsClient = () => {
   const projects = [
     {
       title: "Job Scriptor",
-      src: "jobscriptor-1.jpg",
-      src2: "jobscriptor-2.jpg",
-      src3: "jobscriptor-3.jpg",
-      src4: "jobscriptor-4.jpg",
+      src: "job1.webp",
+      src2: "job2.webp",
+      src3: "job3.webp",
+      src4: "job4.webp",
       link: "https://www.jobscriptor.com/",
       about:
         "Website featuring AI tools for writing resumes and cover letters, and for finding jobs that match your resume.",
@@ -23,10 +23,10 @@ const ProjectsClient = () => {
     },
     {
       title: "Kerimov Designs",
-      src: "kerimov1.png",
-      src2: "kerimov2.png",
-      src3: "kerimov3.png",
-      src4: "kerimov4.png",
+      src: "rustam1.webp",
+      src2: "rustam2.webp",
+      src3: "rustam3.webp",
+      src4: "rustam4.webp",
       link: "https://kerimovdesigns.com",
       about: "Portfolio website for graphic designer Rustam Kerimov.",
       stack:
