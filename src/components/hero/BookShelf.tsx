@@ -42,11 +42,12 @@ export default function Bookshelf() {
         </RoundedBox>
       ))}
 
-      {/* Books */}
+      {/* Books on upper and middle shelves */}
       {Array.from({ length: 17 }).map((_, i) => {
         const shelfLevel = Math.floor(i / 6);
-        const y = 0.05 + shelfLevel * 0.8;
+        if (shelfLevel === 0) return null; // skip bottom shelf
 
+        const y = 0.05 + shelfLevel * 0.8;
         const height = 0.18 + Math.random() * 0.05;
         const width = 0.035 + Math.random() * 0.01;
         const depth = 0.133 + Math.random() * 0.01;
@@ -62,6 +63,39 @@ export default function Bookshelf() {
         return (
           <RoundedBox
             key={i}
+            args={[width, height, depth]}
+            radius={0.008}
+            smoothness={2}
+            position={[x, y + height / 2, z]}
+            rotation={[tiltX, tiltY, 0]}
+          >
+            <meshStandardMaterial
+              color={color}
+              roughness={0.6}
+              metalness={0.2}
+            />
+          </RoundedBox>
+        );
+      })}
+
+      {/* Books on right side of bottom shelf */}
+      {Array.from({ length: 4 }).map((_, i) => {
+        const y = 0.05; // bottom shelf height
+        const height = 0.18 + Math.random() * 0.04;
+        const width = 0.035 + Math.random() * 0.01;
+        const depth = 0.13 + Math.random() * 0.01;
+        const tiltY = (Math.random() - 0.5) * 0.1;
+        const tiltX = (Math.random() - 0.5) * 0.02;
+
+        // only on right side
+        const x = 0.1 + i * 0.06 + Math.random() * 0.02;
+        const z = -0.015 + Math.random() * 0.09;
+
+        const color = bookColors[i % bookColors.length];
+
+        return (
+          <RoundedBox
+            key={`bottom-${i}`}
             args={[width, height, depth]}
             radius={0.008}
             smoothness={2}
@@ -109,15 +143,11 @@ export default function Bookshelf() {
 
       {/* Oil painting with frame */}
       <group position={[-4, 3.35, -0.55]}>
-        {/* Painting */}
         <mesh>
           <planeGeometry args={[0.9, 0.5]} />
           <meshStandardMaterial map={paintingTexture} />
         </mesh>
-
-        {/* Frame */}
         <group position={[0, 0, 0.01]}>
-          {/* Top frame */}
           <mesh position={[0, 0.25 + 0.02 / 2, 0]}>
             <boxGeometry args={[0.94, 0.04, 0.02]} />
             <meshStandardMaterial
@@ -126,7 +156,6 @@ export default function Bookshelf() {
               roughness={0.5}
             />
           </mesh>
-          {/* Bottom frame */}
           <mesh position={[0, -0.25 - 0.02 / 2, 0]}>
             <boxGeometry args={[0.94, 0.04, 0.02]} />
             <meshStandardMaterial
@@ -135,7 +164,6 @@ export default function Bookshelf() {
               roughness={0.5}
             />
           </mesh>
-          {/* Left frame */}
           <mesh position={[-0.45 - 0.02 / 2, 0, 0]}>
             <boxGeometry args={[0.04, 0.54, 0.02]} />
             <meshStandardMaterial
@@ -144,7 +172,6 @@ export default function Bookshelf() {
               roughness={0.5}
             />
           </mesh>
-          {/* Right frame */}
           <mesh position={[0.45 + 0.02 / 2, 0, 0]}>
             <boxGeometry args={[0.04, 0.54, 0.02]} />
             <meshStandardMaterial

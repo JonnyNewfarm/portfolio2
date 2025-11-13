@@ -25,6 +25,7 @@ import { Preload } from "@react-three/drei";
 import Skateboard from "./hero/Skateboard";
 import RecordPlayer from "./hero/RecordPlayer";
 import ComputerTower from "./hero/ComputerTower";
+import Plant from "./hero/Plant";
 
 export default function HeroSection() {
   const ref = useRef<HTMLDivElement>(null);
@@ -63,6 +64,9 @@ export default function HeroSection() {
             <WindowOnWall />
           </Suspense>
           <Wall />
+          <Suspense fallback={null}>
+            <Plant />
+          </Suspense>
 
           <Wall2 />
           <Suspense fallback={null}>
