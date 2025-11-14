@@ -13,6 +13,7 @@ export default function Desk() {
 
   const { scene: cupScene } = useGLTF("/flower-cup.glb");
   const screenRef = useRef<THREE.Mesh>(null);
+  const { scene: keyboardScene } = useGLTF("/keyboard4-small.glb");
 
   useFrame(({ clock }) => {
     if (screenRef.current) {
@@ -72,23 +73,10 @@ export default function Desk() {
 
   return (
     <group position={[0, 0, 1.2]}>
-      {/* Keyboard */}
-      <group position={[-0.1, 1, 0]}>
-        <RoundedBox
-          args={[0.8, 0.04, 0.3]}
-          radius={0.02}
-          smoothness={2}
-          castShadow={false}
-          receiveShadow
-        >
-          <meshStandardMaterial
-            color="#C0C9B8"
-            roughness={0.6}
-            metalness={0.1}
-          />
-        </RoundedBox>
+      {/* Keyboard (GLB) */}
+      <group position={[-0.33, 1.32, 0.6]} scale={0.11}>
+        <primitive object={keyboardScene} />
       </group>
-
       {/* Desk Lamp */}
       <group position={[1.1, 1.05, -0.5]}>
         <spotLight
@@ -103,24 +91,7 @@ export default function Desk() {
           castShadow={false}
         />
       </group>
-
-      {/* Mouse */}
-      <group position={[0.5, 1, 0]}>
-        <mesh castShadow={false} receiveShadow scale={[0.7, 0.5, 2]}>
-          <sphereGeometry args={[0.12, 16, 16]} />
-          <meshStandardMaterial
-            color="#C0C9B8"
-            roughness={0.6}
-            metalness={0.1}
-          />
-        </mesh>
-        <mesh position={[0.01, 0.063, 0.055]} rotation={[Math.PI / 2, 0, 0]}>
-          <cylinderGeometry args={[0.01, 0.01, 0.08, 6]} />
-          <meshStandardMaterial color="black" roughness={0.4} metalness={0.2} />
-        </mesh>
-      </group>
-
-      {/* Desk Top */}
+      y {/* Desk Top */}
       <RoundedBox
         args={[2.75, 0.06, 1.5]}
         radius={0.01}
@@ -131,7 +102,6 @@ export default function Desk() {
       >
         <meshStandardMaterial map={texture} roughness={0.6} metalness={0.1} />
       </RoundedBox>
-
       {/* Legs */}
       {[-1.28, 1.28].map((x) =>
         [-0.68, 0.62].map((z, i) => (
@@ -150,7 +120,6 @@ export default function Desk() {
           </mesh>
         ))
       )}
-
       {[-1.36, 1.27].map((x) => (
         <mesh
           key={`bar-${x}`}
@@ -163,7 +132,6 @@ export default function Desk() {
           <meshStandardMaterial map={texture} roughness={0.5} metalness={0.2} />
         </mesh>
       ))}
-
       {/* Monitor */}
       <group position={[0, 0.96, -0.6]}>
         <mesh position={[0, 0.4, 0]} castShadow={false} receiveShadow>
@@ -195,7 +163,6 @@ export default function Desk() {
           material={gradientMaterial}
         />
       </group>
-
       <group
         position={[1.25, 1.03, 0.7]}
         rotation={[0, Math.PI / 9, 0]}
@@ -208,3 +175,4 @@ export default function Desk() {
 }
 
 useGLTF.preload("/flower-cup.glb");
+useGLTF.preload("/keyboard4-small.glb");
