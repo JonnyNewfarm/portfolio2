@@ -23,7 +23,7 @@ export default function ComputerTower() {
       </mesh>
 
       {/* Power Button */}
-      <mesh position={[0.295, 0.3, 0]}>
+      <mesh position={[0.25, 0.25, 0]}>
         <cylinderGeometry args={[0.015, 0.015, 0.01, 2]} />
         <meshStandardMaterial
           color="#00ff99"
