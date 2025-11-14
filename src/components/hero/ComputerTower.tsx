@@ -33,14 +33,6 @@ export default function ComputerTower() {
           }
         />
       </mesh>
-
-      {/* USB Ports */}
-      {[0.05, -0.05].map((y, i) => (
-        <mesh key={i} position={[0.29, -0.15, 0]}>
-          <boxGeometry args={[0.05, 0.015, 0.01]} />
-          <meshStandardMaterial color="gray" />
-        </mesh>
-      ))}
     </group>
   );
 }
