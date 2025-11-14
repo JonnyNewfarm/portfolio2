@@ -4,7 +4,7 @@ import { useRef } from "react";
 import * as THREE from "three";
 
 export default function Skateboard() {
-  const { scene } = useGLTF("/board3.glb");
+  const { scene } = useGLTF("/board3-small.glb");
   const group = useRef<THREE.Group>(null);
 
   return (

@@ -4,7 +4,7 @@ import { useRef } from "react";
 import * as THREE from "three";
 
 export default function Plant() {
-  const { scene } = useGLTF("/flower5.glb");
+  const { scene } = useGLTF("/flower5-small.glb");
   const group = useRef<THREE.Group>(null);
 
   return (
