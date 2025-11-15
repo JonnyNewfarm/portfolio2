@@ -15,7 +15,7 @@ const bookColors = [
 
 export default function Bookshelf() {
   const letterTexture = useLoader(THREE.TextureLoader, "/letter.webp");
-  const imgTexture = useLoader(THREE.TextureLoader, "/wall-img3.jpg");
+  const imgTexture = useLoader(THREE.TextureLoader, "/selfie.webp");
   const paintingTexture = useLoader(THREE.TextureLoader, "/oil-painting.webp");
   const carpetTexture = useLoader(THREE.TextureLoader, "/fabrics/carpet.webp");
   carpetTexture.colorSpace = THREE.SRGBColorSpace;
