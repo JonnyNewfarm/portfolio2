@@ -4,7 +4,7 @@ import { useRef, useEffect } from "react";
 import { Group, Object3D } from "three";
 
 export default function Clock() {
-  const { scene } = useGLTF("/clock-small.glb");
+  const { scene } = useGLTF("/clock.glb");
   const group = useRef<Group>(null);
   const hourHand = useRef<Object3D | null>(null);
 
