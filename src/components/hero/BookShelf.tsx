@@ -45,7 +45,7 @@ export default function Bookshelf() {
       {/* Books on upper and middle shelves */}
       {Array.from({ length: 17 }).map((_, i) => {
         const shelfLevel = Math.floor(i / 6);
-        if (shelfLevel === 0) return null; // skip bottom shelf
+        if (shelfLevel === 0) return null;
 
         const y = 0.05 + shelfLevel * 0.8;
         const height = 0.18 + Math.random() * 0.05;
@@ -80,14 +80,13 @@ export default function Bookshelf() {
 
       {/* Books on right side of bottom shelf */}
       {Array.from({ length: 4 }).map((_, i) => {
-        const y = 0.05; // bottom shelf height
+        const y = 0.05;
         const height = 0.18 + Math.random() * 0.04;
         const width = 0.035 + Math.random() * 0.01;
         const depth = 0.13 + Math.random() * 0.01;
         const tiltY = (Math.random() - 0.5) * 0.1;
         const tiltX = (Math.random() - 0.5) * 0.02;
 
-        // only on right side
         const x = 0.1 + i * 0.06 + Math.random() * 0.02;
         const z = -0.015 + Math.random() * 0.09;
 
@@ -112,13 +111,13 @@ export default function Bookshelf() {
       })}
 
       {/* Letter */}
-      <mesh position={[-1.9, 3.1, -0.55]}>
+      <mesh position={[-1.9, 3, -0.55]}>
         <planeGeometry args={[0.3, 0.45]} />
         <meshStandardMaterial map={letterTexture} />
       </mesh>
 
       {/* Wall image */}
-      <mesh position={[-1.5, 3.08, -0.55]}>
+      <mesh position={[-1.5, 2.9, -0.55]}>
         <planeGeometry args={[0.3, 0.44]} />
         <meshStandardMaterial map={imgTexture} />
       </mesh>

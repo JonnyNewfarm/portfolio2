@@ -13,7 +13,7 @@ export default function Desk() {
 
   const { scene: cupScene } = useGLTF("/flower-cup.glb");
   const screenRef = useRef<THREE.Mesh>(null);
-  const { scene: keyboardScene } = useGLTF("/keyboard4-small.glb");
+  const { scene: keyboardScene } = useGLTF("/keyboard-small.glb");
 
   useFrame(({ clock }) => {
     if (screenRef.current) {
@@ -175,4 +175,4 @@ export default function Desk() {
 }
 
 useGLTF.preload("/flower-cup.glb");
-useGLTF.preload("/keyboard4-small.glb");
+useGLTF.preload("/keyboard-small.glb");
