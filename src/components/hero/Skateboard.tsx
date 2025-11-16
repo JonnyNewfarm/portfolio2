@@ -4,7 +4,7 @@ import { useRef } from "react";
 import * as THREE from "three";
 
 export default function Skateboard() {
-  const { scene } = useGLTF("/board3-small.glb");
+  const { scene } = useGLTF("/skate2-small.glb");
   const group = useRef<THREE.Group>(null);
 
   return (
@@ -15,7 +15,7 @@ export default function Skateboard() {
           ref={group}
           object={scene}
           scale={0.1}
-          rotation={[Math.PI / 0.1, 2.15, -2]}
+          rotation={[Math.PI / 0.1, 2, -2]}
         />
       </mesh>
 
