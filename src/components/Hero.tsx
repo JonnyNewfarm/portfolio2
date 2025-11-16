@@ -4,7 +4,7 @@ import { Canvas } from "@react-three/fiber";
 import { useScroll } from "framer-motion";
 import { useTransform, motion as regMotion } from "framer-motion";
 
-import { Suspense, useRef } from "react";
+import { Suspense, useRef, useEffect, useState } from "react";
 
 import DarkModeBtn from "./DarkModeBtn";
 import FloorLamp from "./hero/FloorLamp";
@@ -30,7 +30,6 @@ import Clock from "./hero/Clock";
 
 export default function HeroSection() {
   const ref = useRef<HTMLDivElement>(null);
-
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end start"],
@@ -38,10 +37,29 @@ export default function HeroSection() {
 
   const opacity = useTransform(scrollYProgress, [0.2, 0.26], [1, 0]);
 
+  const [isLandscape, setIsLandscape] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+
+      setIsMobile(w < 768);
+      setIsLandscape(w > h);
+    };
+
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
+  const loadExtras = !isMobile || isLandscape;
+
   return (
     <section
       ref={ref}
-      className="h-[155vh] md:h-[140vh]  bg-[#c6c0c0] dark:bg-[#757474] text-black dark:text-stone-300"
+      className="h-[155vh] md:h-[140vh] bg-[#c6c0c0] dark:bg-[#757474] text-black dark:text-stone-300"
     >
       <div
         style={{
@@ -56,47 +74,55 @@ export default function HeroSection() {
         <Canvas shadows dpr={[1, 1.5]}>
           <ambientLight intensity={0.55} />
           <directionalLight position={[5, 5, 5]} intensity={1} />
+
           <FloorLamp />
           <Desk />
-          <Suspense fallback={null}>
-            <Bookshelf />
-          </Suspense>
-          <Suspense fallback={null}>
-            <WindowOnWall />
-          </Suspense>
           <Wall />
-          <Suspense fallback={null}>
-            <Plant />
-          </Suspense>
-
           <Wall2 />
-          <Suspense fallback={null}>
-            <Curtain />
-          </Suspense>
           <WallShelfWithCandle />
           <Floor />
           <Clock />
-
-          <CartoonModel scrollYProgress={scrollYProgress} />
           <Suspense fallback={null}>
-            <Skateboard />
+            <Bookshelf />
           </Suspense>
           <RecordPlayer />
           <Chair />
           <ComputerTower />
+          <CartoonModel scrollYProgress={scrollYProgress} />
           <ScreenUI scrollYProgress={scrollYProgress} />
           <ScreenHint scrollYProgress={scrollYProgress} />
+
+          <Suspense fallback={null}>
+            <Plant />
+          </Suspense>
+
+          {loadExtras && (
+            <>
+              <Suspense fallback={null}>
+                <WindowOnWall />
+              </Suspense>
+              <Suspense fallback={null}>
+                <Curtain />
+              </Suspense>
+              <Suspense fallback={null}>
+                <Skateboard />
+              </Suspense>
+            </>
+          )}
+
           <CameraController scrollYProgress={scrollYProgress} />
+
           <Preload all />
         </Canvas>
 
-        <div className="absolute   z-50 text-xl  text-[#c6cfc8] uppercase  md:text-5xl font-semibold  left-5 bottom-14  md:left-20">
+        <div className="absolute z-50 text-xl text-[#c6cfc8] uppercase md:text-5xl font-semibold left-5 bottom-14 md:left-20">
           <regMotion.h1 style={{ opacity }}>Scroll to zoom</regMotion.h1>
         </div>
-        <div className="absolute hidden md:block  md:-translate-y-1/2 md:top-1/2 right-5 z-50">
+
+        <div className="absolute hidden md:block md:-translate-y-1/2 md:top-1/2 right-5 z-50">
           <DarkModeBtn />
         </div>
-        <div className="absolute  md:hidden  bottom-12 right-5 z-50">
+        <div className="absolute md:hidden bottom-12 right-5 z-50">
           <DarkModeBtn />
         </div>
       </div>
