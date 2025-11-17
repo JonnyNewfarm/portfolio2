@@ -17,7 +17,6 @@ import Wall2 from "./hero/Wall2";
 import WallShelfWithCandle from "./hero/WallShelfWithCandle";
 import Floor from "./hero/Floor";
 import CartoonModel from "./hero/CartoonModel";
-import Chair from "./hero/Chair";
 import ScreenUI from "./hero/ScreenUI";
 import ScreenHint from "./hero/ScreenHint";
 import { CameraController } from "./hero/CameraController";
@@ -82,7 +81,6 @@ export default function HeroSection() {
             <Skateboard />
           </Suspense>
           <RecordPlayer />
-          <Chair />
           <ComputerTower />
           <ScreenUI scrollYProgress={scrollYProgress} />
           <ScreenHint scrollYProgress={scrollYProgress} />

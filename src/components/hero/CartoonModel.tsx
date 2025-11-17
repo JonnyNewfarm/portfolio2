@@ -10,39 +10,25 @@ export default function CartoonModel({
 }: {
   scrollYProgress: MotionValue<number>;
 }) {
-  const { scene } = useGLTF("/cartoon-3-ultra.glb");
+  const { scene } = useGLTF("/chair-cartoon.glb");
   const group = useRef<THREE.Group>(null);
 
   const bones = useRef<{
-    hip?: THREE.Object3D;
-    leftLeg?: THREE.Object3D;
-    rightLeg?: THREE.Object3D;
     spine?: THREE.Object3D;
-    rightArm?: THREE.Object3D;
     chest?: THREE.Object3D;
+    rightArm?: THREE.Object3D;
   }>({});
 
   useEffect(() => {
     if (!group.current) return;
-    bones.current.hip = group.current.getObjectByName("Hips");
-    bones.current.leftLeg = group.current.getObjectByName("LeftLeg");
-    bones.current.rightLeg = group.current.getObjectByName("RightLeg");
-    bones.current.spine = group.current.getObjectByName("Spine");
+
     bones.current.rightArm = group.current.getObjectByName("RightArm");
-    bones.current.chest = group.current.getObjectByName("Chest"); // sometimes named differently
-
-    if (bones.current.hip) {
-      bones.current.hip.rotation.x = -Math.PI / 2.7;
-    }
-
-    if (bones.current.leftLeg) bones.current.leftLeg.rotation.x = -Math.PI / 2;
-    if (bones.current.rightLeg)
-      bones.current.rightLeg.rotation.x = -Math.PI / 2.5;
-    if (bones.current.spine) bones.current.spine.rotation.x = Math.PI / 2.9;
+    bones.current.spine = group.current.getObjectByName("Spine") || undefined;
+    bones.current.chest = group.current.getObjectByName("Chest") || undefined;
 
     if (bones.current.rightArm) {
       bones.current.rightArm.rotation.x = Math.PI / 2.3;
-      bones.current.rightArm.rotation.z = -Math.PI / 13;
+      bones.current.rightArm.rotation.z = -Math.PI / 10;
     }
   }, [scene]);
 
@@ -51,30 +37,26 @@ export default function CartoonModel({
 
     const t = state.clock.getElapsedTime();
 
-    group.current.position.y = -0.45 + Math.sin(t * 0.3) * 0.0015;
-    group.current.rotation.y = Math.PI + Math.sin(t * 0.3) * 0.0015;
-
     const breathing = Math.sin(t * 0.7) * 0.022;
-
     if (bones.current.spine) {
-      bones.current.spine.scale.y = 1 + breathing * 0.22;
-      bones.current.spine.position.z = breathing * 0.22;
+      bones.current.spine.scale.y = 1 + breathing * 0.45;
+      bones.current.spine.position.z = breathing * 0.35;
     }
 
-    if (bones.current.chest) {
-      bones.current.chest.scale.y = 1 + breathing * 0.3;
-      bones.current.chest.position.z = breathing * 0.3;
-    }
-
+    // scroll-controlled arm rotation
     const progress = scrollYProgress.get();
     if (bones.current.rightArm) {
-      bones.current.rightArm.rotation.y = (Math.PI / 1.9) * progress;
+      bones.current.rightArm.rotation.y = (Math.PI / 2.8) * progress;
     }
   });
 
   return (
-    <mesh position={[0.14, 0.011, 2.889]}>
-      <primitive ref={group} object={scene} scale={1.41} />
+    <mesh
+      scale={0.335}
+      position={[0.17, -0.15, 2.889]}
+      rotation={[0, Math.PI, 0]}
+    >
+      <primitive ref={group} object={scene} />
     </mesh>
   );
 }
