@@ -19,6 +19,9 @@ export default function CartoonModel({
     rightArm?: THREE.Object3D;
   }>({});
 
+  // smoothed scroll value for arm rotation
+  const smoothed = useRef(0);
+
   useEffect(() => {
     if (!group.current) return;
 
@@ -43,11 +46,14 @@ export default function CartoonModel({
       bones.current.spine.position.z = breathing * 0.35;
     }
 
-    // scroll-controlled arm rotation
-    const progress = scrollYProgress.get();
+    // ----- FIXED ARM MOVEMENT (smooth scroll → rotation) -----
+    const target = scrollYProgress.get();
+    smoothed.current = THREE.MathUtils.lerp(smoothed.current, target, 0.08);
+
     if (bones.current.rightArm) {
-      bones.current.rightArm.rotation.y = (Math.PI / 2.8) * progress;
+      bones.current.rightArm.rotation.y = (Math.PI / 2.8) * smoothed.current;
     }
+    // ----------------------------------------------------------
   });
 
   return (
