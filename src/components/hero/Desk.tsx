@@ -4,6 +4,7 @@ import { useFrame, useLoader } from "@react-three/fiber";
 import { RoundedBox, useGLTF } from "@react-three/drei";
 import { useRef } from "react";
 import * as THREE from "three";
+import Steam from "./Steam";
 
 export default function Desk() {
   const lightRef = useRef<THREE.SpotLight>(null);
@@ -169,6 +170,10 @@ export default function Desk() {
         scale={1.8}
       >
         <primitive object={cupScene} />
+
+        <group position={[0.017, 0.1, 0]}>
+          <Steam count={14} />
+        </group>
       </group>
     </group>
   );
