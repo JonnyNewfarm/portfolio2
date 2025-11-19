@@ -58,14 +58,12 @@ export default function Steam({ count = 26 }) {
 
     vec3 pos = position;
 
-    // Shorter steam (1/3 height)
     pos.y += t * 0.2;
 
-    // Softer turbulence (slower side movement)
     pos.x += turbulence(t * 6.0 + seed) * 0.015;
     pos.z += turbulence(t * 5.0 - seed) * 0.015;
 
-    // Smooth fade in/out
+    // fade in/out
     vAlpha = smoothstep(0.0, 0.2, t) * (1.0 - t);
 
     vec4 mv = modelViewMatrix * vec4(pos, 1.0);
@@ -80,7 +78,6 @@ export default function Steam({ count = 26 }) {
           void main() {
             float d = length(gl_PointCoord - 0.5);
 
-            // Much softer falloff than before
             float alpha = smoothstep(0.6, 0.25, d) * vAlpha;
 
             gl_FragColor = vec4(0.92, 0.92, 0.92, alpha * 0.5);

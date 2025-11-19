@@ -16,3 +16,8 @@ cd jonasnygaard.com
 npm install
 npm run dev
 ```
+
+## 3D Models Used
+
+- **“Eastern Blue Bird”** by kenchoo — Licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)  
+  Source: [link to the model]

@@ -26,6 +26,7 @@ import RecordPlayer from "./hero/RecordPlayer";
 import ComputerTower from "./hero/ComputerTower";
 import Plant from "./hero/Plant";
 import Clock from "./hero/Clock";
+import Bird from "./hero/Bird";
 
 export default function HeroSection() {
   const ref = useRef<HTMLDivElement>(null);
@@ -67,7 +68,7 @@ export default function HeroSection() {
           <Suspense fallback={null}>
             <Plant />
           </Suspense>
-
+          <Bird />
           <Wall2 />
           <Suspense fallback={null}>
             <Curtain />

@@ -171,7 +171,7 @@ export default function Desk() {
       >
         <primitive object={cupScene} />
 
-        <group position={[0.017, 0.1, 0]}>
+        <group position={[0.0, 0.1, 0]}>
           <Steam count={14} />
         </group>
       </group>
