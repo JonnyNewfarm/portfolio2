@@ -29,7 +29,7 @@ export default function ComputerTower() {
           color="#00ff99"
           emissive="#00ff99"
           emissiveIntensity={
-            document.documentElement.classList.contains("dark") ? 2 : 0.4
+            document.documentElement.classList.contains("dark") ? 1 : 0.4
           }
         />
       </mesh>

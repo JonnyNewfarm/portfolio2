@@ -53,7 +53,7 @@ export default function HeroSection() {
           alignItems: "center",
         }}
       >
-        <Canvas shadows dpr={[1, 1.5]}>
+        <Canvas dpr={[1, 1.5]}>
           <ambientLight intensity={0.55} />
           <directionalLight position={[5, 5, 5]} intensity={1} />
           <FloorLamp />
@@ -68,7 +68,9 @@ export default function HeroSection() {
           <Suspense fallback={null}>
             <Plant />
           </Suspense>
-          <Bird />
+          <Suspense fallback={null}>
+            <Bird />
+          </Suspense>
           <Wall2 />
           <Suspense fallback={null}>
             <Curtain />

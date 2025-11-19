@@ -9,7 +9,7 @@ import * as THREE from "three";
 export default function FloorLamp() {
   const bulbRef = useRef<THREE.Mesh>(null);
   const lightRef = useRef<THREE.SpotLight>(null);
-  const texture = useLoader(THREE.TextureLoader, "/fabrics/fabric-1.webp");
+  const texture = useLoader(THREE.TextureLoader, "/fabrics/lamp-tex.webp");
   texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
   texture.repeat.set(2, 2);
 

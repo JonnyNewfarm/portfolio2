@@ -7,7 +7,7 @@ import * as THREE from "three";
 import useDarkMode from "@/hooks/useDarkMode";
 
 export default function Wall2() {
-  const texture = useLoader(THREE.TextureLoader, "/fabrics/stone-wall2.webp");
+  const texture = useLoader(THREE.TextureLoader, "/concrete.webp");
   texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
   texture.repeat.set(4, 4);
   texture.colorSpace = THREE.SRGBColorSpace;
