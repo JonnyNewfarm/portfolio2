@@ -1,17 +1,30 @@
 "use client";
-import { useGLTF } from "@react-three/drei";
-import { useRef } from "react";
+
+import { useRef, useEffect } from "react";
+import { useGLTF, useAnimations } from "@react-three/drei";
 import * as THREE from "three";
 
 export default function Kitty() {
-  const { scene } = useGLTF("/flower5.glb");
   const group = useRef<THREE.Group>(null);
+  const { scene, animations } = useGLTF("/cat-anim2.glb");
+  const { actions } = useAnimations(animations, group);
+
+  useEffect(() => {
+    Object.values(actions).forEach((action) => {
+      if (!action) return;
+
+      action.play();
+    });
+  }, [actions]);
 
   return (
-    <>
-      <mesh position={[2.8, 0.65, 0.7]}>
-        <primitive ref={group} object={scene} scale={0.25} />
-      </mesh>
-    </>
+    <group
+      ref={group}
+      scale={0.03}
+      position={[0.4, 0.1, 1.3]}
+      rotation={[0, -1.9, 0]}
+    >
+      <primitive object={scene} />
+    </group>
   );
 }

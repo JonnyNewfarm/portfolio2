@@ -6,7 +6,7 @@ import * as THREE from "three";
 
 export default function Bird() {
   const group = useRef<THREE.Group>(null);
-  const { scene, animations } = useGLTF("/anim-bird-small.glb");
+  const { scene, animations } = useGLTF("/white-anim-bird2.glb");
   const { actions } = useAnimations(animations, group);
 
   useEffect(() => {
