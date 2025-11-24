@@ -27,6 +27,7 @@ import ComputerTower from "./hero/ComputerTower";
 import Plant from "./hero/Plant";
 import Clock from "./hero/Clock";
 import Bird from "./hero/Bird";
+import Kitty from "./hero/Kitty";
 
 export default function HeroSection() {
   const ref = useRef<HTMLDivElement>(null);
@@ -78,6 +79,7 @@ export default function HeroSection() {
           <WallShelfWithCandle />
           <Floor />
           <Clock />
+          <Kitty />
 
           <CartoonModel scrollYProgress={scrollYProgress} />
           <Suspense fallback={null}>
