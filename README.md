@@ -19,5 +19,6 @@ npm run dev
 
 ## 3D Models Used
 
-- **“Eastern Blue Bird”** by kenchoo — Licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)  
-  Source: [link to the model]
+- **“Eastern Blue Bird”** by kenchoo — Licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
+
+  "An Animated Cat" (https://skfb.ly/6YPwH) by Evil_Katz is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
