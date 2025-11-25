@@ -28,6 +28,7 @@ import Plant from "./hero/Plant";
 import Clock from "./hero/Clock";
 import Bird from "./hero/Bird";
 import Kitty from "./hero/Kitty";
+import Chest from "./hero/Chest";
 
 export default function HeroSection() {
   const ref = useRef<HTMLDivElement>(null);
@@ -72,6 +73,10 @@ export default function HeroSection() {
           <Suspense fallback={null}>
             <Bird />
           </Suspense>
+          <Suspense fallback={null}>
+            <Chest />
+          </Suspense>
+
           <Wall2 />
           <Suspense fallback={null}>
             <Curtain />
