@@ -114,7 +114,7 @@ export default function Chest() {
           key={i}
           fontSize={0.16}
           color={textColor}
-          rotation={[0, 2.6, 0]}
+          rotation={[0, 2, 0]}
           ref={(el: any) => (wordsRef.current[i] = el)}
           renderOrder={999}
         >
