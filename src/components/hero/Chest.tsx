@@ -9,19 +9,36 @@ export default function Chest() {
   const lidRef = useRef<THREE.Object3D | null>(null);
   const wordsRef = useRef<any[]>([]);
   const [trigger, setTrigger] = useState(false);
-  const [textColor, setTextColor] = useState("#383b38");
+  const [isDark, setIsDark] = useState(false);
 
   const techWords = ["Next.js", "TW CSS", "R3F", "Motion", "GSAP"];
 
+  const wordColorsLight = [
+    "#383b38",
+    "#694d41",
+    "#73603f",
+    "#4a3d44",
+    "#4a615a",
+  ];
+  const wordColorsDark = [
+    "#c7d6c7",
+    "#b4c8cf",
+    "#ccac9d",
+    "#9fcca5",
+    "#a1b5c9",
+  ];
+
+  const wordColors = isDark ? wordColorsDark : wordColorsLight;
+
   useEffect(() => {
-    const updateColor = () => {
-      const isDark = document.documentElement.classList.contains("dark");
-      setTextColor(isDark ? "#c7d6c7" : "#383b38");
+    const updateMode = () => {
+      const dark = document.documentElement.classList.contains("dark");
+      setIsDark(dark);
     };
 
-    updateColor();
+    updateMode();
 
-    const observer = new MutationObserver(updateColor);
+    const observer = new MutationObserver(updateMode);
     observer.observe(document.documentElement, {
       attributes: true,
       attributeFilter: ["class"],
@@ -50,6 +67,7 @@ export default function Chest() {
     });
 
     const chestPos = lidRef.current.getWorldPosition(new THREE.Vector3());
+
     wordsRef.current.forEach((word) => {
       word.position.set(chestPos.x, chestPos.y, chestPos.z);
       word.scale.set(1, 1, 1);
@@ -91,12 +109,12 @@ export default function Chest() {
         onClick={() => setTrigger(true)}
         onPointerOver={() => (document.body.style.cursor = "pointer")}
         onPointerOut={() => (document.body.style.cursor = "default")}
-        position={[-2.5, 0.77, 2.84]}
-        fontSize={0.18}
-        color={textColor}
+        position={[-2.55, 0.77, 2.84]}
+        fontSize={0.14}
+        color={isDark ? "#c7d6c7" : "#383b38"}
         rotation={[0, 1.6, 0]}
       >
-        Stack
+        Stack Used
       </Text>
 
       <group
@@ -113,7 +131,7 @@ export default function Chest() {
         <Text
           key={i}
           fontSize={0.16}
-          color={textColor}
+          color={wordColors[i]}
           rotation={[0, 2, 0]}
           ref={(el: any) => (wordsRef.current[i] = el)}
           renderOrder={999}
