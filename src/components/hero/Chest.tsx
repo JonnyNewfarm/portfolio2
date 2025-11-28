@@ -1,3 +1,4 @@
+"use client";
 import { useGLTF, Text } from "@react-three/drei";
 import { useRef, useEffect, useState } from "react";
 import * as THREE from "three";
@@ -78,20 +79,21 @@ export default function Chest() {
 
     techWords.forEach((_, i) => {
       const word = wordsRef.current[i];
-      tl.to(
-        word.position,
-        { y: word.position.y + 0.8, duration: 1, ease: "power2.out" },
-        ">0"
-      );
+
       tl.to(
         word.material,
         { opacity: 1, duration: 0.3, ease: "power2.out" },
-        "<"
+        `word${i}`
+      );
+      tl.to(
+        word.position,
+        { y: word.position.y + 0.8, duration: 1, ease: "power2.out" },
+        `word${i}`
       );
       tl.to(
         word.material,
         { opacity: 0, duration: 0.5, ease: "power2.out" },
-        "+=0.3"
+        `word${i}+0.8`
       );
     });
 
@@ -100,6 +102,7 @@ export default function Chest() {
       { x: 0, duration: 1, ease: "power2.out" },
       "+=0.2"
     );
+
     tl.call(() => setTrigger(false));
   }, [trigger]);
 
