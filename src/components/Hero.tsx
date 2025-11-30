@@ -98,9 +98,17 @@ export default function HeroSection() {
           <Preload all />
         </Canvas>
 
-        <div className="absolute   z-50 text-xl  text-[#c6cfc8] uppercase  md:text-5xl font-semibold  left-5 bottom-14  md:left-20">
+        <div className="absolute z-50 text-xl text-[#c6cfc8] uppercase md:text-5xl font-semibold left-5 bottom-14 md:left-20">
+          <regMotion.p
+            style={{ opacity }}
+            className="text-base md:text-3xl tracking-wide mb-1"
+          >
+            Click around
+          </regMotion.p>
+
           <regMotion.h1 style={{ opacity }}>Scroll to zoom</regMotion.h1>
         </div>
+
         <div className="absolute hidden md:block  md:-translate-y-1/2 md:top-1/2 right-5 z-50">
           <DarkModeBtn />
         </div>
