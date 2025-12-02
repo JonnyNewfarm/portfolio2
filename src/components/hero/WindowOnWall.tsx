@@ -162,15 +162,6 @@ export default function WindowOnWall() {
             metalness={0.2}
           />
         </mesh>
-
-        <mesh position={[0, 0, 0.07]} rotation={[0, 0, Math.PI / 2]}>
-          <torusGeometry args={[0.025, 0.006, 16, 32]} />
-          <meshStandardMaterial
-            color="#656b66"
-            metalness={0.9}
-            roughness={0.2}
-          />
-        </mesh>
       </group>
     </group>
   );

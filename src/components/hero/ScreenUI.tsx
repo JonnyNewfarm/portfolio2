@@ -17,8 +17,9 @@ export default function ScreenUI({
   const router = useRouter();
   const groupRef = useRef<THREE.Group>(null);
 
-  const [nextPage, setNextPage] = useState(false);
-  const [playGame, setPlayGame] = useState(false);
+  const [page, setPage] = useState<"intro" | "clickAround" | "nav" | "game">(
+    "intro"
+  );
 
   useFrame(() => {
     const progress = scrollYProgress.get();
@@ -31,7 +32,7 @@ export default function ScreenUI({
   return (
     <group ref={groupRef} position={[0, 1.5, 6]}>
       <AnimatePresence mode="wait">
-        {playGame ? (
+        {page === "game" ? (
           <motion.group
             key="game"
             initial={{ opacity: 0 }}
@@ -39,9 +40,49 @@ export default function ScreenUI({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.6, ease: "easeInOut" }}
           >
-            <MiniGame onExit={() => setPlayGame(false)} />
+            <MiniGame onExit={() => setPage("nav")} />
           </motion.group>
-        ) : nextPage ? (
+        ) : page === "clickAround" ? (
+          <motion.group
+            key="clickAround"
+            initial={{ opacity: 0, y: 0.04 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.6, ease: "easeInOut" }}
+          >
+            <Text position={[0.1, 0.6, 1.3]} fontSize={0.16} color="black">
+              This is my 3D portfolio.
+            </Text>
+            <Text position={[-0.01, 0.4, 1.3]} fontSize={0.16} color="black">
+              Try Clicking around,
+            </Text>
+            <Text position={[-0.068, 0.2, 1.3]} fontSize={0.16} color="black">
+              Clouds, board, etc.
+            </Text>
+
+            <Text
+              position={[0.7, -0.07, 1.1]}
+              fontSize={0.269}
+              color="black"
+              onClick={() => setPage("nav")}
+              onPointerOver={() => (document.body.style.cursor = "pointer")}
+              onPointerOut={() => (document.body.style.cursor = "default")}
+            >
+              Next
+            </Text>
+
+            <Text
+              position={[-0.46, -0.06, 1.31]}
+              fontSize={0.269}
+              color="black"
+              onClick={() => setPage("intro")}
+              onPointerOver={() => (document.body.style.cursor = "pointer")}
+              onPointerOut={() => (document.body.style.cursor = "default")}
+            >
+              Back
+            </Text>
+          </motion.group>
+        ) : page === "nav" ? (
           <motion.group
             key="nav"
             initial={{ opacity: 0, y: 0.04 }}
@@ -56,7 +97,7 @@ export default function ScreenUI({
               position={[0.6, 0.65, 1.3]}
               fontSize={0.132}
               color="black"
-              onClick={() => setNextPage(false)}
+              onClick={() => setPage("clickAround")}
               onPointerOver={() => (document.body.style.cursor = "pointer")}
               onPointerOut={() => (document.body.style.cursor = "default")}
             >
@@ -67,7 +108,7 @@ export default function ScreenUI({
               position={[0.635, 0.035, 1.3]}
               fontSize={0.21}
               color="black"
-              onClick={() => setPlayGame(true)}
+              onClick={() => setPage("game")}
               onPointerOver={() => (document.body.style.cursor = "pointer")}
               onPointerOut={() => (document.body.style.cursor = "default")}
             >
@@ -125,9 +166,8 @@ export default function ScreenUI({
             <Text
               position={[-0.46, -0.04, 1.31]}
               fontSize={0.269}
-              fontweight={900}
               color="black"
-              onClick={() => setNextPage(true)}
+              onClick={() => setPage("clickAround")}
               onPointerOver={() => (document.body.style.cursor = "pointer")}
               onPointerOut={() => (document.body.style.cursor = "default")}
             >

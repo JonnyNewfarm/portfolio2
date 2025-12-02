@@ -29,6 +29,7 @@ import Clock from "./hero/Clock";
 import Bird from "./hero/Bird";
 import Kitty from "./hero/Kitty";
 import Chest from "./hero/Chest";
+import Cloud from "./hero/Cloud";
 
 export default function HeroSection() {
   const ref = useRef<HTMLDivElement>(null);
@@ -85,6 +86,7 @@ export default function HeroSection() {
           <Floor />
           <Clock />
           <Kitty />
+          <Cloud />
 
           <CartoonModel scrollYProgress={scrollYProgress} />
           <Suspense fallback={null}>

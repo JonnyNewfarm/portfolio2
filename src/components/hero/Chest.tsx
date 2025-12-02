@@ -9,6 +9,8 @@ export default function Chest() {
 
   const lidRef = useRef<THREE.Object3D | null>(null);
   const wordsRef = useRef<any[]>([]);
+  const arrowRef = useRef<THREE.Mesh>(null);
+
   const [trigger, setTrigger] = useState(false);
   const [isDark, setIsDark] = useState(false);
 
@@ -61,6 +63,18 @@ export default function Chest() {
 
     const tl = gsap.timeline();
 
+    if (arrowRef.current) {
+      tl.to(
+        arrowRef.current.rotation,
+        {
+          z: 0.1,
+          duration: 0.3,
+          ease: "power2.out",
+        },
+        0
+      );
+    }
+
     tl.to(lidRef.current.rotation, {
       x: -1.2,
       duration: 1,
@@ -71,7 +85,6 @@ export default function Chest() {
 
     wordsRef.current.forEach((word) => {
       word.position.set(chestPos.x, chestPos.y, chestPos.z);
-      word.scale.set(1, 1, 1);
       word.material.transparent = true;
       word.material.opacity = 0;
       word.rotation.set(0, 1.6, 0);
@@ -80,46 +93,68 @@ export default function Chest() {
     techWords.forEach((_, i) => {
       const word = wordsRef.current[i];
 
-      tl.to(
-        word.material,
-        { opacity: 1, duration: 0.3, ease: "power2.out" },
-        `word${i}`
-      );
+      tl.to(word.material, { opacity: 1, duration: 0.3 }, `word${i}`);
       tl.to(
         word.position,
-        { y: word.position.y + 0.8, duration: 1, ease: "power2.out" },
+        { y: word.position.y + 0.8, duration: 1 },
         `word${i}`
       );
-      tl.to(
-        word.material,
-        { opacity: 0, duration: 0.5, ease: "power2.out" },
-        `word${i}+0.8`
-      );
+      tl.to(word.material, { opacity: 0, duration: 0.5 }, `word${i}+0.8`);
     });
 
     tl.to(
       lidRef.current.rotation,
-      { x: 0, duration: 1, ease: "power2.out" },
+      {
+        x: 0,
+        duration: 1,
+        ease: "power2.out",
+      },
       "+=0.2"
     );
+
+    if (arrowRef.current) {
+      tl.to(
+        arrowRef.current.rotation,
+        {
+          z: Math.PI,
+          duration: 0.3,
+          ease: "power2.out",
+        },
+        "-=0.4"
+      );
+    }
 
     tl.call(() => setTrigger(false));
   }, [trigger]);
 
   return (
     <group>
-      <Text
+      {/* TEXT + ARROW */}
+      <group
         onClick={() => setTrigger(true)}
         onPointerOver={() => (document.body.style.cursor = "pointer")}
         onPointerOut={() => (document.body.style.cursor = "default")}
-        position={[-2.55, 0.77, 2.84]}
-        fontSize={0.14}
-        color={isDark ? "#c7d6c7" : "#383b38"}
-        rotation={[0, 1.6, 0]}
       >
-        Stack Used
-      </Text>
+        <Text
+          position={[-2.55, 0.77, 2.84]}
+          fontSize={0.14}
+          color={isDark ? "#c7d6c7" : "#383b38"}
+          rotation={[0, 1.6, 0]}
+        >
+          Stack Used
+        </Text>
 
+        <mesh
+          ref={arrowRef}
+          position={[-2.55, 0.77, 2.42]}
+          rotation={[0, 1.4, Math.PI]}
+        >
+          <coneGeometry args={[0.035, 0.08, 3]} />
+          <meshStandardMaterial color={isDark ? "#c7d6c7" : "#383b38"} />
+        </mesh>
+      </group>
+
+      {/* CHEST */}
       <group
         onClick={() => setTrigger(true)}
         onPointerOver={() => (document.body.style.cursor = "pointer")}
@@ -130,6 +165,7 @@ export default function Chest() {
         <primitive object={scene} scale={0.6} />
       </group>
 
+      {/* WORDS */}
       {techWords.map((word, i) => (
         <Text
           key={i}
