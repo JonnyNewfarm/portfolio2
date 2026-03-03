@@ -10,6 +10,17 @@ import { CiPause1, CiPlay1 } from "react-icons/ci";
 const ProjectsClient = () => {
   const projects = [
     {
+      title: "Calero Studio",
+      src: "cal.png",
+      src2: "cal2.png",
+      src3: "cal3.png",
+      src4: "cal4.png",
+      link: "https://www.calero.studio/",
+      about:
+        "E-commerce product page for Calero Studio showcasing a modern designer lamp with a strong focus on visuals, smooth interactions and 3D product magazine.",
+      stack: "React, Prisma, Three.js, GSAP, TailwindCSS, Neon, Stripe",
+    },
+    {
       title: "Job Scriptor",
       src: "job1.webp",
       src2: "job2.webp",
@@ -131,7 +142,7 @@ const ProjectsClient = () => {
                     alt={p.title}
                     width={600}
                     height={400}
-                    className="w-full h-auto object-contain hover:opacity-90 transition-opacity"
+                    className="w-full  h-auto object-contain hover:opacity-90 transition-opacity"
                   />
                 </a>
 
