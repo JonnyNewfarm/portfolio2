@@ -151,7 +151,6 @@ function JNLogo() {
       animate="visible"
       className="overflow-visible"
     >
-      {/* J - top */}
       <motion.path
         d="M30 35H82"
         stroke="#ecdfcc"
@@ -162,7 +161,6 @@ function JNLogo() {
         custom={0}
       />
 
-      {/* J - stem + hook */}
       <motion.path
         d="M68 35V118C68 140 56 145 40 145C29 145 20 141 14 134"
         stroke="#ecdfcc"
@@ -173,7 +171,6 @@ function JNLogo() {
         custom={0.18}
       />
 
-      {/* N - left stem */}
       <motion.path
         d="M118 145V35"
         stroke="#ecdfcc"
@@ -184,7 +181,6 @@ function JNLogo() {
         custom={0.38}
       />
 
-      {/* N - diagonal */}
       <motion.path
         d="M118 35L172 145"
         stroke="#ecdfcc"
@@ -195,7 +191,6 @@ function JNLogo() {
         custom={0.56}
       />
 
-      {/* N - right stem */}
       <motion.path
         d="M172 145V35"
         stroke="#ecdfcc"
