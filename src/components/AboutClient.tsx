@@ -7,25 +7,33 @@ import Image from "next/image";
 const AboutClient = () => {
   return (
     <ScrollSection>
-      <div className="bg-[#ececec] dark:bg-[#2e2b2b] text-[#161310] dark:text-stone-300 flex justify-center min-h-screen h-full w-full border-b md:pt-16 border-stone-300 dark:border-b-stone-600">
-        <div className="flex flex-col-reverse mt-10 md:flex-row items-center w-full max-w-7xl">
-          <div className="flex flex-col w-full md:w-3/4 px-6 md:px-10 ">
+      <section className="min-h-screen w-full border-b border-stone-300 bg-[#ececec] text-[#161310] dark:border-b-stone-600 dark:bg-[#2e2b2b] dark:text-stone-300">
+        <div className="mx-auto grid min-h-screen w-full max-w-[1800px] grid-cols-1 px-6 pb-16 pt-28 sm:px-10 lg:grid-cols-12 lg:gap-10 lg:px-16 xl:px-20">
+          {/* Left content */}
+          <div className="order-2 flex flex-col lg:order-1 lg:col-span-7 xl:col-span-8">
             <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{
-                scale: [0.8, 1],
-                opacity: [0, 1, 1],
-              }}
-              transition={{
-                delay: 0.1,
-                duration: 1,
-                times: [0, 0.4, 1],
-                ease: "easeInOut",
-              }}
-              className="mb-10"
+              initial={{ opacity: 0, y: 28 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, ease: "easeOut" }}
+              className="max-w-[980px]"
             >
-              <h1 className="mb-3 text-3xl">The Face Behind the Code</h1>
-              <p className="text-sm md:text-[16px] max-w-xl lg:max-w-2xl">
+              <p className="mb-6 text-[10px] uppercase tracking-[0.3em] opacity-45">
+                About / Profile
+              </p>
+
+              <div className="max-w-[950px]">
+                <h1 className="text-5xl uppercase leading-[0.88] tracking-[-0.06em] sm:text-6xl xl:text-7xl">
+                  The face
+                </h1>
+                <h1 className="text-5xl uppercase leading-[0.88] tracking-[-0.06em] sm:ml-10 sm:text-6xl xl:ml-16 xl:text-7xl">
+                  behind
+                </h1>
+                <h1 className="text-5xl uppercase leading-[0.88] tracking-[-0.06em] sm:ml-20 sm:text-6xl xl:ml-32 xl:text-7xl">
+                  the code
+                </h1>
+              </div>
+
+              <p className="mt-10 max-w-[760px] text-sm leading-relaxed opacity-75 sm:text-base">
                 I&apos;m a 28-year-old frontend developer from Oslo with a
                 passion for clean design, solid code, and the space where those
                 two worlds meet. I&apos;ve worked on everything from portfolio
@@ -36,58 +44,54 @@ const AboutClient = () => {
               </p>
             </motion.div>
 
-            <div className="mb-10 w-full">
-              <motion.h1
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{
-                  scale: [0.8, 1],
-                  opacity: [0, 1, 1],
-                }}
-                transition={{
-                  delay: 0.2,
-                  duration: 1,
-                  times: [0, 0.4, 1],
-                  ease: "easeInOut",
-                }}
-                className="mb-6 text-2xl"
-              >
-                Design / Code / Fullstack
-              </motion.h1>
+            <motion.div
+              initial={{ opacity: 0, y: 28 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut", delay: 0.08 }}
+              className="mt-16"
+            >
+              <div className="mb-8 border-t border-stone-400/30 pt-6 dark:border-stone-200/20">
+                <p className="text-[10px] uppercase tracking-[0.26em] opacity-45">
+                  Design / Code / Fullstack
+                </p>
+              </div>
 
-              <motion.div
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{
-                  scale: [0.8, 1],
-                  opacity: [0, 1, 1],
-                }}
-                transition={{
-                  delay: 0.3,
-                  duration: 1,
-                  times: [0, 0.4, 1],
-                  ease: "easeInOut",
-                }}
-                className="flex flex-col lg:flex-row divide-y lg:divide-y-0 lg:divide-x divide-stone-400/50 dark:divide-stone-200/50 text-sm"
-              >
-                <div className="flex-1 px-4 py-4">
-                  <h2 className="text-lg mb-2">Design</h2>
-                  <p>
+              <div className="grid grid-cols-1 border-t border-stone-400/30 dark:border-stone-200/20 lg:grid-cols-3 lg:divide-x lg:divide-stone-400/30 lg:dark:divide-stone-200/20">
+                <div className="border-b border-stone-400/30 px-0 py-8 dark:border-stone-200/20 lg:border-b-0 lg:px-6 lg:first:pl-0">
+                  <p className="mb-3 text-[10px] uppercase tracking-[0.24em] opacity-40">
+                    01
+                  </p>
+                  <h2 className="mb-4 text-2xl uppercase tracking-[-0.04em]">
+                    Design
+                  </h2>
+                  <p className="text-sm leading-relaxed opacity-75">
                     I keep things simple and structured. I design with both
                     users and devs in mind, mostly using Figma and Adobe XD.
                   </p>
                 </div>
 
-                <div className="flex-1 px-4 py-4">
-                  <h2 className="text-lg mb-2">Code</h2>
-                  <p>
+                <div className="border-b border-stone-400/30 px-0 py-8 dark:border-stone-200/20 lg:border-b-0 lg:px-6">
+                  <p className="mb-3 text-[10px] uppercase tracking-[0.24em] opacity-40">
+                    02
+                  </p>
+                  <h2 className="mb-4 text-2xl uppercase tracking-[-0.04em]">
+                    Code
+                  </h2>
+                  <p className="text-sm leading-relaxed opacity-75">
                     I like to work with React, Next.js, TypeScript, CSS/SASS,
                     and Tailwind. I focus on writing clean, efficient code and
                     building interfaces that feel smooth and responsive.
                   </p>
                 </div>
 
-                <div className="flex-1 px-4 py-4">
-                  <h2 className="text-lg mb-2">Fullstack</h2>
-                  <p>
+                <div className="px-0 py-8 lg:px-6 lg:last:pr-0">
+                  <p className="mb-3 text-[10px] uppercase tracking-[0.24em] opacity-40">
+                    03
+                  </p>
+                  <h2 className="mb-4 text-2xl uppercase tracking-[-0.04em]">
+                    Fullstack
+                  </h2>
+                  <p className="text-sm leading-relaxed opacity-75">
                     I&apos;ve built applications using different tools and
                     frameworks like Prisma, Mongoose, MongoDB, SQL, and Neon, to
                     name a few. I enjoy working across the stack, connecting
@@ -95,36 +99,49 @@ const AboutClient = () => {
                     the backend to the user interface.
                   </p>
                 </div>
-              </motion.div>
-            </div>
+              </div>
+            </motion.div>
           </div>
 
+          {/* Right image */}
           <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{
-              scale: [0.8, 1],
-              opacity: [0, 1, 1],
-            }}
-            transition={{
-              delay: 0.1,
-              duration: 1,
-              times: [0, 0.4, 1],
-              ease: "easeInOut",
-            }}
-            className="w-full md:w-1/2 h-[50vh] md:h-screen flex justify-center items-center p-4 relative"
+            initial={{ opacity: 0, y: 28 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.75, ease: "easeOut", delay: 0.04 }}
+            className="order-1 mb-12 flex lg:order-2 lg:col-span-5 lg:mb-0 xl:col-span-4"
           >
-            <div className="relative mt-16 md:mt-0 w-full h-[80%]">
-              <Image
-                src="/jonas1.webp"
-                alt="Image of Jonas"
-                fill
-                className="object-contain"
-                priority
-              />
+            <div className="w-full lg:ml-auto lg:max-w-[540px]">
+              <div className="mb-6 border-b border-stone-400/30 pb-5 dark:border-stone-200/20">
+                <p className="mb-2 text-[10px] uppercase tracking-[0.25em] opacity-40">
+                  Portrait
+                </p>
+                <h2 className="text-3xl uppercase leading-none tracking-[-0.04em] sm:text-4xl">
+                  Jonas Nygaard
+                </h2>
+              </div>
+
+              <div className="relative overflow-hidden ">
+                <div className="relative h-[48vh] w-full sm:h-[58vh] lg:h-[72vh]">
+                  <Image
+                    src="/jonas1.webp"
+                    alt="Image of Jonas"
+                    fill
+                    className="object-contain"
+                    priority
+                  />
+                </div>
+              </div>
+
+              <div className="mt-6 border-t border-stone-400/30 pt-5 dark:border-stone-200/20">
+                <p className="max-w-[420px] text-sm leading-relaxed opacity-65">
+                  Frontend developer with a strong interest in visual design,
+                  motion, interactivity and polished digital experiences.
+                </p>
+              </div>
             </div>
           </motion.div>
         </div>
-      </div>
+      </section>
     </ScrollSection>
   );
 };
