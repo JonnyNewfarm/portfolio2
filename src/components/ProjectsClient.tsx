@@ -10,6 +10,29 @@ import { CiPause1, CiPlay1 } from "react-icons/ci";
 const ProjectsClient = () => {
   const projects = [
     {
+      title: "Petsaco",
+      src: "petsaco1.png",
+      src2: "petsaco2.png",
+      src3: "petsaco3.png",
+      src4: "petsaco4.png",
+      link: "https://petsaco.com",
+      about:
+        "E-commerce store for petsaco, selling products for pets. Modern design with GSAP animations ",
+      stack:
+        "React, Next.js, Prisma, GSAP, Motion, TailwindCSS, Neon, Nextauth, stripe, Zustand.",
+    },
+    {
+      title: "Kerimov Designs",
+      src: "rustam1.webp",
+      src2: "rustam2.webp",
+      src3: "rustam3.webp",
+      src4: "rustam4.webp",
+      link: "https://kerimovdesigns.com",
+      about: "Portfolio website for graphic designer Rustam Kerimov.",
+      stack:
+        "React, Next.js, Prisma,GSAP, Motion, TailwindCSS, MongoDB, Uploadthing, NextAuth.",
+    },
+    {
       title: "Calero Studio",
       src: "cal.png",
       src2: "cal2.png",
@@ -31,17 +54,6 @@ const ProjectsClient = () => {
         "Website featuring AI tools for writing resumes and cover letters, and for finding jobs that match your resume.",
       stack:
         "React, Next.js, Prisma, TailwindCSS, Neon, NextAuth, OpenAI, Stripe.",
-    },
-    {
-      title: "Kerimov Designs",
-      src: "rustam1.webp",
-      src2: "rustam2.webp",
-      src3: "rustam3.webp",
-      src4: "rustam4.webp",
-      link: "https://kerimovdesigns.com",
-      about: "Portfolio website for graphic designer Rustam Kerimov.",
-      stack:
-        "React, Next.js, Prisma, TailwindCSS, MongoDB, Uploadthing, NextAuth.",
     },
   ];
 
