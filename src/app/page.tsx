@@ -17,7 +17,7 @@ export default function Home() {
       const timer = setTimeout(() => {
         setIsLoading(false);
         sessionStorage.setItem("preloaderShown", "true");
-      }, 3000);
+      }, 4000);
       return () => clearTimeout(timer);
     }
   }, []);
