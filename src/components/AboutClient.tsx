@@ -25,10 +25,10 @@ const AboutClient = () => {
                 <h1 className="text-5xl uppercase leading-[0.88] tracking-[-0.06em] sm:text-6xl xl:text-7xl">
                   The face
                 </h1>
-                <h1 className="text-5xl uppercase leading-[0.88] tracking-[-0.06em] sm:ml-10 sm:text-6xl xl:ml-16 xl:text-7xl">
+                <h1 className="text-5xl uppercase leading-[0.88] tracking-[-0.06em]  sm:text-6xl  xl:text-7xl">
                   behind
                 </h1>
-                <h1 className="text-5xl uppercase leading-[0.88] tracking-[-0.06em] sm:ml-20 sm:text-6xl xl:ml-32 xl:text-7xl">
+                <h1 className="text-5xl uppercase leading-[0.88] tracking-[-0.06em]  sm:text-6xl xl:text-7xl">
                   the code
                 </h1>
               </div>
@@ -123,7 +123,7 @@ const AboutClient = () => {
               <div className="relative overflow-hidden ">
                 <div className="relative h-[48vh] w-full sm:h-[58vh] lg:h-[72vh]">
                   <Image
-                    src="/jonas1.webp"
+                    src="/jonas-2.jpg"
                     alt="Image of Jonas"
                     fill
                     className="object-contain"

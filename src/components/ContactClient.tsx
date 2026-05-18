@@ -105,10 +105,10 @@ const ContactClient = () => {
                 <h1 className="text-5xl uppercase leading-[0.88] tracking-[-0.06em] sm:text-6xl xl:text-7xl">
                   Let&apos;s turn
                 </h1>
-                <h1 className="text-5xl uppercase leading-[0.88] tracking-[-0.06em] sm:ml-8 sm:text-6xl xl:ml-12 xl:text-7xl">
+                <h1 className="text-5xl uppercase leading-[0.88] tracking-[-0.06em]  sm:text-6xl xl:text-7xl">
                   your vision
                 </h1>
-                <h1 className="text-5xl uppercase leading-[0.88] tracking-[-0.06em] sm:ml-16 sm:text-6xl xl:ml-24 xl:text-7xl">
+                <h1 className="text-5xl uppercase leading-[0.88] tracking-[-0.06em]  sm:text-6xl  xl:text-7xl">
                   into reality
                 </h1>
               </div>
