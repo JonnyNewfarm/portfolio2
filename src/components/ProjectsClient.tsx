@@ -11,10 +11,10 @@ const ProjectsClient = () => {
   const projects = [
     {
       title: "Calero Studio",
-      src: "calero-1.jpg",
-      src2: "calero-3.png",
-      src3: "calero-4.jpg",
-      src4: "calero-5.jpg",
+      src: "cs1.jpg",
+      src2: "cs-2.jpg",
+      src3: "cs-3.jpg",
+      src4: "cs-4.jpg",
       link: "https://www.calero.studio/",
       about:
         "E-commerce product page for Calero Studio showcasing a modern designer lamp with a strong focus on visuals, smooth interactions and 3D product magazine.",
@@ -36,8 +36,8 @@ const ProjectsClient = () => {
       title: "Kerimov Designs",
       src: "rustam1.webp",
       src2: "rustam2.webp",
-      src3: "rustam3.webp",
-      src4: "rustam4.webp",
+      src3: "kerimov-3.jpg",
+      src4: "kerimov-4.jpg",
       link: "https://kerimovdesigns.com",
       about: "Portfolio website for graphic designer Rustam Kerimov.",
       stack:
