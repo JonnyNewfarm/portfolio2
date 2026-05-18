@@ -10,6 +10,17 @@ import { CiPause1, CiPlay1 } from "react-icons/ci";
 const ProjectsClient = () => {
   const projects = [
     {
+      title: "Calero Studio",
+      src: "calero-1.jpg",
+      src2: "calero-3.png",
+      src3: "calero-4.jpg",
+      src4: "calero-5.jpg",
+      link: "https://www.calero.studio/",
+      about:
+        "E-commerce product page for Calero Studio showcasing a modern designer lamp with a strong focus on visuals, smooth interactions and 3D product magazine.",
+      stack: "React, Prisma, Three.js, GSAP, TailwindCSS, Neon, Stripe",
+    },
+    {
       title: "Petsaco",
       src: "petsaco1.png",
       src2: "petsaco2.png",
@@ -31,17 +42,6 @@ const ProjectsClient = () => {
       about: "Portfolio website for graphic designer Rustam Kerimov.",
       stack:
         "React, Next.js, Prisma,GSAP, Motion, TailwindCSS, MongoDB, Uploadthing, NextAuth.",
-    },
-    {
-      title: "Calero Studio",
-      src: "cal.png",
-      src2: "cal2.png",
-      src3: "cal3.png",
-      src4: "cal4.png",
-      link: "https://www.calero.studio/",
-      about:
-        "E-commerce product page for Calero Studio showcasing a modern designer lamp with a strong focus on visuals, smooth interactions and 3D product magazine.",
-      stack: "React, Prisma, Three.js, GSAP, TailwindCSS, Neon, Stripe",
     },
     {
       title: "Job Scriptor",
@@ -127,9 +127,11 @@ const ProjectsClient = () => {
             <p className="mb-4 text-[10px] uppercase tracking-[0.3em] opacity-45">
               Selected Work
             </p>
+
             <h1 className="text-4xl uppercase leading-[0.92] tracking-[-0.05em]">
               My Projects
             </h1>
+
             <p className="mt-4 text-sm uppercase tracking-[0.18em] opacity-55">
               Code / Design / Fullstack
             </p>
@@ -158,13 +160,15 @@ const ProjectsClient = () => {
                   rel="noopener noreferrer"
                   className="block"
                 >
-                  <div className="relative h-[240px] w-full overflow-hidden border border-[#161310]/15 dark:border-stone-300/15">
-                    <Image
-                      src={`/projects/${p.src}`}
-                      alt={p.title}
-                      fill
-                      className="object-cover transition-opacity duration-300 hover:opacity-90"
-                    />
+                  <div className="relative h-[260px] w-full border border-[#161310]/20 bg-[#f6f4f1] p-4 dark:border-stone-300/20 dark:bg-[#242121]">
+                    <div className="relative h-full w-full">
+                      <Image
+                        src={`/projects/${p.src}`}
+                        alt={p.title}
+                        fill
+                        className="object-contain transition-opacity duration-300 hover:opacity-90"
+                      />
+                    </div>
                   </div>
                 </a>
 
@@ -343,11 +347,12 @@ const ProjectsClient = () => {
               className="col-span-8"
             >
               <div className="ml-auto flex w-full max-w-[980px] flex-col">
-                <div className="mb-6 flex items-end justify-between gap-6  pb-5 dark:border-stone-300/15">
+                <div className="mb-6 flex items-end justify-between gap-6 border-b border-[#161310]/15 pb-5 dark:border-stone-300/15">
                   <div>
                     <p className="mb-2 text-[10px] uppercase tracking-[0.25em] opacity-40">
                       Showcase
                     </p>
+
                     <h2 className="text-4xl uppercase leading-none tracking-[-0.05em] xl:text-2xl">
                       {selected.title}
                     </h2>
@@ -363,7 +368,7 @@ const ProjectsClient = () => {
                   </a>
                 </div>
 
-                <div className="relative h-[76vh] overflow-hidden border-l border-[#161310]/15 dark:border-stone-300/15">
+                <div className="relative h-[76vh] overflow-hidden border-l border-r border-[#161310]/15 bg-[#ececec] px-6 dark:border-stone-300/15 dark:bg-[#262323]">
                   <div
                     ref={containerRef}
                     className="h-screen"
@@ -374,21 +379,30 @@ const ProjectsClient = () => {
                   >
                     <div ref={scrollRef}>
                       {[...Array(2)].map((_, idx) => (
-                        <div key={idx} className="space-y-12 mb-12">
+                        <div key={idx} className="mb-16 space-y-16 py-16">
                           {[
                             selected.src,
                             selected.src2,
                             selected.src3,
                             selected.src4,
                           ].map((img, i) => (
-                            <div key={i} className="relative w-full h-[300px]">
-                              <Image
-                                src={`/projects/${img}`}
-                                alt={`${selected.title} image ${i + 1}`}
-                                fill
-                                className="object-contain"
-                                priority
-                              />
+                            <div
+                              key={i}
+                              className="relative h-[340px] w-full border border-[#161310]/20 bg-[#f6f4f1] p-6 dark:border-stone-300/20 dark:bg-[#242121]"
+                            >
+                              <span className="absolute left-4 top-4 z-10 text-[10px] uppercase tracking-[0.22em] opacity-40">
+                                {String(i + 1).padStart(2, "0")}
+                              </span>
+
+                              <div className="relative h-full w-full">
+                                <Image
+                                  src={`/projects/${img}`}
+                                  alt={`${selected.title} image ${i + 1}`}
+                                  fill
+                                  className="object-contain"
+                                  priority
+                                />
+                              </div>
                             </div>
                           ))}
                         </div>

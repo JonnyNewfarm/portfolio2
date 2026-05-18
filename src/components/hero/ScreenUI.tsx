@@ -18,7 +18,7 @@ export default function ScreenUI({
   const groupRef = useRef<THREE.Group>(null);
 
   const [page, setPage] = useState<"intro" | "clickAround" | "nav" | "game">(
-    "intro"
+    "intro",
   );
 
   useFrame(() => {
@@ -61,7 +61,7 @@ export default function ScreenUI({
             </Text>
 
             <Text
-              position={[0.7, -0.07, 1.1]}
+              position={[0.7, -0.07, 1.2]}
               fontSize={0.269}
               color="black"
               onClick={() => setPage("nav")}
