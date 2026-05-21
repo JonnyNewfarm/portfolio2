@@ -22,8 +22,8 @@ const ProjectsClient = () => {
     },
     {
       title: "Petsaco",
-      src: "petsaco1.png",
-      src2: "petsaco2.png",
+      src: "pets-1.jpg",
+      src2: "pets-2.jpg",
       src3: "petsaco3.png",
       src4: "petsaco4.png",
       link: "https://petsaco.com",
