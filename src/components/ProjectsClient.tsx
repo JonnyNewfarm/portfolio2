@@ -11,8 +11,8 @@ const ProjectsClient = () => {
   const projects = [
     {
       title: "Calero Studio",
-      src: "cs-1.jpg",
-      src2: "cs-2.jpg",
+      src: "calero-3.jpg",
+      src2: "calero-2.jpg",
       src3: "cals-3.jpg",
       src4: "cals-4.jpg",
       link: "https://www.calero.studio/",
@@ -22,8 +22,8 @@ const ProjectsClient = () => {
     },
     {
       title: "Petsaco",
-      src: "pets-1.jpg",
-      src2: "pets-2.jpg",
+      src: "petsaco-1.jpg",
+      src2: "petsaco-2.jpg",
       src3: "petsaco3.png",
       src4: "petsaco4.png",
       link: "https://petsaco.com",
