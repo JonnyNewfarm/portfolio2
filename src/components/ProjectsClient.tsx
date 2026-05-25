@@ -21,18 +21,6 @@ const ProjectsClient = () => {
       stack: "React, Prisma, Three.js, GSAP, TailwindCSS, Neon, Stripe",
     },
     {
-      title: "Petsaco",
-      src: "petsaco-1.jpg",
-      src2: "petsaco-2.jpg",
-      src3: "petsaco3.png",
-      src4: "petsaco4.png",
-      link: "https://petsaco.com",
-      about:
-        "E-commerce store for petsaco, selling products for pets. Modern design with GSAP animations ",
-      stack:
-        "React, Next.js, Prisma, GSAP, Motion, TailwindCSS, Neon, Nextauth, stripe, Zustand.",
-    },
-    {
       title: "Kerimov Designs",
       src: "rustam1.webp",
       src2: "rustam2.webp",
@@ -43,6 +31,19 @@ const ProjectsClient = () => {
       stack:
         "React, Next.js, Prisma,GSAP, Motion, TailwindCSS, MongoDB, Uploadthing, NextAuth.",
     },
+    {
+      title: "Petsaco",
+      src: "petsaco-3.jpg",
+      src2: "petsaco-4.jpg",
+      src3: "petsaco3.png",
+      src4: "petsaco4.png",
+      link: "https://petsaco.com",
+      about:
+        "E-commerce store for petsaco, selling products for pets. Modern design with GSAP animations ",
+      stack:
+        "React, Next.js, Prisma, GSAP, Motion, TailwindCSS, Neon, Nextauth, stripe, Zustand.",
+    },
+
     {
       title: "Job Scriptor",
       src: "job1.webp",
@@ -388,20 +389,23 @@ const ProjectsClient = () => {
                           ].map((img, i) => (
                             <div
                               key={i}
-                              className="relative h-[340px] w-full border border-[#161310]/20 bg-[#f6f4f1] p-6 dark:border-stone-300/20 dark:bg-[#242121]"
+                              className="relative h-[340px] w-full  "
                             >
                               <span className="absolute left-4 top-4 z-10 text-[10px] uppercase tracking-[0.22em] opacity-40">
                                 {String(i + 1).padStart(2, "0")}
                               </span>
 
                               <div className="relative h-full w-full">
-                                <Image
-                                  src={`/projects/${img}`}
-                                  alt={`${selected.title} image ${i + 1}`}
-                                  fill
-                                  className="object-contain"
-                                  priority
-                                />
+                                <div className="flex h-full w-full items-center justify-center">
+                                  <Image
+                                    src={`/projects/${img}`}
+                                    alt={`${selected.title} image ${i + 1}`}
+                                    width={900}
+                                    height={600}
+                                    className="max-h-full w-auto max-w-full border border-[#161310]/10 object-contain dark:border-stone-300/20"
+                                    priority
+                                  />
+                                </div>
                               </div>
                             </div>
                           ))}
