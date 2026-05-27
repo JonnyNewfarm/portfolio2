@@ -10,16 +10,18 @@ import { CiPause1, CiPlay1 } from "react-icons/ci";
 const ProjectsClient = () => {
   const projects = [
     {
-      title: "Calero Studio",
-      src: "calero-3.jpg",
-      src2: "calero-2.jpg",
-      src3: "cals-3.jpg",
-      src4: "cals-4.jpg",
-      link: "https://www.calero.studio/",
+      title: "Petsaco",
+      src: "petsac-1.jpg",
+      src2: "petsac-2.jpg",
+      src3: "petsac-3.jpg",
+      src4: "petsac-4.jpg",
+      link: "https://petsaco.com",
       about:
-        "E-commerce product page for Calero Studio showcasing a modern designer lamp with a strong focus on visuals, smooth interactions and 3D product magazine.",
-      stack: "React, Prisma, Three.js, GSAP, TailwindCSS, Neon, Stripe",
+        "E-commerce store for petsaco, selling products for pets. Modern design with GSAP animations ",
+      stack:
+        "React, Next.js, Prisma, GSAP, Motion, TailwindCSS, Neon, Nextauth, stripe, Zustand.",
     },
+
     {
       title: "Kerimov Designs",
       src: "rustam1.webp",
@@ -32,16 +34,15 @@ const ProjectsClient = () => {
         "React, Next.js, Prisma,GSAP, Motion, TailwindCSS, MongoDB, Uploadthing, NextAuth.",
     },
     {
-      title: "Petsaco",
-      src: "petsaco-3.jpg",
-      src2: "petsaco-4.jpg",
-      src3: "petsaco3.png",
-      src4: "petsaco4.png",
-      link: "https://petsaco.com",
+      title: "Calero Studio",
+      src: "calero-3.jpg",
+      src2: "calero-2.jpg",
+      src3: "cals-3.jpg",
+      src4: "cals-4.jpg",
+      link: "https://www.calero.studio/",
       about:
-        "E-commerce store for petsaco, selling products for pets. Modern design with GSAP animations ",
-      stack:
-        "React, Next.js, Prisma, GSAP, Motion, TailwindCSS, Neon, Nextauth, stripe, Zustand.",
+        "E-commerce product page for Calero Studio showcasing a modern designer lamp with a strong focus on visuals, smooth interactions and 3D product magazine.",
+      stack: "React, Prisma, Three.js, GSAP, TailwindCSS, Neon, Stripe",
     },
 
     {
