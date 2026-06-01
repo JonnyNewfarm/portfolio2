@@ -37,8 +37,10 @@ const ProjectsClient = () => {
       title: "Calero Studio",
       src: "calero-3.jpg",
       src2: "calero-2.jpg",
-      src3: "cals-3.jpg",
-      src4: "cals-4.jpg",
+      src3: "caler-2.jpg",
+      src4: "caler-3.jpg",
+      src5: "caler-4.jpg",
+      src6: "caler-5.jpg",
       link: "https://www.calero.studio/",
       about:
         "E-commerce product page for Calero Studio showcasing a modern designer lamp with a strong focus on visuals, smooth interactions and 3D product magazine.",
