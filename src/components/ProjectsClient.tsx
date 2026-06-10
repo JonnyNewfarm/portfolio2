@@ -33,7 +33,6 @@ const ProjectsClient = () => {
         "E-commerce product page for Calero Studio showcasing a modern designer lamp with a strong focus on visuals, smooth interactions and 3D product magazine.",
       stack: "React, Prisma, Three.js, GSAP, TailwindCSS, Neon, Stripe",
     },
-
     {
       title: "Petsaco",
       src: "petsac-1.jpg",
@@ -46,7 +45,6 @@ const ProjectsClient = () => {
       stack:
         "React, Next.js, Prisma, GSAP, Motion, TailwindCSS, Neon, Nextauth, stripe, Zustand.",
     },
-
     {
       title: "Job Scriptor",
       src: "job1.webp",
@@ -118,11 +116,42 @@ const ProjectsClient = () => {
     }
   };
 
+  const desktopImages = [selected.src, selected.src3, selected.src5].filter(
+    Boolean,
+  ) as string[];
+
+  const mobileImages = [selected.src2, selected.src4, selected.src6].filter(
+    Boolean,
+  ) as string[];
+
+  const selectedImages = [
+    ...desktopImages.map((img) => ({
+      src: img,
+      type: "desktop" as const,
+    })),
+    ...mobileImages.map((img) => ({
+      src: img,
+      type: "mobile" as const,
+    })),
+  ];
+
+  const desktopImageLayouts = [
+    "ml-[18%] h-[380px] w-[72%] scale-[0.98] xl:h-[460px]",
+    "ml-[5%] mt-24 h-[360px] w-[64%] scale-[1.05] xl:h-[440px]",
+    "ml-[26%] mt-24 h-[400px] w-[68%] scale-[0.94] xl:h-[480px]",
+  ];
+
+  const mobileImageLayouts = [
+    "ml-[8%] mt-32 h-[500px] w-[32%] scale-[1] xl:h-[600px]",
+    "ml-[56%] mt-32 h-[520px] w-[30%] scale-[0.92] xl:h-[620px]",
+    "ml-[28%] mt-32 h-[480px] w-[28%] scale-[1.08] xl:h-[580px]",
+  ];
+
   return (
     <SmoothScroll>
-      <section className="min-h-screen w-full border-b border-stone-300 bg-[#ececec] text-[#161310] dark:border-stone-600 dark:bg-[#2e2b2b] dark:text-stone-300">
+      <section className="relative min-h-screen w-full border-b border-stone-300 bg-[#ececec] text-[#161310] dark:border-stone-600 dark:bg-[#2e2b2b] dark:text-stone-300">
         {/* Mobile */}
-        <div className="md:hidden px-6 pb-16 pt-28">
+        <div className="px-6 pb-16 pt-28 md:hidden">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
@@ -132,7 +161,7 @@ const ProjectsClient = () => {
               Selected Work
             </p>
 
-            <h1 className="text-4xl uppercase font-black leading-[0.92] tracking-[-0.05em]">
+            <h1 className="text-4xl font-black uppercase leading-[0.92] tracking-[-0.05em]">
               My Work
             </h1>
 
@@ -186,6 +215,7 @@ const ProjectsClient = () => {
                       <p className="mb-2 text-[10px] uppercase tracking-[0.22em] opacity-40">
                         Stack
                       </p>
+
                       <p className="text-sm leading-relaxed opacity-70">
                         {p.stack}
                       </p>
@@ -214,165 +244,55 @@ const ProjectsClient = () => {
               initial={{ opacity: 0, y: 28 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.65, ease: "easeOut" }}
-              className="col-span-4 flex min-h-[calc(100vh-7rem)] flex-col"
+              className="col-span-3 flex min-h-[calc(100vh-7rem)] flex-col"
             >
-              <div className="shrink-0">
-                <p className="mb-4 text-[10px] uppercase tracking-[0.3em] opacity-45">
-                  Selected Work
-                </p>
+              <div className="flex flex-1 flex-col justify-center">
+                <div>
+                  <div className="flex flex-col gap-9">
+                    {projects.map((project, i) => {
+                      const isSelected = selected.title === project.title;
 
-                <h1 className="max-w-[420px] font-black text-6xl uppercase leading-[0.9] tracking-[-0.06em] xl:text-7xl">
-                  My Work
-                </h1>
-
-                <div className="mt-5 flex items-center justify-between gap-4 border-b border-[#161310]/15 pb-6 dark:border-stone-300/15">
-                  <p className="text-sm uppercase tracking-[0.18em] opacity-55">
-                    Code / Design / Fullstack
-                  </p>
-
-                  <button
-                    onClick={handlePauseToggle}
-                    className="flex cursor-pointer items-center gap-2 text-sm uppercase tracking-[0.16em] opacity-70 transition-opacity duration-300 hover:opacity-100"
-                  >
-                    {isPaused ? (
-                      <>
-                        <CiPlay1 />
-                        Resume
-                      </>
-                    ) : (
-                      <>
-                        <CiPause1 />
-                        Pause
-                      </>
-                    )}
-                  </button>
-                </div>
-              </div>
-
-              <div className="mt-10 flex-1">
-                {projects.map((project, i) => {
-                  const isSelected = selected.title === project.title;
-
-                  return (
-                    <button
-                      key={i}
-                      onClick={() => handleSelectProject(project)}
-                      className="group flex w-full cursor-pointer flex-col border-b border-[#161310]/15 py-5 text-left dark:border-stone-300/15"
-                    >
-                      <div className="flex items-start justify-between gap-6">
-                        <div className="flex items-start gap-4">
-                          <span
-                            className={`mt-1 text-[10px] uppercase tracking-[0.24em] transition-opacity duration-300 ${
-                              isSelected ? "opacity-100" : "opacity-30"
+                      return (
+                        <button
+                          key={i}
+                          onClick={() => handleSelectProject(project)}
+                          className="group cursor-pointer text-left"
+                        >
+                          <h2
+                            className={`text-2xl uppercase leading-[0.9] tracking-[-0.05em] transition-all duration-300 xl:text-3xl ${
+                              isSelected
+                                ? "translate-x-2 opacity-100"
+                                : "translate-x-0 opacity-35 group-hover:opacity-100"
                             }`}
                           >
-                            {String(i + 1).padStart(2, "0")}
-                          </span>
-
-                          <div>
-                            <h2
-                              className={`text-2xl uppercase leading-none tracking-[-0.04em] transition-all duration-300 xl:text-3xl ${
-                                isSelected
-                                  ? "translate-x-2 opacity-100"
-                                  : "translate-x-0 opacity-65 group-hover:opacity-100"
-                              }`}
-                            >
-                              {project.title}
-                            </h2>
-                          </div>
-                        </div>
-
-                        <span
-                          className={`shrink-0 text-xs uppercase tracking-[0.18em] transition-opacity duration-300 ${
-                            isSelected ? "opacity-60" : "opacity-25"
-                          }`}
-                        >
-                          Live
-                        </span>
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-
-              <motion.div
-                key={selected.title}
-                initial={{ opacity: 0, y: 18 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.45, ease: "easeOut" }}
-                className="mt-10 shrink-0 border-t border-[#161310]/15 pt-6 dark:border-stone-300/15"
-              >
-                <p className="mb-3 text-[10px] uppercase tracking-[0.25em] opacity-40">
-                  Selected Project
-                </p>
-
-                <h3 className="text-3xl uppercase leading-[0.95] tracking-[-0.04em]">
-                  {selected.title}
-                </h3>
-
-                <div className="mt-8 grid grid-cols-1 gap-6 border-t border-[#161310]/15 pt-6 dark:border-stone-300/15">
-                  <div>
-                    <p className="mb-2 text-[10px] uppercase tracking-[0.22em] opacity-40">
-                      About
-                    </p>
-                    <p className="max-w-[520px] text-sm leading-relaxed opacity-75">
-                      {selected.about}
-                    </p>
-                  </div>
-
-                  <div>
-                    <p className="mb-2 text-[10px] uppercase tracking-[0.22em] opacity-40">
-                      Stack
-                    </p>
-                    <p className="text-sm leading-relaxed opacity-70">
-                      {selected.stack}
-                    </p>
-                  </div>
-
-                  <div>
-                    <a
-                      href={selected.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-block border-2 font-semibold border-[#161310] px-5 py-2 text-lg uppercase tracking-[0.18em] dark:border-stone-300"
-                    >
-                      View Website
-                    </a>
-                  </div>
-                </div>
-              </motion.div>
-            </motion.div>
-
-            {/* Right showcase */}
-            <motion.div
-              initial={{ opacity: 0, y: 28 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.75, ease: "easeOut", delay: 0.08 }}
-              className="col-span-8"
-            >
-              <div className="ml-auto flex w-full max-w-[980px] flex-col">
-                <div className="mb-6 flex items-end justify-between gap-6 border-b border-[#161310]/15 pb-5 dark:border-stone-300/15">
-                  <div>
-                    <p className="mb-2 text-[10px] uppercase tracking-[0.25em] opacity-40">
-                      Showcase
-                    </p>
-
-                    <h2 className="text-4xl uppercase leading-none tracking-[-0.05em] xl:text-2xl">
-                      {selected.title}
-                    </h2>
+                            {project.title}
+                          </h2>
+                        </button>
+                      );
+                    })}
                   </div>
 
                   <a
                     href={selected.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-sm uppercase tracking-[0.18em] opacity-55 transition-opacity duration-300 hover:opacity-100"
+                    className="mt-10 inline-block border border-[#161310] px-5 py-3 text-sm uppercase tracking-[0.18em] opacity-80 transition-opacity duration-300 hover:opacity-100 dark:border-stone-300"
                   >
-                    Open Live
+                    View live
                   </a>
                 </div>
+              </div>
+            </motion.div>
 
-                <div className="relative h-[76vh] overflow-hidden border-l border-r border-[#161310]/15 bg-[#ececec] px-6 dark:border-stone-300/15 dark:bg-[#262323]">
+            {/* Right auto looping page */}
+            <motion.div
+              initial={{ opacity: 0, y: 28 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.75, ease: "easeOut", delay: 0.08 }}
+              className="col-span-9"
+            >
+              <div className="ml-auto flex w-full max-w-[1080px] flex-col">
+                <div className="relative h-[76vh] overflow-hidden bg-[#ececec] px-6 dark:bg-[#2e2b2b]">
                   <div
                     ref={containerRef}
                     className="h-screen"
@@ -383,35 +303,75 @@ const ProjectsClient = () => {
                   >
                     <div ref={scrollRef}>
                       {[...Array(2)].map((_, idx) => (
-                        <div key={idx} className="mb-16 space-y-16 py-16">
-                          {[
-                            selected.src,
-                            selected.src2,
-                            selected.src3,
-                            selected.src4,
-                          ].map((img, i) => (
-                            <div
-                              key={i}
-                              className="relative h-[340px] w-full  "
-                            >
-                              <span className="absolute left-4 top-4 z-10 text-[10px] uppercase tracking-[0.22em] opacity-40">
-                                {String(i + 1).padStart(2, "0")}
-                              </span>
+                        <div key={idx} className="mb-24 py-20">
+                          <div className="mb-28 max-w-[640px]">
+                            <h2 className="text-6xl uppercase font-black leading-[0.86] tracking-[-0.07em] xl:text-8xl">
+                              {selected.title}
+                            </h2>
 
-                              <div className="relative h-full w-full">
-                                <div className="flex h-full w-full items-center justify-center">
+                            <p className="mt-7 max-w-[520px] font-semibold text-base leading-relaxed opacity-70 xl:text-xl">
+                              {selected.about}
+                            </p>
+
+                            <div className="mt-8 max-w-[560px]">
+                              <p className="mb-2 text-[10px] uppercase tracking-[0.22em] opacity-35">
+                                Stack
+                              </p>
+
+                              <p className="text-sm leading-relaxed opacity-60 xl:text-lg">
+                                {selected.stack}
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="relative">
+                            {selectedImages.map((image, i) => {
+                              const desktopIndex =
+                                selectedImages
+                                  .slice(0, i + 1)
+                                  .filter((item) => item.type === "desktop")
+                                  .length - 1;
+
+                              const mobileIndex =
+                                selectedImages
+                                  .slice(0, i + 1)
+                                  .filter((item) => item.type === "mobile")
+                                  .length - 1;
+
+                              const layout =
+                                image.type === "desktop"
+                                  ? desktopImageLayouts[
+                                      desktopIndex % desktopImageLayouts.length
+                                    ]
+                                  : mobileImageLayouts[
+                                      mobileIndex % mobileImageLayouts.length
+                                    ];
+
+                              return (
+                                <div
+                                  key={`${image.src}-${i}`}
+                                  className={`relative ${layout}`}
+                                >
                                   <Image
-                                    src={`/projects/${img}`}
-                                    alt={`${selected.title} image ${i + 1}`}
-                                    width={900}
-                                    height={600}
-                                    className="max-h-full w-auto max-w-full border border-[#161310]/10 object-contain dark:border-stone-300/20"
-                                    priority
+                                    src={`/projects/${image.src}`}
+                                    alt={`${selected.title} ${
+                                      image.type === "desktop"
+                                        ? "desktop"
+                                        : "mobile"
+                                    } image ${i + 1}`}
+                                    width={
+                                      image.type === "desktop" ? 1100 : 500
+                                    }
+                                    height={
+                                      image.type === "desktop" ? 720 : 900
+                                    }
+                                    className="h-full w-full object-contain"
+                                    priority={idx === 0 && i < 2}
                                   />
                                 </div>
-                              </div>
-                            </div>
-                          ))}
+                              );
+                            })}
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -420,6 +380,13 @@ const ProjectsClient = () => {
               </div>
             </motion.div>
           </div>
+
+          <button
+            onClick={handlePauseToggle}
+            className="fixed bottom-8 right-8 z-50 flex cursor-pointer items-center gap-3  px-6 py-4 text-base font-semibold uppercase tracking-[0.16em] opacity-90 transition-opacity duration-300 hover:opacity-100 "
+          >
+            {isPaused ? <>Resume</> : <>Pause</>}
+          </button>
         </div>
       </section>
     </SmoothScroll>
