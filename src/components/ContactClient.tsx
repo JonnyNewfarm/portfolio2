@@ -5,6 +5,170 @@ import SmoothScroll from "@/components/SmoothScroll";
 import { motion } from "framer-motion";
 import { toast } from "react-hot-toast";
 
+const ease = [0.22, 1, 0.36, 1] as const;
+
+type TextRevealProps = {
+  children: string;
+  as?: "p" | "h1" | "h2" | "h3" | "span" | "label";
+  className?: string;
+  delay?: number;
+  once?: boolean;
+  mode?: "words" | "lines";
+  htmlFor?: string;
+};
+
+function TextReveal({
+  children,
+  as = "p",
+  className = "",
+  delay = 0,
+  once = true,
+  mode = "words",
+  htmlFor,
+}: TextRevealProps) {
+  const MotionTag = motion[as] as any;
+
+  const items =
+    mode === "lines"
+      ? children.split("\n").filter((line) => line.trim().length > 0)
+      : children.split(" ");
+
+  const containerVariants = {
+    hidden: {},
+    visible: {
+      transition: {
+        delayChildren: delay,
+        staggerChildren: mode === "lines" ? 0.11 : 0.028,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: {
+      y: "115%",
+      opacity: 0,
+      rotate: mode === "lines" ? 2.5 : 1.5,
+      filter: "blur(10px)",
+    },
+    visible: {
+      y: "0%",
+      opacity: 1,
+      rotate: 0,
+      filter: "blur(0px)",
+      transition: {
+        duration: mode === "lines" ? 1 : 0.75,
+        ease,
+      },
+    },
+  };
+
+  return (
+    <MotionTag
+      htmlFor={htmlFor}
+      variants={containerVariants}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once, amount: 0.35 }}
+      className={className}
+    >
+      {items.map((item, index) => (
+        <span
+          key={`${item}-${index}`}
+          className={
+            mode === "lines"
+              ? "block overflow-hidden"
+              : "inline-block overflow-hidden align-top"
+          }
+        >
+          <motion.span
+            variants={itemVariants}
+            className="inline-block will-change-transform"
+          >
+            {item}
+            {mode === "words" && index !== items.length - 1 ? "\u00A0" : null}
+          </motion.span>
+        </span>
+      ))}
+    </MotionTag>
+  );
+}
+
+type FadeInProps = {
+  children: React.ReactNode;
+  className?: string;
+  delay?: number;
+  y?: number;
+  amount?: number;
+};
+
+function FadeIn({
+  children,
+  className = "",
+  delay = 0,
+  y = 28,
+  amount = 0.25,
+}: FadeInProps) {
+  return (
+    <motion.div
+      initial={{
+        opacity: 0,
+        y,
+        filter: "blur(8px)",
+      }}
+      whileInView={{
+        opacity: 1,
+        y: 0,
+        filter: "blur(0px)",
+      }}
+      viewport={{ once: true, amount }}
+      transition={{
+        duration: 0.9,
+        delay,
+        ease,
+      }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+type AnimatedFieldProps = {
+  children: React.ReactNode;
+  delay?: number;
+  className?: string;
+};
+
+function AnimatedField({
+  children,
+  delay = 0,
+  className = "",
+}: AnimatedFieldProps) {
+  return (
+    <motion.div
+      initial={{
+        opacity: 0,
+        y: 26,
+        filter: "blur(8px)",
+      }}
+      whileInView={{
+        opacity: 1,
+        y: 0,
+        filter: "blur(0px)",
+      }}
+      viewport={{ once: true, amount: 0.35 }}
+      transition={{
+        duration: 0.85,
+        delay,
+        ease,
+      }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
 const ContactClient = () => {
   const [form, setForm] = useState({
     name: "",
@@ -97,74 +261,126 @@ const ContactClient = () => {
     <SmoothScroll>
       <section className="min-h-screen w-full overflow-hidden border-b border-stone-300 bg-[#ececec] px-4 pb-12 pt-28 text-[#161310] dark:border-stone-600 dark:bg-[#2e2b2b] dark:text-stone-300 sm:px-8 md:px-10 lg:px-16 lg:pt-36">
         <div className="mx-auto w-full max-w-[1800px]">
-          <motion.div
-            initial={{ opacity: 0, y: 28, filter: "blur(6px)" }}
-            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-            transition={{
-              duration: 0.9,
-              ease: [0.22, 1, 0.36, 1],
-            }}
-            className="mb-16 grid grid-cols-1 gap-8 md:grid-cols-[1.2fr_0.8fr] md:items-end lg:mb-24"
-          >
+          {/* HERO */}
+          <div className="mb-16 grid grid-cols-1 gap-8 md:grid-cols-[1.2fr_0.8fr] md:items-end lg:mb-24">
             <div>
-              <p className="mb-6 text-xs font-black uppercase tracking-[0.28em] opacity-45">
+              <TextReveal
+                as="p"
+                mode="words"
+                delay={0.05}
+                className="mb-6 text-xs font-black uppercase tracking-[0.28em] opacity-45"
+              >
                 Contact / Availability
-              </p>
+              </TextReveal>
 
-              <h1 className="max-w-[1250px] text-[11vw] font-black uppercase leading-[0.78] tracking-[-0.06em] sm:text-[14vw] md:text-[10vw] lg:text-[8vw]">
-                Let&apos;s build
-                <br />
-                something
-                <br />
-                useful.
-              </h1>
+              <TextReveal
+                as="h1"
+                mode="lines"
+                delay={0.12}
+                className="max-w-[1250px] text-[11vw] font-black uppercase leading-[0.78] tracking-[-0.06em] sm:text-[14vw] md:text-[10vw] lg:text-[8vw]"
+              >
+                {`Let's build
+something
+useful.`}
+              </TextReveal>
             </div>
 
-            <p className="max-w-[540px] text-base font-bold leading-[1.35] opacity-60 md:justify-self-end md:text-right md:text-lg">
+            <TextReveal
+              as="p"
+              mode="words"
+              delay={0.35}
+              className="max-w-[540px] text-base font-bold leading-[1.35] opacity-60 md:justify-self-end md:text-right md:text-lg"
+            >
               I design and build clean digital experiences, from visual identity
               and interface design to frontend development.
-            </p>
-          </motion.div>
+            </TextReveal>
+          </div>
 
           <div className="grid grid-cols-1 gap-14 lg:grid-cols-[0.72fr_1.28fr] lg:gap-16">
-            <motion.aside
-              initial={{ opacity: 0, y: 30, filter: "blur(6px)" }}
-              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              viewport={{ once: true, amount: 0.35 }}
-              transition={{
-                duration: 0.85,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-              className="order-2 lg:order-1"
-            >
-              <div className="grid grid-cols-1 gap-10 text-sm font-black uppercase tracking-[0.18em] opacity-75 sm:grid-cols-2 lg:sticky lg:top-28 lg:grid-cols-1">
-                <div>
+            {/* DETAILS */}
+            <aside className="order-2 lg:order-1">
+              <motion.div
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.25 }}
+                variants={{
+                  hidden: {},
+                  visible: {
+                    transition: {
+                      staggerChildren: 0.08,
+                    },
+                  },
+                }}
+                className="grid grid-cols-1 gap-10 text-sm font-black uppercase tracking-[0.18em] opacity-75 sm:grid-cols-2 lg:sticky lg:top-28 lg:grid-cols-1"
+              >
+                <motion.div
+                  variants={{
+                    hidden: {
+                      opacity: 0,
+                      y: 30,
+                      filter: "blur(8px)",
+                    },
+                    visible: {
+                      opacity: 1,
+                      y: 0,
+                      filter: "blur(0px)",
+                      transition: {
+                        duration: 0.85,
+                        ease,
+                      },
+                    },
+                  }}
+                >
                   <p className="mb-3 text-xs tracking-[0.24em] opacity-40">
                     Details
                   </p>
 
                   <div className="flex flex-col gap-2">
-                    <p>Jonas Nygaard</p>
+                    <a
+                      href="https://www.jonasnygaard.com/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="transition duration-500 hover:tracking-[0.22em] hover:opacity-60"
+                    >
+                      Jonas Nygaard
+                    </a>
 
                     <a
                       href="mailto:jonasnygaard96@gmail.com"
-                      className="normal-case tracking-normal transition hover:opacity-60"
+                      className="normal-case tracking-normal transition duration-500 hover:opacity-60"
                     >
                       jonasnygaard96@gmail.com
                     </a>
 
                     <a
                       href="tel:+4748263011"
-                      className="transition hover:opacity-60"
+                      className="transition duration-500 hover:tracking-[0.22em] hover:opacity-60"
                     >
                       +47 48 26 30 11
                     </a>
 
                     <p>Oslo, Norway</p>
                   </div>
-                </div>
+                </motion.div>
 
-                <div>
+                <motion.div
+                  variants={{
+                    hidden: {
+                      opacity: 0,
+                      y: 30,
+                      filter: "blur(8px)",
+                    },
+                    visible: {
+                      opacity: 1,
+                      y: 0,
+                      filter: "blur(0px)",
+                      transition: {
+                        duration: 0.85,
+                        ease,
+                      },
+                    },
+                  }}
+                >
                   <p className="mb-3 text-xs tracking-[0.24em] opacity-40">
                     Social
                   </p>
@@ -174,7 +390,7 @@ const ContactClient = () => {
                       href="https://www.linkedin.com/in/jonas-nygaard-0aa767366/"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="transition hover:opacity-60"
+                      className="transition duration-500 hover:tracking-[0.22em] hover:opacity-60"
                     >
                       LinkedIn
                     </a>
@@ -183,14 +399,31 @@ const ContactClient = () => {
                       href="https://www.jonasnygaard.com/"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="transition hover:opacity-60"
+                      className="transition duration-500 hover:tracking-[0.22em] hover:opacity-60"
                     >
                       Portfolio
                     </a>
                   </div>
-                </div>
+                </motion.div>
 
-                <div>
+                <motion.div
+                  variants={{
+                    hidden: {
+                      opacity: 0,
+                      y: 30,
+                      filter: "blur(8px)",
+                    },
+                    visible: {
+                      opacity: 1,
+                      y: 0,
+                      filter: "blur(0px)",
+                      transition: {
+                        duration: 0.85,
+                        ease,
+                      },
+                    },
+                  }}
+                >
                   <p className="mb-3 text-xs tracking-[0.24em] opacity-40">
                     Work
                   </p>
@@ -199,48 +432,61 @@ const ContactClient = () => {
                     Available for freelance work, web design, frontend builds
                     and selected collaborations.
                   </p>
-                </div>
-              </div>
-            </motion.aside>
+                </motion.div>
+              </motion.div>
+            </aside>
 
-            <motion.form
+            {/* FORM */}
+            <form
               onSubmit={handleSubmit}
               noValidate
-              initial={{ opacity: 0, y: 34, filter: "blur(7px)" }}
-              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              viewport={{ once: true, amount: 0.25 }}
-              transition={{
-                duration: 0.95,
-                delay: 0.08,
-                ease: [0.22, 1, 0.36, 1],
-              }}
               className="order-1 lg:order-2"
             >
               <div className="mb-10 flex items-end justify-between gap-8 border-b border-stone-400/30 pb-5 dark:border-stone-200/20">
                 <div>
-                  <p className="mb-3 text-xs font-black uppercase tracking-[0.24em] opacity-40">
+                  <TextReveal
+                    as="p"
+                    mode="words"
+                    className="mb-3 text-xs font-black uppercase tracking-[0.24em] opacity-40"
+                  >
                     Send a message
-                  </p>
+                  </TextReveal>
 
-                  <h2 className="text-[12vw] font-black uppercase leading-[0.84] tracking-[-0.08em] sm:text-[8vw] md:text-[5vw] lg:text-[4vw]">
+                  <TextReveal
+                    as="h2"
+                    mode="lines"
+                    delay={0.05}
+                    className="text-[12vw] font-black uppercase leading-[0.84] tracking-[-0.08em] sm:text-[8vw] md:text-[5vw] lg:text-[4vw]"
+                  >
                     Start here
-                  </h2>
+                  </TextReveal>
                 </div>
 
-                <p className="hidden max-w-[260px] text-right text-sm font-bold leading-[1.35] opacity-45 md:block">
+                <TextReveal
+                  as="p"
+                  mode="words"
+                  delay={0.16}
+                  className="hidden max-w-[260px] text-right text-sm font-bold leading-[1.35] opacity-45 md:block"
+                >
                   Tell me what you need, what exists already and what the goal
                   is.
-                </p>
+                </TextReveal>
               </div>
 
               <div className="grid grid-cols-1 gap-x-10 gap-y-9 md:grid-cols-2">
-                <div>
-                  <label className="mb-3 block text-xs font-black uppercase tracking-[0.24em] opacity-80">
+                <AnimatedField delay={0.02}>
+                  <TextReveal
+                    as="label"
+                    htmlFor="name"
+                    mode="words"
+                    className="mb-3 block text-xs font-black uppercase tracking-[0.24em] opacity-80"
+                  >
                     Name
-                  </label>
+                  </TextReveal>
 
                   <input
-                    className="w-full border-b border-stone-700/50 bg-transparent py-5 text-lg font-bold outline-none transition placeholder:opacity-30 focus:border-stone-900 dark:border-stone-300/40 dark:focus:border-stone-100 md:text-xl"
+                    id="name"
+                    className="w-full border-b border-stone-700/50 bg-transparent py-5 text-lg font-bold outline-none transition duration-500 placeholder:opacity-30 focus:border-stone-900 dark:border-stone-300/40 dark:focus:border-stone-100 md:text-xl"
                     placeholder="Your name"
                     name="name"
                     type="text"
@@ -254,15 +500,21 @@ const ContactClient = () => {
                       {validationErrors.name}
                     </p>
                   )}
-                </div>
+                </AnimatedField>
 
-                <div>
-                  <label className="mb-3 block text-xs font-black uppercase tracking-[0.24em] opacity-80">
+                <AnimatedField delay={0.08}>
+                  <TextReveal
+                    as="label"
+                    htmlFor="email"
+                    mode="words"
+                    className="mb-3 block text-xs font-black uppercase tracking-[0.24em] opacity-80"
+                  >
                     Email
-                  </label>
+                  </TextReveal>
 
                   <input
-                    className="w-full border-b border-stone-700/50 bg-transparent py-5 text-lg font-bold outline-none transition placeholder:opacity-30 focus:border-stone-900 dark:border-stone-300/40 dark:focus:border-stone-100 md:text-xl"
+                    id="email"
+                    className="w-full border-b border-stone-700/50 bg-transparent py-5 text-lg font-bold outline-none transition duration-500 placeholder:opacity-30 focus:border-stone-900 dark:border-stone-300/40 dark:focus:border-stone-100 md:text-xl"
                     placeholder="Your email"
                     name="email"
                     type="email"
@@ -276,30 +528,42 @@ const ContactClient = () => {
                       {validationErrors.email}
                     </p>
                   )}
-                </div>
+                </AnimatedField>
 
-                <div className="md:col-span-2">
-                  <label className="mb-3 block text-xs font-black uppercase tracking-[0.24em] opacity-80">
+                <AnimatedField delay={0.14} className="md:col-span-2">
+                  <TextReveal
+                    as="label"
+                    htmlFor="organization"
+                    mode="words"
+                    className="mb-3 block text-xs font-black uppercase tracking-[0.24em] opacity-80"
+                  >
                     Organization
-                  </label>
+                  </TextReveal>
 
                   <input
-                    className="w-full border-b border-stone-700/50 bg-transparent py-5 text-lg font-bold outline-none transition placeholder:opacity-30 focus:border-stone-900 dark:border-stone-300/40 dark:focus:border-stone-100 md:text-xl"
+                    id="organization"
+                    className="w-full border-b border-stone-700/50 bg-transparent py-5 text-lg font-bold outline-none transition duration-500 placeholder:opacity-30 focus:border-stone-900 dark:border-stone-300/40 dark:focus:border-stone-100 md:text-xl"
                     placeholder="Studio, company or project — optional"
                     name="organization"
                     type="text"
                     value={form.organization}
                     onChange={handleChange}
                   />
-                </div>
+                </AnimatedField>
 
-                <div className="md:col-span-2">
-                  <label className="mb-3 block text-xs font-black uppercase tracking-[0.24em] opacity-80">
+                <AnimatedField delay={0.2} className="md:col-span-2">
+                  <TextReveal
+                    as="label"
+                    htmlFor="message"
+                    mode="words"
+                    className="mb-3 block text-xs font-black uppercase tracking-[0.24em] opacity-80"
+                  >
                     Message
-                  </label>
+                  </TextReveal>
 
                   <textarea
-                    className="min-h-[220px] w-full resize-none border-b border-stone-700/50 bg-transparent py-5 text-lg font-bold leading-[1.35] outline-none transition placeholder:opacity-30 focus:border-stone-900 dark:border-stone-300/40 dark:focus:border-stone-100 md:text-xl"
+                    id="message"
+                    className="min-h-[220px] w-full resize-none border-b border-stone-700/50 bg-transparent py-5 text-lg font-bold leading-[1.35] outline-none transition duration-500 placeholder:opacity-30 focus:border-stone-900 dark:border-stone-300/40 dark:focus:border-stone-100 md:text-xl"
                     placeholder="Tell me about the project..."
                     name="message"
                     value={form.message}
@@ -312,23 +576,33 @@ const ContactClient = () => {
                       {validationErrors.message}
                     </p>
                   )}
-                </div>
+                </AnimatedField>
               </div>
 
-              <div className="mt-12 flex flex-col gap-5 sm:flex-row sm:items-center">
+              <FadeIn
+                delay={0.18}
+                y={24}
+                className="mt-12 flex flex-col gap-5 sm:flex-row sm:items-center"
+              >
                 <button
                   type="submit"
                   disabled={isSending}
-                  className="w-fit border cursor-pointer border-[#161310] px-8 py-4 text-sm font-black uppercase tracking-[0.2em] text-[#161310] transition hover:opacity-60 disabled:cursor-not-allowed disabled:opacity-40 dark:border-stone-300 dark:text-stone-300"
+                  className="group relative w-fit cursor-pointer overflow-hidden border border-[#161310] px-8 py-4 text-sm font-black uppercase tracking-[0.2em] text-[#161310] transition disabled:cursor-not-allowed disabled:opacity-40 dark:border-stone-300 dark:text-stone-300"
                 >
-                  {isSending ? "Sending..." : "Send message"}
+                  <span className="inline-block transition duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-y-[160%]">
+                    {isSending ? "Sending..." : "Send message"}
+                  </span>
+
+                  <span className="absolute left-8 top-4 inline-block translate-y-[160%] transition duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-y-0">
+                    {isSending ? "Sending..." : "Send message"}
+                  </span>
                 </button>
 
                 <p className="max-w-[360px] text-sm font-bold leading-[1.35] opacity-45">
                   Open for freelance and selected collaborations.
                 </p>
-              </div>
-            </motion.form>
+              </FadeIn>
+            </form>
           </div>
         </div>
       </section>
