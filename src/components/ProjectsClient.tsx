@@ -10,6 +10,17 @@ import { CiPause1, CiPlay1 } from "react-icons/ci";
 const ProjectsClient = () => {
   const projects = [
     {
+      title: "Kerimov Designs",
+      src: "rustam1.webp",
+      src2: "rustam2.webp",
+      src3: "kerimov-3.jpg",
+      src4: "kerimov-4.jpg",
+      link: "https://kerimovdesigns.com",
+      about: "Portfolio website for graphic designer Rustam Kerimov.",
+      stack:
+        "React, Next.js, Prisma,GSAP, Motion, TailwindCSS, MongoDB, Uploadthing, NextAuth.",
+    },
+    {
       title: "Calero Studio",
       src: "calero-3.jpg",
       src2: "calero-2.jpg",
@@ -23,17 +34,6 @@ const ProjectsClient = () => {
       stack: "React, Prisma, Three.js, GSAP, TailwindCSS, Neon, Stripe",
     },
 
-    {
-      title: "Kerimov Designs",
-      src: "rustam1.webp",
-      src2: "rustam2.webp",
-      src3: "kerimov-3.jpg",
-      src4: "kerimov-4.jpg",
-      link: "https://kerimovdesigns.com",
-      about: "Portfolio website for graphic designer Rustam Kerimov.",
-      stack:
-        "React, Next.js, Prisma,GSAP, Motion, TailwindCSS, MongoDB, Uploadthing, NextAuth.",
-    },
     {
       title: "Petsaco",
       src: "petsac-1.jpg",
