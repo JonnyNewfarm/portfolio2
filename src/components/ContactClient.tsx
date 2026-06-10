@@ -20,6 +20,7 @@ const ContactClient = () => {
   }>({});
 
   const [submitted, setSubmitted] = useState(false);
+  const [isSending, setIsSending] = useState(false);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -56,12 +57,17 @@ const ContactClient = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     setSubmitted(true);
+    setIsSending(true);
 
     const errors = validateForm();
     setValidationErrors(errors);
 
-    if (Object.keys(errors).length > 0) return;
+    if (Object.keys(errors).length > 0) {
+      setIsSending(false);
+      return;
+    }
 
     try {
       const res = await fetch("/api/contact", {
@@ -82,106 +88,159 @@ const ContactClient = () => {
       }
     } catch {
       toast.error("Network error. Please try again later.");
+    } finally {
+      setIsSending(false);
     }
   };
 
   return (
     <SmoothScroll>
-      <section className="min-h-screen w-full border-b border-stone-300 bg-[#ececec] text-[#161310] dark:border-stone-600 dark:bg-[#2e2b2b] dark:text-stone-300">
-        <div className="mx-auto grid min-h-screen w-full max-w-[1800px] grid-cols-1 px-6 pb-16 pt-28 sm:px-10 lg:grid-cols-12 lg:gap-10 lg:px-16 xl:px-20">
-          {/* Left side */}
+      <section className="min-h-screen w-full overflow-hidden border-b border-stone-300 bg-[#ececec] px-4 pb-12 pt-28 text-[#161310] dark:border-stone-600 dark:bg-[#2e2b2b] dark:text-stone-300 sm:px-8 md:px-10 lg:px-16 lg:pt-36">
+        <div className="mx-auto w-full max-w-[1800px]">
           <motion.div
-            initial={{ opacity: 0, y: 28 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: "easeOut" }}
-            className="flex flex-col justify-between border-b border-stone-400/20 pb-12 dark:border-stone-200/20 lg:col-span-5 lg:min-h-[calc(100vh-7rem)] lg:border-b-0 lg:border-r lg:pr-10 xl:col-span-4"
+            initial={{ opacity: 0, y: 28, filter: "blur(6px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            transition={{
+              duration: 0.9,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+            className="mb-16 grid grid-cols-1 gap-8 md:grid-cols-[1.2fr_0.8fr] md:items-end lg:mb-24"
           >
             <div>
-              <p className="mb-6 text-[10px] uppercase tracking-[0.3em] opacity-45">
-                Contact / Start a project
+              <p className="mb-6 text-xs font-black uppercase tracking-[0.28em] opacity-45">
+                Contact / Availability
               </p>
 
-              <div className="max-w-[560px]">
-                <h1 className="text-5xl uppercase leading-[0.88] tracking-[-0.06em] sm:text-6xl xl:text-7xl">
-                  Let&apos;s turn
-                </h1>
-                <h1 className="text-5xl uppercase leading-[0.88] tracking-[-0.06em]  sm:text-6xl xl:text-7xl">
-                  your vision
-                </h1>
-                <h1 className="text-5xl uppercase leading-[0.88] tracking-[-0.06em]  sm:text-6xl  xl:text-7xl">
-                  into reality
-                </h1>
-              </div>
-
-              <p className="mt-8 max-w-[470px] text-sm leading-relaxed opacity-70 sm:text-base">
-                Got an idea, brand or product in mind? Reach out and let&apos;s
-                build something thoughtful, sharp and visually strong together.
-              </p>
+              <h1 className="max-w-[1250px] text-[11vw] font-black uppercase leading-[0.78] tracking-[-0.06em] sm:text-[14vw] md:text-[10vw] lg:text-[8vw]">
+                Let&apos;s build
+                <br />
+                something
+                <br />
+                useful.
+              </h1>
             </div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 18 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, ease: "easeOut", delay: 0.1 }}
-              className="mt-12 border-t border-stone-400/20 pt-6 dark:border-stone-200/20 lg:mt-16"
-            >
-              <p className="mb-4 text-[10px] uppercase tracking-[0.24em] opacity-45">
-                Contact Details
-              </p>
-
-              <div className="flex flex-col gap-2 text-sm sm:text-base">
-                <p>Jonas Nygaard</p>
-                <a
-                  href="mailto:jonasnygaard96@gmail.com"
-                  className="transition-opacity duration-300 hover:opacity-60"
-                >
-                  jonasnygaard96@gmail.com
-                </a>
-                <a
-                  href="tel:+4748263011"
-                  className="transition-opacity duration-300 hover:opacity-60"
-                >
-                  +47 48 26 30 11
-                </a>
-                <p>Oslo, Norway</p>
-                <a
-                  className="mt-2 text-sm uppercase tracking-[0.18em] opacity-70 transition-opacity duration-300 hover:opacity-100"
-                  href="https://www.linkedin.com/in/jonas-nygaard-0aa767366/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  LinkedIn
-                </a>
-              </div>
-            </motion.div>
+            <p className="max-w-[540px] text-base font-bold leading-[1.35] opacity-60 md:justify-self-end md:text-right md:text-lg">
+              I design and build clean digital experiences, from visual identity
+              and interface design to frontend development.
+            </p>
           </motion.div>
 
-          {/* Right side */}
-          <div className="pt-12 lg:col-span-7 lg:flex lg:min-h-[calc(100vh-7rem)] lg:items-center lg:pt-0 xl:col-span-8">
+          <div className="grid grid-cols-1 gap-14 lg:grid-cols-[0.72fr_1.28fr] lg:gap-16">
+            <motion.aside
+              initial={{ opacity: 0, y: 30, filter: "blur(6px)" }}
+              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              viewport={{ once: true, amount: 0.35 }}
+              transition={{
+                duration: 0.85,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+              className="order-2 lg:order-1"
+            >
+              <div className="grid grid-cols-1 gap-10 text-sm font-black uppercase tracking-[0.18em] opacity-75 sm:grid-cols-2 lg:sticky lg:top-28 lg:grid-cols-1">
+                <div>
+                  <p className="mb-3 text-xs tracking-[0.24em] opacity-40">
+                    Details
+                  </p>
+
+                  <div className="flex flex-col gap-2">
+                    <p>Jonas Nygaard</p>
+
+                    <a
+                      href="mailto:jonasnygaard96@gmail.com"
+                      className="normal-case tracking-normal transition hover:opacity-60"
+                    >
+                      jonasnygaard96@gmail.com
+                    </a>
+
+                    <a
+                      href="tel:+4748263011"
+                      className="transition hover:opacity-60"
+                    >
+                      +47 48 26 30 11
+                    </a>
+
+                    <p>Oslo, Norway</p>
+                  </div>
+                </div>
+
+                <div>
+                  <p className="mb-3 text-xs tracking-[0.24em] opacity-40">
+                    Social
+                  </p>
+
+                  <div className="flex flex-col gap-2">
+                    <a
+                      href="https://www.linkedin.com/in/jonas-nygaard-0aa767366/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="transition hover:opacity-60"
+                    >
+                      LinkedIn
+                    </a>
+
+                    <a
+                      href="https://www.jonasnygaard.com/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="transition hover:opacity-60"
+                    >
+                      Portfolio
+                    </a>
+                  </div>
+                </div>
+
+                <div>
+                  <p className="mb-3 text-xs tracking-[0.24em] opacity-40">
+                    Work
+                  </p>
+
+                  <p className="max-w-[340px] text-base font-bold normal-case leading-[1.35] tracking-normal opacity-60">
+                    Available for freelance work, web design, frontend builds
+                    and selected collaborations.
+                  </p>
+                </div>
+              </div>
+            </motion.aside>
+
             <motion.form
-              initial={{ opacity: 0, y: 28 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.75, ease: "easeOut", delay: 0.08 }}
               onSubmit={handleSubmit}
               noValidate
-              className="w-full max-w-[920px] lg:ml-auto"
+              initial={{ opacity: 0, y: 34, filter: "blur(7px)" }}
+              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              viewport={{ once: true, amount: 0.25 }}
+              transition={{
+                duration: 0.95,
+                delay: 0.08,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+              className="order-1 lg:order-2"
             >
-              <div className="mb-10 border-b border-stone-400/20 pb-5 dark:border-stone-200/20">
-                <p className="mb-2 text-[10px] uppercase tracking-[0.25em] opacity-40">
-                  Send a message
+              <div className="mb-10 flex items-end justify-between gap-8 border-b border-stone-400/30 pb-5 dark:border-stone-200/20">
+                <div>
+                  <p className="mb-3 text-xs font-black uppercase tracking-[0.24em] opacity-40">
+                    Send a message
+                  </p>
+
+                  <h2 className="text-[12vw] font-black uppercase leading-[0.84] tracking-[-0.08em] sm:text-[8vw] md:text-[5vw] lg:text-[4vw]">
+                    Start here
+                  </h2>
+                </div>
+
+                <p className="hidden max-w-[260px] text-right text-sm font-bold leading-[1.35] opacity-45 md:block">
+                  Tell me what you need, what exists already and what the goal
+                  is.
                 </p>
-                <h2 className="text-3xl uppercase leading-none tracking-[-0.04em] sm:text-5xl">
-                  Let&apos;s talk
-                </h2>
               </div>
 
-              <div className="grid grid-cols-1 gap-x-10 gap-y-8 md:grid-cols-2">
+              <div className="grid grid-cols-1 gap-x-10 gap-y-9 md:grid-cols-2">
                 <div>
-                  <label className="mb-3 block text-[10px] uppercase tracking-[0.24em] ">
+                  <label className="mb-3 block text-xs font-black uppercase tracking-[0.24em] opacity-80">
                     Name
                   </label>
+
                   <input
-                    className="w-full border-b border-stone-700/70 bg-transparent px-0 py-4 text-base outline-none placeholder:opacity-30 dark:border-stone-300/70"
+                    className="w-full border-b border-stone-700/50 bg-transparent py-5 text-lg font-bold outline-none transition placeholder:opacity-30 focus:border-stone-900 dark:border-stone-300/40 dark:focus:border-stone-100 md:text-xl"
                     placeholder="Your name"
                     name="name"
                     type="text"
@@ -189,19 +248,21 @@ const ContactClient = () => {
                     onChange={handleChange}
                     required
                   />
+
                   {submitted && validationErrors.name && (
-                    <p className="mt-2 text-sm text-red-600">
+                    <p className="mt-3 text-sm font-bold text-red-600">
                       {validationErrors.name}
                     </p>
                   )}
                 </div>
 
                 <div>
-                  <label className="mb-3 block text-[10px] uppercase tracking-[0.24em] ">
+                  <label className="mb-3 block text-xs font-black uppercase tracking-[0.24em] opacity-80">
                     Email
                   </label>
+
                   <input
-                    className="w-full border-b border-stone-700/70 bg-transparent px-0 py-4 text-base outline-none placeholder:opacity-30 dark:border-stone-300/70"
+                    className="w-full border-b border-stone-700/50 bg-transparent py-5 text-lg font-bold outline-none transition placeholder:opacity-30 focus:border-stone-900 dark:border-stone-300/40 dark:focus:border-stone-100 md:text-xl"
                     placeholder="Your email"
                     name="email"
                     type="email"
@@ -209,20 +270,22 @@ const ContactClient = () => {
                     onChange={handleChange}
                     required
                   />
+
                   {submitted && validationErrors.email && (
-                    <p className="mt-2 text-sm text-red-600">
+                    <p className="mt-3 text-sm font-bold text-red-600">
                       {validationErrors.email}
                     </p>
                   )}
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="mb-3 block text-[10px] uppercase tracking-[0.24em]">
+                  <label className="mb-3 block text-xs font-black uppercase tracking-[0.24em] opacity-80">
                     Organization
                   </label>
+
                   <input
-                    className="w-full border-b border-stone-700/70 bg-transparent px-0 py-4 text-base outline-none placeholder:opacity-30 dark:border-stone-300/70"
-                    placeholder="Studio, company or brand (optional)"
+                    className="w-full border-b border-stone-700/50 bg-transparent py-5 text-lg font-bold outline-none transition placeholder:opacity-30 focus:border-stone-900 dark:border-stone-300/40 dark:focus:border-stone-100 md:text-xl"
+                    placeholder="Studio, company or project — optional"
                     name="organization"
                     type="text"
                     value={form.organization}
@@ -231,34 +294,37 @@ const ContactClient = () => {
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="mb-3 block text-[10px] uppercase tracking-[0.24em] ">
+                  <label className="mb-3 block text-xs font-black uppercase tracking-[0.24em] opacity-80">
                     Message
                   </label>
+
                   <textarea
-                    className="min-h-[180px] w-full resize-none border-b border-stone-700/70 bg-transparent px-0 py-4 text-base outline-none placeholder:opacity-30 dark:border-stone-300/70"
-                    placeholder="Tell me about your idea, project goals or what you want to create..."
+                    className="min-h-[220px] w-full resize-none border-b border-stone-700/50 bg-transparent py-5 text-lg font-bold leading-[1.35] outline-none transition placeholder:opacity-30 focus:border-stone-900 dark:border-stone-300/40 dark:focus:border-stone-100 md:text-xl"
+                    placeholder="Tell me about the project..."
                     name="message"
                     value={form.message}
                     onChange={handleChange}
                     required
                   />
+
                   {submitted && validationErrors.message && (
-                    <p className="mt-2 text-sm text-red-600">
+                    <p className="mt-3 text-sm font-bold text-red-600">
                       {validationErrors.message}
                     </p>
                   )}
                 </div>
               </div>
 
-              <div className="mt-10 flex items-center gap-6">
+              <div className="mt-12 flex flex-col gap-5 sm:flex-row sm:items-center">
                 <button
                   type="submit"
-                  className="cursor-pointer border border-stone-700 px-7 py-3 text-xs font-medium uppercase tracking-[0.18em] transition-opacity duration-300 hover:opacity-65 dark:border-stone-300"
+                  disabled={isSending}
+                  className="w-fit border cursor-pointer border-[#161310] px-8 py-4 text-sm font-black uppercase tracking-[0.2em] text-[#161310] transition hover:opacity-60 disabled:cursor-not-allowed disabled:opacity-40 dark:border-stone-300 dark:text-stone-300"
                 >
-                  Send Message
+                  {isSending ? "Sending..." : "Send message"}
                 </button>
 
-                <p className="text-sm opacity-45">
+                <p className="max-w-[360px] text-sm font-bold leading-[1.35] opacity-45">
                   Open for freelance and selected collaborations.
                 </p>
               </div>

@@ -132,8 +132,8 @@ const ProjectsClient = () => {
               Selected Work
             </p>
 
-            <h1 className="text-4xl uppercase leading-[0.92] tracking-[-0.05em]">
-              My Projects
+            <h1 className="text-4xl uppercase font-black leading-[0.92] tracking-[-0.05em]">
+              My Work
             </h1>
 
             <p className="mt-4 text-sm uppercase tracking-[0.18em] opacity-55">
@@ -195,7 +195,7 @@ const ProjectsClient = () => {
                       href={p.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-block w-fit border border-[#161310] px-4 py-2 text-xs uppercase tracking-[0.18em] dark:border-stone-300"
+                      className="inline-block w-fit border border-[#161310] px-4 py-2 text-sm uppercase tracking-[0.18em] dark:border-stone-300"
                     >
                       View Website
                     </a>
@@ -221,8 +221,8 @@ const ProjectsClient = () => {
                   Selected Work
                 </p>
 
-                <h1 className="max-w-[420px] text-6xl uppercase leading-[0.9] tracking-[-0.06em] xl:text-7xl">
-                  My Projects
+                <h1 className="max-w-[420px] font-black text-6xl uppercase leading-[0.9] tracking-[-0.06em] xl:text-7xl">
+                  My Work
                 </h1>
 
                 <div className="mt-5 flex items-center justify-between gap-4 border-b border-[#161310]/15 pb-6 dark:border-stone-300/15">
@@ -334,7 +334,7 @@ const ProjectsClient = () => {
                       href={selected.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-block border border-[#161310] px-5 py-2 text-xs uppercase tracking-[0.18em] dark:border-stone-300"
+                      className="inline-block border-2 font-semibold border-[#161310] px-5 py-2 text-lg uppercase tracking-[0.18em] dark:border-stone-300"
                     >
                       View Website
                     </a>
