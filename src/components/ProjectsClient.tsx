@@ -149,7 +149,7 @@ const ProjectsClient = () => {
 
   return (
     <SmoothScroll>
-      <section className="relative min-h-screen w-full border-b border-stone-300 bg-[#ececec] text-[#161310] dark:border-stone-600 dark:bg-[#2e2b2b] dark:text-stone-300">
+      <section className="relative min-h-screen w-full  bg-[#ececec] text-[#161310]  dark:bg-[#2e2b2b] dark:text-stone-300">
         {/* Mobile */}
         <div className="px-6 pb-16 pt-28 md:hidden">
           <motion.div
@@ -276,9 +276,15 @@ const ProjectsClient = () => {
                     href={selected.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-10 inline-block border border-[#161310] px-5 py-3 text-sm uppercase tracking-[0.18em] opacity-80 transition-opacity duration-300 hover:opacity-100 dark:border-stone-300"
+                    className="group relative mt-10 inline-block w-fit cursor-pointer overflow-hidden border border-[#161310] px-8 py-4 text-sm  uppercase tracking-[0.2em] text-[#161310] transition dark:border-stone-300 dark:text-stone-300"
                   >
-                    View live
+                    <span className="inline-block transition duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-y-[160%]">
+                      View live
+                    </span>
+
+                    <span className="absolute left-8 top-4 inline-block translate-y-[160%] transition duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-y-0">
+                      View live
+                    </span>
                   </a>
                 </div>
               </div>

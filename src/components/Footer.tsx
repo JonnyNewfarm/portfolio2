@@ -29,7 +29,7 @@ const Footer = () => {
 
   return (
     <footer className="relative overflow-hidden bg-[#ececec] px-4 py-10 text-[#161310] dark:bg-[#2e2b2b] dark:text-stone-300 md:px-10 lg:px-16">
-      <div className="mx-auto flex min-h-[520px] w-full max-w-[1800px] flex-col justify-between border-t border-stone-400/30 pt-8 dark:border-stone-200/20">
+      <div className="mx-auto flex min-h-[520px] w-full max-w-[1800px] flex-col justify-between  pt-8 ">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-[1.2fr_0.8fr] md:items-start">
           <div>
             <p className="mb-6 text-xs font-black uppercase tracking-[0.24em] opacity-45 md:text-sm">

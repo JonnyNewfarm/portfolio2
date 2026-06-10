@@ -529,13 +529,9 @@ something useful.`}
                   <FadeIn delay={0.2} y={20} className="md:justify-self-end">
                     <Link
                       href="/contact"
-                      className="group relative block w-fit overflow-hidden border-b border-[#161310] px-7 py-4 text-xs font-black uppercase tracking-[0.22em] transition dark:border-stone-300"
+                      className="group relative block w-fit overflow-hidden  px-7 py-4 text-md font-black uppercase tracking-[0.22em] transition dark:border-stone-300"
                     >
                       <span className="inline-block transition duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-y-full">
-                        Contact
-                      </span>
-
-                      <span className="absolute left-7 top-4 inline-block translate-y-full transition duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-y-0">
                         Contact
                       </span>
                     </Link>
