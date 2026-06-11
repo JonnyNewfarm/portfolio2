@@ -54,7 +54,7 @@ const Navbar = () => {
       <div className="flex items-center justify-between">
         <Link
           href="/"
-          className="flex items-center gap-x-2 text-xs uppercase tracking-[0.18em] lg:hidden"
+          className="flex items-center font-black gap-x-2 text-xs uppercase tracking-[0.09em] lg:hidden"
         >
           <FaRegCopyright size={13} />
           <span>Newfarm Studio</span>

@@ -5,7 +5,6 @@ import Image from "next/image";
 import { gsap } from "gsap";
 import SmoothScroll from "@/components/SmoothScroll";
 import { motion } from "framer-motion";
-import { CiPause1, CiPlay1 } from "react-icons/ci";
 import WaveLinkText from "./WaveLinkText";
 
 const ProjectsClient = () => {
@@ -27,8 +26,6 @@ const ProjectsClient = () => {
       src2: "calero-2.jpg",
       src3: "caler-2.jpg",
       src4: "caler-3.jpg",
-      src5: "caler-4.jpg",
-      src6: "caler-5.jpg",
       link: "https://www.calero.studio/",
       about:
         "E-commerce product page for Calero Studio showcasing a modern designer lamp with a strong focus on visuals, smooth interactions and 3D product magazine.",
@@ -61,11 +58,14 @@ const ProjectsClient = () => {
   ];
 
   const [selected, setSelected] = useState(projects[0]);
+  const [displayedProject, setDisplayedProject] = useState(projects[0]);
+  const [isChanging, setIsChanging] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const animRef = useRef<gsap.core.Tween | null>(null);
+  const changeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (!scrollRef.current || !containerRef.current) return;
@@ -78,7 +78,7 @@ const ProjectsClient = () => {
 
     animRef.current = gsap.to(scrollRef.current, {
       y: -scrollHeight,
-      duration: 15,
+      duration: 25,
       ease: "linear",
       repeat: -1,
       modifiers: {
@@ -90,26 +90,50 @@ const ProjectsClient = () => {
       },
     });
 
+    if (isPaused) {
+      animRef.current.pause();
+    }
+
     return () => {
       animRef.current?.kill();
       animRef.current = null;
     };
-  }, [selected]);
+  }, [displayedProject, isPaused]);
+
+  useEffect(() => {
+    return () => {
+      if (changeTimeoutRef.current) {
+        clearTimeout(changeTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const handlePauseToggle = () => {
     if (!animRef.current) return;
 
     if (isPaused) {
       animRef.current.resume();
+      setIsPaused(false);
     } else {
       animRef.current.pause();
+      setIsPaused(true);
     }
-
-    setIsPaused(!isPaused);
   };
 
   const handleSelectProject = (project: (typeof projects)[number]) => {
+    if (project.title === selected.title) return;
+
     setSelected(project);
+    setIsChanging(true);
+
+    if (changeTimeoutRef.current) {
+      clearTimeout(changeTimeoutRef.current);
+    }
+
+    changeTimeoutRef.current = setTimeout(() => {
+      setDisplayedProject(project);
+      setIsChanging(false);
+    }, 260);
 
     if (isPaused && animRef.current) {
       animRef.current.resume();
@@ -117,11 +141,11 @@ const ProjectsClient = () => {
     }
   };
 
-  const desktopImages = [selected.src, selected.src3, selected.src5].filter(
+  const desktopImages = [displayedProject.src, displayedProject.src3].filter(
     Boolean,
   ) as string[];
 
-  const mobileImages = [selected.src2, selected.src4, selected.src6].filter(
+  const mobileImages = [displayedProject.src2, displayedProject.src4].filter(
     Boolean,
   ) as string[];
 
@@ -150,7 +174,7 @@ const ProjectsClient = () => {
 
   return (
     <SmoothScroll>
-      <section className="relative min-h-screen w-full  bg-[#ececec] text-[#161310]  dark:bg-[#2e2b2b] dark:text-stone-300">
+      <section className="relative min-h-screen w-full bg-[#ececec] text-[#161310] dark:bg-[#2e2b2b] dark:text-stone-300">
         {/* Mobile */}
         <div className="px-6 pb-16 pt-28 md:hidden">
           <motion.div
@@ -174,7 +198,7 @@ const ProjectsClient = () => {
           <div className="mt-14 flex flex-col gap-16">
             {projects.map((p, i) => (
               <motion.article
-                key={i}
+                key={p.title}
                 initial={{ opacity: 0, y: 26 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.15 + i * 0.08, duration: 0.6 }}
@@ -249,18 +273,32 @@ const ProjectsClient = () => {
             >
               <div className="flex flex-1 flex-col justify-center">
                 <div>
+                  <div className="mb-10 flex items-center justify-between text-[14px] uppercase tracking-[0.28em] ">
+                    <p>Selected Projects</p>
+                    <p>04</p>
+                  </div>
                   <div className="flex flex-col gap-9">
                     {projects.map((project, i) => {
                       const isSelected = selected.title === project.title;
 
                       return (
                         <button
-                          key={i}
+                          key={project.title}
                           onClick={() => handleSelectProject(project)}
-                          className="group cursor-pointer text-left"
+                          className="group grid cursor-pointer grid-cols-[34px_1fr]  text-left"
                         >
+                          <span
+                            className={`pt-1 text-[10px] uppercase tracking-[0.22em] transition-opacity duration-300 ${
+                              isSelected
+                                ? "opacity-90"
+                                : "opacity-50 group-hover:opacity-60"
+                            }`}
+                          >
+                            {String(i + 1).padStart(2, "0")}
+                          </span>
+
                           <h2
-                            className={`text-2xl uppercase leading-[0.9] tracking-[-0.05em] transition-all duration-300 xl:text-3xl ${
+                            className={`text-2xl uppercase whitespace-nowrap leading-[0.9] tracking-[-0.05em] transition-all duration-300 xl:text-3xl ${
                               isSelected
                                 ? "translate-x-2 opacity-100"
                                 : "translate-x-0 opacity-35 group-hover:opacity-100"
@@ -274,10 +312,10 @@ const ProjectsClient = () => {
                   </div>
 
                   <a
-                    href={selected.link}
+                    href={displayedProject.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group relative mt-10 inline-block w-fit cursor-pointer overflow-hidden font-black  text-[18px]  uppercase tracking-[0.2em] text-[#161310]  dark:text-stone-300"
+                    className="group relative mt-10 inline-block w-fit cursor-pointer overflow-hidden text-[18px] font-black uppercase tracking-[0.2em] text-[#161310] dark:text-stone-300"
                   >
                     <WaveLinkText text="View live" />
                   </a>
@@ -293,7 +331,18 @@ const ProjectsClient = () => {
               className="col-span-9"
             >
               <div className="ml-auto flex w-full max-w-[1080px] flex-col">
-                <div className="relative h-[76vh] overflow-hidden bg-[#ececec] px-6 dark:bg-[#2e2b2b]">
+                <motion.div
+                  animate={{
+                    opacity: isChanging ? 0 : 1,
+                    y: isChanging ? 26 : 0,
+                    filter: isChanging ? "blur(8px)" : "blur(0px)",
+                  }}
+                  transition={{
+                    duration: 0.38,
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
+                  className="relative h-[76vh] overflow-hidden bg-[#ececec] px-6 dark:bg-[#2e2b2b]"
+                >
                   <div
                     ref={containerRef}
                     className="h-screen"
@@ -306,12 +355,12 @@ const ProjectsClient = () => {
                       {[...Array(2)].map((_, idx) => (
                         <div key={idx} className="mb-24 py-20">
                           <div className="mb-28 max-w-[640px]">
-                            <h2 className="text-6xl uppercase font-black leading-[0.86] tracking-[-0.07em] xl:text-8xl">
-                              {selected.title}
+                            <h2 className="text-6xl font-black uppercase leading-[0.86] tracking-[-0.07em] xl:text-8xl">
+                              {displayedProject.title}
                             </h2>
 
-                            <p className="mt-7 max-w-[520px] font-semibold text-base leading-relaxed opacity-70 xl:text-xl">
-                              {selected.about}
+                            <p className="mt-7 max-w-[520px] text-base font-semibold leading-relaxed opacity-70 xl:text-xl">
+                              {displayedProject.about}
                             </p>
 
                             <div className="mt-8 max-w-[560px]">
@@ -320,7 +369,7 @@ const ProjectsClient = () => {
                               </p>
 
                               <p className="text-sm leading-relaxed opacity-60 xl:text-lg">
-                                {selected.stack}
+                                {displayedProject.stack}
                               </p>
                             </div>
                           </div>
@@ -350,12 +399,12 @@ const ProjectsClient = () => {
 
                               return (
                                 <div
-                                  key={`${image.src}-${i}`}
+                                  key={`${displayedProject.title}-${image.src}-${i}`}
                                   className={`relative ${layout}`}
                                 >
                                   <Image
                                     src={`/projects/${image.src}`}
-                                    alt={`${selected.title} ${
+                                    alt={`${displayedProject.title} ${
                                       image.type === "desktop"
                                         ? "desktop"
                                         : "mobile"
@@ -377,14 +426,14 @@ const ProjectsClient = () => {
                       ))}
                     </div>
                   </div>
-                </div>
+                </motion.div>
               </div>
             </motion.div>
           </div>
 
           <button
             onClick={handlePauseToggle}
-            className="fixed bottom-8 right-8 z-50 flex cursor-pointer items-center gap-3  px-6 py-4 text-base font-semibold uppercase tracking-[0.16em] opacity-90 transition-opacity duration-300 hover:opacity-100 "
+            className="fixed bottom-8 right-8 z-50 flex cursor-pointer items-center gap-3 px-6 py-4 text-base font-semibold uppercase tracking-[0.16em] opacity-90 transition-opacity duration-300 hover:opacity-100"
           >
             {isPaused ? <>Resume</> : <>Pause</>}
           </button>

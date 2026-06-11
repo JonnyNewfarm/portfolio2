@@ -85,7 +85,7 @@ const BurgerMenu = () => {
                 <p className="mb-3 text-[10px] uppercase tracking-[0.28em] text-white/35">
                   Navigation
                 </p>
-                <h2 className="text-4xl uppercase leading-[0.9] tracking-[-0.05em]">
+                <h2 className="text-4xl font-black uppercase leading-[0.9] tracking-[-0.05em]">
                   Menu
                 </h2>
               </div>
