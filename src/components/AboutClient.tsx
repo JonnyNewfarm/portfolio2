@@ -238,10 +238,9 @@ export default function AboutClient() {
                 delay={0.12}
                 className="max-w-[1250px] text-[14vw] font-black uppercase leading-[0.92] tracking-[-0.06em] sm:text-[14vw] md:text-[10vw] lg:text-[8.2vw]"
               >
-                {`Frontend
-developer
-with a
-design eye.`}
+                {`Creative
+frontend
+developer.`}
               </TextReveal>
             </div>
 
