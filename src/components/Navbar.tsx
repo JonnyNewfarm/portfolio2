@@ -4,6 +4,7 @@ import BurgerMenu from "./BurgerMenu";
 import { FaRegCopyright } from "react-icons/fa";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import WaveLinkText from "./WaveLinkText";
 
 const Navbar = () => {
   const router = useRouter();
@@ -51,7 +52,6 @@ const Navbar = () => {
   return (
     <header className="fixed top-0 z-50 w-full bg-transparent px-6 py-5 text-[#1c1a17] dark:text-stone-300 lg:px-12 xl:px-16">
       <div className="flex items-center justify-between">
-        {/* Mobile logo */}
         <Link
           href="/"
           className="flex items-center gap-x-2 text-xs uppercase tracking-[0.18em] lg:hidden"
@@ -60,12 +60,10 @@ const Navbar = () => {
           <span>Newfarm Studio</span>
         </Link>
 
-        {/* Mobile menu */}
         <div className="lg:hidden">
           <BurgerMenu />
         </div>
 
-        {/* Desktop navbar */}
         <div className="hidden w-full lg:block">
           <div className="grid grid-cols-4 items-start gap-8 pb-4 dark:border-stone-300/10">
             <div>
@@ -106,9 +104,9 @@ const Navbar = () => {
                     key={route.label}
                     href={route.url}
                     onClick={(e) => handleRouteTransition(e, route.url)}
-                    className=" font-semibold hover:scale-105 transition-transform ease-in-out"
+                    className=" font-semibold "
                   >
-                    {route.label}
+                    <WaveLinkText text={`${route.label}`} />
                     {index < routes.length - 1 ? "," : ""}
                   </Link>
                 ))}

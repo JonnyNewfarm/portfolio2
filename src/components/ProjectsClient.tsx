@@ -6,6 +6,7 @@ import { gsap } from "gsap";
 import SmoothScroll from "@/components/SmoothScroll";
 import { motion } from "framer-motion";
 import { CiPause1, CiPlay1 } from "react-icons/ci";
+import WaveLinkText from "./WaveLinkText";
 
 const ProjectsClient = () => {
   const projects = [
@@ -276,15 +277,9 @@ const ProjectsClient = () => {
                     href={selected.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group relative mt-10 inline-block w-fit cursor-pointer overflow-hidden border border-[#161310] px-8 py-4 text-sm  uppercase tracking-[0.2em] text-[#161310] transition dark:border-stone-300 dark:text-stone-300"
+                    className="group relative mt-10 inline-block w-fit cursor-pointer overflow-hidden font-black  text-[18px]  uppercase tracking-[0.2em] text-[#161310]  dark:text-stone-300"
                   >
-                    <span className="inline-block transition duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-y-[160%]">
-                      View live
-                    </span>
-
-                    <span className="absolute left-8 top-4 inline-block translate-y-[160%] transition duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-y-0">
-                      View live
-                    </span>
+                    <WaveLinkText text="View live" />
                   </a>
                 </div>
               </div>

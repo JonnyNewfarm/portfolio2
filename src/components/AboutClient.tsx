@@ -11,6 +11,7 @@ import {
 } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import WaveLinkText from "./WaveLinkText";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -83,15 +84,13 @@ function TextReveal({
 
   const itemVariants = {
     hidden: {
-      y: "115%",
+      y: "110%",
       opacity: 0,
-      rotate: mode === "lines" ? 2.5 : 1.5,
       filter: "blur(10px)",
     },
     visible: {
       y: "0%",
       opacity: 1,
-      rotate: 0,
       filter: "blur(0px)",
       transition: {
         duration: mode === "lines" ? 1 : 0.75,
@@ -113,13 +112,13 @@ function TextReveal({
           key={`${item}-${index}`}
           className={
             mode === "lines"
-              ? "block overflow-hidden"
-              : "inline-block overflow-hidden align-top"
+              ? "block overflow-hidden py-[0.08em] -my-[0.08em]"
+              : "inline-block overflow-hidden align-top py-[0.08em] -my-[0.08em]"
           }
         >
           <motion.span
             variants={itemVariants}
-            className="inline-block will-change-transform"
+            className="inline-block leading-[inherit] will-change-transform"
           >
             {item}
             {mode === "words" && index !== items.length - 1 ? "\u00A0" : null}
@@ -228,7 +227,7 @@ export default function AboutClient() {
                 as="p"
                 mode="words"
                 delay={0.05}
-                className="mb-6 text-xs font-black uppercase tracking-[0.28em] opacity-45"
+                className="mb-6 text-xs font-black uppercase leading-[1.2] tracking-[0.28em] opacity-45"
               >
                 About / Jonas Nygaard
               </TextReveal>
@@ -237,7 +236,7 @@ export default function AboutClient() {
                 as="h1"
                 mode="lines"
                 delay={0.12}
-                className="max-w-[1250px] text-[14vw] font-black uppercase leading-[0.85] tracking-[-0.06em] sm:text-[14vw] md:text-[10vw] lg:text-[8.2vw]"
+                className="max-w-[1250px] text-[14vw] font-black uppercase leading-[0.92] tracking-[-0.06em] sm:text-[14vw] md:text-[10vw] lg:text-[8.2vw]"
               >
                 {`Frontend
 developer
@@ -251,7 +250,7 @@ design eye.`}
                 as="p"
                 mode="words"
                 delay={0.35}
-                className="max-w-[560px] text-base font-bold leading-[1.4] opacity-65 md:text-lg lg:ml-auto lg:text-right"
+                className="max-w-[560px] text-base font-bold leading-[1.45] opacity-85 md:text-lg lg:ml-auto lg:text-right"
               >
                 I design and build web experiences where layout, motion and code
                 work together. Clean interfaces, sharp details and frontend
@@ -309,7 +308,7 @@ design eye.`}
                     },
                   },
                 }}
-                className="mt-5 grid grid-cols-2 gap-x-6 gap-y-5 text-xs font-black uppercase tracking-[0.18em] opacity-75"
+                className="mt-5 grid grid-cols-2 gap-x-6 gap-y-5 text-xs font-black uppercase leading-[1.25] tracking-[0.18em] opacity-75"
               >
                 {[
                   ["Name", "Jonas Nygaard"],
@@ -349,7 +348,7 @@ design eye.`}
                 <TextReveal
                   as="p"
                   mode="words"
-                  className="mb-8 text-xs font-black uppercase tracking-[0.28em] opacity-45"
+                  className="mb-8 text-xs font-black uppercase leading-[1.2] tracking-[0.28em] opacity-45"
                 >
                   Profile
                 </TextReveal>
@@ -358,7 +357,7 @@ design eye.`}
                   as="p"
                   mode="words"
                   delay={0.05}
-                  className="max-w-[1050px] text-[8vw] font-black uppercase leading-[0.9] tracking-[-0.075em] opacity-90 md:text-[5vw] lg:text-[3.75vw]"
+                  className="max-w-[1050px] text-[8vw] font-black uppercase leading-[1] tracking-[-0.075em] opacity-90 md:text-[5vw] lg:text-[3.75vw]"
                 >
                   I work between visual design and development, turning ideas
                   into responsive, polished and usable digital products.
@@ -368,7 +367,7 @@ design eye.`}
                   as="p"
                   mode="words"
                   delay={0.15}
-                  className="mt-8 max-w-[760px] text-base font-bold leading-[1.5] opacity-60 md:text-lg"
+                  className="mt-8 max-w-[760px] text-base  leading-[1.55]  md:text-lg"
                 >
                   My work usually starts with structure: what should the page
                   say, how should it feel, and how should people move through
@@ -382,7 +381,7 @@ design eye.`}
                 <TextReveal
                   as="p"
                   mode="words"
-                  className="mb-8 text-xs font-black uppercase tracking-[0.28em] opacity-45"
+                  className="mb-8 text-xs font-black uppercase leading-[1.2] tracking-[0.28em] opacity-45"
                 >
                   Work areas
                 </TextReveal>
@@ -403,7 +402,7 @@ design eye.`}
                           },
                         },
                       }}
-                      className="group grid grid-cols-1 gap-6 py-8 md:grid-cols-[0.18fr_0.55fr_0.8fr] md:items-start lg:py-10"
+                      className="group grid grid-cols-1 gap-6 py-8 md:grid-cols-[0.11fr_0.55fr_0.9fr] md:items-start lg:py-10"
                     >
                       <motion.p
                         variants={{
@@ -422,7 +421,7 @@ design eye.`}
                             },
                           },
                         }}
-                        className="text-xs font-black uppercase tracking-[0.24em] opacity-35"
+                        className="text-xs font-black uppercase leading-[1.2] tracking-[0.24em] opacity-35"
                       >
                         {item.number}
                       </motion.p>
@@ -431,7 +430,7 @@ design eye.`}
                         as="h2"
                         mode="lines"
                         delay={0}
-                        className="text-[12vw] font-black uppercase leading-[0.82] tracking-[-0.09em] md:text-[5vw] lg:text-[3.8vw]"
+                        className="text-[8vw] font-black uppercase leading-[0.95] tracking-[-0.04em] md:text-[5vw] lg:text-[3.2vw]"
                       >
                         {item.title}
                       </TextReveal>
@@ -440,7 +439,7 @@ design eye.`}
                         as="p"
                         mode="words"
                         delay={0.08}
-                        className="max-w-[560px] text-base font-bold leading-[1.45] opacity-60 md:justify-self-end md:text-right md:text-lg"
+                        className="max-w-[560px] text-base  leading-[1.5] opacity-85 md:justify-self-end md:text-right md:text-lg"
                       >
                         {item.text}
                       </TextReveal>
@@ -455,7 +454,7 @@ design eye.`}
                   <TextReveal
                     as="p"
                     mode="words"
-                    className="text-xs font-black uppercase tracking-[0.28em] opacity-45"
+                    className="text-xs font-black uppercase leading-[1.2] tracking-[0.28em] opacity-80"
                   >
                     Stack / Tools
                   </TextReveal>
@@ -464,7 +463,7 @@ design eye.`}
                     as="p"
                     mode="words"
                     delay={0.1}
-                    className="hidden max-w-[360px] text-right text-xs font-black uppercase leading-[1.35] tracking-[0.22em] opacity-35 md:block"
+                    className="hidden max-w-[360px] text-right text-xs font-black uppercase leading-[1.35] tracking-[0.22em] opacity-65 md:block"
                   >
                     Tools used to design, build and ship web projects.
                   </TextReveal>
@@ -482,22 +481,23 @@ design eye.`}
                       },
                     },
                   }}
-                  className="flex flex-wrap gap-x-5 gap-y-3"
+                  className="flex flex-wrap gap-x-5 gap-y-1 overflow-visible py-2"
                 >
                   {stack.map((item) => (
-                    <span key={item} className="overflow-hidden">
+                    <span
+                      key={item}
+                      className="inline-block overflow-visible py-[0.18em] -my-[0.18em]"
+                    >
                       <motion.span
                         variants={{
                           hidden: {
-                            y: "120%",
+                            y: "115%",
                             opacity: 0,
-                            rotate: 2,
                             filter: "blur(8px)",
                           },
                           visible: {
                             y: "0%",
                             opacity: 1,
-                            rotate: 0,
                             filter: "blur(0px)",
                             transition: {
                               duration: 0.85,
@@ -505,7 +505,7 @@ design eye.`}
                             },
                           },
                         }}
-                        className="inline-block text-[clamp(2.4rem,5vw,6rem)] font-black uppercase leading-[0.82] tracking-[-0.09em] opacity-80 will-change-transform"
+                        className="inline-block text-[clamp(2.4rem,5vw,6rem)] font-black uppercase leading-[1.08] tracking-[-0.08em] opacity-80 will-change-transform"
                       >
                         {item}
                       </motion.span>
@@ -520,7 +520,7 @@ design eye.`}
                   <TextReveal
                     as="h2"
                     mode="lines"
-                    className="max-w-[1000px] text-[13vw] font-black uppercase leading-[0.8] tracking-[-0.095em] md:text-[6.5vw] lg:text-[5vw]"
+                    className="max-w-[1000px] text-[13vw] font-black uppercase leading-[0.92] tracking-[-0.095em] md:text-[6.5vw] lg:text-[5vw]"
                   >
                     {`Let's build
 something useful.`}
@@ -529,11 +529,9 @@ something useful.`}
                   <FadeIn delay={0.2} y={20} className="md:justify-self-end">
                     <Link
                       href="/contact"
-                      className="group relative block w-fit overflow-hidden  px-7 py-4 text-md font-black uppercase tracking-[0.22em] transition dark:border-stone-300"
+                      className="group relative block w-fit overflow-hidden text-md font-black uppercase tracking-[0.22em] transition"
                     >
-                      <span className="inline-block transition duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-y-full">
-                        Contact
-                      </span>
+                      <WaveLinkText text="Contact Me" />
                     </Link>
                   </FadeIn>
                 </div>

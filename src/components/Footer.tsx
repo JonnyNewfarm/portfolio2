@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import WaveLinkText from "./WaveLinkText";
 
 const Footer = () => {
   const pathname = usePathname();
@@ -29,7 +30,7 @@ const Footer = () => {
 
   return (
     <footer className="relative overflow-hidden bg-[#ececec] px-4 py-10 text-[#161310] dark:bg-[#2e2b2b] dark:text-stone-300 md:px-10 lg:px-16">
-      <div className="mx-auto flex min-h-[520px] w-full max-w-[1800px] flex-col justify-between  pt-8 ">
+      <div className="mx-auto flex min-h-[520px] w-full max-w-[1800px] flex-col justify-between pt-8">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-[1.2fr_0.8fr] md:items-start">
           <div>
             <p className="mb-6 text-xs font-black uppercase tracking-[0.24em] opacity-45 md:text-sm">
@@ -51,21 +52,30 @@ const Footer = () => {
                 Navigation
               </p>
 
-              <div className="flex flex-col gap-1 text-xl font-black uppercase leading-[1.05] tracking-[-0.04em] opacity-80 md:text-3xl">
-                <Link href="/" className="transition hover:opacity-60">
-                  Home
+              <div className="flex flex-col items-start gap-1 text-xl font-black uppercase leading-[1.05] tracking-[-0.04em] opacity-80 md:items-end md:text-3xl">
+                <Link href="/" className="w-fit transition hover:opacity-60">
+                  <WaveLinkText text="Home" />
                 </Link>
 
-                <Link href="/projects" className="transition hover:opacity-60">
-                  My Work
+                <Link
+                  href="/projects"
+                  className="w-fit transition hover:opacity-60"
+                >
+                  <WaveLinkText text="My Work" />
                 </Link>
 
-                <Link href="/about" className="transition hover:opacity-60">
-                  About
+                <Link
+                  href="/about"
+                  className="w-fit transition hover:opacity-60"
+                >
+                  <WaveLinkText text="About" />
                 </Link>
 
-                <Link href="/contact" className="transition hover:opacity-60">
-                  Contact
+                <Link
+                  href="/contact"
+                  className="w-fit transition hover:opacity-60"
+                >
+                  <WaveLinkText text="Contact" />
                 </Link>
               </div>
             </div>
@@ -75,23 +85,23 @@ const Footer = () => {
                 Social
               </p>
 
-              <div className="flex flex-col gap-1 text-xl font-black uppercase leading-[1.05] tracking-[-0.04em] opacity-80 md:text-3xl">
+              <div className="flex flex-col items-start gap-1 text-xl font-black uppercase leading-[1.05] tracking-[-0.04em] opacity-80 md:items-end md:text-3xl">
                 <a
                   href="https://www.linkedin.com/in/jonas-nygaard-0aa767366/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="transition hover:opacity-60"
+                  className="w-fit transition hover:opacity-60"
                 >
-                  LinkedIn
+                  <WaveLinkText text="LinkedIn" />
                 </a>
 
                 <a
                   href="https://www.jonasnygaard.com/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="transition hover:opacity-60"
+                  className="w-fit transition hover:opacity-60"
                 >
-                  Portfolio
+                  <WaveLinkText text="Portfolio" />
                 </a>
               </div>
             </div>
@@ -105,9 +115,9 @@ const Footer = () => {
               target="_blank"
               rel="noopener noreferrer"
               href="https://www.jonasnygaard.com/"
-              className="transition hover:opacity-60"
+              className="inline-block w-fit transition hover:opacity-60"
             >
-              Newfarm Studio
+              <WaveLinkText text="Newfarm Studio" />
             </a>
           </div>
 
@@ -115,9 +125,9 @@ const Footer = () => {
             <p className="mb-1 opacity-35">Email</p>
             <a
               href="mailto:jonasnygaard96@gmail.com"
-              className="normal-case tracking-normal transition hover:opacity-60"
+              className="inline-block w-fit normal-case tracking-normal transition hover:opacity-60"
             >
-              jonasnygaard96@gmail.com
+              <WaveLinkText text="jonasnygaard96@gmail.com" />
             </a>
           </div>
 

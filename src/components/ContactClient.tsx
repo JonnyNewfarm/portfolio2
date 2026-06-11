@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import SmoothScroll from "@/components/SmoothScroll";
 import { motion } from "framer-motion";
 import { toast } from "react-hot-toast";
+import WaveLinkText from "./WaveLinkText";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -289,7 +290,7 @@ useful.`}
               as="p"
               mode="words"
               delay={0.35}
-              className="max-w-[540px] text-base font-bold leading-[1.35] opacity-60 md:justify-self-end md:text-right md:text-lg"
+              className="max-w-[540px] text-base font-bold leading-[1.35] opacity-85 md:justify-self-end md:text-right md:text-lg"
             >
               I design and build clean digital experiences, from visual identity
               and interface design to frontend development.
@@ -335,28 +336,28 @@ useful.`}
                     Details
                   </p>
 
-                  <div className="flex flex-col gap-2">
+                  <div className="flex flex-col items-start gap-2">
                     <a
                       href="https://www.jonasnygaard.com/"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="transition duration-500 hover:tracking-[0.22em] hover:opacity-60"
+                      className="w-fit transition duration-500 hover:opacity-60"
                     >
-                      Jonas Nygaard
+                      <WaveLinkText text="Jonas Nygaard" />
                     </a>
 
                     <a
                       href="mailto:jonasnygaard96@gmail.com"
-                      className="normal-case tracking-normal transition duration-500 hover:opacity-60"
+                      className="w-fit normal-case tracking-normal transition duration-500 hover:opacity-60"
                     >
-                      jonasnygaard96@gmail.com
+                      <WaveLinkText text="jonasnygaard96@gmail.com" />
                     </a>
 
                     <a
                       href="tel:+4748263011"
-                      className="transition duration-500 hover:tracking-[0.22em] hover:opacity-60"
+                      className="w-fit transition duration-500 hover:opacity-60"
                     >
-                      +47 48 26 30 11
+                      <WaveLinkText text="+47 48 26 30 11" />
                     </a>
 
                     <p>Oslo, Norway</p>
@@ -385,23 +386,23 @@ useful.`}
                     Social
                   </p>
 
-                  <div className="flex flex-col gap-2">
+                  <div className="flex flex-col items-start gap-2">
                     <a
                       href="https://www.linkedin.com/in/jonas-nygaard-0aa767366/"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="transition duration-500 hover:tracking-[0.22em] hover:opacity-60"
+                      className="w-fit transition duration-500 hover:opacity-60"
                     >
-                      LinkedIn
+                      <WaveLinkText text="LinkedIn" />
                     </a>
 
                     <a
                       href="https://www.jonasnygaard.com/"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="transition duration-500 hover:tracking-[0.22em] hover:opacity-60"
+                      className="w-fit transition duration-500 hover:opacity-60"
                     >
-                      Portfolio
+                      <WaveLinkText text="Portfolio" />
                     </a>
                   </div>
                 </motion.div>
@@ -428,7 +429,7 @@ useful.`}
                     Work
                   </p>
 
-                  <p className="max-w-[340px] text-base font-bold normal-case leading-[1.35] tracking-normal opacity-60">
+                  <p className="max-w-[340px] text-base font-bold normal-case leading-[1.35] tracking-normal opacity-85">
                     Available for freelance work, web design, frontend builds
                     and selected collaborations.
                   </p>
@@ -456,7 +457,7 @@ useful.`}
                     as="h2"
                     mode="lines"
                     delay={0.05}
-                    className="text-[12vw] font-black uppercase leading-[0.84] tracking-[-0.08em] sm:text-[8vw] md:text-[5vw] lg:text-[4vw]"
+                    className="text-[12vw] font-semibold uppercase leading-[0.84] tracking-[-0.04em] sm:text-[8vw] md:text-[5vw] lg:text-[4vw]"
                   >
                     Start here
                   </TextReveal>
@@ -466,7 +467,7 @@ useful.`}
                   as="p"
                   mode="words"
                   delay={0.16}
-                  className="hidden max-w-[260px] text-right text-sm font-bold leading-[1.35] opacity-45 md:block"
+                  className="hidden max-w-[260px] text-right text-sm  leading-[1.35]  md:block"
                 >
                   Tell me what you need, what exists already and what the goal
                   is.
@@ -587,15 +588,11 @@ useful.`}
                 <button
                   type="submit"
                   disabled={isSending}
-                  className="group relative w-fit cursor-pointer overflow-hidden border border-[#161310] px-8 py-4 text-sm font-black uppercase tracking-[0.2em] text-[#161310] transition disabled:cursor-not-allowed disabled:opacity-40 dark:border-stone-300 dark:text-stone-300"
+                  className="relative w-fit cursor-pointer overflow-hidden border border-[#161310] px-8 py-4 text-sm font-black uppercase tracking-[0.2em] text-[#161310] transition disabled:cursor-not-allowed disabled:opacity-40 dark:border-stone-300 dark:text-stone-300"
                 >
-                  <span className="inline-block transition duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-y-[160%]">
-                    {isSending ? "Sending..." : "Send message"}
-                  </span>
-
-                  <span className="absolute left-8 top-4 inline-block translate-y-[160%] transition duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-y-0">
-                    {isSending ? "Sending..." : "Send message"}
-                  </span>
+                  <WaveLinkText
+                    text={isSending ? "Sending..." : "Send message"}
+                  />
                 </button>
 
                 <p className="max-w-[360px] text-sm font-bold leading-[1.35] opacity-45">
