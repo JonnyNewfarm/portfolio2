@@ -1,180 +1,246 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
-import { gsap } from "gsap";
+import gsap from "gsap";
 import SmoothScroll from "@/components/SmoothScroll";
 import { motion } from "framer-motion";
 import WaveLinkText from "./WaveLinkText";
 
+type Project = {
+  title: string;
+  year: string;
+  category: string;
+  link: string;
+  about: string;
+  stack: string;
+  role: string;
+  images: string[];
+};
+
+type CaseCard = {
+  image: string;
+  eyebrow: string;
+  title: string;
+  description: string;
+};
+
+const projects: Project[] = [
+  {
+    title: "Kerimov Designs",
+    year: "2025",
+    category: "Web Design & Branding",
+    link: "https://kerimovdesigns.com",
+    about: "Portfolio website for graphic designer Rustam Kerimov.",
+    stack:
+      "React, Next.js, Prisma, GSAP, Motion, TailwindCSS, MongoDB, Uploadthing, NextAuth.",
+    role: "Design, frontend and backend.",
+    images: [
+      "kerimov-01.jpg",
+      "kerimov-02.jpg",
+      "kerimov-03.jpg",
+      "kerimov-04.jpg",
+      "kerimov-05.jpg",
+      "kerimov-06.jpg",
+    ],
+  },
+  {
+    title: "Calero Studio",
+    year: "2025",
+    category: "E-commerce & 3D",
+    link: "https://www.calero.studio/",
+    about:
+      "E-commerce product page with visual direction, product storytelling, 3D presentation and smooth motion.",
+    stack: "React, Prisma, Three.js, GSAP, TailwindCSS, Neon, Stripe.",
+    role: "Design, frontend, backend, Stripe and motion.",
+    images: [
+      "calero-01.jpg",
+      "calero-02.jpg",
+      "calero-03.jpg",
+      "calero-04.jpg",
+      "calero-05.jpg",
+      "calero-06.jpg",
+    ],
+  },
+  {
+    title: "Petsaco",
+    year: "2025",
+    category: "E-commerce & Brand",
+    link: "https://petsaco.com",
+    about:
+      "E-commerce store with product browsing, authentication, checkout and animated brand experience.",
+    stack:
+      "React, Next.js, Prisma, GSAP, Motion, TailwindCSS, Neon, NextAuth, Stripe, Zustand.",
+    role: "Design, frontend, backend, auth, checkout and animations.",
+    images: [
+      "petsaco-01.jpg",
+      "petsaco-02.jpg",
+      "petsaco-03.jpg",
+      "petsaco-04.jpg",
+      "petsaco-05.jpg",
+      "petsaco-06.jpg",
+    ],
+  },
+];
+
 const ProjectsClient = () => {
-  const projects = [
-    {
-      title: "Kerimov Designs",
-      src: "rustam1.webp",
-      src2: "rustam2.webp",
-      src3: "kerimov-3.jpg",
-      src4: "kerimov-4.jpg",
-      link: "https://kerimovdesigns.com",
-      about: "Portfolio website for graphic designer Rustam Kerimov.",
-      stack:
-        "React, Next.js, Prisma,GSAP, Motion, TailwindCSS, MongoDB, Uploadthing, NextAuth.",
-    },
-    {
-      title: "Calero Studio",
-      src: "calero-3.jpg",
-      src2: "calero-2.jpg",
-      src3: "caler-2.jpg",
-      src4: "caler-3.jpg",
-      link: "https://www.calero.studio/",
-      about:
-        "E-commerce product page for Calero Studio showcasing a modern designer lamp with a strong focus on visuals, smooth interactions and 3D product magazine.",
-      stack: "React, Prisma, Three.js, GSAP, TailwindCSS, Neon, Stripe",
-    },
-    {
-      title: "Petsaco",
-      src: "petsac-1.jpg",
-      src2: "petsac-2.jpg",
-      src3: "petsac-3.jpg",
-      src4: "petsac-4.jpg",
-      link: "https://petsaco.com",
-      about:
-        "E-commerce store for petsaco, selling products for pets. Modern design with GSAP animations ",
-      stack:
-        "React, Next.js, Prisma, GSAP, Motion, TailwindCSS, Neon, Nextauth, stripe, Zustand.",
-    },
-    {
-      title: "Job Scriptor",
-      src: "job1.webp",
-      src2: "job2.webp",
-      src3: "job3.webp",
-      src4: "job4.webp",
-      link: "https://www.jobscriptor.com/",
-      about:
-        "Website featuring AI tools for writing resumes and cover letters, and for finding jobs that match your resume.",
-      stack:
-        "React, Next.js, Prisma, TailwindCSS, Neon, NextAuth, OpenAI, Stripe.",
-    },
-  ];
+  const [selectedProject, setSelectedProject] = useState<Project>(projects[0]);
 
-  const [selected, setSelected] = useState(projects[0]);
-  const [displayedProject, setDisplayedProject] = useState(projects[0]);
-  const [isChanging, setIsChanging] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
+  const stageRef = useRef<HTMLDivElement | null>(null);
+  const cardRefs = useRef<HTMLElement[]>([]);
+  const offsetRef = useRef(0);
+  const velocityRef = useRef(0);
+  const rafRef = useRef<number | null>(null);
 
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const animRef = useRef<gsap.core.Tween | null>(null);
-  const changeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  useEffect(() => {
-    if (!scrollRef.current || !containerRef.current) return;
-
-    const container = containerRef.current;
-    const scrollHeight = container.scrollHeight / 2;
-
-    gsap.killTweensOf(scrollRef.current);
-    gsap.set(scrollRef.current, { y: 0 });
-
-    animRef.current = gsap.to(scrollRef.current, {
-      y: -scrollHeight,
-      duration: 25,
-      ease: "linear",
-      repeat: -1,
-      modifiers: {
-        y: (y) => {
-          const val = parseFloat(y);
-          if (val <= -scrollHeight) return "0px";
-          return y;
-        },
+  const cards = useMemo<CaseCard[]>(() => {
+    const content = [
+      {
+        eyebrow: `${selectedProject.category}, ${selectedProject.year}`,
+        title: selectedProject.title,
+        description: selectedProject.about,
       },
-    });
+      {
+        eyebrow: `Design, ${selectedProject.year}`,
+        title: "Design",
+        description:
+          "Visual direction, typography, layout and interaction design.",
+      },
+      {
+        eyebrow: `Frontend, ${selectedProject.year}`,
+        title: "Frontend",
+        description:
+          "Responsive interface, animation system and polished user experience.",
+      },
+      {
+        eyebrow: `Backend, ${selectedProject.year}`,
+        title: "Backend",
+        description:
+          "Database, authentication, API logic and application structure.",
+      },
+      {
+        eyebrow: "Stack",
+        title: "Technology",
+        description: selectedProject.stack,
+      },
+      {
+        eyebrow: "Role",
+        title: "What I Did",
+        description: selectedProject.role,
+      },
+    ];
 
-    if (isPaused) {
-      animRef.current.pause();
-    }
+    return selectedProject.images.map((image, index) => ({
+      image,
+      ...content[index],
+    }));
+  }, [selectedProject]);
 
-    return () => {
-      animRef.current?.kill();
-      animRef.current = null;
-    };
-  }, [displayedProject, isPaused]);
+  const loopedCards = useMemo(() => {
+    return [
+      ...cards,
+      ...cards,
+      ...cards,
+      ...cards,
+      ...cards,
+      ...cards,
+      ...cards,
+      ...cards,
+      ...cards,
+      ...cards,
+    ];
+  }, [cards]);
 
   useEffect(() => {
+    const stage = stageRef.current;
+    if (!stage) return;
+
+    const baseWidth = () => window.innerWidth * 0.22;
+    const baseHeight = () => baseWidth() * 1.02;
+
+    const minScale = 1;
+    const maxScale = 1.6;
+
+    const getScaleFromX = (x: number) => {
+      const vw = window.innerWidth;
+
+      return gsap.utils.clamp(
+        minScale,
+        maxScale,
+        gsap.utils.mapRange(0, vw * 0.9, minScale, maxScale, x),
+      );
+    };
+
+    const render = () => {
+      const bw = baseWidth();
+      const bh = baseHeight();
+
+      const oneSetWidth = cards.length * bw;
+      const wrappedOffset = gsap.utils.wrap(0, oneSetWidth, offsetRef.current);
+
+      let runningX = -oneSetWidth + wrappedOffset;
+
+      cardRefs.current.forEach((card) => {
+        if (!card) return;
+
+        const scale = getScaleFromX(runningX);
+        const width = bw * scale;
+        const height = bh * scale;
+
+        gsap.set(card, {
+          x: runningX,
+          width,
+          height,
+        });
+
+        runningX += width;
+      });
+    };
+
+    const tick = () => {
+      offsetRef.current += velocityRef.current;
+      velocityRef.current *= 0.88;
+
+      if (Math.abs(velocityRef.current) < 0.01) {
+        velocityRef.current = 0;
+      }
+
+      render();
+      rafRef.current = requestAnimationFrame(tick);
+    };
+
+    const handleWheel = (event: WheelEvent) => {
+      event.preventDefault();
+
+      velocityRef.current += event.deltaY * 0.22;
+    };
+
+    stage.addEventListener("wheel", handleWheel, { passive: false });
+    window.addEventListener("resize", render);
+
+    render();
+    rafRef.current = requestAnimationFrame(tick);
+
     return () => {
-      if (changeTimeoutRef.current) {
-        clearTimeout(changeTimeoutRef.current);
+      stage.removeEventListener("wheel", handleWheel);
+      window.removeEventListener("resize", render);
+
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
       }
     };
-  }, []);
+  }, [cards]);
 
-  const handlePauseToggle = () => {
-    if (!animRef.current) return;
+  const handleSelectProject = (project: Project) => {
+    if (project.title === selectedProject.title) return;
 
-    if (isPaused) {
-      animRef.current.resume();
-      setIsPaused(false);
-    } else {
-      animRef.current.pause();
-      setIsPaused(true);
-    }
+    setSelectedProject(project);
+    offsetRef.current = 0;
+    velocityRef.current = 0;
   };
-
-  const handleSelectProject = (project: (typeof projects)[number]) => {
-    if (project.title === selected.title) return;
-
-    setSelected(project);
-    setIsChanging(true);
-
-    if (changeTimeoutRef.current) {
-      clearTimeout(changeTimeoutRef.current);
-    }
-
-    changeTimeoutRef.current = setTimeout(() => {
-      setDisplayedProject(project);
-      setIsChanging(false);
-    }, 260);
-
-    if (isPaused && animRef.current) {
-      animRef.current.resume();
-      setIsPaused(false);
-    }
-  };
-
-  const desktopImages = [displayedProject.src, displayedProject.src3].filter(
-    Boolean,
-  ) as string[];
-
-  const mobileImages = [displayedProject.src2, displayedProject.src4].filter(
-    Boolean,
-  ) as string[];
-
-  const selectedImages = [
-    ...desktopImages.map((img) => ({
-      src: img,
-      type: "desktop" as const,
-    })),
-    ...mobileImages.map((img) => ({
-      src: img,
-      type: "mobile" as const,
-    })),
-  ];
-
-  const desktopImageLayouts = [
-    "ml-[18%] h-[380px] w-[72%] scale-[0.98] xl:h-[460px]",
-    "ml-[5%] mt-24 h-[360px] w-[64%] scale-[1.05] xl:h-[440px]",
-    "ml-[26%] mt-24 h-[400px] w-[68%] scale-[0.94] xl:h-[480px]",
-  ];
-
-  const mobileImageLayouts = [
-    "ml-[8%] mt-32 h-[500px] w-[32%] scale-[1] xl:h-[600px]",
-    "ml-[56%] mt-32 h-[520px] w-[30%] scale-[0.92] xl:h-[620px]",
-    "ml-[28%] mt-32 h-[480px] w-[28%] scale-[1.08] xl:h-[580px]",
-  ];
 
   return (
     <SmoothScroll>
-      <section className="relative min-h-screen w-full bg-[#ececec] text-[#161310] dark:bg-[#2e2b2b] dark:text-stone-300">
+      <section className="relative min-h-screen w-full overflow-hidden bg-[#ececec] text-[#161310] dark:bg-[#2e2b2b] dark:text-stone-300">
         {/* Mobile */}
         <div className="px-6 pb-16 pt-28 md:hidden">
           <motion.div
@@ -182,75 +248,75 @@ const ProjectsClient = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
-            <p className="mb-4 text-[10px] uppercase tracking-[0.3em] opacity-45">
+            <p className="mb-4 text-[10px] uppercase tracking-[0.3em] text-[#161310]/45 dark:text-stone-300/45">
               Selected Work
             </p>
 
-            <h1 className="text-4xl font-black uppercase leading-[0.92] tracking-[-0.05em]">
+            <h1 className="text-4xl font-black uppercase leading-[0.92] tracking-[-0.05em] text-[#161310] dark:text-stone-200">
               My Work
             </h1>
 
-            <p className="mt-4 text-sm uppercase tracking-[0.18em] opacity-55">
+            <p className="mt-4 text-sm uppercase tracking-[0.18em] text-[#161310]/55 dark:text-stone-300/55">
               Code / Design / Fullstack
             </p>
           </motion.div>
 
           <div className="mt-14 flex flex-col gap-16">
-            {projects.map((p, i) => (
+            {projects.map((project, i) => (
               <motion.article
-                key={p.title}
+                key={project.title}
                 initial={{ opacity: 0, y: 26 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.15 + i * 0.08, duration: 0.6 }}
                 className="flex flex-col"
               >
-                <p className="mb-3 text-[10px] uppercase tracking-[0.28em] opacity-35">
+                <p className="mb-3 text-[10px] uppercase tracking-[0.28em] text-[#161310]/35 dark:text-stone-300/35">
                   {String(i + 1).padStart(2, "0")}
                 </p>
 
-                <h2 className="mb-5 text-2xl uppercase leading-[0.95] tracking-[-0.04em]">
-                  {p.title}
+                <h2 className="mb-5 text-2xl uppercase leading-[0.95] tracking-[-0.04em] text-[#161310] dark:text-stone-200">
+                  {project.title}
                 </h2>
 
                 <a
-                  href={p.link}
+                  href={project.link}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block"
                 >
-                  <div className="relative h-[260px] w-full border border-[#161310]/20 bg-[#f6f4f1] p-4 dark:border-stone-300/20 dark:bg-[#242121]">
-                    <div className="relative h-full w-full">
+                  <div className="relative h-[260px] w-full border border-[#161310]/20 p-4 dark:border-stone-300/20">
+                    <div className="relative h-full w-full ">
                       <Image
-                        src={`/projects/${p.src}`}
-                        alt={p.title}
+                        src={`/projects/${project.images[0]}`}
+                        alt={project.title}
                         fill
-                        className="object-contain transition-opacity duration-300 hover:opacity-90"
+                        className="object-contain  transition-opacity duration-300 hover:opacity-90"
                       />
                     </div>
                   </div>
                 </a>
 
                 <div className="mt-6 border-t border-[#161310]/15 pt-5 dark:border-stone-300/15">
-                  <p className="text-sm leading-relaxed opacity-75">
-                    {p.about}
+                  <p className="text-sm leading-relaxed text-[#161310]/75 dark:text-stone-300/75">
+                    {project.about}
                   </p>
 
                   <div className="mt-5 flex flex-col gap-4 border-t border-[#161310]/15 pt-4 dark:border-stone-300/15">
                     <div>
-                      <p className="mb-2 text-[10px] uppercase tracking-[0.22em] opacity-40">
+                      <p className="mb-2 text-[10px] uppercase tracking-[0.22em] text-[#161310]/40 dark:text-stone-300/40">
                         Stack
                       </p>
 
-                      <p className="text-sm leading-relaxed opacity-70">
-                        {p.stack}
+                      <p className="text-sm leading-relaxed text-[#161310]/70 dark:text-stone-300/70">
+                        {project.stack}
                       </p>
                     </div>
 
                     <a
-                      href={p.link}
+                      href={project.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-block w-fit border border-[#161310] px-4 py-2 text-sm uppercase tracking-[0.18em] dark:border-stone-300"
+                      className="inline-block w-fit border border-[#161310] px-4 py-2 text-sm uppercase tracking-[0.18em] text-[#161310] dark:border-stone-300 dark:text-stone-300"
                     >
                       View Website
                     </a>
@@ -262,181 +328,80 @@ const ProjectsClient = () => {
         </div>
 
         {/* Desktop */}
-        <div className="hidden md:block">
-          <div className="mx-auto grid min-h-screen w-full max-w-[1800px] grid-cols-12 gap-10 px-10 pb-12 pt-28 xl:px-20">
-            {/* Left rail */}
-            <motion.div
-              initial={{ opacity: 0, y: 28 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.65, ease: "easeOut" }}
-              className="col-span-3 flex min-h-[calc(100vh-7rem)] flex-col"
-            >
-              <div className="flex flex-1 flex-col justify-center">
-                <div>
-                  <div className="mb-10 flex items-center justify-between text-[14px] uppercase tracking-[0.28em] ">
-                    <p>Selected Projects</p>
-                    <p>04</p>
-                  </div>
-                  <div className="flex flex-col gap-9">
-                    {projects.map((project, i) => {
-                      const isSelected = selected.title === project.title;
+        <div className="hidden h-screen w-full overflow-hidden md:block">
+          {/* Left project list */}
+          <div className="fixed left-6 top-[22vh] z-50 flex flex-col gap-5 xl:left-8">
+            <div className="flex flex-col gap-5">
+              {projects.map((project, index) => {
+                const isActive = selectedProject.title === project.title;
 
-                      return (
-                        <button
-                          key={project.title}
-                          onClick={() => handleSelectProject(project)}
-                          className="group grid cursor-pointer grid-cols-[34px_1fr]  text-left"
-                        >
-                          <span
-                            className={`pt-1 text-[10px] uppercase tracking-[0.22em] transition-opacity duration-300 ${
-                              isSelected
-                                ? "opacity-90"
-                                : "opacity-50 group-hover:opacity-60"
-                            }`}
-                          >
-                            {String(i + 1).padStart(2, "0")}
-                          </span>
-
-                          <h2
-                            className={`text-2xl uppercase whitespace-nowrap leading-[0.9] tracking-[-0.05em] transition-all duration-300 xl:text-3xl ${
-                              isSelected
-                                ? "translate-x-2 opacity-100"
-                                : "translate-x-0 opacity-35 group-hover:opacity-100"
-                            }`}
-                          >
-                            {project.title}
-                          </h2>
-                        </button>
-                      );
-                    })}
-                  </div>
-
-                  <a
-                    href={displayedProject.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group relative mt-10 inline-block w-fit cursor-pointer overflow-hidden text-[18px] font-black uppercase tracking-[0.2em] text-[#161310] dark:text-stone-300"
+                return (
+                  <button
+                    key={project.title}
+                    onClick={() => handleSelectProject(project)}
+                    className={`w-fit text-left cursor-pointer text-[18px] font-black uppercase tracking-[-0.02em] text-[#161310] transition-opacity duration-300 dark:text-stone-300 ${
+                      isActive ? "opacity-100" : "opacity-35 hover:opacity-100"
+                    }`}
                   >
-                    <WaveLinkText text="View live" />
-                  </a>
-                </div>
-              </div>
-            </motion.div>
+                    <span className="mr-2 inline-block min-w-[24px]">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    {project.title}
+                  </button>
+                );
+              })}
+            </div>
 
-            {/* Right auto looping page */}
-            <motion.div
-              initial={{ opacity: 0, y: 28 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.75, ease: "easeOut", delay: 0.08 }}
-              className="col-span-9"
+            <a
+              href={selectedProject.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group relative mt-3 inline-block  w-fit overflow-hidden text-[15px] font-black uppercase tracking-[0.18em] text-[#161310] dark:text-stone-300"
             >
-              <div className="ml-auto flex w-full max-w-[1080px] flex-col">
-                <motion.div
-                  animate={{
-                    opacity: isChanging ? 0 : 1,
-                    y: isChanging ? 26 : 0,
-                    filter: isChanging ? "blur(8px)" : "blur(0px)",
-                  }}
-                  transition={{
-                    duration: 0.38,
-                    ease: [0.22, 1, 0.36, 1],
-                  }}
-                  className="relative h-[76vh] overflow-hidden bg-[#ececec] px-6 dark:bg-[#2e2b2b]"
-                >
-                  <div
-                    ref={containerRef}
-                    className="h-screen"
-                    style={{
-                      overflow: "hidden",
-                      position: "relative",
-                    }}
-                  >
-                    <div ref={scrollRef}>
-                      {[...Array(2)].map((_, idx) => (
-                        <div key={idx} className="mb-24 py-20">
-                          <div className="mb-28 max-w-[640px]">
-                            <h2 className="text-6xl font-black uppercase leading-[0.86] tracking-[-0.07em] xl:text-8xl">
-                              {displayedProject.title}
-                            </h2>
-
-                            <p className="mt-7 max-w-[520px] text-base font-semibold leading-relaxed opacity-70 xl:text-xl">
-                              {displayedProject.about}
-                            </p>
-
-                            <div className="mt-8 max-w-[560px]">
-                              <p className="mb-2 text-[10px] uppercase tracking-[0.22em] opacity-35">
-                                Stack
-                              </p>
-
-                              <p className="text-sm leading-relaxed opacity-60 xl:text-lg">
-                                {displayedProject.stack}
-                              </p>
-                            </div>
-                          </div>
-
-                          <div className="relative">
-                            {selectedImages.map((image, i) => {
-                              const desktopIndex =
-                                selectedImages
-                                  .slice(0, i + 1)
-                                  .filter((item) => item.type === "desktop")
-                                  .length - 1;
-
-                              const mobileIndex =
-                                selectedImages
-                                  .slice(0, i + 1)
-                                  .filter((item) => item.type === "mobile")
-                                  .length - 1;
-
-                              const layout =
-                                image.type === "desktop"
-                                  ? desktopImageLayouts[
-                                      desktopIndex % desktopImageLayouts.length
-                                    ]
-                                  : mobileImageLayouts[
-                                      mobileIndex % mobileImageLayouts.length
-                                    ];
-
-                              return (
-                                <div
-                                  key={`${displayedProject.title}-${image.src}-${i}`}
-                                  className={`relative ${layout}`}
-                                >
-                                  <Image
-                                    src={`/projects/${image.src}`}
-                                    alt={`${displayedProject.title} ${
-                                      image.type === "desktop"
-                                        ? "desktop"
-                                        : "mobile"
-                                    } image ${i + 1}`}
-                                    width={
-                                      image.type === "desktop" ? 1100 : 500
-                                    }
-                                    height={
-                                      image.type === "desktop" ? 720 : 900
-                                    }
-                                    className="h-full w-full object-contain"
-                                    priority={idx === 0 && i < 2}
-                                  />
-                                </div>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </motion.div>
-              </div>
-            </motion.div>
+              <WaveLinkText text="Live Link" />
+            </a>
           </div>
 
-          <button
-            onClick={handlePauseToggle}
-            className="fixed bottom-8 right-8 z-50 flex cursor-pointer items-center gap-3 px-6 py-4 text-base font-semibold uppercase tracking-[0.16em] opacity-90 transition-opacity duration-300 hover:opacity-100"
+          {/* Infinite desktop cards */}
+          <div
+            ref={stageRef}
+            className="relative  h-screen w-full overflow-hidden"
           >
-            {isPaused ? <>Resume</> : <>Pause</>}
-          </button>
+            {loopedCards.map((card, index) => (
+              <article
+                key={`${card.title}-${card.image}-${index}`}
+                ref={(el) => {
+                  if (el) cardRefs.current[index] = el;
+                }}
+                className="absolute  bottom-[-3vh]  left-0 flex flex-col overflow-hidden border border-[#161310]/30 bg-[#ececec] p-[1.1vw] text-[#161310] will-change-[transform,width,height] dark:border-stone-300/25 dark:bg-[#2e2b2b] dark:text-stone-300"
+              >
+                <div className="relative  aspect-[16/9] w-full shrink-0 overflow-hidden bg-transparent">
+                  <Image
+                    src={`/projects/${card.image}`}
+                    alt={card.title}
+                    fill
+                    priority={index < 6}
+                    sizes="100vw"
+                    className="object-contain"
+                  />
+                </div>
+
+                <div className="flex min-h-0 flex-1 flex-col pt-[1vw]">
+                  <p className="text-[clamp(12px,0.85vw,18px)] leading-none text-[#161310]/60 dark:text-stone-300/60">
+                    {card.eyebrow}
+                  </p>
+
+                  <h2 className="mt-[0.55vw] text-[clamp(18px,1.35vw,32px)] font-medium uppercase leading-[1.02] text-[#161310] dark:text-stone-200">
+                    {card.title}
+                  </h2>
+
+                  <p className="mt-[0.85vw] line-clamp-4 max-w-[96%] text-[clamp(13px,0.95vw,20px)] leading-[1.35] text-[#161310]/75 dark:text-stone-300/75">
+                    {card.description}
+                  </p>
+                </div>
+              </article>
+            ))}
+          </div>
         </div>
       </section>
     </SmoothScroll>

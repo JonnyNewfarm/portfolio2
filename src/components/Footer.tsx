@@ -26,7 +26,7 @@ const Footer = () => {
     return () => clearInterval(interval);
   }, []);
 
-  if (pathname === "/") return null;
+  if (pathname === "/" || pathname === "/projects") return null;
 
   return (
     <footer className="relative overflow-hidden bg-[#ececec] px-4 py-10 text-[#161310] dark:bg-[#2e2b2b] dark:text-stone-300 md:px-10 lg:px-16">
