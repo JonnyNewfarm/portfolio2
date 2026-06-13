@@ -1,7 +1,10 @@
 "use client";
 
 import React, { useRef } from "react";
+import Image from "next/image";
+import Link from "next/link";
 import ScrollSection from "@/components/SmoothScroll";
+import WaveLinkText from "./WaveLinkText";
 import {
   motion,
   useMotionValue,
@@ -9,42 +12,17 @@ import {
   useSpring,
   useTransform,
 } from "framer-motion";
-import Image from "next/image";
-import Link from "next/link";
-import WaveLinkText from "./WaveLinkText";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
-const stack = [
-  "React",
-  "Next.js",
-  "TypeScript",
-  "Tailwind",
-  "Framer Motion",
-  "Three.js",
-  "Prisma",
-  "MongoDB",
-  "SQL",
-  "Neon",
-  "Figma",
-  "Photoshop",
-];
-
-const focusAreas = [
+const imageStats = [
   {
-    number: "01",
-    title: "Interface",
-    text: "Clean layouts, strong hierarchy and digital experiences that feel clear from the first interaction.",
+    label: "Name",
+    value: "Jonas Nygaard",
   },
   {
-    number: "02",
-    title: "Frontend",
-    text: "React and Next.js builds with responsive structure, motion and attention to detail.",
-  },
-  {
-    number: "03",
-    title: "Systems",
-    text: "Auth, databases, dashboards and fullstack features connected to usable interfaces.",
+    label: "Location",
+    value: "Oslo, Norway",
   },
 ];
 
@@ -192,8 +170,7 @@ export default function AboutClient() {
     offset: ["start end", "end start"],
   });
 
-  const imageY = useTransform(scrollYProgress, [0, 1], ["-8%", "25%"]);
-  const imageScale = useTransform(scrollYProgress, [0, 1], [1.14, 1.08]);
+  const imageScale = useTransform(scrollYProgress, [0, 1], [1.04, 1]);
 
   const handleImageMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -204,8 +181,8 @@ export default function AboutClient() {
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
 
-    const moveX = ((x - centerX) / centerX) * 18;
-    const moveY = ((y - centerY) / centerY) * 18;
+    const moveX = ((x - centerX) / centerX) * 8;
+    const moveY = ((y - centerY) / centerY) * 8;
 
     mouseX.set(moveX);
     mouseY.set(moveY);
@@ -218,322 +195,135 @@ export default function AboutClient() {
 
   return (
     <ScrollSection>
-      <section className="min-h-screen w-full overflow-hidden bg-[#ececec] px-4 pb-16 pt-28 text-[#161310] dark:bg-[#2e2b2b] dark:text-stone-300 sm:px-8 md:px-10 lg:px-16 lg:pt-36">
-        <div className="mx-auto w-full max-w-[1800px]">
-          {/* HERO */}
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16">
-            <div>
-              <TextReveal
-                as="p"
-                mode="words"
-                delay={0.05}
-                className="mb-6 text-xs font-black uppercase leading-[1.2] tracking-[0.28em] opacity-45"
-              >
-                About / Jonas Nygaard
-              </TextReveal>
-
-              <TextReveal
-                as="h1"
-                mode="lines"
-                delay={0.12}
-                className="max-w-[1250px] text-[14vw] font-black uppercase leading-[0.92] tracking-[-0.06em] sm:text-[14vw] md:text-[10vw] lg:text-[8.2vw]"
-              >
-                {`Creative
-frontend
-developer.`}
-              </TextReveal>
-            </div>
-
-            <div className="flex flex-col justify-end">
-              <TextReveal
-                as="p"
-                mode="words"
-                delay={0.35}
-                className="max-w-[560px] text-base font-bold leading-[1.45] opacity-85 md:text-lg lg:ml-auto lg:text-right"
-              >
-                I design and build web experiences where layout, motion and code
-                work together. Clean interfaces, sharp details and frontend
-                systems that feel good to use.
-              </TextReveal>
-            </div>
-          </div>
-
-          {/* PORTRAIT / INFO */}
-          <div
+      <section className="relative min-h-screen overflow-hidden bg-[#ececec] text-[#161310] dark:bg-[#2e2b2b] dark:text-stone-300">
+        {/* IMAGE + STATS */}
+        <div className="absolute right-0 top-[6.2rem] z-[1] w-[54vw] sm:w-[42vw] md:w-[34vw] lg:top-[5.7rem] lg:w-[27vw] xl:w-[24vw] 2xl:w-[21vw]">
+          <motion.div
             ref={imageRef}
-            className="mt-16 grid grid-cols-1 gap-10 lg:mt-24 lg:grid-cols-[0.78fr_1.22fr] lg:gap-16"
+            onMouseMove={handleImageMove}
+            onMouseLeave={handleImageLeave}
+            style={{
+              x: smoothMouseX,
+              y: smoothMouseY,
+              scale: imageScale,
+            }}
+            className="relative aspect-[4/5] w-full overflow-hidden bg-stone-400/10 dark:bg-stone-200/5"
           >
-            <FadeIn className="lg:sticky lg:top-28 lg:h-fit">
-              <motion.div
-                onMouseMove={handleImageMove}
-                onMouseLeave={handleImageLeave}
-                className="relative aspect-[3/4] w-full max-w-[620px] overflow-hidden bg-stone-400/10 dark:bg-stone-200/5"
-              >
-                <motion.div
-                  style={{
-                    y: imageY,
-                    x: smoothMouseX,
-                    scale: imageScale,
-                  }}
-                  className="absolute inset-[-6%] will-change-transform"
-                >
-                  <motion.div
-                    style={{
-                      y: smoothMouseY,
-                    }}
-                    className="relative h-full w-full"
-                  >
-                    <Image
-                      src="/jonas-2.jpg"
-                      alt="Image of Jonas"
-                      fill
-                      priority
-                      className="object-cover object-center"
-                    />
-                  </motion.div>
-                </motion.div>
-              </motion.div>
+            <Image
+              src="/jonas-2.jpg"
+              alt="Jonas Nygaard"
+              fill
+              priority
+              className="object-cover object-top"
+            />
+          </motion.div>
 
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.4 }}
+            variants={{
+              hidden: {},
+              visible: {
+                transition: {
+                  staggerChildren: 0.08,
+                  delayChildren: 0.15,
+                },
+              },
+            }}
+            className="mt-5 grid grid-cols-1 gap-4 text-[10px] font-black uppercase leading-[1.25] tracking-[0.16em] sm:grid-cols-2 sm:gap-6 lg:text-xs lg:tracking-[0.18em]"
+          >
+            {imageStats.map((item) => (
               <motion.div
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, amount: 0.3 }}
+                key={item.label}
                 variants={{
-                  hidden: {},
+                  hidden: {
+                    opacity: 0,
+                    y: 16,
+                    filter: "blur(6px)",
+                  },
                   visible: {
+                    opacity: 1,
+                    y: 0,
+                    filter: "blur(0px)",
                     transition: {
-                      staggerChildren: 0.06,
-                      delayChildren: 0.15,
+                      duration: 0.7,
+                      ease,
                     },
                   },
                 }}
-                className="mt-5 grid grid-cols-2 gap-x-6 gap-y-5 text-xs font-black uppercase leading-[1.25] tracking-[0.18em] opacity-75"
               >
-                {[
-                  ["Name", "Jonas Nygaard"],
-                  ["Location", "Oslo, Norway"],
-                  ["Focus", "Frontend / UI"],
-                  ["Mode", "Design / Code"],
-                ].map(([label, value]) => (
-                  <motion.div
-                    key={label}
-                    variants={{
-                      hidden: {
-                        opacity: 0,
-                        y: 18,
-                        filter: "blur(6px)",
-                      },
-                      visible: {
-                        opacity: 1,
-                        y: 0,
-                        filter: "blur(0px)",
-                        transition: {
-                          duration: 0.7,
-                          ease,
-                        },
-                      },
-                    }}
-                  >
-                    <p className="mb-1 opacity-35">{label}</p>
-                    <p>{value}</p>
-                  </motion.div>
-                ))}
+                <p className="mb-1 opacity-35">{item.label}</p>
+                <p className="opacity-85">{item.value}</p>
               </motion.div>
-            </FadeIn>
+            ))}
+          </motion.div>
+        </div>
 
-            <div>
-              {/* PROFILE */}
-              <div className="pt-8 dark:border-stone-200/20">
-                <TextReveal
-                  as="p"
-                  mode="words"
-                  className="mb-8 text-xs font-black uppercase leading-[1.2] tracking-[0.28em] opacity-45"
-                >
-                  Profile
-                </TextReveal>
+        {/* CONTENT */}
+        <div className="relative z-[2] px-4 sm:px-8 md:px-10 lg:pl-16 lg:pr-[28vw] xl:pr-[26vw] 2xl:pr-[24vw]">
+          {/* HERO */}
+          <div className="flex min-h-screen flex-col justify-end pb-10 pt-28 lg:pt-36">
+            <TextReveal
+              as="h1"
+              mode="lines"
+              delay={0.12}
+              className="max-w-[980px] text-[clamp(3rem,7vw,7rem)] font-black uppercase leading-[0.92] tracking-[-0.07em]"
+            >
+              {`Designer &
+frontend
+developer.`}
+            </TextReveal>
+          </div>
 
+          {/* UNDER FIRST VIEWPORT */}
+          <div className="pb-16 lg:pb-24">
+            <div className="border-t border-stone-400/30 pt-8 dark:border-stone-200/20">
+              <div className="grid max-w-[900px] grid-cols-1 gap-6 md:grid-cols-2">
                 <TextReveal
                   as="p"
                   mode="words"
                   delay={0.05}
-                  className="max-w-[1050px] text-[8vw] font-black uppercase leading-[1] tracking-[-0.075em] opacity-90 md:text-[5vw] lg:text-[3.75vw]"
+                  className="text-base leading-[1.65] opacity-80 md:text-lg"
                 >
-                  I work between visual design and development, turning ideas
-                  into responsive, polished and usable digital products.
+                  I like being creative in both design and development, building
+                  digital experiences with focus on layout, interaction, motion
+                  and frontend details.
                 </TextReveal>
 
                 <TextReveal
                   as="p"
                   mode="words"
-                  delay={0.15}
-                  className="mt-8 max-w-[760px] text-base  leading-[1.55]  md:text-lg"
+                  delay={0.13}
+                  className="text-base leading-[1.65] opacity-80 md:text-lg"
                 >
-                  My work usually starts with structure: what should the page
-                  say, how should it feel, and how should people move through
-                  it. From there I build interfaces with strong layout, clear
-                  interactions and code that is easy to maintain.
+                  My work is about making websites feel sharp, responsive and
+                  alive — from the first idea to the final interface.
                 </TextReveal>
               </div>
+            </div>
 
-              {/* FOCUS AREAS */}
-              <div className="mt-16 border-stone-400/30 pt-8 dark:border-stone-200/20 lg:mt-24">
+            <div className="mt-16 border-t border-stone-400/30 pt-8 dark:border-stone-200/20">
+              <div className="grid grid-cols-1 gap-8 md:grid-cols-[1fr_0.35fr] md:items-end">
                 <TextReveal
                   as="p"
-                  mode="words"
-                  className="mb-8 text-xs font-black uppercase leading-[1.2] tracking-[0.28em] opacity-45"
+                  mode="lines"
+                  delay={0.05}
+                  className="max-w-[760px] text-3xl font-black uppercase leading-[1] tracking-[-0.05em] md:text-5xl"
                 >
-                  Work areas
+                  {`Available for
+selected freelance
+projects.`}
                 </TextReveal>
 
-                <div className="divide-y divide-stone-400/30 border-t border-stone-400/30 dark:divide-stone-200/20 dark:border-stone-200/20">
-                  {focusAreas.map((item, index) => (
-                    <motion.div
-                      key={item.title}
-                      initial="hidden"
-                      whileInView="visible"
-                      viewport={{ once: true, amount: 0.35 }}
-                      variants={{
-                        hidden: {},
-                        visible: {
-                          transition: {
-                            staggerChildren: 0.08,
-                            delayChildren: index * 0.05,
-                          },
-                        },
-                      }}
-                      className="group grid grid-cols-1 gap-6 py-8 md:grid-cols-[0.11fr_0.55fr_0.9fr] md:items-start lg:py-10"
-                    >
-                      <motion.p
-                        variants={{
-                          hidden: {
-                            opacity: 0,
-                            y: 20,
-                            filter: "blur(6px)",
-                          },
-                          visible: {
-                            opacity: 1,
-                            y: 0,
-                            filter: "blur(0px)",
-                            transition: {
-                              duration: 0.75,
-                              ease,
-                            },
-                          },
-                        }}
-                        className="text-xs font-black uppercase leading-[1.2] tracking-[0.24em] opacity-35"
-                      >
-                        {item.number}
-                      </motion.p>
-
-                      <TextReveal
-                        as="h2"
-                        mode="lines"
-                        delay={0}
-                        className="text-[8vw] font-black uppercase leading-[0.95] tracking-[-0.04em] md:text-[5vw] lg:text-[3.2vw]"
-                      >
-                        {item.title}
-                      </TextReveal>
-
-                      <TextReveal
-                        as="p"
-                        mode="words"
-                        delay={0.08}
-                        className="max-w-[560px] text-base  leading-[1.5] opacity-85 md:justify-self-end md:text-right md:text-lg"
-                      >
-                        {item.text}
-                      </TextReveal>
-                    </motion.div>
-                  ))}
-                </div>
-              </div>
-
-              {/* STACK */}
-              <div className="mt-16 border-t border-stone-400/30 pt-8 dark:border-stone-200/20 lg:mt-24">
-                <div className="mb-8 flex items-end justify-between gap-8">
-                  <TextReveal
-                    as="p"
-                    mode="words"
-                    className="text-xs font-black uppercase leading-[1.2] tracking-[0.28em] opacity-80"
+                <FadeIn delay={0.25} y={20} className="md:justify-self-end">
+                  <Link
+                    href="/contact"
+                    className="group relative block w-fit overflow-hidden text-sm font-black uppercase tracking-[0.22em] md:text-base"
                   >
-                    Stack / Tools
-                  </TextReveal>
-
-                  <TextReveal
-                    as="p"
-                    mode="words"
-                    delay={0.1}
-                    className="hidden max-w-[360px] text-right text-xs font-black uppercase leading-[1.35] tracking-[0.22em] opacity-65 md:block"
-                  >
-                    Tools used to design, build and ship web projects.
-                  </TextReveal>
-                </div>
-
-                <motion.div
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true, amount: 0.2 }}
-                  variants={{
-                    hidden: {},
-                    visible: {
-                      transition: {
-                        staggerChildren: 0.035,
-                      },
-                    },
-                  }}
-                  className="flex flex-wrap gap-x-5 gap-y-1 overflow-visible py-2"
-                >
-                  {stack.map((item) => (
-                    <span
-                      key={item}
-                      className="inline-block overflow-visible py-[0.18em] -my-[0.18em]"
-                    >
-                      <motion.span
-                        variants={{
-                          hidden: {
-                            y: "115%",
-                            opacity: 0,
-                            filter: "blur(8px)",
-                          },
-                          visible: {
-                            y: "0%",
-                            opacity: 1,
-                            filter: "blur(0px)",
-                            transition: {
-                              duration: 0.85,
-                              ease,
-                            },
-                          },
-                        }}
-                        className="inline-block text-[clamp(2.4rem,5vw,6rem)] font-black uppercase leading-[1.08] tracking-[-0.08em] opacity-80 will-change-transform"
-                      >
-                        {item}
-                      </motion.span>
-                    </span>
-                  ))}
-                </motion.div>
-              </div>
-
-              {/* CTA */}
-              <div className="mt-16 border-t border-stone-400/30 pt-8 dark:border-stone-200/20 lg:mt-24">
-                <div className="grid grid-cols-1 gap-8 md:grid-cols-[1fr_0.4fr] md:items-end">
-                  <TextReveal
-                    as="h2"
-                    mode="lines"
-                    className="max-w-[1000px] text-[13vw] font-black uppercase leading-[0.92] tracking-[-0.095em] md:text-[6.5vw] lg:text-[5vw]"
-                  >
-                    {`Let's build
-something useful.`}
-                  </TextReveal>
-
-                  <FadeIn delay={0.2} y={20} className="md:justify-self-end">
-                    <Link
-                      href="/contact"
-                      className="group relative block w-fit overflow-hidden text-md font-black uppercase tracking-[0.22em] transition"
-                    >
-                      <WaveLinkText text="Contact Me" />
-                    </Link>
-                  </FadeIn>
-                </div>
+                    <WaveLinkText text="Contact Me" />
+                  </Link>
+                </FadeIn>
               </div>
             </div>
           </div>
