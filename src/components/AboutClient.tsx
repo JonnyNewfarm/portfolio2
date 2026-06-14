@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import ScrollSection from "@/components/SmoothScroll";
@@ -14,6 +14,22 @@ import {
 } from "framer-motion";
 
 const ease = [0.22, 1, 0.36, 1] as const;
+
+const introImages = [
+  {
+    src: "/jonas-03.jpeg",
+    alt: "Jonas Nygaard 3",
+  },
+
+  {
+    src: "/jonas-02.jpg",
+    alt: "Jonas Nygaard 2",
+  },
+  {
+    src: "/jonas-01.jpg",
+    alt: "Jonas Nygaard 1",
+  },
+];
 
 const imageStats = [
   {
@@ -33,6 +49,7 @@ type TextRevealProps = {
   delay?: number;
   once?: boolean;
   mode?: "words" | "lines";
+  trigger?: boolean;
 };
 
 function TextReveal({
@@ -42,6 +59,7 @@ function TextReveal({
   delay = 0,
   once = true,
   mode = "words",
+  trigger,
 }: TextRevealProps) {
   const MotionTag = motion[as];
 
@@ -77,13 +95,23 @@ function TextReveal({
     },
   };
 
+  const animationProps =
+    typeof trigger === "boolean"
+      ? {
+          initial: "hidden",
+          animate: trigger ? "visible" : "hidden",
+        }
+      : {
+          initial: "hidden",
+          whileInView: "visible",
+          viewport: { once, amount: 0.35 },
+        };
+
   return (
     <MotionTag
       variants={containerVariants}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once, amount: 0.35 }}
       className={className}
+      {...animationProps}
     >
       {items.map((item, index) => (
         <span
@@ -150,6 +178,9 @@ function FadeIn({
 export default function AboutClient() {
   const imageRef = useRef<HTMLDivElement | null>(null);
 
+  const [activeImage, setActiveImage] = useState(0);
+  const [introDone, setIntroDone] = useState(false);
+
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
@@ -171,6 +202,28 @@ export default function AboutClient() {
   });
 
   const imageScale = useTransform(scrollYProgress, [0, 1], [1.04, 1]);
+
+  useEffect(() => {
+    const stepDuration = 850;
+
+    const imageTimers = introImages.map((_, index) =>
+      window.setTimeout(() => {
+        setActiveImage(index);
+      }, index * stepDuration),
+    );
+
+    const doneTimer = window.setTimeout(
+      () => {
+        setIntroDone(true);
+      },
+      introImages.length * stepDuration + 250,
+    );
+
+    return () => {
+      imageTimers.forEach((timer) => window.clearTimeout(timer));
+      window.clearTimeout(doneTimer);
+    };
+  }, []);
 
   const handleImageMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -207,21 +260,79 @@ export default function AboutClient() {
               y: smoothMouseY,
               scale: imageScale,
             }}
+            initial={{
+              clipPath: "inset(100% 0% 0% 0%)",
+              filter: "blur(12px)",
+            }}
+            animate={{
+              clipPath: "inset(0% 0% 0% 0%)",
+              filter: "blur(0px)",
+            }}
+            transition={{
+              duration: 1.1,
+              ease,
+            }}
             className="relative aspect-[4/5] w-full overflow-hidden bg-stone-400/10 dark:bg-stone-200/5"
           >
-            <Image
-              src="/jonas-2.jpg"
-              alt="Jonas Nygaard"
-              fill
-              priority
-              className="object-cover object-top"
-            />
+            {introImages.map((image, index) => (
+              <motion.div
+                key={image.src}
+                initial={false}
+                animate={{
+                  y:
+                    activeImage === index
+                      ? "0%"
+                      : index < activeImage
+                        ? "-100%"
+                        : "100%",
+                  scale: activeImage === index ? 1 : 1.08,
+                  opacity: activeImage === index ? 1 : 0,
+                  filter: activeImage === index ? "blur(0px)" : "blur(8px)",
+                  zIndex: activeImage === index ? 2 : 1,
+                }}
+                transition={{
+                  duration: 0.55,
+                  ease,
+                }}
+                className="absolute inset-0"
+              >
+                <Image
+                  src={image.src}
+                  alt={image.alt}
+                  fill
+                  priority
+                  className="object-cover object-top"
+                  sizes="(max-width: 640px) 54vw, (max-width: 768px) 42vw, (max-width: 1024px) 34vw, 27vw"
+                />
+              </motion.div>
+            ))}
+
+            {/* AWWWARDS STYLE COUNTER */}
+            <div className="pointer-events-none absolute inset-0 z-10 flex items-end justify-between p-3 mix-blend-difference">
+              <motion.p
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.65, delay: 0.25, ease }}
+                className="text-[9px] font-black uppercase leading-none tracking-[0.22em] text-white"
+              >
+                Jonas
+              </motion.p>
+
+              <motion.p
+                key={activeImage}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35, ease }}
+                className="text-[9px] font-black uppercase leading-none tracking-[0.22em] text-white"
+              >
+                0{activeImage + 1} / 03
+              </motion.p>
+            </div>
           </motion.div>
 
           <motion.div
             initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.4 }}
+            animate={introDone ? "visible" : "hidden"}
             variants={{
               hidden: {},
               visible: {
@@ -267,7 +378,8 @@ export default function AboutClient() {
             <TextReveal
               as="h1"
               mode="lines"
-              delay={0.12}
+              delay={0.05}
+              trigger={introDone}
               className="max-w-[980px] text-[clamp(3rem,7vw,7rem)] font-black uppercase leading-[0.92] tracking-[-0.07em]"
             >
               {`Designer &
