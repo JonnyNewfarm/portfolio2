@@ -20,7 +20,6 @@ const introImages = [
     src: "/jonas-03.jpeg",
     alt: "Jonas Nygaard 3",
   },
-
   {
     src: "/jonas-02.jpg",
     alt: "Jonas Nygaard 2",
@@ -180,6 +179,9 @@ export default function AboutClient() {
 
   const [activeImage, setActiveImage] = useState(0);
   const [introDone, setIntroDone] = useState(false);
+  const [loadedImages, setLoadedImages] = useState(0);
+
+  const allImagesLoaded = loadedImages >= introImages.length;
 
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -204,26 +206,98 @@ export default function AboutClient() {
   const imageScale = useTransform(scrollYProgress, [0, 1], [1.04, 1]);
 
   useEffect(() => {
+    if (introDone) return;
+
+    const scrollY = window.scrollY;
+
+    const originalBodyOverflow = document.body.style.overflow;
+    const originalBodyPosition = document.body.style.position;
+    const originalBodyTop = document.body.style.top;
+    const originalBodyWidth = document.body.style.width;
+    const originalHtmlOverflow = document.documentElement.style.overflow;
+
+    const preventDefault = (event: Event) => {
+      event.preventDefault();
+    };
+
+    const preventScrollKeys = (event: KeyboardEvent) => {
+      const blockedKeys = [
+        " ",
+        "PageUp",
+        "PageDown",
+        "End",
+        "Home",
+        "ArrowUp",
+        "ArrowDown",
+        "ArrowLeft",
+        "ArrowRight",
+      ];
+
+      if (blockedKeys.includes(event.key)) {
+        event.preventDefault();
+      }
+    };
+
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
+
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.width = "100%";
+
+    window.addEventListener("wheel", preventDefault, { passive: false });
+    window.addEventListener("touchmove", preventDefault, { passive: false });
+    window.addEventListener("keydown", preventScrollKeys);
+
+    return () => {
+      document.body.style.overflow = originalBodyOverflow;
+      document.body.style.position = originalBodyPosition;
+      document.body.style.top = originalBodyTop;
+      document.body.style.width = originalBodyWidth;
+      document.documentElement.style.overflow = originalHtmlOverflow;
+
+      window.removeEventListener("wheel", preventDefault);
+      window.removeEventListener("touchmove", preventDefault);
+      window.removeEventListener("keydown", preventScrollKeys);
+
+      window.scrollTo(0, scrollY);
+    };
+  }, [introDone]);
+
+  useEffect(() => {
+    if (!allImagesLoaded) return;
+
+    const firstImageHold = 1050;
     const stepDuration = 850;
 
-    const imageTimers = introImages.map((_, index) =>
-      window.setTimeout(() => {
-        setActiveImage(index);
-      }, index * stepDuration),
-    );
+    const secondImageTimer = window.setTimeout(() => {
+      setActiveImage(1);
+    }, firstImageHold);
+
+    const thirdImageTimer = window.setTimeout(() => {
+      setActiveImage(2);
+    }, firstImageHold + stepDuration);
 
     const doneTimer = window.setTimeout(
       () => {
         setIntroDone(true);
       },
-      introImages.length * stepDuration + 250,
+      firstImageHold + stepDuration * 2 + 250,
     );
 
     return () => {
-      imageTimers.forEach((timer) => window.clearTimeout(timer));
+      window.clearTimeout(secondImageTimer);
+      window.clearTimeout(thirdImageTimer);
       window.clearTimeout(doneTimer);
     };
-  }, []);
+  }, [allImagesLoaded]);
+
+  const handleImageLoad = () => {
+    setLoadedImages((current) => {
+      if (current >= introImages.length) return current;
+      return current + 1;
+    });
+  };
 
   const handleImageMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -265,8 +339,10 @@ export default function AboutClient() {
               filter: "blur(12px)",
             }}
             animate={{
-              clipPath: "inset(0% 0% 0% 0%)",
-              filter: "blur(0px)",
+              clipPath: allImagesLoaded
+                ? "inset(0% 0% 0% 0%)"
+                : "inset(100% 0% 0% 0%)",
+              filter: allImagesLoaded ? "blur(0px)" : "blur(12px)",
             }}
             transition={{
               duration: 1.1,
@@ -301,6 +377,7 @@ export default function AboutClient() {
                   alt={image.alt}
                   fill
                   priority
+                  onLoad={handleImageLoad}
                   className="object-cover object-top"
                   sizes="(max-width: 640px) 54vw, (max-width: 768px) 42vw, (max-width: 1024px) 34vw, 27vw"
                 />
@@ -311,7 +388,10 @@ export default function AboutClient() {
             <div className="pointer-events-none absolute inset-0 z-10 flex items-end justify-between p-3 mix-blend-difference">
               <motion.p
                 initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
+                animate={{
+                  opacity: allImagesLoaded ? 1 : 0,
+                  y: allImagesLoaded ? 0 : 12,
+                }}
                 transition={{ duration: 0.65, delay: 0.25, ease }}
                 className="text-[9px] font-black uppercase leading-none tracking-[0.22em] text-white"
               >
@@ -321,7 +401,10 @@ export default function AboutClient() {
               <motion.p
                 key={activeImage}
                 initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
+                animate={{
+                  opacity: allImagesLoaded ? 1 : 0,
+                  y: allImagesLoaded ? 0 : 10,
+                }}
                 transition={{ duration: 0.35, ease }}
                 className="text-[9px] font-black uppercase leading-none tracking-[0.22em] text-white"
               >

@@ -56,7 +56,7 @@ const projects: Project[] = [
     role: "Design, frontend, backend, Stripe and motion.",
     images: [
       "calero-01.jpg",
-      "calero-02.jpg",
+      "calero-001.jpg",
       "calero-03.jpg",
       "calero-04.jpg",
       "calero-05.jpg",
@@ -445,6 +445,9 @@ const ProjectsClient = () => {
         <div className="hidden h-screen w-full overflow-hidden md:block">
           {/* Left project list */}
           <div className="fixed left-6 top-[22vh] z-50 flex flex-col gap-5 xl:left-8">
+            <p className="relative text-[11px] font-black uppercase tracking-[0.28em] text-[#161310]/80 dark:text-stone-300/80">
+              Selected Work <span className="opacity-70">/ 03</span>
+            </p>
             <div className="flex flex-col gap-5">
               {projects.map((project, index) => {
                 const isActive = selectedProject.title === project.title;
@@ -470,7 +473,7 @@ const ProjectsClient = () => {
               href={selectedProject.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="group relative mt-3 inline-block  w-fit overflow-hidden text-[15px] font-black uppercase tracking-[0.18em] text-[#161310] dark:text-stone-300"
+              className="group relative mt-1 inline-block  w-fit overflow-hidden text-[15px] font-black uppercase tracking-[0.18em] text-[#161310] dark:text-stone-300"
             >
               <WaveLinkText text="Live Link" />
             </a>
