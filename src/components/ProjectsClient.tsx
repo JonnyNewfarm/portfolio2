@@ -1,10 +1,16 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  CSSProperties,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import Image from "next/image";
-import gsap from "gsap";
 import SmoothScroll from "@/components/SmoothScroll";
 import { motion } from "framer-motion";
+import gsap from "gsap";
 import WaveLinkText from "./WaveLinkText";
 import Link from "next/link";
 
@@ -19,12 +25,19 @@ type Project = {
   images: string[];
 };
 
-type CaseCard = {
+type DesktopImage = {
+  project: Project;
   image: string;
-  eyebrow: string;
-  title: string;
-  description: string;
+  imageIndex: number;
 };
+
+type DesktopOffset = {
+  x: string;
+  y: string;
+  align: "start" | "center" | "end";
+};
+
+type DropdownMode = "projects" | "details";
 
 const projects: Project[] = [
   {
@@ -37,9 +50,9 @@ const projects: Project[] = [
       "React, Next.js, Prisma, GSAP, Motion, TailwindCSS, MongoDB, Uploadthing, NextAuth.",
     role: "Design, frontend and backend.",
     images: [
-      "kerimov-01.jpg",
-      "kerimov-02.jpg",
-      "kerimov-03.jpg",
+      "kerimov-001.jpg",
+      "kerimov-002.jpg",
+      "kerimov-003.jpg",
       "kerimov-04.jpg",
       "kerimov-05.jpg",
       "kerimov-06.jpg",
@@ -84,164 +97,221 @@ const projects: Project[] = [
   },
 ];
 
+const desktopOffsets: DesktopOffset[] = [
+  { x: "-0.8vw", y: "-0.35vw", align: "start" },
+  { x: "0.35vw", y: "0.2vw", align: "center" },
+  { x: "0.7vw", y: "-0.45vw", align: "end" },
+  { x: "-0.2vw", y: "0.45vw", align: "center" },
+
+  { x: "0.6vw", y: "-0.25vw", align: "end" },
+  { x: "-0.7vw", y: "0.25vw", align: "start" },
+  { x: "0.15vw", y: "-0.4vw", align: "center" },
+  { x: "0.85vw", y: "0.35vw", align: "end" },
+
+  { x: "-0.55vw", y: "0.15vw", align: "start" },
+  { x: "0.25vw", y: "-0.3vw", align: "center" },
+  { x: "-0.15vw", y: "0.4vw", align: "center" },
+  { x: "0.75vw", y: "-0.2vw", align: "end" },
+];
+
 const ProjectsClient = () => {
   const [selectedProject, setSelectedProject] = useState<Project>(projects[0]);
+  const [isDesktop, setIsDesktop] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [dropdownMode, setDropdownMode] = useState<DropdownMode>("projects");
 
-  const stageRef = useRef<HTMLDivElement | null>(null);
-  const cardRefs = useRef<HTMLElement[]>([]);
-  const offsetRef = useRef(0);
-  const velocityRef = useRef(0);
-  const rafRef = useRef<number | null>(null);
+  const floatingRefs = useRef<Array<HTMLDivElement | null>>([]);
 
-  const cards = useMemo<CaseCard[]>(() => {
-    const content = [
-      {
-        eyebrow: `${selectedProject.category}, ${selectedProject.year}`,
-        title: selectedProject.title,
-        description: selectedProject.about,
-      },
-      {
-        eyebrow: `Design, ${selectedProject.year}`,
-        title: "Design",
-        description:
-          "Visual direction, typography, layout and interaction design.",
-      },
-      {
-        eyebrow: `Frontend, ${selectedProject.year}`,
-        title: "Frontend",
-        description:
-          "Responsive interface, animation system and polished user experience.",
-      },
-      {
-        eyebrow: `Backend, ${selectedProject.year}`,
-        title: "Backend",
-        description:
-          "Database, authentication, API logic and application structure.",
-      },
-      {
-        eyebrow: "Stack",
-        title: "Technology",
-        description: selectedProject.stack,
-      },
-      {
-        eyebrow: "Role",
-        title: "What I Did",
-        description: selectedProject.role,
-      },
-    ];
+  const quickSetters = useRef<
+    Array<{
+      x: (value: number) => void;
+      y: (value: number) => void;
+    } | null>
+  >([]);
 
-    return selectedProject.images.map((image, index) => ({
-      image,
-      ...content[index],
-    }));
-  }, [selectedProject]);
+  const desktopImages = useMemo<DesktopImage[]>(() => {
+    const kerimov = projects[0];
+    const calero = projects[1];
+    const petsaco = projects[2];
 
-  const loopedCards = useMemo(() => {
     return [
-      ...cards,
-      ...cards,
-      ...cards,
-      ...cards,
-      ...cards,
-      ...cards,
-      ...cards,
-      ...cards,
-      ...cards,
-      ...cards,
+      {
+        project: kerimov,
+        image: kerimov.images[0],
+        imageIndex: 0,
+      },
+      {
+        project: calero,
+        image: calero.images[0],
+        imageIndex: 0,
+      },
+      {
+        project: petsaco,
+        image: petsaco.images[0],
+        imageIndex: 0,
+      },
+      {
+        project: kerimov,
+        image: kerimov.images[1],
+        imageIndex: 1,
+      },
+
+      {
+        project: calero,
+        image: calero.images[1],
+        imageIndex: 1,
+      },
+      {
+        project: petsaco,
+        image: petsaco.images[1],
+        imageIndex: 1,
+      },
+      {
+        project: kerimov,
+        image: kerimov.images[2],
+        imageIndex: 2,
+      },
+      {
+        project: calero,
+        image: calero.images[2],
+        imageIndex: 2,
+      },
+
+      {
+        project: petsaco,
+        image: petsaco.images[2],
+        imageIndex: 2,
+      },
+      {
+        project: kerimov,
+        image: kerimov.images[3],
+        imageIndex: 3,
+      },
+      {
+        project: calero,
+        image: calero.images[3],
+        imageIndex: 3,
+      },
+      {
+        project: petsaco,
+        image: petsaco.images[3],
+        imageIndex: 3,
+      },
     ];
-  }, [cards]);
+  }, []);
 
   useEffect(() => {
-    const stage = stageRef.current;
-    if (!stage) return;
-
-    const baseWidth = () => window.innerWidth * 0.22;
-    const baseHeight = () => baseWidth() * 1.02;
-
-    const minScale = 1;
-    const maxScale = 1.6;
-
-    const getScaleFromX = (x: number) => {
-      const vw = window.innerWidth;
-
-      return gsap.utils.clamp(
-        minScale,
-        maxScale,
-        gsap.utils.mapRange(0, vw * 0.9, minScale, maxScale, x),
-      );
+    const checkScreen = () => {
+      setIsDesktop(window.innerWidth >= 768);
     };
 
-    const render = () => {
-      const bw = baseWidth();
-      const bh = baseHeight();
-
-      const oneSetWidth = cards.length * bw;
-      const wrappedOffset = gsap.utils.wrap(0, oneSetWidth, offsetRef.current);
-
-      let runningX = -oneSetWidth + wrappedOffset;
-
-      cardRefs.current.forEach((card) => {
-        if (!card) return;
-
-        const scale = getScaleFromX(runningX);
-        const width = bw * scale;
-        const height = bh * scale;
-
-        gsap.set(card, {
-          x: runningX,
-          width,
-          height,
-        });
-
-        runningX += width;
-      });
-    };
-
-    const tick = () => {
-      offsetRef.current += velocityRef.current;
-      velocityRef.current *= 0.88;
-
-      if (Math.abs(velocityRef.current) < 0.01) {
-        velocityRef.current = 0;
-      }
-
-      render();
-      rafRef.current = requestAnimationFrame(tick);
-    };
-
-    const handleWheel = (event: WheelEvent) => {
-      event.preventDefault();
-
-      velocityRef.current += event.deltaY * 0.22;
-    };
-
-    stage.addEventListener("wheel", handleWheel, { passive: false });
-    window.addEventListener("resize", render);
-
-    render();
-    rafRef.current = requestAnimationFrame(tick);
+    checkScreen();
+    window.addEventListener("resize", checkScreen);
 
     return () => {
-      stage.removeEventListener("wheel", handleWheel);
-      window.removeEventListener("resize", render);
-
-      if (rafRef.current) {
-        cancelAnimationFrame(rafRef.current);
-      }
+      window.removeEventListener("resize", checkScreen);
     };
-  }, [cards]);
+  }, []);
+
+  useEffect(() => {
+    quickSetters.current = floatingRefs.current.map((element) => {
+      if (!element) return null;
+
+      return {
+        x: gsap.quickTo(element, "x", {
+          duration: 0.85,
+          ease: "power3.out",
+        }),
+        y: gsap.quickTo(element, "y", {
+          duration: 0.85,
+          ease: "power3.out",
+        }),
+      };
+    });
+
+    return () => {
+      quickSetters.current = [];
+    };
+  }, [desktopImages.length]);
+
+  function handleMouseMove(event: React.MouseEvent<HTMLElement>) {
+    if (!isDesktop) return;
+
+    const rect = event.currentTarget.getBoundingClientRect();
+
+    const mouseX = event.clientX - rect.left;
+    const mouseY = event.clientY - rect.top;
+
+    const normalizedX = mouseX / rect.width - 0.5;
+    const normalizedY = mouseY / rect.height - 0.5;
+
+    quickSetters.current.forEach((setter, index) => {
+      if (!setter) return;
+
+      const depth = index % 3 === 0 ? 1 : index % 3 === 1 ? 0.65 : 0.35;
+
+      setter.x(normalizedX * 80 * depth);
+      setter.y(normalizedY * 55 * depth);
+    });
+  }
+
+  function handleMouseLeave() {
+    quickSetters.current.forEach((setter) => {
+      if (!setter) return;
+
+      setter.x(0);
+      setter.y(0);
+    });
+  }
 
   const handleSelectProject = (project: Project) => {
-    if (project.title === selectedProject.title) return;
-
     setSelectedProject(project);
-    offsetRef.current = 0;
-    velocityRef.current = 0;
+    setIsDropdownOpen(false);
+  };
+
+  const toggleProjectsMenu = () => {
+    if (isDropdownOpen && dropdownMode === "projects") {
+      setIsDropdownOpen(false);
+      return;
+    }
+
+    setDropdownMode("projects");
+    setIsDropdownOpen(true);
+  };
+
+  const toggleDetailsMenu = () => {
+    if (isDropdownOpen && dropdownMode === "details") {
+      setIsDropdownOpen(false);
+      return;
+    }
+
+    setDropdownMode("details");
+    setIsDropdownOpen(true);
+  };
+
+  const toggleMenuButton = () => {
+    if (isDropdownOpen) {
+      setIsDropdownOpen(false);
+      return;
+    }
+
+    setDropdownMode("projects");
+    setIsDropdownOpen(true);
+  };
+
+  const getAlignClass = (align: DesktopOffset["align"]) => {
+    if (align === "start") return "justify-self-start";
+    if (align === "end") return "justify-self-end";
+    return "justify-self-center";
   };
 
   return (
     <SmoothScroll>
-      <section className="relative min-h-screen w-full overflow-hidden bg-[#ececec] text-[#161310] dark:bg-[#2e2b2b] dark:text-stone-300">
+      <section
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        className="relative min-h-screen w-full overflow-hidden bg-[#fbfafa] text-[#161310] dark:bg-[#2e2b2b] dark:text-stone-300"
+      >
         {/* Mobile */}
         <div className="px-6 pb-16 pt-28 md:hidden">
           <motion.div
@@ -286,12 +356,12 @@ const ProjectsClient = () => {
                   className="block"
                 >
                   <div className="relative h-[260px] w-full border border-[#161310]/20 p-4 dark:border-stone-300/20">
-                    <div className="relative h-full w-full ">
+                    <div className="relative h-full w-full">
                       <Image
                         src={`/projects/${project.images[0]}`}
                         alt={project.title}
                         fill
-                        className="object-contain  transition-opacity duration-300 hover:opacity-90"
+                        className="object-contain transition-opacity duration-300 hover:opacity-90"
                       />
                     </div>
                   </div>
@@ -327,7 +397,7 @@ const ProjectsClient = () => {
             ))}
           </div>
 
-          <footer className="relative overflow-hidden bg-[#ececec] px-4 py-10 text-[#161310] dark:bg-[#2e2b2b] dark:text-stone-300 md:px-10 lg:px-16">
+          <footer className="relative overflow-hidden bg-[#fbfafa] px-4 py-10 text-[#161310] dark:bg-[#2e2b2b] dark:text-stone-300 md:px-10 lg:px-16">
             <div className="mx-auto flex min-h-[520px] w-full max-w-[1800px] flex-col justify-between pt-8">
               <div className="grid grid-cols-1 gap-12 md:grid-cols-[1.2fr_0.8fr] md:items-start">
                 <div>
@@ -442,82 +512,357 @@ const ProjectsClient = () => {
         </div>
 
         {/* Desktop */}
-        <div className="hidden h-screen w-full overflow-hidden md:block">
-          {/* Left project list */}
-          <div className="fixed left-6 top-[22vh] z-50 flex flex-col gap-5 xl:left-8">
-            <p className="relative text-[11px] font-black uppercase tracking-[0.28em] text-[#161310]/80 dark:text-stone-300/80">
-              Selected Work <span className="opacity-70">/ 03</span>
-            </p>
-            <div className="flex flex-col gap-5">
-              {projects.map((project, index) => {
-                const isActive = selectedProject.title === project.title;
+        <div className="hidden h-screen w-full overflow-hidden pt-24 md:block">
+          <div className="relative h-[calc(100vh-6rem)] w-full overflow-visible">
+            <div className="mx-auto grid h-full w-[90vw] grid-cols-4 grid-rows-3 gap-x-[3vw] gap-y-[2.2vw] overflow-visible px-[0.6vw] py-[1.2vw]">
+              {" "}
+              {desktopImages.map((item, index) => {
+                const isSelected = item.project.title === selectedProject.title;
+                const offset = desktopOffsets[index % desktopOffsets.length];
+
+                const wrapperStyle: CSSProperties = {
+                  transform: `translate(${offset.x}, ${offset.y}) ${
+                    isSelected ? "scale(1.4)" : "scale(1)"
+                  }`,
+                };
 
                 return (
-                  <button
-                    key={project.title}
-                    onClick={() => handleSelectProject(project)}
-                    className={`w-fit text-left cursor-pointer text-[18px] font-black uppercase tracking-[-0.02em] text-[#161310] transition-opacity duration-300 dark:text-stone-300 ${
-                      isActive ? "opacity-100" : "opacity-35 hover:opacity-100"
-                    }`}
+                  <div
+                    key={`${item.project.title}-${item.image}`}
+                    className={`flex overflow-visible ${getAlignClass(
+                      offset.align,
+                    )} items-center`}
                   >
-                    <span className="mr-2 inline-block min-w-[24px]">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-                    {project.title}
-                  </button>
+                    <div
+                      style={wrapperStyle}
+                      className={`relative overflow-visible transition-transform duration-500 ease-out ${
+                        isSelected ? "z-30" : "z-0"
+                      }`}
+                    >
+                      <div
+                        ref={(element) => {
+                          floatingRefs.current[index] = element;
+                        }}
+                        className="relative overflow-visible"
+                      >
+                        <button
+                          type="button"
+                          onClick={() => handleSelectProject(item.project)}
+                          aria-label={`${item.project.title} image ${
+                            item.imageIndex + 1
+                          }`}
+                          className={`relative block h-[clamp(120px,9.8vw,205px)] w-[clamp(200px,17vw,340px)] overflow-visible transition-[filter,opacity] duration-500 ease-out ${
+                            isSelected
+                              ? "opacity-100 blur-0"
+                              : "opacity-45 blur-[4px]  hover:opacity-70 hover:blur-[1.5px]"
+                          }`}
+                        >
+                          <Image
+                            src={`/projects/${item.image}`}
+                            alt={`${item.project.title} ${item.imageIndex + 1}`}
+                            fill
+                            priority={index < 6}
+                            sizes="(min-width: 768px) 17vw, 100vw"
+                            className="object-contain"
+                            draggable={false}
+                          />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 );
               })}
             </div>
 
-            <a
-              href={selectedProject.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group relative mt-1 inline-block  w-fit overflow-hidden text-[15px] font-black uppercase tracking-[0.18em] text-[#161310] dark:text-stone-300"
-            >
-              <WaveLinkText text="Live Link" />
-            </a>
-          </div>
-
-          {/* Infinite desktop cards */}
-          <div
-            ref={stageRef}
-            className="relative  h-screen w-full overflow-hidden"
-          >
-            {loopedCards.map((card, index) => (
-              <article
-                key={`${card.title}-${card.image}-${index}`}
-                ref={(el) => {
-                  if (el) cardRefs.current[index] = el;
+            {/* Collapsible project menu */}
+            <div className="absolute bottom-8 left-6 z-[999] w-[clamp(390px,30vw,560px)] xl:left-8">
+              <motion.div
+                initial={false}
+                animate={{
+                  maxHeight: isDropdownOpen
+                    ? dropdownMode === "projects"
+                      ? 320
+                      : 390
+                    : 0,
+                  opacity: isDropdownOpen ? 1 : 0,
+                  y: isDropdownOpen ? 0 : 10,
                 }}
-                className="absolute  bottom-[-3vh]  left-0 flex flex-col overflow-hidden border border-[#161310]/30 bg-[#ececec] p-[1.1vw] text-[#161310] will-change-[transform,width,height] dark:border-stone-300/25 dark:bg-[#2e2b2b] dark:text-stone-300"
+                transition={{
+                  maxHeight: {
+                    duration: isDropdownOpen ? 0.65 : 0.58,
+                    delay: isDropdownOpen ? 0 : 0.16,
+                    ease: [0.76, 0, 0.24, 1],
+                  },
+                  opacity: {
+                    duration: isDropdownOpen ? 0.18 : 0.16,
+                    delay: isDropdownOpen ? 0 : 0.12,
+                    ease: "linear",
+                  },
+                  y: {
+                    duration: 0.45,
+                    ease: [0.76, 0, 0.24, 1],
+                  },
+                }}
+                className={`absolute bottom-full left-0 mb-3 w-full overflow-hidden border border-[#161310]/20 bg-[#fbfafa]/92 text-[#161310] backdrop-blur-md dark:border-stone-300/20 dark:bg-[#2e2b2b]/92 dark:text-stone-200 ${
+                  isDropdownOpen ? "" : "pointer-events-none"
+                }`}
               >
-                <div className="relative  aspect-[16/9] w-full shrink-0 overflow-hidden bg-transparent">
-                  <Image
-                    src={`/projects/${card.image}`}
-                    alt={card.title}
-                    fill
-                    priority={index < 6}
-                    sizes="100vw"
-                    className="object-contain"
-                  />
-                </div>
+                <motion.div
+                  initial={false}
+                  animate={
+                    isDropdownOpen
+                      ? {
+                          opacity: 1,
+                          y: 0,
+                          filter: "blur(0px)",
+                        }
+                      : {
+                          opacity: 0,
+                          y: 18,
+                          filter: "blur(6px)",
+                        }
+                  }
+                  transition={{
+                    opacity: {
+                      duration: isDropdownOpen ? 0.35 : 0.16,
+                      delay: isDropdownOpen ? 0.18 : 0,
+                      ease: "easeOut",
+                    },
+                    y: {
+                      duration: isDropdownOpen ? 0.55 : 0.22,
+                      delay: isDropdownOpen ? 0.18 : 0,
+                      ease: isDropdownOpen
+                        ? [0.22, 1, 0.36, 1]
+                        : [0.76, 0, 0.24, 1],
+                    },
+                    filter: {
+                      duration: isDropdownOpen ? 0.35 : 0.16,
+                      delay: isDropdownOpen ? 0.18 : 0,
+                      ease: "easeOut",
+                    },
+                  }}
+                  className="flex flex-col"
+                >
+                  {dropdownMode === "projects" &&
+                    projects.map((project, index) => {
+                      const isActive = selectedProject.title === project.title;
 
-                <div className="flex min-h-0 flex-1 flex-col pt-[1vw]">
-                  <p className="text-[clamp(12px,0.85vw,18px)] leading-none text-[#161310]/60 dark:text-stone-300/60">
-                    {card.eyebrow}
-                  </p>
+                      return (
+                        <motion.button
+                          key={project.title}
+                          type="button"
+                          onClick={() => handleSelectProject(project)}
+                          initial={false}
+                          animate={
+                            isDropdownOpen
+                              ? {
+                                  opacity: isActive ? 1 : 0.5,
+                                  y: 0,
+                                  filter: "blur(0px)",
+                                }
+                              : {
+                                  opacity: 0,
+                                  y: 18,
+                                  filter: "blur(6px)",
+                                }
+                          }
+                          transition={{
+                            duration: isDropdownOpen ? 0.55 : 0.18,
+                            delay: isDropdownOpen ? 0.22 + index * 0.06 : 0,
+                            ease: isDropdownOpen
+                              ? [0.22, 1, 0.36, 1]
+                              : [0.76, 0, 0.24, 1],
+                          }}
+                          className="group relative grid grid-cols-[1fr_auto] items-center gap-5 border-b border-[#161310]/12 px-6 py-6 text-left last:border-b-0 dark:border-stone-300/12"
+                        >
+                          <span className="text-[clamp(22px,1.65vw,32px)] font-black uppercase leading-[0.9] tracking-[-0.06em] transition-opacity duration-300 group-hover:opacity-70">
+                            {project.title}
+                          </span>
 
-                  <h2 className="mt-[0.55vw] text-[clamp(18px,1.35vw,32px)] font-medium uppercase leading-[1.02] text-[#161310] dark:text-stone-200">
-                    {card.title}
-                  </h2>
+                          <span className="text-[12px] font-black tracking-[0.18em] opacity-45">
+                            {String(index + 1).padStart(2, "0")}
+                          </span>
 
-                  <p className="mt-[0.85vw] line-clamp-4 max-w-[96%] text-[clamp(13px,0.95vw,20px)] leading-[1.35] text-[#161310]/75 dark:text-stone-300/75">
-                    {card.description}
-                  </p>
-                </div>
-              </article>
-            ))}
+                          <span className="absolute bottom-0 left-0 h-px w-full origin-left scale-x-0 bg-current opacity-25 transition-transform duration-500 group-hover:scale-x-100" />
+                        </motion.button>
+                      );
+                    })}
+
+                  {dropdownMode === "details" && (
+                    <div className="flex flex-col gap-6 p-6">
+                      <motion.div
+                        initial={false}
+                        animate={
+                          isDropdownOpen
+                            ? {
+                                opacity: 1,
+                                y: 0,
+                                filter: "blur(0px)",
+                              }
+                            : {
+                                opacity: 0,
+                                y: 18,
+                                filter: "blur(6px)",
+                              }
+                        }
+                        transition={{
+                          duration: isDropdownOpen ? 0.55 : 0.18,
+                          delay: isDropdownOpen ? 0.22 : 0,
+                          ease: isDropdownOpen
+                            ? [0.22, 1, 0.36, 1]
+                            : [0.76, 0, 0.24, 1],
+                        }}
+                      >
+                        <p className="mb-3 text-[11px] font-black uppercase tracking-[0.24em] text-[#161310]/40 dark:text-stone-300/40">
+                          About
+                        </p>
+
+                        <p className="text-[clamp(18px,1.2vw,24px)] font-black uppercase leading-[1.02] tracking-[-0.045em] text-[#161310] dark:text-stone-100">
+                          {selectedProject.about}
+                        </p>
+                      </motion.div>
+
+                      <motion.div
+                        initial={false}
+                        animate={
+                          isDropdownOpen
+                            ? {
+                                opacity: 1,
+                                y: 0,
+                                filter: "blur(0px)",
+                              }
+                            : {
+                                opacity: 0,
+                                y: 18,
+                                filter: "blur(6px)",
+                              }
+                        }
+                        transition={{
+                          duration: isDropdownOpen ? 0.55 : 0.18,
+                          delay: isDropdownOpen ? 0.28 : 0,
+                          ease: isDropdownOpen
+                            ? [0.22, 1, 0.36, 1]
+                            : [0.76, 0, 0.24, 1],
+                        }}
+                        className="grid grid-cols-2 gap-6 border-t border-[#161310]/12 pt-5 dark:border-stone-300/12"
+                      >
+                        <div>
+                          <p className="mb-2 text-[10px] font-black uppercase tracking-[0.22em] text-[#161310]/40 dark:text-stone-300/40">
+                            Stack
+                          </p>
+
+                          <p className="text-[14px] font-black uppercase leading-snug tracking-[-0.02em] text-[#161310]/75 dark:text-stone-300/75">
+                            {selectedProject.stack}
+                          </p>
+                        </div>
+
+                        <div>
+                          <p className="mb-2 text-[10px] font-black uppercase tracking-[0.22em] text-[#161310]/40 dark:text-stone-300/40">
+                            Role
+                          </p>
+
+                          <p className="text-[14px] font-black uppercase leading-snug tracking-[-0.02em] text-[#161310]/75 dark:text-stone-300/75">
+                            {selectedProject.role}
+                          </p>
+                        </div>
+                      </motion.div>
+                    </div>
+                  )}
+                </motion.div>
+              </motion.div>
+
+              <div className="grid min-h-[72px] grid-cols-[1fr_auto_auto_auto] border border-[#161310]/25 bg-[#fbfafa]/92 text-[#161310] backdrop-blur-md dark:border-stone-300/25 dark:bg-[#2e2b2b]/92 dark:text-stone-200">
+                <button
+                  type="button"
+                  onClick={toggleProjectsMenu}
+                  aria-expanded={isDropdownOpen && dropdownMode === "projects"}
+                  aria-label="Open project menu"
+                  className="flex min-w-0 items-center px-6 text-left text-[clamp(22px,1.45vw,28px)] font-black uppercase leading-none tracking-[-0.055em] transition-opacity hover:opacity-60"
+                >
+                  <span className="truncate">{selectedProject.title}</span>
+                </button>
+
+                <a
+                  href={selectedProject.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center border-l border-[#161310]/15 px-5 text-[12px] font-black uppercase tracking-[0.18em] transition-opacity hover:opacity-60 dark:border-stone-300/15"
+                >
+                  <WaveLinkText text="Live" />
+                </a>
+
+                <button
+                  type="button"
+                  onClick={toggleDetailsMenu}
+                  aria-expanded={isDropdownOpen && dropdownMode === "details"}
+                  className={`flex cursor-pointer items-center border-l border-[#161310]/15 px-5 text-[12px] font-black uppercase tracking-[0.18em] transition-opacity hover:opacity-60 dark:border-stone-300/15 ${
+                    isDropdownOpen && dropdownMode === "details"
+                      ? "opacity-100"
+                      : "opacity-60"
+                  }`}
+                >
+                  Details
+                </button>
+
+                <button
+                  type="button"
+                  onClick={toggleMenuButton}
+                  aria-expanded={isDropdownOpen}
+                  aria-label="Toggle project menu"
+                  className="group cursor-pointer relative flex h-[72px] w-[78px] items-center justify-center border-l border-[#161310]/15 transition-opacity hover:opacity-70 dark:border-stone-300/15"
+                >
+                  <span className="relative block h-6 w-9 overflow-hidden">
+                    <motion.span
+                      animate={
+                        isDropdownOpen
+                          ? {
+                              top: "50%",
+                              y: "-50%",
+                              width: "36px",
+                              opacity: 1,
+                            }
+                          : {
+                              top: "7px",
+                              y: "0%",
+                              width: "36px",
+                              opacity: 1,
+                            }
+                      }
+                      transition={{
+                        duration: 0.55,
+                        ease: [0.22, 1, 0.36, 1],
+                      }}
+                      className="absolute left-0 h-[2px] bg-current"
+                    />
+
+                    <motion.span
+                      animate={
+                        isDropdownOpen
+                          ? {
+                              top: "50%",
+                              y: "-50%",
+                              x: 10,
+                              width: "18px",
+                              opacity: 0,
+                            }
+                          : {
+                              top: "17px",
+                              y: "0%",
+                              x: 0,
+                              width: "26px",
+                              opacity: 1,
+                            }
+                      }
+                      transition={{
+                        duration: 0.55,
+                        ease: [0.22, 1, 0.36, 1],
+                      }}
+                      className="absolute left-0 h-[2px] bg-current"
+                    />
+                  </span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </section>

@@ -260,7 +260,7 @@ const ContactClient = () => {
 
   return (
     <SmoothScroll>
-      <section className="min-h-screen w-full overflow-hidden border-b border-stone-300 bg-[#ececec] px-4 pb-12 pt-28 text-[#161310] dark:border-stone-600 dark:bg-[#2e2b2b] dark:text-stone-300 sm:px-8 md:px-10 lg:px-16 lg:pt-36">
+      <section className="min-h-screen w-full overflow-hidden  bg-[#fbfafa] px-4 pb-12 pt-28 text-[#161310] dark:border-stone-600 dark:bg-[#2e2b2b] dark:text-stone-300 sm:px-8 md:px-10 lg:px-16 lg:pt-36">
         <div className="mx-auto w-full max-w-[1800px]">
           {/* HERO */}
           <div className="mb-16 grid grid-cols-1 gap-8 md:grid-cols-[1.2fr_0.8fr] md:items-end lg:mb-24">

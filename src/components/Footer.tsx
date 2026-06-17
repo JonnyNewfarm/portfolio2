@@ -26,10 +26,10 @@ const Footer = () => {
     return () => clearInterval(interval);
   }, []);
 
-  if (pathname === "/" || pathname === "/projects") return null;
+  if (pathname === "/") return null;
 
   return (
-    <footer className="relative overflow-hidden bg-[#ececec] px-4 py-10 text-[#161310] dark:bg-[#2e2b2b] dark:text-stone-300 md:px-10 lg:px-16">
+    <footer className="relative overflow-hidden bg-[#fbfafa] px-4 py-10 text-[#161310] dark:bg-[#2e2b2b] dark:text-stone-300 md:px-10 lg:px-16">
       <div className="mx-auto flex min-h-[520px] w-full max-w-[1800px] flex-col justify-between pt-8">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-[1.2fr_0.8fr] md:items-start">
           <div>
@@ -37,7 +37,7 @@ const Footer = () => {
               Contact / Availability
             </p>
 
-            <h2 className="max-w-[1200px] text-[13vw] font-black uppercase leading-[0.78] tracking-[-0.075em] md:text-[10vw] lg:text-[7.6vw]">
+            <h2 className="max-w-[1200px] text-[13vw] font-black uppercase leading-[0.78] tracking-[-0.045em] md:text-[10vw] lg:text-[7.6vw]">
               Let&apos;s build
               <br />
               something

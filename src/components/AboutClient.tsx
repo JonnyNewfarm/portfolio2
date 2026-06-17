@@ -322,7 +322,7 @@ export default function AboutClient() {
 
   return (
     <ScrollSection>
-      <section className="relative min-h-screen overflow-hidden bg-[#ececec] text-[#161310] dark:bg-[#2e2b2b] dark:text-stone-300">
+      <section className="relative min-h-screen overflow-hidden bg-[#fbfafa] text-[#161310] dark:bg-[#2e2b2b] dark:text-stone-300">
         {/* IMAGE + STATS */}
         <div className="absolute right-0 top-[6.2rem] z-[1] w-[54vw] sm:w-[42vw] md:w-[34vw] lg:top-[5.7rem] lg:w-[27vw] xl:w-[24vw] 2xl:w-[21vw]">
           <motion.div
@@ -473,7 +473,7 @@ developer.`}
 
           {/* UNDER FIRST VIEWPORT */}
           <div className="pb-16 lg:pb-24">
-            <div className="border-t border-stone-400/30 pt-8 dark:border-stone-200/20">
+            <div className=" pt-8 ">
               <div className="grid max-w-[900px] grid-cols-1 gap-6 md:grid-cols-2">
                 <TextReveal
                   as="p"
@@ -498,7 +498,7 @@ developer.`}
               </div>
             </div>
 
-            <div className="mt-16 border-t border-stone-400/30 pt-8 dark:border-stone-200/20">
+            <div className="mt-16  pt-8 ">
               <div className="grid grid-cols-1 gap-8 md:grid-cols-[1fr_0.35fr] md:items-end">
                 <TextReveal
                   as="p"

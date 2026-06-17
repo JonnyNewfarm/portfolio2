@@ -67,36 +67,36 @@ const Navbar = () => {
         <div className="hidden w-full lg:block">
           <div className="grid grid-cols-4 items-start gap-8 pb-4 dark:border-stone-300/10">
             <div>
-              <p className="mb-1 text-[10px] uppercase tracking-[0.22em] opacity-45">
-                Studio
+              <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.22em] opacity-80">
+                Studio:
               </p>
-              <div className="flex items-center font-semibold gap-2 text-sm uppercase tracking-[0.08em]">
+              <div className="flex items-center font-black gap-2 text-sm uppercase tracking-[0.08em]">
                 <FaRegCopyright size={12} />
                 <span>Newfarm Studio</span>
               </div>
             </div>
 
             <div>
-              <p className="mb-1 text-[10px] uppercase tracking-[0.22em] opacity-45">
-                Name
+              <p className="mb-1 text-[10px] uppercase font-semibold tracking-[0.22em] opacity-80">
+                Name:
               </p>
-              <p className="text-sm uppercase font-semibold tracking-[0.08em]">
+              <p className="text-sm uppercase font-black tracking-[0.08em]">
                 Jonas Nygaard
               </p>
             </div>
 
             <div>
-              <p className="mb-1 text-[10px] uppercase tracking-[0.22em] opacity-45">
-                Occupation
+              <p className="mb-1 text-[10px] uppercase font-semibold tracking-[0.22em] opacity-80">
+                Occupation:
               </p>
-              <p className="text-sm uppercase font-semibold tracking-[0.08em]">
+              <p className="text-sm uppercase font-black tracking-[0.08em]">
                 Designer & Developer
               </p>
             </div>
 
             <div>
-              <p className="mb-1 text-[10px] uppercase tracking-[0.22em] opacity-45">
-                Navigation
+              <p className="mb-1 text-[10px] uppercase font-semibold tracking-[0.22em] opacity-80">
+                Navigation:
               </p>
               <nav className="flex flex-wrap gap-x-4 gap-y-1 text-sm uppercase tracking-[0.08em]">
                 {routes.map((route, index) => (
@@ -104,7 +104,7 @@ const Navbar = () => {
                     key={route.label}
                     href={route.url}
                     onClick={(e) => handleRouteTransition(e, route.url)}
-                    className=" font-semibold "
+                    className=" font-black "
                   >
                     <WaveLinkText text={`${route.label}`} />
                     {index < routes.length - 1 ? "," : ""}
