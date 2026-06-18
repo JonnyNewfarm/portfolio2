@@ -1,7 +1,7 @@
 "use client";
 
 import React, {
-  CSSProperties,
+  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -9,10 +9,14 @@ import React, {
 } from "react";
 import Image from "next/image";
 import SmoothScroll from "@/components/SmoothScroll";
-import { motion } from "framer-motion";
-import gsap from "gsap";
+import {
+  MotionValue,
+  motion,
+  useMotionValue,
+  useSpring,
+  useTransform,
+} from "framer-motion";
 import WaveLinkText from "./WaveLinkText";
-import Link from "next/link";
 
 type Project = {
   title: string;
@@ -25,19 +29,11 @@ type Project = {
   images: string[];
 };
 
-type DesktopImage = {
+type ScrollCard = {
   project: Project;
-  image: string;
-  imageIndex: number;
+  projectIndex: number;
+  globalIndex: number;
 };
-
-type DesktopOffset = {
-  x: string;
-  y: string;
-  align: "start" | "center" | "end";
-};
-
-type DropdownMode = "projects" | "details";
 
 const projects: Project[] = [
   {
@@ -97,221 +93,407 @@ const projects: Project[] = [
   },
 ];
 
-const desktopOffsets: DesktopOffset[] = [
-  { x: "-0.8vw", y: "-0.35vw", align: "start" },
-  { x: "0.35vw", y: "0.2vw", align: "center" },
-  { x: "0.7vw", y: "-0.45vw", align: "end" },
-  { x: "-0.2vw", y: "0.45vw", align: "center" },
+function wrapIndex(index: number, length: number) {
+  return ((index % length) + length) % length;
+}
 
-  { x: "0.6vw", y: "-0.25vw", align: "end" },
-  { x: "-0.7vw", y: "0.25vw", align: "start" },
-  { x: "0.15vw", y: "-0.4vw", align: "center" },
-  { x: "0.85vw", y: "0.35vw", align: "end" },
+function clamp(value: number, min: number, max: number) {
+  return Math.min(Math.max(value, min), max);
+}
 
-  { x: "-0.55vw", y: "0.15vw", align: "start" },
-  { x: "0.25vw", y: "-0.3vw", align: "center" },
-  { x: "-0.15vw", y: "0.4vw", align: "center" },
-  { x: "0.75vw", y: "-0.2vw", align: "end" },
-];
+type ProjectCardProps = {
+  card: ScrollCard;
+  scrollIndex: MotionValue<number>;
+  step: number;
+  isActive: boolean;
+  detailsOpen: boolean;
+};
+
+const ProjectCard = ({
+  card,
+  scrollIndex,
+  step,
+  isActive,
+  detailsOpen,
+}: ProjectCardProps) => {
+  const x = useTransform(scrollIndex, (latest) => {
+    return (card.globalIndex - latest) * step;
+  });
+
+  const distance = useTransform(scrollIndex, (latest) => {
+    return clamp(Math.abs(card.globalIndex - latest), 0, 1);
+  });
+
+  const scale = useTransform(distance, [0, 1], [1, 0.92]);
+
+  const showDetails = isActive && detailsOpen;
+
+  return (
+    <motion.article
+      style={{
+        x,
+        scale,
+      }}
+      className="pointer-events-none absolute left-1/2 top-1/2 h-[42vh] min-h-[340px] w-[44vw] min-w-[560px] max-w-[860px] -translate-x-1/2 -translate-y-1/2"
+    >
+      <div className="relative h-full w-full overflow-visible">
+        {/* Corner border locked to active image */}
+        <motion.div
+          aria-hidden="true"
+          animate={
+            isActive
+              ? {
+                  opacity: 1,
+                  scale: [0.96, 1.055, 1],
+                }
+              : {
+                  opacity: 0,
+                  scale: 0.96,
+                }
+          }
+          transition={{
+            duration: isActive ? 0.65 : 0.25,
+            ease: [0.76, 0, 0.24, 1],
+          }}
+          className="absolute -inset-3 z-30"
+        >
+          {/* Top left */}
+          <span className="absolute left-0 top-0 h-8 w-[5px] bg-[#161310] dark:bg-stone-200" />
+          <span className="absolute left-0 top-0 h-[5px] w-8 bg-[#161310] dark:bg-stone-200" />
+
+          {/* Top right */}
+          <span className="absolute right-0 top-0 h-8 w-[5px] bg-[#161310] dark:bg-stone-200" />
+          <span className="absolute right-0 top-0 h-[5px] w-8 bg-[#161310] dark:bg-stone-200" />
+
+          {/* Bottom left */}
+          <span className="absolute bottom-0 left-0 h-8 w-[5px] bg-[#161310] dark:bg-stone-200" />
+          <span className="absolute bottom-0 left-0 h-[5px] w-8 bg-[#161310] dark:bg-stone-200" />
+
+          {/* Bottom right */}
+          <span className="absolute bottom-0 right-0 h-8 w-[5px] bg-[#161310] dark:bg-stone-200" />
+          <span className="absolute bottom-0 right-0 h-[5px] w-8 bg-[#161310] dark:bg-stone-200" />
+        </motion.div>
+
+        <div className="relative h-full w-full overflow-hidden bg-[#fbfafa] dark:bg-[#2e2b2b]">
+          <motion.div
+            animate={{
+              y: showDetails ? "0%" : "105%",
+            }}
+            transition={{
+              duration: 0.9,
+              ease: [0.76, 0, 0.24, 1],
+            }}
+            className="absolute inset-0 z-10 flex h-full w-full flex-col justify-between bg-[#fbfafa] p-8 text-[#161310] dark:bg-[#2e2b2b] dark:text-stone-300"
+          >
+            <div>
+              <p className="mb-4 text-[11px] font-black uppercase tracking-[0.24em] opacity-40">
+                About
+              </p>
+
+              <p className="max-w-[720px] text-[clamp(22px,2.1vw,42px)] font-black uppercase leading-[0.95] tracking-[-0.055em]">
+                {card.project.about}
+              </p>
+            </div>
+
+            <div className="grid grid-cols-[1.2fr_0.8fr] gap-8">
+              <div>
+                <p className="mb-3 text-[11px] font-black uppercase tracking-[0.24em] opacity-40">
+                  Stack
+                </p>
+
+                <p className="text-[clamp(15px,1.1vw,22px)] font-black uppercase leading-[1.05] tracking-[-0.035em] opacity-80">
+                  {card.project.stack}
+                </p>
+              </div>
+
+              <div>
+                <p className="mb-3 text-[11px] font-black uppercase tracking-[0.24em] opacity-40">
+                  Role
+                </p>
+
+                <p className="text-[clamp(15px,1.1vw,22px)] font-black uppercase leading-[1.05] tracking-[-0.035em] opacity-80">
+                  {card.project.role}
+                </p>
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div
+            animate={{
+              y: showDetails ? "-105%" : "0%",
+            }}
+            transition={{
+              duration: 0.9,
+              ease: [0.76, 0, 0.24, 1],
+            }}
+            className="absolute inset-0 z-20 bg-[#fbfafa] dark:bg-[#2e2b2b]"
+          >
+            <Image
+              src={`/projects/${card.project.images[0]}`}
+              alt={card.project.title}
+              fill
+              priority={Math.abs(card.globalIndex) <= 2}
+              sizes="(min-width: 768px) 44vw, 100vw"
+              className="select-none object-contain"
+              draggable={false}
+            />
+          </motion.div>
+        </div>
+      </div>
+    </motion.article>
+  );
+};
 
 const ProjectsClient = () => {
-  const [selectedProject, setSelectedProject] = useState<Project>(projects[0]);
-  const [isDesktop, setIsDesktop] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [dropdownMode, setDropdownMode] = useState<DropdownMode>("projects");
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const snapTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isSnappingRef = useRef(false);
 
-  const floatingRefs = useRef<Array<HTMLDivElement | null>>([]);
+  const [viewportWidth, setViewportWidth] = useState(1440);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [nearestStep, setNearestStep] = useState(0);
+  const [detailsOpen, setDetailsOpen] = useState(false);
 
-  const quickSetters = useRef<
-    Array<{
-      x: (value: number) => void;
-      y: (value: number) => void;
-    } | null>
-  >([]);
+  const rawScrollIndex = useMotionValue(0);
 
-  const desktopImages = useMemo<DesktopImage[]>(() => {
-    const kerimov = projects[0];
-    const calero = projects[1];
-    const petsaco = projects[2];
+  const scrollIndex = useSpring(rawScrollIndex, {
+    stiffness: 150,
+    damping: 32,
+    mass: 0.65,
+  });
 
-    return [
-      {
-        project: kerimov,
-        image: kerimov.images[0],
-        imageIndex: 0,
-      },
-      {
-        project: calero,
-        image: calero.images[0],
-        imageIndex: 0,
-      },
-      {
-        project: petsaco,
-        image: petsaco.images[0],
-        imageIndex: 0,
-      },
-      {
-        project: kerimov,
-        image: kerimov.images[1],
-        imageIndex: 1,
-      },
+  const totalCycles = 5;
+  const totalSteps = projects.length * totalCycles - 1;
 
-      {
-        project: calero,
-        image: calero.images[1],
-        imageIndex: 1,
-      },
-      {
-        project: petsaco,
-        image: petsaco.images[1],
-        imageIndex: 1,
-      },
-      {
-        project: kerimov,
-        image: kerimov.images[2],
-        imageIndex: 2,
-      },
-      {
-        project: calero,
-        image: calero.images[2],
-        imageIndex: 2,
-      },
+  const step = useMemo(() => {
+    if (viewportWidth < 1024) return viewportWidth * 0.78;
+    if (viewportWidth < 1440) return viewportWidth * 0.58;
+    return viewportWidth * 0.5;
+  }, [viewportWidth]);
 
-      {
-        project: petsaco,
-        image: petsaco.images[2],
-        imageIndex: 2,
-      },
-      {
-        project: kerimov,
-        image: kerimov.images[3],
-        imageIndex: 3,
-      },
-      {
-        project: calero,
-        image: calero.images[3],
-        imageIndex: 3,
-      },
-      {
-        project: petsaco,
-        image: petsaco.images[3],
-        imageIndex: 3,
-      },
-    ];
-  }, []);
+  const cards = useMemo<ScrollCard[]>(() => {
+    const items: ScrollCard[] = [];
+
+    for (
+      let globalIndex = -projects.length;
+      globalIndex <= totalSteps + projects.length;
+      globalIndex++
+    ) {
+      const projectIndex = wrapIndex(globalIndex, projects.length);
+
+      items.push({
+        project: projects[projectIndex],
+        projectIndex,
+        globalIndex,
+      });
+    }
+
+    return items;
+  }, [totalSteps]);
+
+  const scrollToStep = useCallback(
+    (targetStep: number, behavior: ScrollBehavior = "smooth") => {
+      const section = sectionRef.current;
+      if (!section) return;
+
+      const clampedStep = clamp(targetStep, 0, totalSteps);
+      const sectionTop = section.offsetTop;
+      const scrollableDistance = section.offsetHeight - window.innerHeight;
+      const progress = clampedStep / totalSteps;
+      const targetY = sectionTop + scrollableDistance * progress;
+
+      isSnappingRef.current = true;
+
+      window.scrollTo({
+        top: targetY,
+        behavior,
+      });
+
+      window.setTimeout(() => {
+        isSnappingRef.current = false;
+      }, 650);
+    },
+    [totalSteps],
+  );
 
   useEffect(() => {
-    const checkScreen = () => {
-      setIsDesktop(window.innerWidth >= 768);
+    const handleResize = () => {
+      setViewportWidth(window.innerWidth);
     };
 
-    checkScreen();
-    window.addEventListener("resize", checkScreen);
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      window.removeEventListener("resize", checkScreen);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
   useEffect(() => {
-    quickSetters.current = floatingRefs.current.map((element) => {
-      if (!element) return null;
+    const handleScroll = () => {
+      const section = sectionRef.current;
+      if (!section) return;
 
-      return {
-        x: gsap.quickTo(element, "x", {
-          duration: 0.85,
-          ease: "power3.out",
-        }),
-        y: gsap.quickTo(element, "y", {
-          duration: 0.85,
-          ease: "power3.out",
-        }),
-      };
-    });
+      const rect = section.getBoundingClientRect();
+      const scrollableDistance = section.offsetHeight - window.innerHeight;
+
+      if (scrollableDistance <= 0) return;
+
+      const progress = clamp(-rect.top / scrollableDistance, 0, 1);
+      const nextRawIndex = progress * totalSteps;
+
+      rawScrollIndex.set(nextRawIndex);
+
+      const roundedStep = Math.round(nextRawIndex);
+      const nextActiveIndex = wrapIndex(roundedStep, projects.length);
+
+      setNearestStep(roundedStep);
+      setActiveIndex(nextActiveIndex);
+
+      const isInsideSection =
+        rect.top <= 0 && rect.bottom >= window.innerHeight;
+
+      if (!isInsideSection || isSnappingRef.current) return;
+
+      if (snapTimeoutRef.current) {
+        clearTimeout(snapTimeoutRef.current);
+      }
+
+      snapTimeoutRef.current = setTimeout(() => {
+        const currentStep = rawScrollIndex.get();
+        const snapStep = Math.round(currentStep);
+        const distanceFromSnap = Math.abs(currentStep - snapStep);
+
+        if (distanceFromSnap > 0.08) {
+          scrollToStep(snapStep, "smooth");
+        }
+      }, 135);
+    };
+
+    handleScroll();
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleScroll);
 
     return () => {
-      quickSetters.current = [];
+      if (snapTimeoutRef.current) {
+        clearTimeout(snapTimeoutRef.current);
+      }
+
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
     };
-  }, [desktopImages.length]);
+  }, [rawScrollIndex, scrollToStep, totalSteps]);
 
-  function handleMouseMove(event: React.MouseEvent<HTMLElement>) {
-    if (!isDesktop) return;
+  useEffect(() => {
+    setDetailsOpen(false);
+  }, [activeIndex]);
 
-    const rect = event.currentTarget.getBoundingClientRect();
-
-    const mouseX = event.clientX - rect.left;
-    const mouseY = event.clientY - rect.top;
-
-    const normalizedX = mouseX / rect.width - 0.5;
-    const normalizedY = mouseY / rect.height - 0.5;
-
-    quickSetters.current.forEach((setter, index) => {
-      if (!setter) return;
-
-      const depth = index % 3 === 0 ? 1 : index % 3 === 1 ? 0.65 : 0.35;
-
-      setter.x(normalizedX * 80 * depth);
-      setter.y(normalizedY * 55 * depth);
-    });
-  }
-
-  function handleMouseLeave() {
-    quickSetters.current.forEach((setter) => {
-      if (!setter) return;
-
-      setter.x(0);
-      setter.y(0);
-    });
-  }
-
-  const handleSelectProject = (project: Project) => {
-    setSelectedProject(project);
-    setIsDropdownOpen(false);
+  const handlePrev = () => {
+    setDetailsOpen(false);
+    scrollToStep(nearestStep - 1);
   };
 
-  const toggleProjectsMenu = () => {
-    if (isDropdownOpen && dropdownMode === "projects") {
-      setIsDropdownOpen(false);
-      return;
-    }
-
-    setDropdownMode("projects");
-    setIsDropdownOpen(true);
-  };
-
-  const toggleDetailsMenu = () => {
-    if (isDropdownOpen && dropdownMode === "details") {
-      setIsDropdownOpen(false);
-      return;
-    }
-
-    setDropdownMode("details");
-    setIsDropdownOpen(true);
-  };
-
-  const toggleMenuButton = () => {
-    if (isDropdownOpen) {
-      setIsDropdownOpen(false);
-      return;
-    }
-
-    setDropdownMode("projects");
-    setIsDropdownOpen(true);
-  };
-
-  const getAlignClass = (align: DesktopOffset["align"]) => {
-    if (align === "start") return "justify-self-start";
-    if (align === "end") return "justify-self-end";
-    return "justify-self-center";
+  const handleNext = () => {
+    setDetailsOpen(false);
+    scrollToStep(nearestStep + 1);
   };
 
   return (
     <SmoothScroll>
       <section
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
-        className="relative min-h-screen w-full overflow-hidden bg-[#fbfafa] text-[#161310] dark:bg-[#2e2b2b] dark:text-stone-300"
+        ref={sectionRef}
+        className="relative min-h-screen w-full bg-[#fbfafa] text-[#161310] dark:bg-[#2e2b2b] dark:text-stone-300 md:h-[560vh]"
       >
+        {/* Desktop sticky scroll */}
+        <div className="sticky top-0 hidden h-screen w-full overflow-hidden md:block">
+          <button
+            type="button"
+            onClick={handlePrev}
+            style={{ mixBlendMode: "difference" }}
+            className="absolute left-8 top-[calc(50%-28vh)] z-50 text-[26px] font-black uppercase tracking-[0.12em] text-[#2e2b2b] dark:text-stone-200 opacity-100 transition-opacity hover:opacity-70"
+          >
+            Prev
+          </button>
+
+          <button
+            type="button"
+            onClick={handleNext}
+            style={{ mixBlendMode: "difference" }}
+            className="absolute right-8 top-[calc(50%-28vh)] z-50 text-[26px] font-black uppercase tracking-[0.12em] text-[#2e2b2b] dark:text-stone-200 opacity-100 transition-opacity hover:opacity-70"
+          >
+            Next
+          </button>
+
+          <div className="absolute left-0 top-1/2 z-10 h-[62vh] w-full -translate-y-1/2 overflow-visible">
+            <div className="pointer-events-none absolute inset-0">
+              {cards.map((card) => {
+                const isActiveCard = card.globalIndex === nearestStep;
+
+                return (
+                  <ProjectCard
+                    key={`${card.globalIndex}-${card.project.title}`}
+                    card={card}
+                    scrollIndex={scrollIndex}
+                    step={step}
+                    isActive={isActiveCard}
+                    detailsOpen={detailsOpen}
+                  />
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="absolute right-8 top-[calc(50%+23vh)] z-40 text-right text-[13px] font-black uppercase tracking-[0.08em] opacity-60">
+            {String(activeIndex + 1).padStart(2, "0")}/
+            {String(projects.length).padStart(2, "0")}
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setDetailsOpen((current) => !current)}
+            className="absolute bottom-8 left-8 z-40 text-[26px] font-black uppercase leading-none tracking-[-0.01em] transition-opacity hover:opacity-55"
+          >
+            {detailsOpen ? "Image" : "Details"}
+          </button>
+
+          <div className="absolute bottom-8 left-1/2 z-40 flex max-w-[54vw] -translate-x-1/2 items-center justify-center gap-7 text-center">
+            {projects.map((project, index) => (
+              <button
+                key={project.title}
+                type="button"
+                onClick={() => {
+                  setDetailsOpen(false);
+
+                  const currentCycle = Math.floor(
+                    nearestStep / projects.length,
+                  );
+                  const targetStep = currentCycle * projects.length + index;
+
+                  scrollToStep(targetStep);
+                }}
+                className={`whitespace-nowrap text-[clamp(13px,1vw,18px)] font-black uppercase leading-none tracking-[-0.025em] transition-all duration-500 ${
+                  index === activeIndex
+                    ? "scale-110 opacity-100"
+                    : "opacity-25 hover:opacity-55"
+                }`}
+              >
+                {project.title}
+              </button>
+            ))}
+          </div>
+
+          <a
+            href={projects[activeIndex].link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="absolute bottom-8 right-8 z-40 text-right text-[26px] font-black uppercase leading-none tracking-[-0.01em] transition-opacity hover:opacity-55"
+          >
+            <WaveLinkText text="Live Link" />
+          </a>
+        </div>
+
         {/* Mobile */}
         <div className="px-6 pb-16 pt-28 md:hidden">
           <motion.div
@@ -361,7 +543,9 @@ const ProjectsClient = () => {
                         src={`/projects/${project.images[0]}`}
                         alt={project.title}
                         fill
+                        sizes="100vw"
                         className="object-contain transition-opacity duration-300 hover:opacity-90"
+                        draggable={false}
                       />
                     </div>
                   </div>
@@ -395,474 +579,6 @@ const ProjectsClient = () => {
                 </div>
               </motion.article>
             ))}
-          </div>
-
-          <footer className="relative overflow-hidden bg-[#fbfafa] px-4 py-10 text-[#161310] dark:bg-[#2e2b2b] dark:text-stone-300 md:px-10 lg:px-16">
-            <div className="mx-auto flex min-h-[520px] w-full max-w-[1800px] flex-col justify-between pt-8">
-              <div className="grid grid-cols-1 gap-12 md:grid-cols-[1.2fr_0.8fr] md:items-start">
-                <div>
-                  <p className="mb-6 text-xs font-black uppercase tracking-[0.24em] opacity-45 md:text-sm">
-                    Contact / Availability
-                  </p>
-
-                  <h2 className="max-w-[1200px] text-[13vw] font-black uppercase leading-[0.78] tracking-[-0.075em] md:text-[10vw] lg:text-[7.6vw]">
-                    Let&apos;s build
-                    <br />
-                    something
-                    <br />
-                    useful.
-                  </h2>
-                </div>
-
-                <div className="grid grid-cols-2 gap-8 md:grid-cols-1 md:justify-self-end md:text-right">
-                  <div>
-                    <p className="mb-3 text-xs font-black uppercase tracking-[0.22em] opacity-40">
-                      Navigation
-                    </p>
-
-                    <div className="flex flex-col items-start gap-1 text-xl font-black uppercase leading-[1.05] tracking-[-0.04em] opacity-80 md:items-end md:text-3xl">
-                      <Link
-                        href="/"
-                        className="w-fit transition hover:opacity-60"
-                      >
-                        <WaveLinkText text="Home" />
-                      </Link>
-
-                      <Link
-                        href="/projects"
-                        className="w-fit transition hover:opacity-60"
-                      >
-                        <WaveLinkText text="My Work" />
-                      </Link>
-
-                      <Link
-                        href="/about"
-                        className="w-fit transition hover:opacity-60"
-                      >
-                        <WaveLinkText text="About" />
-                      </Link>
-
-                      <Link
-                        href="/contact"
-                        className="w-fit transition hover:opacity-60"
-                      >
-                        <WaveLinkText text="Contact" />
-                      </Link>
-                    </div>
-                  </div>
-
-                  <div>
-                    <p className="mb-3 text-xs font-black uppercase tracking-[0.22em] opacity-40">
-                      Social
-                    </p>
-
-                    <div className="flex flex-col items-start gap-1 text-xl font-black uppercase leading-[1.05] tracking-[-0.04em] opacity-80 md:items-end md:text-3xl">
-                      <a
-                        href="https://www.linkedin.com/in/jonas-nygaard-0aa767366/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-fit transition hover:opacity-60"
-                      >
-                        <WaveLinkText text="LinkedIn" />
-                      </a>
-
-                      <a
-                        href="https://www.jonasnygaard.com/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-fit transition hover:opacity-60"
-                      >
-                        <WaveLinkText text="Portfolio" />
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-20 grid grid-cols-1 gap-6 border-t border-stone-400/30 pt-6 text-sm font-black uppercase tracking-[0.14em] opacity-75 dark:border-stone-200/20 md:grid-cols-4">
-                <div>
-                  <p className="mb-1 opacity-35">Created by</p>
-                  <a
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    href="https://www.jonasnygaard.com/"
-                    className="inline-block w-fit transition hover:opacity-60"
-                  >
-                    <WaveLinkText text="Newfarm Studio" />
-                  </a>
-                </div>
-
-                <div>
-                  <p className="mb-1 opacity-35">Email</p>
-                  <a
-                    href="mailto:jonasnygaard96@gmail.com"
-                    className="inline-block w-fit normal-case tracking-normal transition hover:opacity-60"
-                  >
-                    <WaveLinkText text="jonasnygaard96@gmail.com" />
-                  </a>
-                </div>
-
-                <div className="md:text-right">
-                  <p className="mb-1 opacity-35">Location</p>
-                  <p>Oslo, Norway</p>
-                </div>
-              </div>
-            </div>
-          </footer>
-        </div>
-
-        {/* Desktop */}
-        <div className="hidden h-screen w-full overflow-hidden pt-24 md:block">
-          <div className="relative h-[calc(100vh-6rem)] w-full overflow-visible">
-            <div className="mx-auto grid h-full w-[90vw] grid-cols-4 grid-rows-3 gap-x-[3vw] gap-y-[2.2vw] overflow-visible px-[0.6vw] py-[1.2vw]">
-              {" "}
-              {desktopImages.map((item, index) => {
-                const isSelected = item.project.title === selectedProject.title;
-                const offset = desktopOffsets[index % desktopOffsets.length];
-
-                const wrapperStyle: CSSProperties = {
-                  transform: `translate(${offset.x}, ${offset.y}) ${
-                    isSelected ? "scale(1.4)" : "scale(1)"
-                  }`,
-                };
-
-                return (
-                  <div
-                    key={`${item.project.title}-${item.image}`}
-                    className={`flex overflow-visible ${getAlignClass(
-                      offset.align,
-                    )} items-center`}
-                  >
-                    <div
-                      style={wrapperStyle}
-                      className={`relative overflow-visible transition-transform duration-500 ease-out ${
-                        isSelected ? "z-30" : "z-0"
-                      }`}
-                    >
-                      <div
-                        ref={(element) => {
-                          floatingRefs.current[index] = element;
-                        }}
-                        className="relative overflow-visible"
-                      >
-                        <button
-                          type="button"
-                          onClick={() => handleSelectProject(item.project)}
-                          aria-label={`${item.project.title} image ${
-                            item.imageIndex + 1
-                          }`}
-                          className={`relative block h-[clamp(120px,9.8vw,205px)] w-[clamp(200px,17vw,340px)] overflow-visible transition-[filter,opacity] duration-500 ease-out ${
-                            isSelected
-                              ? "opacity-100 blur-0"
-                              : "opacity-45 blur-[4px]  hover:opacity-70 hover:blur-[1.5px]"
-                          }`}
-                        >
-                          <Image
-                            src={`/projects/${item.image}`}
-                            alt={`${item.project.title} ${item.imageIndex + 1}`}
-                            fill
-                            priority={index < 6}
-                            sizes="(min-width: 768px) 17vw, 100vw"
-                            className="object-contain"
-                            draggable={false}
-                          />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Collapsible project menu */}
-            <div className="absolute bottom-8 left-6 z-[999] w-[clamp(280px,30vw,500px)] xl:left-8">
-              <motion.div
-                initial={false}
-                animate={{
-                  maxHeight: isDropdownOpen
-                    ? dropdownMode === "projects"
-                      ? 320
-                      : 390
-                    : 0,
-                  opacity: isDropdownOpen ? 1 : 0,
-                  y: isDropdownOpen ? 0 : 10,
-                }}
-                transition={{
-                  maxHeight: {
-                    duration: isDropdownOpen ? 0.65 : 0.58,
-                    delay: isDropdownOpen ? 0 : 0.16,
-                    ease: [0.76, 0, 0.24, 1],
-                  },
-                  opacity: {
-                    duration: isDropdownOpen ? 0.18 : 0.16,
-                    delay: isDropdownOpen ? 0 : 0.12,
-                    ease: "linear",
-                  },
-                  y: {
-                    duration: 0.45,
-                    ease: [0.76, 0, 0.24, 1],
-                  },
-                }}
-                className={`absolute bottom-full left-0 mb-3 w-full overflow-hidden border border-[#161310]/35 text-stone-200  dark:border-stone-300/25 bg-[#263029]/95 dark:bg-[#28322b]/95 dark:text-stone-200 ${
-                  isDropdownOpen ? "" : "pointer-events-none"
-                }`}
-              >
-                <motion.div
-                  initial={false}
-                  animate={
-                    isDropdownOpen
-                      ? {
-                          opacity: 1,
-                          y: 0,
-                          filter: "blur(0px)",
-                        }
-                      : {
-                          opacity: 0,
-                          y: 18,
-                          filter: "blur(6px)",
-                        }
-                  }
-                  transition={{
-                    opacity: {
-                      duration: isDropdownOpen ? 0.35 : 0.16,
-                      delay: isDropdownOpen ? 0.18 : 0,
-                      ease: "easeOut",
-                    },
-                    y: {
-                      duration: isDropdownOpen ? 0.55 : 0.22,
-                      delay: isDropdownOpen ? 0.18 : 0,
-                      ease: isDropdownOpen
-                        ? [0.22, 1, 0.36, 1]
-                        : [0.76, 0, 0.24, 1],
-                    },
-                    filter: {
-                      duration: isDropdownOpen ? 0.35 : 0.16,
-                      delay: isDropdownOpen ? 0.18 : 0,
-                      ease: "easeOut",
-                    },
-                  }}
-                  className="flex flex-col"
-                >
-                  {dropdownMode === "projects" &&
-                    projects.map((project, index) => {
-                      const isActive = selectedProject.title === project.title;
-
-                      return (
-                        <motion.button
-                          key={project.title}
-                          type="button"
-                          onClick={() => handleSelectProject(project)}
-                          initial={false}
-                          animate={
-                            isDropdownOpen
-                              ? {
-                                  opacity: isActive ? 1 : 0.5,
-                                  y: 0,
-                                  filter: "blur(0px)",
-                                }
-                              : {
-                                  opacity: 0,
-                                  y: 18,
-                                  filter: "blur(6px)",
-                                }
-                          }
-                          transition={{
-                            duration: isDropdownOpen ? 0.55 : 0.18,
-                            delay: isDropdownOpen ? 0.22 + index * 0.06 : 0,
-                            ease: isDropdownOpen
-                              ? [0.22, 1, 0.36, 1]
-                              : [0.76, 0, 0.24, 1],
-                          }}
-                          className="group relative grid grid-cols-[1fr_auto] items-center gap-5 border-b border-[#161310]/12 px-6 py-6 text-left last:border-b-0 dark:border-stone-300/12"
-                        >
-                          <span className="text-[clamp(22px,1.65vw,32px)] font-black uppercase leading-[0.9] tracking-[-0.06em] transition-opacity duration-300 group-hover:opacity-70">
-                            {project.title}
-                          </span>
-
-                          <span className="text-[12px] font-black tracking-[0.18em] opacity-45">
-                            {String(index + 1).padStart(2, "0")}
-                          </span>
-
-                          <span className="absolute bottom-0 left-0 h-px w-full origin-left scale-x-0 bg-current opacity-25 transition-transform duration-500 group-hover:scale-x-100" />
-                        </motion.button>
-                      );
-                    })}
-
-                  {dropdownMode === "details" && (
-                    <div className="flex flex-col gap-6 p-6">
-                      <motion.div
-                        initial={false}
-                        animate={
-                          isDropdownOpen
-                            ? {
-                                opacity: 1,
-                                y: 0,
-                                filter: "blur(0px)",
-                              }
-                            : {
-                                opacity: 0,
-                                y: 18,
-                                filter: "blur(6px)",
-                              }
-                        }
-                        transition={{
-                          duration: isDropdownOpen ? 0.55 : 0.18,
-                          delay: isDropdownOpen ? 0.22 : 0,
-                          ease: isDropdownOpen
-                            ? [0.22, 1, 0.36, 1]
-                            : [0.76, 0, 0.24, 1],
-                        }}
-                      >
-                        <p className="mb-3 text-[11px] font-black uppercase tracking-[0.24em] ">
-                          About
-                        </p>
-
-                        <p className="text-[clamp(18px,1.2vw,24px)] font-black uppercase leading-[1.02] tracking-[-0.045em]">
-                          {selectedProject.about}
-                        </p>
-                      </motion.div>
-
-                      <motion.div
-                        initial={false}
-                        animate={
-                          isDropdownOpen
-                            ? {
-                                opacity: 1,
-                                y: 0,
-                                filter: "blur(0px)",
-                              }
-                            : {
-                                opacity: 0,
-                                y: 18,
-                                filter: "blur(6px)",
-                              }
-                        }
-                        transition={{
-                          duration: isDropdownOpen ? 0.55 : 0.18,
-                          delay: isDropdownOpen ? 0.28 : 0,
-                          ease: isDropdownOpen
-                            ? [0.22, 1, 0.36, 1]
-                            : [0.76, 0, 0.24, 1],
-                        }}
-                        className="grid grid-cols-2 gap-6 border-t border-[#161310]/12 pt-5 dark:border-stone-300/12"
-                      >
-                        <div>
-                          <p className="mb-2 text-[10px] font-black uppercase tracking-[0.22em] ">
-                            Stack
-                          </p>
-
-                          <p className="text-[14px] font-black uppercase leading-snug tracking-[-0.02em]">
-                            {selectedProject.stack}
-                          </p>
-                        </div>
-
-                        <div>
-                          <p className="mb-2 text-[10px] font-black uppercase tracking-[0.22em] ">
-                            Role
-                          </p>
-
-                          <p className="text-[14px] font-black uppercase leading-snug tracking-[-0.02em] ">
-                            {selectedProject.role}
-                          </p>
-                        </div>
-                      </motion.div>
-                    </div>
-                  )}
-                </motion.div>
-              </motion.div>
-
-              <div className="grid min-h-[72px]  grid-cols-[1fr_auto_auto_auto] backdrop-blur-md border border-[#161310]/35 text-stone-200  dark:border-stone-300/25 bg-[#263029]/95 dark:bg-[#28322b]/95 dark:text-stone-200">
-                <button
-                  type="button"
-                  onClick={toggleProjectsMenu}
-                  aria-expanded={isDropdownOpen && dropdownMode === "projects"}
-                  aria-label="Open project menu"
-                  className="flex min-w-0 items-center px-6 text-left text-[clamp(16px,1vw,22px)] font-black uppercase leading-none tracking-[-0.055em] transition-opacity hover:opacity-60"
-                >
-                  <span className="truncate">{selectedProject.title}</span>
-                </button>
-
-                <a
-                  href={selectedProject.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center border-l border-[#161310]/15 px-5 text-[12px] font-black uppercase tracking-[0.18em] transition-opacity hover:opacity-60 dark:border-stone-300/15"
-                >
-                  <WaveLinkText text="Live" />
-                </a>
-
-                <button
-                  type="button"
-                  onClick={toggleDetailsMenu}
-                  aria-expanded={isDropdownOpen && dropdownMode === "details"}
-                  className={`flex cursor-pointer items-center border-l border-[#161310]/15 px-5 text-[12px] font-black uppercase tracking-[0.18em] transition-opacity hover:opacity-60 dark:border-stone-300/15 ${
-                    isDropdownOpen && dropdownMode === "details"
-                      ? "opacity-100"
-                      : "opacity-60"
-                  }`}
-                >
-                  Details
-                </button>
-
-                <button
-                  type="button"
-                  onClick={toggleMenuButton}
-                  aria-expanded={isDropdownOpen}
-                  aria-label="Toggle project menu"
-                  className="group cursor-pointer relative flex h-[72px] w-[78px] items-center justify-center border-l border-[#161310]/15 transition-opacity hover:opacity-70 dark:border-stone-300/15"
-                >
-                  <span className="relative block h-6 w-9 overflow-hidden">
-                    <motion.span
-                      animate={
-                        isDropdownOpen
-                          ? {
-                              top: "50%",
-                              y: "-50%",
-                              width: "36px",
-                              opacity: 1,
-                            }
-                          : {
-                              top: "7px",
-                              y: "0%",
-                              width: "36px",
-                              opacity: 1,
-                            }
-                      }
-                      transition={{
-                        duration: 0.55,
-                        ease: [0.22, 1, 0.36, 1],
-                      }}
-                      className="absolute left-0 h-[2px] bg-current"
-                    />
-
-                    <motion.span
-                      animate={
-                        isDropdownOpen
-                          ? {
-                              top: "50%",
-                              y: "-50%",
-                              x: 10,
-                              width: "18px",
-                              opacity: 0,
-                            }
-                          : {
-                              top: "17px",
-                              y: "0%",
-                              x: 0,
-                              width: "26px",
-                              opacity: 1,
-                            }
-                      }
-                      transition={{
-                        duration: 0.55,
-                        ease: [0.22, 1, 0.36, 1],
-                      }}
-                      className="absolute left-0 h-[2px] bg-current"
-                    />
-                  </span>
-                </button>
-              </div>
-            </div>
           </div>
         </div>
       </section>
