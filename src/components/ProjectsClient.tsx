@@ -575,7 +575,7 @@ const ProjectsClient = () => {
             </div>
 
             {/* Collapsible project menu */}
-            <div className="absolute bottom-8 left-6 z-[999] w-[clamp(390px,30vw,560px)] xl:left-8">
+            <div className="absolute bottom-8 left-6 z-[999] w-[clamp(280px,30vw,500px)] xl:left-8">
               <motion.div
                 initial={false}
                 animate={{
@@ -603,7 +603,7 @@ const ProjectsClient = () => {
                     ease: [0.76, 0, 0.24, 1],
                   },
                 }}
-                className={`absolute bottom-full left-0 mb-3 w-full overflow-hidden border border-[#161310]/20 bg-[#fbfafa]/92 text-[#161310] backdrop-blur-md dark:border-stone-300/20 dark:bg-[#2e2b2b]/92 dark:text-stone-200 ${
+                className={`absolute bottom-full left-0 mb-3 w-full overflow-hidden border border-[#161310]/35 text-stone-200  dark:border-stone-300/25 bg-[#263029]/95 dark:bg-[#28322b]/95 dark:text-stone-200 ${
                   isDropdownOpen ? "" : "pointer-events-none"
                 }`}
               >
@@ -713,11 +713,11 @@ const ProjectsClient = () => {
                             : [0.76, 0, 0.24, 1],
                         }}
                       >
-                        <p className="mb-3 text-[11px] font-black uppercase tracking-[0.24em] text-[#161310]/40 dark:text-stone-300/40">
+                        <p className="mb-3 text-[11px] font-black uppercase tracking-[0.24em] ">
                           About
                         </p>
 
-                        <p className="text-[clamp(18px,1.2vw,24px)] font-black uppercase leading-[1.02] tracking-[-0.045em] text-[#161310] dark:text-stone-100">
+                        <p className="text-[clamp(18px,1.2vw,24px)] font-black uppercase leading-[1.02] tracking-[-0.045em]">
                           {selectedProject.about}
                         </p>
                       </motion.div>
@@ -747,21 +747,21 @@ const ProjectsClient = () => {
                         className="grid grid-cols-2 gap-6 border-t border-[#161310]/12 pt-5 dark:border-stone-300/12"
                       >
                         <div>
-                          <p className="mb-2 text-[10px] font-black uppercase tracking-[0.22em] text-[#161310]/40 dark:text-stone-300/40">
+                          <p className="mb-2 text-[10px] font-black uppercase tracking-[0.22em] ">
                             Stack
                           </p>
 
-                          <p className="text-[14px] font-black uppercase leading-snug tracking-[-0.02em] text-[#161310]/75 dark:text-stone-300/75">
+                          <p className="text-[14px] font-black uppercase leading-snug tracking-[-0.02em]">
                             {selectedProject.stack}
                           </p>
                         </div>
 
                         <div>
-                          <p className="mb-2 text-[10px] font-black uppercase tracking-[0.22em] text-[#161310]/40 dark:text-stone-300/40">
+                          <p className="mb-2 text-[10px] font-black uppercase tracking-[0.22em] ">
                             Role
                           </p>
 
-                          <p className="text-[14px] font-black uppercase leading-snug tracking-[-0.02em] text-[#161310]/75 dark:text-stone-300/75">
+                          <p className="text-[14px] font-black uppercase leading-snug tracking-[-0.02em] ">
                             {selectedProject.role}
                           </p>
                         </div>
@@ -771,13 +771,13 @@ const ProjectsClient = () => {
                 </motion.div>
               </motion.div>
 
-              <div className="grid min-h-[72px] grid-cols-[1fr_auto_auto_auto] border border-[#161310]/25 bg-[#fbfafa]/92 text-[#161310] backdrop-blur-md dark:border-stone-300/25 dark:bg-[#2e2b2b]/92 dark:text-stone-200">
+              <div className="grid min-h-[72px]  grid-cols-[1fr_auto_auto_auto] backdrop-blur-md border border-[#161310]/35 text-stone-200  dark:border-stone-300/25 bg-[#263029]/95 dark:bg-[#28322b]/95 dark:text-stone-200">
                 <button
                   type="button"
                   onClick={toggleProjectsMenu}
                   aria-expanded={isDropdownOpen && dropdownMode === "projects"}
                   aria-label="Open project menu"
-                  className="flex min-w-0 items-center px-6 text-left text-[clamp(22px,1.45vw,28px)] font-black uppercase leading-none tracking-[-0.055em] transition-opacity hover:opacity-60"
+                  className="flex min-w-0 items-center px-6 text-left text-[clamp(16px,1vw,22px)] font-black uppercase leading-none tracking-[-0.055em] transition-opacity hover:opacity-60"
                 >
                   <span className="truncate">{selectedProject.title}</span>
                 </button>

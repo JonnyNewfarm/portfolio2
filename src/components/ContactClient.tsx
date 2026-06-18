@@ -457,7 +457,7 @@ useful.`}
                     as="h2"
                     mode="lines"
                     delay={0.05}
-                    className="text-[12vw] font-semibold uppercase leading-[0.84] tracking-[-0.04em] sm:text-[8vw] md:text-[5vw] lg:text-[4vw]"
+                    className="text-[12vw] font-semibold uppercase leading-[0.84] tracking-[-0.04em] sm:text-[8vw] md:text-[5vw] lg:text-[4vw] "
                   >
                     Start here
                   </TextReveal>

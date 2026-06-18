@@ -17,15 +17,15 @@ const ease = [0.22, 1, 0.36, 1] as const;
 
 const introImages = [
   {
-    src: "/jonas-03.jpeg",
+    src: "/jonas-0003.jpg",
     alt: "Jonas Nygaard 3",
   },
   {
-    src: "/jonas-02.jpg",
+    src: "/jonas-0002.jpg",
     alt: "Jonas Nygaard 2",
   },
   {
-    src: "/jonas-01.jpg",
+    src: "/jonas-0001.jpg",
     alt: "Jonas Nygaard 1",
   },
 ];
@@ -324,7 +324,7 @@ export default function AboutClient() {
     <ScrollSection>
       <section className="relative min-h-screen overflow-hidden bg-[#fbfafa] text-[#161310] dark:bg-[#2e2b2b] dark:text-stone-300">
         {/* IMAGE + STATS */}
-        <div className="absolute right-0 top-[6.2rem] z-[1] w-[54vw] sm:w-[42vw] md:w-[34vw] lg:top-[5.7rem] lg:w-[27vw] xl:w-[24vw] 2xl:w-[21vw]">
+        <div className="absolute right-0 top-[6.2rem] z-[1] w-[54vw] sm:w-[42vw] md:w-[34vw] lg:top-[5.7rem] lg:w-[27vw] xl:w-[24vw] 2xl:w-[23vw]">
           <motion.div
             ref={imageRef}
             onMouseMove={handleImageMove}
