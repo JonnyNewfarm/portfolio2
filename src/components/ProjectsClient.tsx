@@ -11,6 +11,7 @@ import Image from "next/image";
 import SmoothScroll from "@/components/SmoothScroll";
 import {
   MotionValue,
+  animate,
   motion,
   useMotionValue,
   useSpring,
@@ -101,6 +102,70 @@ function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
 }
 
+type SelectionCornersProps = {
+  scrollIndex: MotionValue<number>;
+};
+
+const SelectionCorners = ({ scrollIndex }: SelectionCornersProps) => {
+  const snapProgress = useTransform(scrollIndex, (latest) => {
+    const nearest = Math.round(latest);
+    const distance = Math.abs(latest - nearest);
+
+    return clamp(distance / 0.5, 0, 1);
+  });
+
+  const scale = useTransform(snapProgress, [0, 0.25, 1], [1, 1.025, 1.12]);
+  const opacity = useTransform(snapProgress, [0, 0.65, 1], [1, 0.9, 0.72]);
+
+  const cornerLength = "h-8 w-[1.5px]";
+  const cornerWidth = "h-[1.5px] w-8";
+
+  return (
+    <motion.div
+      aria-hidden="true"
+      style={{
+        scale,
+        opacity,
+      }}
+      className="pointer-events-none absolute left-1/2 top-1/2 z-30 h-[42vh] min-h-[340px] w-[44vw] min-w-[560px] max-w-[860px] -translate-x-1/2 -translate-y-1/2"
+    >
+      <div className="absolute -inset-3 border-[1px] border-[#161310]/50 dark:border-stone-200/35">
+        {/* Top left */}
+        <span
+          className={`absolute -left-[1.5px] -top-[1.5px] ${cornerLength} bg-[#161310] dark:bg-stone-200`}
+        />
+        <span
+          className={`absolute -left-[1.5px] -top-[1.5px] ${cornerWidth} bg-[#161310] dark:bg-stone-200`}
+        />
+
+        {/* Top right */}
+        <span
+          className={`absolute -right-[1.5px] -top-[1.5px] ${cornerLength} bg-[#161310] dark:bg-stone-200`}
+        />
+        <span
+          className={`absolute -right-[1.5px] -top-[1.5px] ${cornerWidth} bg-[#161310] dark:bg-stone-200`}
+        />
+
+        {/* Bottom left */}
+        <span
+          className={`absolute -bottom-[1.5px] -left-[1.5px] ${cornerLength} bg-[#161310] dark:bg-stone-200`}
+        />
+        <span
+          className={`absolute -bottom-[1.5px] -left-[1.5px] ${cornerWidth} bg-[#161310] dark:bg-stone-200`}
+        />
+
+        {/* Bottom right */}
+        <span
+          className={`absolute -bottom-[1.5px] -right-[1.5px] ${cornerLength} bg-[#161310] dark:bg-stone-200`}
+        />
+        <span
+          className={`absolute -bottom-[1.5px] -right-[1.5px] ${cornerWidth} bg-[#161310] dark:bg-stone-200`}
+        />
+      </div>
+    </motion.div>
+  );
+};
+
 type ProjectCardProps = {
   card: ScrollCard;
   scrollIndex: MotionValue<number>;
@@ -125,6 +190,7 @@ const ProjectCard = ({
   });
 
   const scale = useTransform(distance, [0, 1], [1, 0.92]);
+  const opacity = useTransform(distance, [0, 1], [1, 0.72]);
 
   const showDetails = isActive && detailsOpen;
 
@@ -133,47 +199,11 @@ const ProjectCard = ({
       style={{
         x,
         scale,
+        opacity,
       }}
       className="pointer-events-none absolute left-1/2 top-1/2 h-[42vh] min-h-[340px] w-[44vw] min-w-[560px] max-w-[860px] -translate-x-1/2 -translate-y-1/2"
     >
       <div className="relative h-full w-full overflow-visible">
-        {/* Corner border locked to active image */}
-        <motion.div
-          aria-hidden="true"
-          animate={
-            isActive
-              ? {
-                  opacity: 1,
-                  scale: [0.96, 1.055, 1],
-                }
-              : {
-                  opacity: 0,
-                  scale: 0.96,
-                }
-          }
-          transition={{
-            duration: isActive ? 0.65 : 0.25,
-            ease: [0.76, 0, 0.24, 1],
-          }}
-          className="absolute -inset-3 z-30"
-        >
-          {/* Top left */}
-          <span className="absolute left-0 top-0 h-8 w-[5px] bg-[#161310] dark:bg-stone-200" />
-          <span className="absolute left-0 top-0 h-[5px] w-8 bg-[#161310] dark:bg-stone-200" />
-
-          {/* Top right */}
-          <span className="absolute right-0 top-0 h-8 w-[5px] bg-[#161310] dark:bg-stone-200" />
-          <span className="absolute right-0 top-0 h-[5px] w-8 bg-[#161310] dark:bg-stone-200" />
-
-          {/* Bottom left */}
-          <span className="absolute bottom-0 left-0 h-8 w-[5px] bg-[#161310] dark:bg-stone-200" />
-          <span className="absolute bottom-0 left-0 h-[5px] w-8 bg-[#161310] dark:bg-stone-200" />
-
-          {/* Bottom right */}
-          <span className="absolute bottom-0 right-0 h-8 w-[5px] bg-[#161310] dark:bg-stone-200" />
-          <span className="absolute bottom-0 right-0 h-[5px] w-8 bg-[#161310] dark:bg-stone-200" />
-        </motion.div>
-
         <div className="relative h-full w-full overflow-hidden bg-[#fbfafa] dark:bg-[#2e2b2b]">
           <motion.div
             animate={{
@@ -246,8 +276,9 @@ const ProjectCard = ({
 
 const ProjectsClient = () => {
   const sectionRef = useRef<HTMLElement | null>(null);
-  const snapTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const isSnappingRef = useRef(false);
+  const wheelLockRef = useRef(false);
+  const activeStepRef = useRef(0);
+  const animationRef = useRef<ReturnType<typeof animate> | null>(null);
 
   const [viewportWidth, setViewportWidth] = useState(1440);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -257,13 +288,10 @@ const ProjectsClient = () => {
   const rawScrollIndex = useMotionValue(0);
 
   const scrollIndex = useSpring(rawScrollIndex, {
-    stiffness: 150,
-    damping: 32,
-    mass: 0.65,
+    stiffness: 260,
+    damping: 38,
+    mass: 0.42,
   });
-
-  const totalCycles = 5;
-  const totalSteps = projects.length * totalCycles - 1;
 
   const step = useMemo(() => {
     if (viewportWidth < 1024) return viewportWidth * 0.78;
@@ -271,49 +299,93 @@ const ProjectsClient = () => {
     return viewportWidth * 0.5;
   }, [viewportWidth]);
 
-  const cards = useMemo<ScrollCard[]>(() => {
-    const items: ScrollCard[] = [];
+  const cards = useMemo<ScrollCard[]>(
+    (() => {
+      const items: ScrollCard[] = [];
+      const buffer = projects.length * 2;
 
-    for (
-      let globalIndex = -projects.length;
-      globalIndex <= totalSteps + projects.length;
-      globalIndex++
-    ) {
-      const projectIndex = wrapIndex(globalIndex, projects.length);
+      for (
+        let globalIndex = nearestStep - buffer;
+        globalIndex <= nearestStep + buffer;
+        globalIndex++
+      ) {
+        const projectIndex = wrapIndex(globalIndex, projects.length);
 
-      items.push({
-        project: projects[projectIndex],
-        projectIndex,
-        globalIndex,
+        items.push({
+          project: projects[projectIndex],
+          projectIndex,
+          globalIndex,
+        });
+      }
+
+      return items;
+    }) as () => ScrollCard[],
+    [nearestStep],
+  );
+
+  const lockWheel = useCallback((duration = 780) => {
+    wheelLockRef.current = true;
+
+    window.setTimeout(() => {
+      wheelLockRef.current = false;
+    }, duration);
+  }, []);
+
+  const goToStep = useCallback(
+    (targetStep: number) => {
+      animationRef.current?.stop();
+
+      activeStepRef.current = targetStep;
+
+      setDetailsOpen(false);
+      setNearestStep(targetStep);
+      setActiveIndex(wrapIndex(targetStep, projects.length));
+
+      animationRef.current = animate(rawScrollIndex, targetStep, {
+        duration: 0.74,
+        ease: [0.76, 0, 0.24, 1],
+        onComplete: () => {
+          rawScrollIndex.set(targetStep);
+          activeStepRef.current = targetStep;
+          setNearestStep(targetStep);
+          setActiveIndex(wrapIndex(targetStep, projects.length));
+        },
       });
-    }
-
-    return items;
-  }, [totalSteps]);
-
-  const scrollToStep = useCallback(
-    (targetStep: number, behavior: ScrollBehavior = "smooth") => {
-      const section = sectionRef.current;
-      if (!section) return;
-
-      const clampedStep = clamp(targetStep, 0, totalSteps);
-      const sectionTop = section.offsetTop;
-      const scrollableDistance = section.offsetHeight - window.innerHeight;
-      const progress = clampedStep / totalSteps;
-      const targetY = sectionTop + scrollableDistance * progress;
-
-      isSnappingRef.current = true;
-
-      window.scrollTo({
-        top: targetY,
-        behavior,
-      });
-
-      window.setTimeout(() => {
-        isSnappingRef.current = false;
-      }, 650);
     },
-    [totalSteps],
+    [rawScrollIndex],
+  );
+
+  const goToRelativeStep = useCallback(
+    (direction: 1 | -1) => {
+      const nextStep = activeStepRef.current + direction;
+
+      lockWheel();
+      goToStep(nextStep);
+    },
+    [goToStep, lockWheel],
+  );
+
+  const goToProjectIndex = useCallback(
+    (projectIndex: number) => {
+      const currentStep = activeStepRef.current;
+      const currentProjectIndex = wrapIndex(currentStep, projects.length);
+
+      let delta = projectIndex - currentProjectIndex;
+
+      if (delta > projects.length / 2) {
+        delta -= projects.length;
+      }
+
+      if (delta < -projects.length / 2) {
+        delta += projects.length;
+      }
+
+      const targetStep = currentStep + delta;
+
+      lockWheel();
+      goToStep(targetStep);
+    },
+    [goToStep, lockWheel],
   );
 
   useEffect(() => {
@@ -331,88 +403,66 @@ const ProjectsClient = () => {
   }, []);
 
   useEffect(() => {
-    const handleScroll = () => {
+    const handleWheel = (event: WheelEvent) => {
       const section = sectionRef.current;
       if (!section) return;
+      if (window.innerWidth < 768) return;
 
       const rect = section.getBoundingClientRect();
-      const scrollableDistance = section.offsetHeight - window.innerHeight;
 
-      if (scrollableDistance <= 0) return;
-
-      const progress = clamp(-rect.top / scrollableDistance, 0, 1);
-      const nextRawIndex = progress * totalSteps;
-
-      rawScrollIndex.set(nextRawIndex);
-
-      const roundedStep = Math.round(nextRawIndex);
-      const nextActiveIndex = wrapIndex(roundedStep, projects.length);
-
-      setNearestStep(roundedStep);
-      setActiveIndex(nextActiveIndex);
-
-      const isInsideSection =
+      const isInsideStickyArea =
         rect.top <= 0 && rect.bottom >= window.innerHeight;
 
-      if (!isInsideSection || isSnappingRef.current) return;
+      if (!isInsideStickyArea) return;
 
-      if (snapTimeoutRef.current) {
-        clearTimeout(snapTimeoutRef.current);
-      }
+      event.preventDefault();
 
-      snapTimeoutRef.current = setTimeout(() => {
-        const currentStep = rawScrollIndex.get();
-        const snapStep = Math.round(currentStep);
-        const distanceFromSnap = Math.abs(currentStep - snapStep);
+      if (wheelLockRef.current) return;
 
-        if (distanceFromSnap > 0.08) {
-          scrollToStep(snapStep, "smooth");
-        }
-      }, 135);
+      const direction = event.deltaY > 0 ? 1 : -1;
+
+      goToRelativeStep(direction);
     };
 
-    handleScroll();
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("resize", handleScroll);
+    window.addEventListener("wheel", handleWheel, { passive: false });
 
     return () => {
-      if (snapTimeoutRef.current) {
-        clearTimeout(snapTimeoutRef.current);
-      }
-
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", handleScroll);
+      window.removeEventListener("wheel", handleWheel);
     };
-  }, [rawScrollIndex, scrollToStep, totalSteps]);
+  }, [goToRelativeStep]);
 
   useEffect(() => {
     setDetailsOpen(false);
   }, [activeIndex]);
 
+  useEffect(() => {
+    return () => {
+      animationRef.current?.stop();
+    };
+  }, []);
+
   const handlePrev = () => {
-    setDetailsOpen(false);
-    scrollToStep(nearestStep - 1);
+    if (wheelLockRef.current) return;
+    goToRelativeStep(-1);
   };
 
   const handleNext = () => {
-    setDetailsOpen(false);
-    scrollToStep(nearestStep + 1);
+    if (wheelLockRef.current) return;
+    goToRelativeStep(1);
   };
 
   return (
     <SmoothScroll>
       <section
         ref={sectionRef}
-        className="relative min-h-screen w-full bg-[#fbfafa] text-[#161310] dark:bg-[#2e2b2b] dark:text-stone-300 md:h-[560vh]"
+        className="relative min-h-screen w-full bg-[#fbfafa] text-[#161310] dark:bg-[#2e2b2b] dark:text-stone-300 md:h-screen"
       >
-        {/* Desktop sticky scroll */}
-        <div className="sticky top-0 hidden h-screen w-full overflow-hidden md:block">
+        {/* Desktop sticky carousel */}
+        <div className="relative hidden h-screen w-full overflow-hidden md:block">
           <button
             type="button"
             onClick={handlePrev}
-            style={{ mixBlendMode: "difference" }}
-            className="absolute left-8 top-[calc(50%-28vh)] z-50 text-[26px] font-black uppercase tracking-[0.12em] text-[#2e2b2b] dark:text-stone-200 opacity-100 transition-opacity hover:opacity-70"
+            className="absolute left-8 top-[calc(50%-28vh)] z-50 text-[26px] font-black uppercase tracking-[0.12em] text-[#2e2b2b] opacity-100 transition-opacity hover:opacity-70 dark:text-stone-200"
           >
             Prev
           </button>
@@ -420,8 +470,7 @@ const ProjectsClient = () => {
           <button
             type="button"
             onClick={handleNext}
-            style={{ mixBlendMode: "difference" }}
-            className="absolute right-8 top-[calc(50%-28vh)] z-50 text-[26px] font-black uppercase tracking-[0.12em] text-[#2e2b2b] dark:text-stone-200 opacity-100 transition-opacity hover:opacity-70"
+            className="absolute right-8 top-[calc(50%-28vh)] z-50 text-[26px] font-black uppercase tracking-[0.12em] text-[#2e2b2b] opacity-100 transition-opacity hover:opacity-70 dark:text-stone-200"
           >
             Next
           </button>
@@ -445,6 +494,8 @@ const ProjectsClient = () => {
             </div>
           </div>
 
+          <SelectionCorners scrollIndex={scrollIndex} />
+
           <div className="absolute right-8 top-[calc(50%+23vh)] z-40 text-right text-[13px] font-black uppercase tracking-[0.08em] opacity-60">
             {String(activeIndex + 1).padStart(2, "0")}/
             {String(projects.length).padStart(2, "0")}
@@ -453,9 +504,34 @@ const ProjectsClient = () => {
           <button
             type="button"
             onClick={() => setDetailsOpen((current) => !current)}
-            className="absolute bottom-8 left-8 z-40 text-[26px] font-black uppercase leading-none tracking-[-0.01em] transition-opacity hover:opacity-55"
+            aria-label={detailsOpen ? "Show image" : "Show details"}
+            className="absolute bottom-8 left-8 z-40 h-[32px] w-[120px] overflow-hidden text-left text-[26px] font-black uppercase leading-none tracking-[-0.01em] transition-opacity hover:opacity-55"
           >
-            {detailsOpen ? "Image" : "Details"}
+            <motion.span
+              animate={{
+                y: detailsOpen ? "-115%" : "0%",
+              }}
+              transition={{
+                duration: 0.55,
+                ease: [0.76, 0, 0.24, 1],
+              }}
+              className="absolute left-0 top-0 block"
+            >
+              Details
+            </motion.span>
+
+            <motion.span
+              animate={{
+                y: detailsOpen ? "0%" : "115%",
+              }}
+              transition={{
+                duration: 0.55,
+                ease: [0.76, 0, 0.24, 1],
+              }}
+              className="absolute left-0 top-0 block"
+            >
+              Image
+            </motion.span>
           </button>
 
           <div className="absolute bottom-8 left-1/2 z-40 flex max-w-[54vw] -translate-x-1/2 items-center justify-center gap-7 text-center">
@@ -464,14 +540,8 @@ const ProjectsClient = () => {
                 key={project.title}
                 type="button"
                 onClick={() => {
-                  setDetailsOpen(false);
-
-                  const currentCycle = Math.floor(
-                    nearestStep / projects.length,
-                  );
-                  const targetStep = currentCycle * projects.length + index;
-
-                  scrollToStep(targetStep);
+                  if (wheelLockRef.current) return;
+                  goToProjectIndex(index);
                 }}
                 className={`whitespace-nowrap text-[clamp(13px,1vw,18px)] font-black uppercase leading-none tracking-[-0.025em] transition-all duration-500 ${
                   index === activeIndex

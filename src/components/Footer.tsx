@@ -28,8 +28,14 @@ const Footer = () => {
 
   if (pathname === "/") return null;
 
+  const isProjectsPage = pathname === "/projects";
+
   return (
-    <footer className="relative overflow-hidden bg-[#fbfafa] px-4 py-10 text-[#161310] dark:bg-[#2e2b2b] dark:text-stone-300 md:px-10 lg:px-16">
+    <footer
+      className={`relative overflow-hidden bg-[#fbfafa] px-4 py-10 text-[#161310] dark:bg-[#2e2b2b] dark:text-stone-300 md:px-10 lg:px-16 ${
+        isProjectsPage ? "md:hidden" : ""
+      }`}
+    >
       <div className="mx-auto flex min-h-[520px] w-full max-w-[1800px] flex-col justify-between pt-8">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-[1.2fr_0.8fr] md:items-start">
           <div>
