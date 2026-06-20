@@ -44,7 +44,7 @@ export default function HeroSection() {
   return (
     <section
       ref={ref}
-      className="h-[155vh] md:h-[140vh]  bg-[#c6c0c0] dark:bg-[#757474] text-black dark:text-stone-300"
+      className="h-[155vh] md:h-[140vh] bg-[#c6c0c0] dark:bg-[#757474] text-black dark:text-stone-300"
     >
       <div
         style={{
@@ -59,29 +59,38 @@ export default function HeroSection() {
         <Canvas dpr={[1, 1.5]}>
           <ambientLight intensity={0.55} />
           <directionalLight position={[5, 5, 5]} intensity={1} />
+
           <FloorLamp />
           <Desk />
+
           <Suspense fallback={null}>
             <Bookshelf />
           </Suspense>
+
           <Suspense fallback={null}>
             <WindowOnWall />
           </Suspense>
+
           <Wall />
+
           <Suspense fallback={null}>
             <Plant />
           </Suspense>
+
           <Suspense fallback={null}>
             <Bird />
           </Suspense>
+
           <Suspense fallback={null}>
             <Chest />
           </Suspense>
 
           <Wall2 />
+
           <Suspense fallback={null}>
             <Curtain />
           </Suspense>
+
           <WallShelfWithCandle />
           <Floor />
           <Clock />
@@ -89,23 +98,30 @@ export default function HeroSection() {
           <Cloud />
 
           <CartoonModel scrollYProgress={scrollYProgress} />
+
           <Suspense fallback={null}>
             <Skateboard />
           </Suspense>
+
           <RecordPlayer />
           <ComputerTower />
+
           <ScreenUI scrollYProgress={scrollYProgress} />
           <ScreenHint scrollYProgress={scrollYProgress} />
           <CameraController scrollYProgress={scrollYProgress} />
+
           <Preload all />
         </Canvas>
 
-        <div className="absolute z-50 text-xl text-[#c6cfc8] uppercase md:text-5xl font-semibold left-5 bottom-14 md:left-20"></div>
+        <div className="absolute left-5 bottom-14 z-50 font-anton text-xl uppercase tracking-wide text-[#c6cfc8] md:left-20 md:text-5xl">
+          newfarm studio
+        </div>
 
-        <div className="absolute hidden md:block  md:-translate-y-1/2 md:top-1/2 right-5 z-50">
+        <div className="absolute right-5 z-50 hidden md:top-1/2 md:block md:-translate-y-1/2">
           <DarkModeBtn />
         </div>
-        <div className="absolute  md:hidden  bottom-12 right-5 z-50">
+
+        <div className="absolute bottom-12 right-5 z-50 md:hidden">
           <DarkModeBtn />
         </div>
       </div>

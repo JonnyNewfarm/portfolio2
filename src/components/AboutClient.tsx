@@ -322,7 +322,7 @@ export default function AboutClient() {
 
   return (
     <ScrollSection>
-      <section className="relative min-h-screen overflow-hidden bg-[#fbfafa] text-[#161310] dark:bg-[#2e2b2b] dark:text-stone-300">
+      <section className="relative min-h-screen overflow-hidden bg-[#fbfafa] text-[#161310] dark:bg-[#1e1c1c] dark:text-stone-300">
         {/* IMAGE + STATS */}
         <div className="absolute right-0 top-[6.2rem] z-[1] w-[54vw] sm:w-[42vw] md:w-[34vw] lg:top-[5.7rem] lg:w-[27vw] xl:w-[24vw] 2xl:w-[23vw]">
           <motion.div
@@ -425,7 +425,7 @@ export default function AboutClient() {
                 },
               },
             }}
-            className="mt-5 grid grid-cols-1 gap-4 text-[10px] font-black uppercase leading-[1.25] tracking-[0.16em] sm:grid-cols-2 sm:gap-6 lg:text-xs lg:tracking-[0.18em]"
+            className="mt-5 sm:grid hidden grid-cols-1 gap-4 text-[10px] font-black uppercase leading-[1.25] tracking-[0.16em] sm:grid-cols-2 sm:gap-6 lg:text-xs lg:tracking-[0.18em]"
           >
             {imageStats.map((item) => (
               <motion.div
@@ -463,7 +463,7 @@ export default function AboutClient() {
               mode="lines"
               delay={0.05}
               trigger={introDone}
-              className="max-w-[980px] text-[clamp(3rem,7vw,7rem)] font-black uppercase leading-[0.92] tracking-[-0.07em]"
+              className="max-w-[980px] text-[clamp(4rem,8vw,8rem)] font-anton uppercase leading-[0.92] tracking-[-0.01em]"
             >
               {`Designer &
 frontend

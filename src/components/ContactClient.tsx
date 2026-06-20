@@ -48,7 +48,7 @@ function TextReveal({
     hidden: {
       y: "115%",
       opacity: 0,
-      rotate: mode === "lines" ? 2.5 : 1.5,
+      rotate: 0,
       filter: "blur(10px)",
     },
     visible: {
@@ -77,8 +77,8 @@ function TextReveal({
           key={`${item}-${index}`}
           className={
             mode === "lines"
-              ? "block overflow-hidden"
-              : "inline-block overflow-hidden align-top"
+              ? "block overflow-hidden py-[0.08em] -my-[0.08em]"
+              : "inline-block overflow-hidden py-[0.04em] -my-[0.04em] align-top"
           }
         >
           <motion.span
@@ -260,7 +260,7 @@ const ContactClient = () => {
 
   return (
     <SmoothScroll>
-      <section className="min-h-screen w-full overflow-hidden  bg-[#fbfafa] px-4 pb-12 pt-28 text-[#161310] dark:border-stone-600 dark:bg-[#2e2b2b] dark:text-stone-300 sm:px-8 md:px-10 lg:px-16 lg:pt-36">
+      <section className="min-h-screen w-full overflow-hidden bg-[#fbfafa] px-4 pb-12 pt-28 text-[#161310] dark:bg-[#1e1c1c] dark:text-stone-300 sm:px-8 md:px-10 lg:px-16 lg:pt-36">
         <div className="mx-auto w-full max-w-[1800px]">
           {/* HERO */}
           <div className="mb-16 grid grid-cols-1 gap-8 md:grid-cols-[1.2fr_0.8fr] md:items-end lg:mb-24">
@@ -278,7 +278,7 @@ const ContactClient = () => {
                 as="h1"
                 mode="lines"
                 delay={0.12}
-                className="max-w-[1250px] text-[11vw] font-black uppercase leading-[0.78] tracking-[-0.06em] sm:text-[14vw] md:text-[10vw] lg:text-[8vw]"
+                className="max-w-[1250px] text-[11vw] font-anton uppercase leading-[0.86] tracking-[-0.01em] sm:text-[14vw] md:text-[10vw] lg:text-[8vw]"
               >
                 {`Let's build
 something
@@ -457,7 +457,7 @@ useful.`}
                     as="h2"
                     mode="lines"
                     delay={0.05}
-                    className="text-[12vw] font-semibold uppercase leading-[0.84] tracking-[-0.04em] sm:text-[8vw] md:text-[5vw] lg:text-[4vw] "
+                    className="text-[12vw] font-anton uppercase leading-[0.9] tracking-[-0.02em] sm:text-[8vw] md:text-[5vw] lg:text-[4vw]"
                   >
                     Start here
                   </TextReveal>
@@ -467,7 +467,7 @@ useful.`}
                   as="p"
                   mode="words"
                   delay={0.16}
-                  className="hidden max-w-[260px] text-right text-sm  leading-[1.35]  md:block"
+                  className="hidden max-w-[260px] text-right text-sm leading-[1.35] md:block"
                 >
                   Tell me what you need, what exists already and what the goal
                   is.

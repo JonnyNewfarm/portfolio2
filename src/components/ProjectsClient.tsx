@@ -204,7 +204,7 @@ const ProjectCard = ({
       className="pointer-events-none absolute left-1/2 top-1/2 h-[42vh] min-h-[340px] w-[44vw] min-w-[560px] max-w-[860px] -translate-x-1/2 -translate-y-1/2"
     >
       <div className="relative h-full w-full overflow-visible">
-        <div className="relative h-full w-full overflow-hidden bg-[#fbfafa] dark:bg-[#2e2b2b]">
+        <div className="relative h-full w-full overflow-hidden bg-[#fbfafa] dark:bg-[#1e1c1c]">
           <motion.div
             animate={{
               y: showDetails ? "0%" : "105%",
@@ -213,7 +213,7 @@ const ProjectCard = ({
               duration: 0.9,
               ease: [0.76, 0, 0.24, 1],
             }}
-            className="absolute inset-0 z-10 flex h-full w-full flex-col justify-between bg-[#fbfafa] p-8 text-[#161310] dark:bg-[#2e2b2b] dark:text-stone-300"
+            className="absolute inset-0 z-10 flex h-full w-full flex-col justify-between bg-[#fbfafa] p-8 text-[#161310] dark:bg-[#1e1c1c] dark:text-stone-300"
           >
             <div>
               <p className="mb-4 text-[11px] font-black uppercase tracking-[0.24em] opacity-40">
@@ -256,7 +256,7 @@ const ProjectCard = ({
               duration: 0.9,
               ease: [0.76, 0, 0.24, 1],
             }}
-            className="absolute inset-0 z-20 bg-[#fbfafa] dark:bg-[#2e2b2b]"
+            className="absolute inset-0 z-20 bg-[#fbfafa] dark:bg-[#1e1c1c]"
           >
             <Image
               src={`/projects/${card.project.images[0]}`}
@@ -455,7 +455,7 @@ const ProjectsClient = () => {
     <SmoothScroll>
       <section
         ref={sectionRef}
-        className="relative min-h-screen w-full bg-[#fbfafa] text-[#161310] dark:bg-[#2e2b2b] dark:text-stone-300 md:h-screen"
+        className="relative min-h-screen w-full bg-[#fbfafa] text-[#161310] dark:bg-[#1e1c1c] dark:text-stone-300 md:h-screen"
       >
         {/* Desktop sticky carousel */}
         <div className="relative hidden h-screen w-full overflow-hidden md:block">
@@ -575,7 +575,7 @@ const ProjectsClient = () => {
               Selected Work
             </p>
 
-            <h1 className="text-4xl font-black uppercase leading-[0.92] tracking-[-0.05em] text-[#161310] dark:text-stone-200">
+            <h1 className="text-4xl font-anton uppercase leading-[0.92] tracking-[-0.01em] text-[#161310] dark:text-stone-200">
               My Work
             </h1>
 

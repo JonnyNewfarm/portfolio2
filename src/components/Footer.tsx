@@ -32,7 +32,7 @@ const Footer = () => {
 
   return (
     <footer
-      className={`relative overflow-hidden bg-[#fbfafa] px-4 py-10 text-[#161310] dark:bg-[#2e2b2b] dark:text-stone-300 md:px-10 lg:px-16 ${
+      className={`relative overflow-hidden bg-[#fbfafa] px-4 py-10 text-[#161310] dark:bg-[#1e1c1c] dark:text-stone-300 md:px-10 lg:px-16 ${
         isProjectsPage ? "md:hidden" : ""
       }`}
     >
@@ -43,7 +43,7 @@ const Footer = () => {
               Contact / Availability
             </p>
 
-            <h2 className="max-w-[1200px] text-[13vw] font-black uppercase leading-[0.78] tracking-[-0.045em] md:text-[10vw] lg:text-[7.6vw]">
+            <h2 className="max-w-[1200px] text-[13vw] font-anton uppercase leading-[0.92] tracking-[-0.01em] md:text-[10vw] lg:text-[7.6vw]">
               Let&apos;s build
               <br />
               something

@@ -19,6 +19,10 @@ body {
   font-family: var(--font-m), sans-serif !important;
 }
 
+.font-anton {
+  font-family: var(--font-anton), sans-serif;
+}
+
 html::-webkit-scrollbar,
 body::-webkit-scrollbar {
   display: none; 
@@ -52,67 +56,4 @@ body::-webkit-scrollbar {
 
 
 
-  ::view-transition-old(*) {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-::view-transition-new(*) {
-  opacity: 0;
-  transform: translateY(10px);
-}
-
-::view-transition-old(*),
-::view-transition-new(*) {
-  transition: opacity 0.35s ease-in-out, transform 0.35s ease-in-out;
-}
-
-.nav-link {
-  position: relative;
-  display: inline-block;
-}
-
-.nav-link::after {
-  content: "";
-  width: 0%;
-  height: 2px;
-  background-color: black;
-  display: block;
-  margin-top: 2px;
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
-  transition: width 0.2s linear;
-}
-
-.nav-link:hover::after {
-  width: 100%;
-  
-}
-
-
-
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation-duration: 0.3s;
-  background-color: #1c1a17 !important;
-}
-
-::view-transition-old(root) {
-  animation-name: fade-out;
-}
-
-::view-transition-new(root) {
-  animation-name: fade-in;
-}
-
-@keyframes fade-out {
-  from { opacity: 1; }
-  to { opacity: 0; }
-}
-
-@keyframes fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
 
