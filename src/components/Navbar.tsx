@@ -85,7 +85,7 @@ const Navbar = () => {
                 Navigation:
               </p>
 
-              <nav className="flex flex-wrap gap-x-4 gap-y-1 text-sm uppercase tracking-[0.08em]">
+              <nav className="flex flex-wrap gap-x-2 gap-y-1 text-sm uppercase tracking-[0.08em]">
                 {routes.map((route, index) => (
                   <VerticalTransitionLink
                     key={route.label}

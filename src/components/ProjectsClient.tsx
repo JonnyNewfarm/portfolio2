@@ -3,6 +3,7 @@
 import React, {
   useCallback,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -14,10 +15,10 @@ import {
   animate,
   motion,
   useMotionValue,
+  useReducedMotion,
   useSpring,
   useTransform,
 } from "framer-motion";
-import WaveLinkText from "./WaveLinkText";
 
 type Project = {
   title: string;
@@ -35,6 +36,127 @@ type ScrollCard = {
   projectIndex: number;
   globalIndex: number;
 };
+
+type IntroImageRect = {
+  top: number;
+  left: number;
+  width: number;
+  height: number;
+};
+
+type TextRevealTag = "p" | "span" | "h1" | "h2" | "label" | "div";
+
+type TextRevealProps = {
+  children: string;
+  as?: TextRevealTag;
+  className?: string;
+  delay?: number;
+  once?: boolean;
+  mode?: "words" | "lines";
+  htmlFor?: string;
+  active?: boolean;
+};
+
+const INTRO_EASE: [number, number, number, number] = [0.76, 0, 0.24, 1];
+
+const uiRevealVariants = {
+  hidden: {
+    opacity: 0,
+  },
+  show: {
+    opacity: 1,
+  },
+};
+
+const uiRevealTransition = {
+  duration: 0.65,
+  ease: INTRO_EASE,
+};
+
+function TextReveal({
+  children,
+  as = "p",
+  className = "",
+  delay = 0,
+  once = true,
+  mode = "words",
+  htmlFor,
+  active,
+}: TextRevealProps) {
+  const MotionTag = motion[as] as any;
+
+  const items =
+    mode === "lines"
+      ? children.split("\n").filter((line) => line.trim().length > 0)
+      : children.split(" ");
+
+  const containerVariants = {
+    hidden: {},
+    visible: {
+      transition: {
+        delayChildren: delay,
+        staggerChildren: mode === "lines" ? 0.11 : 0.028,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: {
+      y: "115%",
+      opacity: 0,
+    },
+    visible: {
+      y: "0%",
+      opacity: 1,
+      transition: {
+        duration: mode === "lines" ? 1 : 0.75,
+        ease: INTRO_EASE,
+      },
+    },
+  };
+
+  const motionProps =
+    active === undefined
+      ? {
+          whileInView: "visible",
+          viewport: {
+            once,
+            amount: 0.35,
+          },
+        }
+      : {
+          animate: active ? "visible" : "hidden",
+        };
+
+  return (
+    <MotionTag
+      htmlFor={htmlFor}
+      variants={containerVariants}
+      initial="hidden"
+      className={className}
+      {...motionProps}
+    >
+      {items.map((item, index) => (
+        <span
+          key={`${item}-${index}`}
+          className={
+            mode === "lines"
+              ? "block overflow-hidden py-[0.08em] -my-[0.08em]"
+              : "inline-block overflow-hidden py-[0.04em] -my-[0.04em] align-top"
+          }
+        >
+          <motion.span
+            variants={itemVariants}
+            className="inline-block will-change-transform"
+          >
+            {item}
+            {mode === "words" && index !== items.length - 1 ? "\u00A0" : null}
+          </motion.span>
+        </span>
+      ))}
+    </MotionTag>
+  );
+}
 
 const projects: Project[] = [
   {
@@ -102,6 +224,135 @@ function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
 }
 
+type IntroOverlayProps = {
+  onFinish: () => void;
+  mobileImageRect: IntroImageRect | null;
+};
+
+const IntroOverlay = ({ onFinish, mobileImageRect }: IntroOverlayProps) => {
+  const shouldReduceMotion = useReducedMotion();
+  const hasFinishedRef = useRef(false);
+
+  const finishIntro = useCallback(() => {
+    if (hasFinishedRef.current) return;
+
+    hasFinishedRef.current = true;
+    onFinish();
+  }, [onFinish]);
+
+  useEffect(() => {
+    const timeout = window.setTimeout(
+      finishIntro,
+      shouldReduceMotion ? 100 : 3100,
+    );
+
+    return () => {
+      window.clearTimeout(timeout);
+    };
+  }, [finishIntro, shouldReduceMotion]);
+
+  if (shouldReduceMotion) return null;
+
+  return (
+    <motion.div className="pointer-events-none fixed inset-0 z-[40] overflow-hidden">
+      <motion.div
+        aria-hidden="true"
+        className="absolute inset-0 z-10 bg-[#1e1c1c] dark:bg-[#fbfafa]"
+        initial={{
+          y: "0%",
+        }}
+        animate={{
+          y: "-100%",
+        }}
+        transition={{
+          delay: 1.65,
+          duration: 1.05,
+          ease: INTRO_EASE,
+        }}
+      />
+
+      <motion.article
+        initial={{
+          clipPath: "polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%)",
+        }}
+        animate={{
+          clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+        }}
+        transition={{
+          delay: 0.42,
+          duration: 1.18,
+          ease: INTRO_EASE,
+        }}
+        className="absolute left-1/2 top-1/2 z-30 hidden h-[42vh] min-h-[340px] w-[44vw] min-w-[560px] max-w-[860px] -translate-x-1/2 -translate-y-1/2 overflow-hidden md:block"
+      >
+        <Image
+          src={`/projects/${projects[0].images[0]}`}
+          alt={projects[0].title}
+          fill
+          priority
+          sizes="44vw"
+          className="select-none object-contain"
+          draggable={false}
+        />
+      </motion.article>
+
+      {mobileImageRect && (
+        <motion.article
+          initial={{
+            clipPath: "polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%)",
+          }}
+          animate={{
+            clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+          }}
+          transition={{
+            delay: 0.42,
+            duration: 1.18,
+            ease: INTRO_EASE,
+          }}
+          style={{
+            top: mobileImageRect.top,
+            left: mobileImageRect.left,
+            width: mobileImageRect.width,
+            height: mobileImageRect.height,
+          }}
+          className="absolute z-30 block overflow-hidden md:hidden"
+        >
+          <div className="relative h-full w-full border border-[#161310]/20 p-4 dark:border-stone-300/20">
+            <div className="relative h-full w-full">
+              <Image
+                src={`/projects/${projects[0].images[0]}`}
+                alt={projects[0].title}
+                fill
+                priority
+                sizes="calc(100vw - 48px)"
+                className="select-none object-contain"
+                draggable={false}
+              />
+            </div>
+          </div>
+        </motion.article>
+      )}
+
+      <motion.div
+        aria-hidden="true"
+        className="absolute inset-0 z-50 bg-transparent"
+        initial={{
+          opacity: 1,
+        }}
+        animate={{
+          opacity: 0,
+        }}
+        transition={{
+          delay: 2.95,
+          duration: 0.15,
+          ease: "linear",
+        }}
+        onAnimationComplete={finishIntro}
+      />
+    </motion.div>
+  );
+};
+
 type SelectionCornersProps = {
   scrollIndex: MotionValue<number>;
 };
@@ -130,7 +381,6 @@ const SelectionCorners = ({ scrollIndex }: SelectionCornersProps) => {
       className="pointer-events-none absolute left-1/2 top-1/2 z-30 h-[42vh] min-h-[340px] w-[44vw] min-w-[560px] max-w-[860px] -translate-x-1/2 -translate-y-1/2"
     >
       <div className="absolute -inset-3 border-[1px] border-[#161310]/50 dark:border-stone-200/35">
-        {/* Top left */}
         <span
           className={`absolute -left-[1.5px] -top-[1.5px] ${cornerLength} bg-[#161310] dark:bg-stone-200`}
         />
@@ -138,7 +388,6 @@ const SelectionCorners = ({ scrollIndex }: SelectionCornersProps) => {
           className={`absolute -left-[1.5px] -top-[1.5px] ${cornerWidth} bg-[#161310] dark:bg-stone-200`}
         />
 
-        {/* Top right */}
         <span
           className={`absolute -right-[1.5px] -top-[1.5px] ${cornerLength} bg-[#161310] dark:bg-stone-200`}
         />
@@ -146,7 +395,6 @@ const SelectionCorners = ({ scrollIndex }: SelectionCornersProps) => {
           className={`absolute -right-[1.5px] -top-[1.5px] ${cornerWidth} bg-[#161310] dark:bg-stone-200`}
         />
 
-        {/* Bottom left */}
         <span
           className={`absolute -bottom-[1.5px] -left-[1.5px] ${cornerLength} bg-[#161310] dark:bg-stone-200`}
         />
@@ -154,7 +402,6 @@ const SelectionCorners = ({ scrollIndex }: SelectionCornersProps) => {
           className={`absolute -bottom-[1.5px] -left-[1.5px] ${cornerWidth} bg-[#161310] dark:bg-stone-200`}
         />
 
-        {/* Bottom right */}
         <span
           className={`absolute -bottom-[1.5px] -right-[1.5px] ${cornerLength} bg-[#161310] dark:bg-stone-200`}
         />
@@ -211,39 +458,69 @@ const ProjectCard = ({
             }}
             transition={{
               duration: 0.9,
-              ease: [0.76, 0, 0.24, 1],
+              ease: INTRO_EASE,
             }}
             className="absolute inset-0 z-10 flex h-full w-full flex-col justify-between bg-[#fbfafa] p-8 text-[#161310] dark:bg-[#1e1c1c] dark:text-stone-300"
           >
             <div>
-              <p className="mb-4 text-[11px] font-black uppercase tracking-[0.24em] opacity-40">
+              <TextReveal
+                active={showDetails}
+                delay={0.15}
+                as="p"
+                className="mb-4 text-[11px] font-black uppercase tracking-[0.24em] opacity-40"
+              >
                 About
-              </p>
+              </TextReveal>
 
-              <p className="max-w-[720px] text-[clamp(22px,2.1vw,42px)] font-black uppercase leading-[0.95] tracking-[-0.055em]">
+              <TextReveal
+                active={showDetails}
+                delay={0.22}
+                as="p"
+                className="max-w-[720px] text-[clamp(22px,2.1vw,42px)] font-black uppercase leading-[0.95] tracking-[-0.055em]"
+              >
                 {card.project.about}
-              </p>
+              </TextReveal>
             </div>
 
             <div className="grid grid-cols-[1.2fr_0.8fr] gap-8">
               <div>
-                <p className="mb-3 text-[11px] font-black uppercase tracking-[0.24em] opacity-40">
+                <TextReveal
+                  active={showDetails}
+                  delay={0.28}
+                  as="p"
+                  className="mb-3 text-[11px] font-black uppercase tracking-[0.24em] opacity-40"
+                >
                   Stack
-                </p>
+                </TextReveal>
 
-                <p className="text-[clamp(15px,1.1vw,22px)] font-black uppercase leading-[1.05] tracking-[-0.035em] opacity-80">
+                <TextReveal
+                  active={showDetails}
+                  delay={0.34}
+                  as="p"
+                  className="text-[clamp(15px,1.1vw,22px)] font-black uppercase leading-[1.05] tracking-[-0.035em] opacity-80"
+                >
                   {card.project.stack}
-                </p>
+                </TextReveal>
               </div>
 
               <div>
-                <p className="mb-3 text-[11px] font-black uppercase tracking-[0.24em] opacity-40">
+                <TextReveal
+                  active={showDetails}
+                  delay={0.38}
+                  as="p"
+                  className="mb-3 text-[11px] font-black uppercase tracking-[0.24em] opacity-40"
+                >
                   Role
-                </p>
+                </TextReveal>
 
-                <p className="text-[clamp(15px,1.1vw,22px)] font-black uppercase leading-[1.05] tracking-[-0.035em] opacity-80">
+                <TextReveal
+                  active={showDetails}
+                  delay={0.44}
+                  as="p"
+                  className="text-[clamp(15px,1.1vw,22px)] font-black uppercase leading-[1.05] tracking-[-0.035em] opacity-80"
+                >
                   {card.project.role}
-                </p>
+                </TextReveal>
               </div>
             </div>
           </motion.div>
@@ -254,7 +531,7 @@ const ProjectCard = ({
             }}
             transition={{
               duration: 0.9,
-              ease: [0.76, 0, 0.24, 1],
+              ease: INTRO_EASE,
             }}
             className="absolute inset-0 z-20 bg-[#fbfafa] dark:bg-[#1e1c1c]"
           >
@@ -279,11 +556,17 @@ const ProjectsClient = () => {
   const wheelLockRef = useRef(false);
   const activeStepRef = useRef(0);
   const animationRef = useRef<ReturnType<typeof animate> | null>(null);
+  const mobileFirstImageRef = useRef<HTMLDivElement | null>(null);
 
   const [viewportWidth, setViewportWidth] = useState(1440);
   const [activeIndex, setActiveIndex] = useState(0);
   const [nearestStep, setNearestStep] = useState(0);
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const [showIntro, setShowIntro] = useState(true);
+  const [introComplete, setIntroComplete] = useState(false);
+  const [mobileImageRect, setMobileImageRect] = useState<IntroImageRect | null>(
+    null,
+  );
 
   const rawScrollIndex = useMotionValue(0);
 
@@ -299,29 +582,69 @@ const ProjectsClient = () => {
     return viewportWidth * 0.5;
   }, [viewportWidth]);
 
-  const cards = useMemo<ScrollCard[]>(
-    (() => {
-      const items: ScrollCard[] = [];
-      const buffer = projects.length * 2;
+  const cards = useMemo<ScrollCard[]>(() => {
+    const items: ScrollCard[] = [];
+    const buffer = projects.length * 2;
 
-      for (
-        let globalIndex = nearestStep - buffer;
-        globalIndex <= nearestStep + buffer;
-        globalIndex++
+    for (
+      let globalIndex = nearestStep - buffer;
+      globalIndex <= nearestStep + buffer;
+      globalIndex++
+    ) {
+      const projectIndex = wrapIndex(globalIndex, projects.length);
+
+      items.push({
+        project: projects[projectIndex],
+        projectIndex,
+        globalIndex,
+      });
+    }
+
+    return items;
+  }, [nearestStep]);
+
+  const measureMobileIntroImage = useCallback(() => {
+    if (typeof window === "undefined") return;
+
+    if (window.innerWidth >= 768) {
+      setMobileImageRect(null);
+      return;
+    }
+
+    const element = mobileFirstImageRef.current;
+    if (!element) return;
+
+    const rect = element.getBoundingClientRect();
+
+    const nextRect = {
+      top: rect.top,
+      left: rect.left,
+      width: rect.width,
+      height: rect.height,
+    };
+
+    setMobileImageRect((current) => {
+      if (
+        current &&
+        Math.abs(current.top - nextRect.top) < 0.5 &&
+        Math.abs(current.left - nextRect.left) < 0.5 &&
+        Math.abs(current.width - nextRect.width) < 0.5 &&
+        Math.abs(current.height - nextRect.height) < 0.5
       ) {
-        const projectIndex = wrapIndex(globalIndex, projects.length);
-
-        items.push({
-          project: projects[projectIndex],
-          projectIndex,
-          globalIndex,
-        });
+        return current;
       }
 
-      return items;
-    }) as () => ScrollCard[],
-    [nearestStep],
-  );
+      return nextRect;
+    });
+  }, []);
+
+  const finishIntro = useCallback(() => {
+    setIntroComplete(true);
+
+    window.setTimeout(() => {
+      setShowIntro(false);
+    }, 140);
+  }, []);
 
   const lockWheel = useCallback((duration = 780) => {
     wheelLockRef.current = true;
@@ -343,7 +666,7 @@ const ProjectsClient = () => {
 
       animationRef.current = animate(rawScrollIndex, targetStep, {
         duration: 0.74,
-        ease: [0.76, 0, 0.24, 1],
+        ease: INTRO_EASE,
         onComplete: () => {
           rawScrollIndex.set(targetStep);
           activeStepRef.current = targetStep;
@@ -388,9 +711,31 @@ const ProjectsClient = () => {
     [goToStep, lockWheel],
   );
 
+  useLayoutEffect(() => {
+    measureMobileIntroImage();
+
+    const frame = window.requestAnimationFrame(measureMobileIntroImage);
+    const timeoutOne = window.setTimeout(measureMobileIntroImage, 120);
+    const timeoutTwo = window.setTimeout(measureMobileIntroImage, 420);
+
+    window.addEventListener("resize", measureMobileIntroImage);
+    window.addEventListener("orientationchange", measureMobileIntroImage);
+
+    void document.fonts?.ready.then(measureMobileIntroImage);
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.clearTimeout(timeoutOne);
+      window.clearTimeout(timeoutTwo);
+      window.removeEventListener("resize", measureMobileIntroImage);
+      window.removeEventListener("orientationchange", measureMobileIntroImage);
+    };
+  }, [measureMobileIntroImage]);
+
   useEffect(() => {
     const handleResize = () => {
       setViewportWidth(window.innerWidth);
+      measureMobileIntroImage();
     };
 
     handleResize();
@@ -400,13 +745,14 @@ const ProjectsClient = () => {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [measureMobileIntroImage]);
 
   useEffect(() => {
     const handleWheel = (event: WheelEvent) => {
       const section = sectionRef.current;
       if (!section) return;
       if (window.innerWidth < 768) return;
+      if (!introComplete) return;
 
       const rect = section.getBoundingClientRect();
 
@@ -429,7 +775,7 @@ const ProjectsClient = () => {
     return () => {
       window.removeEventListener("wheel", handleWheel);
     };
-  }, [goToRelativeStep]);
+  }, [goToRelativeStep, introComplete]);
 
   useEffect(() => {
     setDetailsOpen(false);
@@ -442,12 +788,12 @@ const ProjectsClient = () => {
   }, []);
 
   const handlePrev = () => {
-    if (wheelLockRef.current) return;
+    if (wheelLockRef.current || !introComplete) return;
     goToRelativeStep(-1);
   };
 
   const handleNext = () => {
-    if (wheelLockRef.current) return;
+    if (wheelLockRef.current || !introComplete) return;
     goToRelativeStep(1);
   };
 
@@ -457,23 +803,47 @@ const ProjectsClient = () => {
         ref={sectionRef}
         className="relative min-h-screen w-full bg-[#fbfafa] text-[#161310] dark:bg-[#1e1c1c] dark:text-stone-300 md:h-screen"
       >
-        {/* Desktop sticky carousel */}
+        {/* Desktop */}
         <div className="relative hidden h-screen w-full overflow-hidden md:block">
-          <button
+          <motion.button
             type="button"
             onClick={handlePrev}
-            className="absolute left-8 top-[calc(50%-28vh)] z-50 text-[26px] font-black uppercase tracking-[0.12em] text-[#2e2b2b] opacity-100 transition-opacity hover:opacity-70 dark:text-stone-200"
+            variants={uiRevealVariants}
+            initial="hidden"
+            animate={introComplete ? "show" : "hidden"}
+            transition={{
+              ...uiRevealTransition,
+              delay: 0.05,
+            }}
+            style={{
+              pointerEvents: introComplete ? "auto" : "none",
+            }}
+            className="absolute left-8 top-[calc(50%-28vh)] z-50 text-[26px] font-black uppercase tracking-[0.12em] text-[#2e2b2b] transition-opacity hover:opacity-70 dark:text-stone-200"
           >
-            Prev
-          </button>
+            <TextReveal active={introComplete} delay={0.05} as="span">
+              Prev
+            </TextReveal>
+          </motion.button>
 
-          <button
+          <motion.button
             type="button"
             onClick={handleNext}
-            className="absolute right-8 top-[calc(50%-28vh)] z-50 text-[26px] font-black uppercase tracking-[0.12em] text-[#2e2b2b] opacity-100 transition-opacity hover:opacity-70 dark:text-stone-200"
+            variants={uiRevealVariants}
+            initial="hidden"
+            animate={introComplete ? "show" : "hidden"}
+            transition={{
+              ...uiRevealTransition,
+              delay: 0.1,
+            }}
+            style={{
+              pointerEvents: introComplete ? "auto" : "none",
+            }}
+            className="absolute right-8 top-[calc(50%-28vh)] z-50 text-[26px] font-black uppercase tracking-[0.12em] text-[#2e2b2b] transition-opacity hover:opacity-70 dark:text-stone-200"
           >
-            Next
-          </button>
+            <TextReveal active={introComplete} delay={0.08} as="span">
+              Next
+            </TextReveal>
+          </motion.button>
 
           <div className="absolute left-0 top-1/2 z-10 h-[62vh] w-full -translate-y-1/2 overflow-visible">
             <div className="pointer-events-none absolute inset-0">
@@ -494,17 +864,50 @@ const ProjectsClient = () => {
             </div>
           </div>
 
-          <SelectionCorners scrollIndex={scrollIndex} />
+          <motion.div
+            className="pointer-events-none absolute inset-0 z-30"
+            variants={uiRevealVariants}
+            initial="hidden"
+            animate={introComplete ? "show" : "hidden"}
+            transition={{
+              ...uiRevealTransition,
+              delay: 0.18,
+            }}
+          >
+            <SelectionCorners scrollIndex={scrollIndex} />
+          </motion.div>
 
-          <div className="absolute right-8 top-[calc(50%+23vh)] z-40 text-right text-[13px] font-black uppercase tracking-[0.08em] opacity-60">
-            {String(activeIndex + 1).padStart(2, "0")}/
-            {String(projects.length).padStart(2, "0")}
-          </div>
+          <motion.div
+            variants={uiRevealVariants}
+            initial="hidden"
+            animate={introComplete ? "show" : "hidden"}
+            transition={{
+              ...uiRevealTransition,
+              delay: 0.22,
+            }}
+            className="absolute right-8 top-[calc(50%+23vh)] z-40 text-right text-[13px] font-black uppercase tracking-[0.08em] opacity-60"
+          >
+            <TextReveal active={introComplete} delay={0.18} as="span">
+              {`${String(activeIndex + 1).padStart(2, "0")}/${String(
+                projects.length,
+              ).padStart(2, "0")}`}
+            </TextReveal>
+          </motion.div>
 
-          <button
+          <motion.button
             type="button"
             onClick={() => setDetailsOpen((current) => !current)}
             aria-label={detailsOpen ? "Show image" : "Show details"}
+            variants={uiRevealVariants}
+            initial="hidden"
+            animate={introComplete ? "show" : "hidden"}
+            transition={{
+              ...uiRevealTransition,
+              delay: 0.25,
+            }}
+            style={{
+              pointerEvents: introComplete ? "auto" : "none",
+            }}
             className="absolute bottom-8 left-8 z-40 h-[32px] w-[120px] overflow-hidden text-left text-[26px] font-black uppercase leading-none tracking-[-0.01em] transition-opacity hover:opacity-55"
           >
             <motion.span
@@ -513,11 +916,13 @@ const ProjectsClient = () => {
               }}
               transition={{
                 duration: 0.55,
-                ease: [0.76, 0, 0.24, 1],
+                ease: INTRO_EASE,
               }}
               className="absolute left-0 top-0 block"
             >
-              Details
+              <TextReveal active={introComplete} delay={0.22} as="span">
+                Details
+              </TextReveal>
             </motion.span>
 
             <motion.span
@@ -526,21 +931,35 @@ const ProjectsClient = () => {
               }}
               transition={{
                 duration: 0.55,
-                ease: [0.76, 0, 0.24, 1],
+                ease: INTRO_EASE,
               }}
               className="absolute left-0 top-0 block"
             >
-              Image
+              <TextReveal active={introComplete} delay={0.22} as="span">
+                Image
+              </TextReveal>
             </motion.span>
-          </button>
+          </motion.button>
 
-          <div className="absolute bottom-8 left-1/2 z-40 flex max-w-[54vw] -translate-x-1/2 items-center justify-center gap-7 text-center">
+          <motion.div
+            variants={uiRevealVariants}
+            initial="hidden"
+            animate={introComplete ? "show" : "hidden"}
+            transition={{
+              ...uiRevealTransition,
+              delay: 0.32,
+            }}
+            style={{
+              pointerEvents: introComplete ? "auto" : "none",
+            }}
+            className="absolute bottom-8 left-1/2 z-40 flex max-w-[54vw] -translate-x-1/2 items-center justify-center gap-7 text-center"
+          >
             {projects.map((project, index) => (
               <button
                 key={project.title}
                 type="button"
                 onClick={() => {
-                  if (wheelLockRef.current) return;
+                  if (wheelLockRef.current || !introComplete) return;
                   goToProjectIndex(index);
                 }}
                 className={`whitespace-nowrap text-[clamp(13px,1vw,18px)] font-black uppercase leading-none tracking-[-0.025em] transition-all duration-500 ${
@@ -549,108 +968,187 @@ const ProjectsClient = () => {
                     : "opacity-25 hover:opacity-55"
                 }`}
               >
-                {project.title}
+                <TextReveal
+                  active={introComplete}
+                  delay={0.28 + index * 0.04}
+                  as="span"
+                >
+                  {project.title}
+                </TextReveal>
               </button>
             ))}
-          </div>
+          </motion.div>
 
-          <a
+          <motion.a
             href={projects[activeIndex].link}
             target="_blank"
             rel="noopener noreferrer"
+            variants={uiRevealVariants}
+            initial="hidden"
+            animate={introComplete ? "show" : "hidden"}
+            transition={{
+              ...uiRevealTransition,
+              delay: 0.38,
+            }}
+            style={{
+              pointerEvents: introComplete ? "auto" : "none",
+            }}
             className="absolute bottom-8 right-8 z-40 text-right text-[26px] font-black uppercase leading-none tracking-[-0.01em] transition-opacity hover:opacity-55"
           >
-            <WaveLinkText text="Live Link" />
-          </a>
+            <TextReveal active={introComplete} delay={0.34} as="span">
+              Live Link
+            </TextReveal>
+          </motion.a>
         </div>
 
         {/* Mobile */}
         <div className="px-6 pb-16 pt-28 md:hidden">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-          >
-            <p className="mb-4 text-[10px] uppercase tracking-[0.3em] text-[#161310]/45 dark:text-stone-300/45">
+          <div>
+            <TextReveal
+              active={introComplete}
+              delay={0.05}
+              as="p"
+              className="mb-4 text-[10px] uppercase tracking-[0.3em] text-[#161310]/45 dark:text-stone-300/45"
+            >
               Selected Work
-            </p>
+            </TextReveal>
 
-            <h1 className="text-4xl font-anton uppercase leading-[0.92] tracking-[-0.01em] text-[#161310] dark:text-stone-200">
+            <TextReveal
+              active={introComplete}
+              delay={0.1}
+              as="h1"
+              className="text-4xl font-anton uppercase leading-[0.92] tracking-[-0.01em] text-[#161310] dark:text-stone-200"
+            >
               My Work
-            </h1>
+            </TextReveal>
 
-            <p className="mt-4 text-sm uppercase tracking-[0.18em] text-[#161310]/55 dark:text-stone-300/55">
+            <TextReveal
+              active={introComplete}
+              delay={0.16}
+              as="p"
+              className="mt-4 text-sm uppercase tracking-[0.18em] text-[#161310]/55 dark:text-stone-300/55"
+            >
               Code / Design / Fullstack
-            </p>
-          </motion.div>
+            </TextReveal>
+          </div>
 
           <div className="mt-14 flex flex-col gap-16">
-            {projects.map((project, i) => (
-              <motion.article
-                key={project.title}
-                initial={{ opacity: 0, y: 26 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.15 + i * 0.08, duration: 0.6 }}
-                className="flex flex-col"
-              >
-                <p className="mb-3 text-[10px] uppercase tracking-[0.28em] text-[#161310]/35 dark:text-stone-300/35">
-                  {String(i + 1).padStart(2, "0")}
-                </p>
+            {projects.map((project, i) => {
+              const isFirstProject = i === 0;
+              const showImage = introComplete || isFirstProject;
 
-                <h2 className="mb-5 text-2xl uppercase leading-[0.95] tracking-[-0.04em] text-[#161310] dark:text-stone-200">
-                  {project.title}
-                </h2>
-
-                <a
-                  href={project.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block"
-                >
-                  <div className="relative h-[260px] w-full border border-[#161310]/20 p-4 dark:border-stone-300/20">
-                    <div className="relative h-full w-full">
-                      <Image
-                        src={`/projects/${project.images[0]}`}
-                        alt={project.title}
-                        fill
-                        sizes="100vw"
-                        className="object-contain transition-opacity duration-300 hover:opacity-90"
-                        draggable={false}
-                      />
-                    </div>
-                  </div>
-                </a>
-
-                <div className="mt-6 border-t border-[#161310]/15 pt-5 dark:border-stone-300/15">
-                  <p className="text-sm leading-relaxed text-[#161310]/75 dark:text-stone-300/75">
-                    {project.about}
-                  </p>
-
-                  <div className="mt-5 flex flex-col gap-4 border-t border-[#161310]/15 pt-4 dark:border-stone-300/15">
-                    <div>
-                      <p className="mb-2 text-[10px] uppercase tracking-[0.22em] text-[#161310]/40 dark:text-stone-300/40">
-                        Stack
-                      </p>
-
-                      <p className="text-sm leading-relaxed text-[#161310]/70 dark:text-stone-300/70">
-                        {project.stack}
-                      </p>
-                    </div>
-
-                    <a
-                      href={project.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-block w-fit border border-[#161310] px-4 py-2 text-sm uppercase tracking-[0.18em] text-[#161310] dark:border-stone-300 dark:text-stone-300"
+              return (
+                <motion.article key={project.title} className="flex flex-col">
+                  <div>
+                    <TextReveal
+                      active={introComplete}
+                      delay={0.12 + i * 0.06}
+                      as="p"
+                      className="mb-3 text-[10px] uppercase tracking-[0.28em] text-[#161310]/35 dark:text-stone-300/35"
                     >
-                      View Website
-                    </a>
+                      {String(i + 1).padStart(2, "0")}
+                    </TextReveal>
+
+                    <TextReveal
+                      active={introComplete}
+                      delay={0.16 + i * 0.06}
+                      as="h2"
+                      className="mb-5 text-2xl uppercase leading-[0.95] tracking-[-0.04em] text-[#161310] dark:text-stone-200"
+                    >
+                      {project.title}
+                    </TextReveal>
                   </div>
-                </div>
-              </motion.article>
-            ))}
+
+                  <motion.a
+                    href={project.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    initial={false}
+                    animate={{
+                      opacity: showImage ? 1 : 0,
+                    }}
+                    transition={{
+                      duration: 0.65,
+                      ease: INTRO_EASE,
+                    }}
+                    className="block"
+                  >
+                    <div
+                      ref={isFirstProject ? mobileFirstImageRef : undefined}
+                      className="relative h-[260px] w-full border border-[#161310]/20 p-4 dark:border-stone-300/20"
+                    >
+                      <div className="relative h-full w-full">
+                        <Image
+                          src={`/projects/${project.images[0]}`}
+                          alt={project.title}
+                          fill
+                          sizes="100vw"
+                          className="object-contain transition-opacity duration-300 hover:opacity-90"
+                          draggable={false}
+                        />
+                      </div>
+                    </div>
+                  </motion.a>
+
+                  <div className="mt-6 border-t border-[#161310]/15 pt-5 dark:border-stone-300/15">
+                    <TextReveal
+                      active={introComplete}
+                      delay={0.22 + i * 0.06}
+                      as="p"
+                      className="text-sm leading-relaxed text-[#161310]/75 dark:text-stone-300/75"
+                    >
+                      {project.about}
+                    </TextReveal>
+
+                    <div className="mt-5 flex flex-col gap-4 border-t border-[#161310]/15 pt-4 dark:border-stone-300/15">
+                      <div>
+                        <TextReveal
+                          active={introComplete}
+                          delay={0.28 + i * 0.06}
+                          as="p"
+                          className="mb-2 text-[10px] uppercase tracking-[0.22em] text-[#161310]/40 dark:text-stone-300/40"
+                        >
+                          Stack
+                        </TextReveal>
+
+                        <TextReveal
+                          active={introComplete}
+                          delay={0.32 + i * 0.06}
+                          as="p"
+                          className="text-sm leading-relaxed text-[#161310]/70 dark:text-stone-300/70"
+                        >
+                          {project.stack}
+                        </TextReveal>
+                      </div>
+
+                      <a
+                        href={project.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-block w-fit border border-[#161310] px-4 py-2 text-sm uppercase tracking-[0.18em] text-[#161310] dark:border-stone-300 dark:text-stone-300"
+                      >
+                        <TextReveal
+                          active={introComplete}
+                          delay={0.36 + i * 0.06}
+                          as="span"
+                        >
+                          View Website
+                        </TextReveal>
+                      </a>
+                    </div>
+                  </div>
+                </motion.article>
+              );
+            })}
           </div>
         </div>
+
+        {showIntro && (
+          <IntroOverlay
+            onFinish={finishIntro}
+            mobileImageRect={mobileImageRect}
+          />
+        )}
       </section>
     </SmoothScroll>
   );

@@ -278,7 +278,7 @@ const ContactClient = () => {
                 as="h1"
                 mode="lines"
                 delay={0.12}
-                className="max-w-[1250px] text-[11vw] font-anton uppercase leading-[0.86] tracking-[-0.01em] sm:text-[14vw] md:text-[10vw] lg:text-[8vw]"
+                className="max-w-[1250px] text-[11vw] font-black uppercase leading-[0.86] tracking-[-0.045em] sm:text-[14vw] md:text-[10vw] lg:text-[8vw]"
               >
                 {`Let's build
 something
@@ -457,7 +457,7 @@ useful.`}
                     as="h2"
                     mode="lines"
                     delay={0.05}
-                    className="text-[12vw] font-anton uppercase leading-[0.9] tracking-[-0.02em] sm:text-[8vw] md:text-[5vw] lg:text-[4vw]"
+                    className="text-[12vw] font-black uppercase leading-[0.9] tracking-[-0.045em] sm:text-[8vw] md:text-[5vw] lg:text-[4vw]"
                   >
                     Start here
                   </TextReveal>

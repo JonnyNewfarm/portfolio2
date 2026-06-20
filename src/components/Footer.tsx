@@ -43,7 +43,7 @@ const Footer = () => {
               Contact / Availability
             </p>
 
-            <h2 className="max-w-[1200px] text-[13vw] font-anton uppercase leading-[0.92] tracking-[-0.01em] md:text-[10vw] lg:text-[7.6vw]">
+            <h2 className="max-w-[1200px] text-[13vw] font-black uppercase leading-[0.92] tracking-[-0.055em] md:text-[10vw] lg:text-[7.6vw]">
               Let&apos;s build
               <br />
               something

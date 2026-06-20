@@ -1,18 +1,12 @@
 import type { Metadata } from "next";
-import { Anton, Montserrat } from "next/font/google";
+import { Anton } from "next/font/google";
 import "./globals.css";
+
 import Navbar from "@/components/Navbar";
 import { Toaster } from "react-hot-toast";
 import Footer from "@/components/Footer";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import VerticalPageTransitionWrapper from "@/components/VerticalTransitionWrapper";
-
-const montserrat = Montserrat({
-  subsets: ["latin"],
-  variable: "--font-m",
-  weight: ["400", "700"],
-  display: "swap",
-});
 
 const anton = Anton({
   subsets: ["latin"],
@@ -38,7 +32,7 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={`
-          font-sans ${montserrat.variable} ${anton.variable}
+          font-satoshi ${anton.variable}
           bg-[#fbfafa] text-[#161310]
           dark:bg-[#2e2b2b] dark:text-stone-300
         `}
@@ -59,6 +53,7 @@ export default function RootLayout({
               background: "#1c1a17",
               color: "#ececec",
               border: "1px solid #ececec",
+              fontFamily: "Satoshi, sans-serif",
             },
             success: {
               iconTheme: {

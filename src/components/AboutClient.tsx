@@ -463,7 +463,7 @@ export default function AboutClient() {
               mode="lines"
               delay={0.05}
               trigger={introDone}
-              className="max-w-[980px] text-[clamp(4rem,8vw,8rem)] font-anton uppercase leading-[0.92] tracking-[-0.01em]"
+              className="max-w-[980px] text-[clamp(3.5rem,7.5vw,7.5rem)] font-black uppercase leading-[0.92] tracking-[-0.065em]"
             >
               {`Designer &
 frontend

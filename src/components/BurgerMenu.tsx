@@ -3,12 +3,28 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import VerticalTransitionLink from "./TransitionLink";
 
-const links = [
-  { label: "Home", href: "/" },
-  { label: "My Work", href: "/projects" },
-  { label: "Contact", href: "/contact" },
-  { label: "About", href: "/about" },
+const links: {
+  label: string;
+  url: string;
+  linkLabel: string;
+  LinkToLabel: string;
+}[] = [
+  { label: "Home", url: "/", linkLabel: "Home", LinkToLabel: "Page" },
+  {
+    label: "My Work",
+    url: "/projects",
+    linkLabel: "Project",
+    LinkToLabel: "Gallery",
+  },
+  {
+    label: "Contact",
+    url: "/contact",
+    linkLabel: "Contact",
+    LinkToLabel: "Details",
+  },
+  { label: "About", url: "/about", linkLabel: "About", LinkToLabel: "Jonas" },
 ];
 
 const BurgerMenu = () => {
@@ -48,7 +64,7 @@ const BurgerMenu = () => {
         ref={buttonRef}
         onClick={() => setIsOpen((prev) => !prev)}
         aria-label={isOpen ? "Close menu" : "Open menu"}
-        className={`relative z-[60] flex items-center gap-3 text-xs uppercase tracking-[0.2em] transition-colors duration-300 ${
+        className={`relative z-[60] flex  font-semibold items-center gap-3 text-xs uppercase tracking-[0.2em] transition-colors duration-300 ${
           isOpen ? "text-white" : "text-[#1c1a17] dark:text-stone-300"
         }`}
       >
@@ -94,7 +110,7 @@ const BurgerMenu = () => {
                 <nav className="mt-6 border-t border-white/10">
                   {links.map((link, index) => (
                     <motion.div
-                      key={link.href}
+                      key={link.url}
                       initial={{ opacity: 0, y: 16 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{
@@ -103,9 +119,11 @@ const BurgerMenu = () => {
                         ease: "easeOut",
                       }}
                     >
-                      <Link
+                      <VerticalTransitionLink
                         onClick={() => setIsOpen(false)}
-                        href={link.href}
+                        href={link.url}
+                        transitionLabel={link.linkLabel}
+                        transitionToLabel={link.LinkToLabel}
                         className="flex items-center justify-between border-b border-white/10 py-6"
                       >
                         <span className="text-2xl uppercase tracking-[-0.04em]">
@@ -114,7 +132,7 @@ const BurgerMenu = () => {
                         <span className="text-xs uppercase tracking-[0.18em] text-white/35">
                           0{index + 1}
                         </span>
-                      </Link>
+                      </VerticalTransitionLink>
                     </motion.div>
                   ))}
                 </nav>
