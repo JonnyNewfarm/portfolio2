@@ -226,10 +226,15 @@ function clamp(value: number, min: number, max: number) {
 
 type IntroOverlayProps = {
   onFinish: () => void;
+  onTextStart: () => void;
   mobileImageRect: IntroImageRect | null;
 };
 
-const IntroOverlay = ({ onFinish, mobileImageRect }: IntroOverlayProps) => {
+const IntroOverlay = ({
+  onFinish,
+  onTextStart,
+  mobileImageRect,
+}: IntroOverlayProps) => {
   const shouldReduceMotion = useReducedMotion();
   const hasFinishedRef = useRef(false);
 
@@ -239,6 +244,17 @@ const IntroOverlay = ({ onFinish, mobileImageRect }: IntroOverlayProps) => {
     hasFinishedRef.current = true;
     onFinish();
   }, [onFinish]);
+
+  useEffect(() => {
+    const timeout = window.setTimeout(
+      onTextStart,
+      shouldReduceMotion ? 0 : 2250,
+    );
+
+    return () => {
+      window.clearTimeout(timeout);
+    };
+  }, [onTextStart, shouldReduceMotion]);
 
   useEffect(() => {
     const timeout = window.setTimeout(
@@ -564,6 +580,7 @@ const ProjectsClient = () => {
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [showIntro, setShowIntro] = useState(true);
   const [introComplete, setIntroComplete] = useState(false);
+  const [introTextActive, setIntroTextActive] = useState(false);
   const [mobileImageRect, setMobileImageRect] = useState<IntroImageRect | null>(
     null,
   );
@@ -638,7 +655,12 @@ const ProjectsClient = () => {
     });
   }, []);
 
+  const startIntroText = useCallback(() => {
+    setIntroTextActive(true);
+  }, []);
+
   const finishIntro = useCallback(() => {
+    setIntroTextActive(true);
     setIntroComplete(true);
 
     window.setTimeout(() => {
@@ -810,7 +832,7 @@ const ProjectsClient = () => {
             onClick={handlePrev}
             variants={uiRevealVariants}
             initial="hidden"
-            animate={introComplete ? "show" : "hidden"}
+            animate={introTextActive ? "show" : "hidden"}
             transition={{
               ...uiRevealTransition,
               delay: 0.05,
@@ -820,7 +842,7 @@ const ProjectsClient = () => {
             }}
             className="absolute left-8 top-[calc(50%-28vh)] z-50 text-[26px] font-black uppercase tracking-[0.12em] text-[#2e2b2b] transition-opacity hover:opacity-70 dark:text-stone-200"
           >
-            <TextReveal active={introComplete} delay={0.05} as="span">
+            <TextReveal active={introTextActive} delay={0.05} as="span">
               Prev
             </TextReveal>
           </motion.button>
@@ -830,7 +852,7 @@ const ProjectsClient = () => {
             onClick={handleNext}
             variants={uiRevealVariants}
             initial="hidden"
-            animate={introComplete ? "show" : "hidden"}
+            animate={introTextActive ? "show" : "hidden"}
             transition={{
               ...uiRevealTransition,
               delay: 0.1,
@@ -840,7 +862,7 @@ const ProjectsClient = () => {
             }}
             className="absolute right-8 top-[calc(50%-28vh)] z-50 text-[26px] font-black uppercase tracking-[0.12em] text-[#2e2b2b] transition-opacity hover:opacity-70 dark:text-stone-200"
           >
-            <TextReveal active={introComplete} delay={0.08} as="span">
+            <TextReveal active={introTextActive} delay={0.08} as="span">
               Next
             </TextReveal>
           </motion.button>
@@ -868,7 +890,7 @@ const ProjectsClient = () => {
             className="pointer-events-none absolute inset-0 z-30"
             variants={uiRevealVariants}
             initial="hidden"
-            animate={introComplete ? "show" : "hidden"}
+            animate={introTextActive ? "show" : "hidden"}
             transition={{
               ...uiRevealTransition,
               delay: 0.18,
@@ -880,14 +902,14 @@ const ProjectsClient = () => {
           <motion.div
             variants={uiRevealVariants}
             initial="hidden"
-            animate={introComplete ? "show" : "hidden"}
+            animate={introTextActive ? "show" : "hidden"}
             transition={{
               ...uiRevealTransition,
               delay: 0.22,
             }}
             className="absolute right-8 top-[calc(50%+23vh)] z-40 text-right text-[13px] font-black uppercase tracking-[0.08em] opacity-60"
           >
-            <TextReveal active={introComplete} delay={0.18} as="span">
+            <TextReveal active={introTextActive} delay={0.18} as="span">
               {`${String(activeIndex + 1).padStart(2, "0")}/${String(
                 projects.length,
               ).padStart(2, "0")}`}
@@ -900,7 +922,7 @@ const ProjectsClient = () => {
             aria-label={detailsOpen ? "Show image" : "Show details"}
             variants={uiRevealVariants}
             initial="hidden"
-            animate={introComplete ? "show" : "hidden"}
+            animate={introTextActive ? "show" : "hidden"}
             transition={{
               ...uiRevealTransition,
               delay: 0.25,
@@ -920,7 +942,7 @@ const ProjectsClient = () => {
               }}
               className="absolute left-0 top-0 block"
             >
-              <TextReveal active={introComplete} delay={0.22} as="span">
+              <TextReveal active={introTextActive} delay={0.22} as="span">
                 Details
               </TextReveal>
             </motion.span>
@@ -935,7 +957,7 @@ const ProjectsClient = () => {
               }}
               className="absolute left-0 top-0 block"
             >
-              <TextReveal active={introComplete} delay={0.22} as="span">
+              <TextReveal active={introTextActive} delay={0.22} as="span">
                 Image
               </TextReveal>
             </motion.span>
@@ -944,7 +966,7 @@ const ProjectsClient = () => {
           <motion.div
             variants={uiRevealVariants}
             initial="hidden"
-            animate={introComplete ? "show" : "hidden"}
+            animate={introTextActive ? "show" : "hidden"}
             transition={{
               ...uiRevealTransition,
               delay: 0.32,
@@ -969,7 +991,7 @@ const ProjectsClient = () => {
                 }`}
               >
                 <TextReveal
-                  active={introComplete}
+                  active={introTextActive}
                   delay={0.28 + index * 0.04}
                   as="span"
                 >
@@ -985,7 +1007,7 @@ const ProjectsClient = () => {
             rel="noopener noreferrer"
             variants={uiRevealVariants}
             initial="hidden"
-            animate={introComplete ? "show" : "hidden"}
+            animate={introTextActive ? "show" : "hidden"}
             transition={{
               ...uiRevealTransition,
               delay: 0.38,
@@ -995,7 +1017,7 @@ const ProjectsClient = () => {
             }}
             className="absolute bottom-8 right-8 z-40 text-right text-[26px] font-black uppercase leading-none tracking-[-0.01em] transition-opacity hover:opacity-55"
           >
-            <TextReveal active={introComplete} delay={0.34} as="span">
+            <TextReveal active={introTextActive} delay={0.34} as="span">
               Live Link
             </TextReveal>
           </motion.a>
@@ -1005,7 +1027,7 @@ const ProjectsClient = () => {
         <div className="px-6 pb-16 pt-28 md:hidden">
           <div>
             <TextReveal
-              active={introComplete}
+              active={introTextActive}
               delay={0.05}
               as="p"
               className="mb-4 text-[10px] uppercase tracking-[0.3em] text-[#161310]/45 dark:text-stone-300/45"
@@ -1014,7 +1036,7 @@ const ProjectsClient = () => {
             </TextReveal>
 
             <TextReveal
-              active={introComplete}
+              active={introTextActive}
               delay={0.1}
               as="h1"
               className="text-4xl font-anton uppercase leading-[0.92] tracking-[-0.01em] text-[#161310] dark:text-stone-200"
@@ -1023,7 +1045,7 @@ const ProjectsClient = () => {
             </TextReveal>
 
             <TextReveal
-              active={introComplete}
+              active={introTextActive}
               delay={0.16}
               as="p"
               className="mt-4 text-sm uppercase tracking-[0.18em] text-[#161310]/55 dark:text-stone-300/55"
@@ -1041,7 +1063,7 @@ const ProjectsClient = () => {
                 <motion.article key={project.title} className="flex flex-col">
                   <div>
                     <TextReveal
-                      active={introComplete}
+                      active={introTextActive}
                       delay={0.12 + i * 0.06}
                       as="p"
                       className="mb-3 text-[10px] uppercase tracking-[0.28em] text-[#161310]/35 dark:text-stone-300/35"
@@ -1050,7 +1072,7 @@ const ProjectsClient = () => {
                     </TextReveal>
 
                     <TextReveal
-                      active={introComplete}
+                      active={introTextActive}
                       delay={0.16 + i * 0.06}
                       as="h2"
                       className="mb-5 text-2xl uppercase leading-[0.95] tracking-[-0.04em] text-[#161310] dark:text-stone-200"
@@ -1092,7 +1114,7 @@ const ProjectsClient = () => {
 
                   <div className="mt-6 border-t border-[#161310]/15 pt-5 dark:border-stone-300/15">
                     <TextReveal
-                      active={introComplete}
+                      active={introTextActive}
                       delay={0.22 + i * 0.06}
                       as="p"
                       className="text-sm leading-relaxed text-[#161310]/75 dark:text-stone-300/75"
@@ -1103,7 +1125,7 @@ const ProjectsClient = () => {
                     <div className="mt-5 flex flex-col gap-4 border-t border-[#161310]/15 pt-4 dark:border-stone-300/15">
                       <div>
                         <TextReveal
-                          active={introComplete}
+                          active={introTextActive}
                           delay={0.28 + i * 0.06}
                           as="p"
                           className="mb-2 text-[10px] uppercase tracking-[0.22em] text-[#161310]/40 dark:text-stone-300/40"
@@ -1112,7 +1134,7 @@ const ProjectsClient = () => {
                         </TextReveal>
 
                         <TextReveal
-                          active={introComplete}
+                          active={introTextActive}
                           delay={0.32 + i * 0.06}
                           as="p"
                           className="text-sm leading-relaxed text-[#161310]/70 dark:text-stone-300/70"
@@ -1128,7 +1150,7 @@ const ProjectsClient = () => {
                         className="inline-block w-fit border border-[#161310] px-4 py-2 text-sm uppercase tracking-[0.18em] text-[#161310] dark:border-stone-300 dark:text-stone-300"
                       >
                         <TextReveal
-                          active={introComplete}
+                          active={introTextActive}
                           delay={0.36 + i * 0.06}
                           as="span"
                         >
@@ -1146,6 +1168,7 @@ const ProjectsClient = () => {
         {showIntro && (
           <IntroOverlay
             onFinish={finishIntro}
+            onTextStart={startIntroText}
             mobileImageRect={mobileImageRect}
           />
         )}
