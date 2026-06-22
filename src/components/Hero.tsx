@@ -113,7 +113,7 @@ export default function HeroSection() {
           <Preload all />
         </Canvas>
 
-        <div className="absolute left-5 bottom-14 z-50 font-anton text-xl uppercase tracking-wide text-[#c6cfc8] md:left-20 md:text-5xl">
+        <div className="absolute left-5 bottom-14 z-50 font-anton text-xl uppercase tracking-wide text-[#c6cfc8] md:left-20 md:text-4xl">
           newfarm studio
         </div>
 

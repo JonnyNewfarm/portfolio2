@@ -5,30 +5,23 @@ import Image from "next/image";
 import Link from "next/link";
 import ScrollSection from "@/components/SmoothScroll";
 import WaveLinkText from "./WaveLinkText";
+import type { AnimationPlaybackControls } from "framer-motion";
 import {
+  animate,
   motion,
+  useMotionTemplate,
   useMotionValue,
   useScroll,
   useSpring,
   useTransform,
 } from "framer-motion";
 
-const ease = [0.22, 1, 0.36, 1] as const;
+const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
-const introImages = [
-  {
-    src: "/jonas-0003.jpg",
-    alt: "Jonas Nygaard 3",
-  },
-  {
-    src: "/jonas-0002.jpg",
-    alt: "Jonas Nygaard 2",
-  },
-  {
-    src: "/jonas-0001.jpg",
-    alt: "Jonas Nygaard 1",
-  },
-];
+const introImage = {
+  src: "/jonas-0003.jpg",
+  alt: "Jonas Nygaard 3",
+};
 
 const imageStats = [
   {
@@ -177,11 +170,20 @@ function FadeIn({
 export default function AboutClient() {
   const imageRef = useRef<HTMLDivElement | null>(null);
 
-  const [activeImage, setActiveImage] = useState(0);
+  const [imageLoaded, setImageLoaded] = useState(false);
   const [introDone, setIntroDone] = useState(false);
-  const [loadedImages, setLoadedImages] = useState(0);
+  const [lineVisible, setLineVisible] = useState(false);
 
-  const allImagesLoaded = loadedImages >= introImages.length;
+  const revealProgress = useMotionValue(0);
+
+  const revealRight = useTransform(
+    revealProgress,
+    (value) => `${100 - value}%`,
+  );
+
+  const revealClipPath = useMotionTemplate`inset(0% ${revealRight} 0% 0%)`;
+
+  const revealLineLeft = useTransform(revealProgress, (value) => `${value}%`);
 
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -265,39 +267,46 @@ export default function AboutClient() {
   }, [introDone]);
 
   useEffect(() => {
-    if (!allImagesLoaded) return;
+    if (!imageLoaded) return;
 
-    const firstImageHold = 1050;
-    const stepDuration = 850;
+    let controls: AnimationPlaybackControls | null = null;
+    let introTimer: number | null = null;
+    let doneTimer: number | null = null;
 
-    const secondImageTimer = window.setTimeout(() => {
-      setActiveImage(1);
-    }, firstImageHold);
+    const startTimer = window.setTimeout(() => {
+      setLineVisible(true);
 
-    const thirdImageTimer = window.setTimeout(() => {
-      setActiveImage(2);
-    }, firstImageHold + stepDuration);
+      controls = animate(revealProgress, 100, {
+        duration: 2.35,
+        ease,
+        onComplete: () => {
+          setLineVisible(false);
 
-    const doneTimer = window.setTimeout(
-      () => {
+          doneTimer = window.setTimeout(() => {
+            setIntroDone(true);
+          }, 80);
+        },
+      });
+
+      introTimer = window.setTimeout(() => {
         setIntroDone(true);
-      },
-      firstImageHold + stepDuration * 2 + 250,
-    );
+      }, 1650);
+    }, 450);
 
     return () => {
-      window.clearTimeout(secondImageTimer);
-      window.clearTimeout(thirdImageTimer);
-      window.clearTimeout(doneTimer);
-    };
-  }, [allImagesLoaded]);
+      window.clearTimeout(startTimer);
 
-  const handleImageLoad = () => {
-    setLoadedImages((current) => {
-      if (current >= introImages.length) return current;
-      return current + 1;
-    });
-  };
+      if (introTimer) {
+        window.clearTimeout(introTimer);
+      }
+
+      if (doneTimer) {
+        window.clearTimeout(doneTimer);
+      }
+
+      controls?.stop();
+    };
+  }, [imageLoaded, revealProgress]);
 
   const handleImageMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -323,7 +332,6 @@ export default function AboutClient() {
   return (
     <ScrollSection>
       <section className="relative min-h-screen overflow-hidden bg-[#fbfafa] text-[#161310] dark:bg-[#1e1c1c] dark:text-stone-300">
-        {/* IMAGE + STATS */}
         <div className="absolute right-0 top-[6.2rem] z-[1] w-[54vw] sm:w-[42vw] md:w-[34vw] lg:top-[5.7rem] lg:w-[27vw] xl:w-[24vw] 2xl:w-[23vw]">
           <motion.div
             ref={imageRef}
@@ -339,10 +347,10 @@ export default function AboutClient() {
               filter: "blur(12px)",
             }}
             animate={{
-              clipPath: allImagesLoaded
+              clipPath: imageLoaded
                 ? "inset(0% 0% 0% 0%)"
                 : "inset(100% 0% 0% 0%)",
-              filter: allImagesLoaded ? "blur(0px)" : "blur(12px)",
+              filter: imageLoaded ? "blur(0px)" : "blur(12px)",
             }}
             transition={{
               duration: 1.1,
@@ -350,65 +358,83 @@ export default function AboutClient() {
             }}
             className="relative aspect-[4/5] w-full overflow-hidden bg-stone-400/10 dark:bg-stone-200/5"
           >
-            {introImages.map((image, index) => (
-              <motion.div
-                key={image.src}
-                initial={false}
-                animate={{
-                  y:
-                    activeImage === index
-                      ? "0%"
-                      : index < activeImage
-                        ? "-100%"
-                        : "100%",
-                  scale: activeImage === index ? 1 : 1.08,
-                  opacity: activeImage === index ? 1 : 0,
-                  filter: activeImage === index ? "blur(0px)" : "blur(8px)",
-                  zIndex: activeImage === index ? 2 : 1,
-                }}
-                transition={{
-                  duration: 0.55,
-                  ease,
-                }}
-                className="absolute inset-0"
-              >
-                <Image
-                  src={image.src}
-                  alt={image.alt}
-                  fill
-                  priority
-                  onLoad={handleImageLoad}
-                  className="object-cover object-top"
-                  sizes="(max-width: 640px) 54vw, (max-width: 768px) 42vw, (max-width: 1024px) 34vw, 27vw"
-                />
-              </motion.div>
-            ))}
+            <Image
+              src={introImage.src}
+              alt={introImage.alt}
+              fill
+              priority
+              onLoad={() => setImageLoaded(true)}
+              className="object-cover object-top"
+              sizes="(max-width: 640px) 54vw, (max-width: 768px) 42vw, (max-width: 1024px) 34vw, 27vw"
+            />
 
-            {/* AWWWARDS STYLE COUNTER */}
+            <motion.div
+              style={{
+                clipPath: revealClipPath,
+              }}
+              className="absolute inset-0 z-[2]"
+            >
+              <Image
+                src={introImage.src}
+                alt={introImage.alt}
+                fill
+                priority
+                className="object-cover object-top grayscale"
+                sizes="(max-width: 640px) 54vw, (max-width: 768px) 42vw, (max-width: 1024px) 34vw, 27vw"
+              />
+            </motion.div>
+
+            <motion.div
+              style={{
+                left: revealLineLeft,
+              }}
+              animate={{
+                opacity: lineVisible ? 1 : 0,
+              }}
+              transition={{
+                duration: 0.18,
+                ease,
+              }}
+              className="pointer-events-none absolute top-0 z-[4] h-full w-px -translate-x-1/2 bg-white mix-blend-difference"
+            />
+
+            <motion.div
+              style={{
+                left: revealLineLeft,
+              }}
+              animate={{
+                opacity: lineVisible ? 0.45 : 0,
+              }}
+              transition={{
+                duration: 0.18,
+                ease,
+              }}
+              className="pointer-events-none absolute top-0 z-[3] h-full w-8 -translate-x-1/2 bg-white/10 blur-md"
+            />
+
             <div className="pointer-events-none absolute inset-0 z-10 flex items-end justify-between p-3 mix-blend-difference">
               <motion.p
                 initial={{ opacity: 0, y: 12 }}
                 animate={{
-                  opacity: allImagesLoaded ? 1 : 0,
-                  y: allImagesLoaded ? 0 : 12,
+                  opacity: imageLoaded ? 1 : 0,
+                  y: imageLoaded ? 0 : 12,
                 }}
                 transition={{ duration: 0.65, delay: 0.25, ease }}
-                className="text-[9px] font-black uppercase leading-none tracking-[0.22em] text-white"
+                className="text-[11px] font-black uppercase leading-none tracking-[0.22em] text-white"
               >
                 Jonas
               </motion.p>
 
               <motion.p
-                key={activeImage}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{
-                  opacity: allImagesLoaded ? 1 : 0,
-                  y: allImagesLoaded ? 0 : 10,
+                  opacity: imageLoaded ? 1 : 0,
+                  y: imageLoaded ? 0 : 10,
                 }}
                 transition={{ duration: 0.35, ease }}
-                className="text-[9px] font-black uppercase leading-none tracking-[0.22em] text-white"
+                className="text-[11px] font-black uppercase leading-none tracking-[0.22em] text-white"
               >
-                0{activeImage + 1} / 03
+                2026{" "}
               </motion.p>
             </div>
           </motion.div>
@@ -425,7 +451,7 @@ export default function AboutClient() {
                 },
               },
             }}
-            className="mt-5 sm:grid hidden grid-cols-1 gap-4 text-[10px] font-black uppercase leading-[1.25] tracking-[0.16em] sm:grid-cols-2 sm:gap-6 lg:text-xs lg:tracking-[0.18em]"
+            className="mt-5 hidden grid-cols-1 gap-4 text-[10px] font-black uppercase leading-[1.25] tracking-[0.16em] sm:grid sm:grid-cols-2 sm:gap-6 lg:text-xs lg:tracking-[0.18em]"
           >
             {imageStats.map((item) => (
               <motion.div
@@ -447,23 +473,20 @@ export default function AboutClient() {
                   },
                 }}
               >
-                <p className="mb-1 opacity-35">{item.label}</p>
-                <p className="opacity-85">{item.value}</p>
+                <p className="mb-1 opacity-60">{item.label}:</p>
+                <p className="opacity-95">{item.value}</p>
               </motion.div>
             ))}
           </motion.div>
         </div>
-
-        {/* CONTENT */}
         <div className="relative z-[2] px-4 sm:px-8 md:px-10 lg:pl-16 lg:pr-[28vw] xl:pr-[26vw] 2xl:pr-[24vw]">
-          {/* HERO */}
           <div className="flex min-h-screen flex-col justify-end pb-10 pt-28 lg:pt-36">
             <TextReveal
               as="h1"
               mode="lines"
               delay={0.05}
               trigger={introDone}
-              className="max-w-[980px] text-[clamp(3.5rem,7.5vw,7.5rem)] font-black uppercase leading-[0.92] tracking-[-0.065em]"
+              className="max-w-[980px] text-[clamp(3rem,7vw,7rem)] font-black uppercase leading-[0.92] tracking-[-0.065em]"
             >
               {`Designer &
 frontend
@@ -471,9 +494,8 @@ developer.`}
             </TextReveal>
           </div>
 
-          {/* UNDER FIRST VIEWPORT */}
           <div className="pb-16 lg:pb-24">
-            <div className=" pt-8 ">
+            <div className="pt-8">
               <div className="grid max-w-[900px] grid-cols-1 gap-6 md:grid-cols-2">
                 <TextReveal
                   as="p"
@@ -498,7 +520,7 @@ developer.`}
               </div>
             </div>
 
-            <div className="mt-16  pt-8 ">
+            <div className="mt-16 pt-8">
               <div className="grid grid-cols-1 gap-8 md:grid-cols-[1fr_0.35fr] md:items-end">
                 <TextReveal
                   as="p"

@@ -262,7 +262,6 @@ const ContactClient = () => {
     <SmoothScroll>
       <section className="min-h-screen w-full overflow-hidden bg-[#fbfafa] px-4 pb-12 pt-28 text-[#161310] dark:bg-[#1e1c1c] dark:text-stone-300 sm:px-8 md:px-10 lg:px-16 lg:pt-36">
         <div className="mx-auto w-full max-w-[1800px]">
-          {/* HERO */}
           <div className="mb-16 grid grid-cols-1 gap-8 md:grid-cols-[1.2fr_0.8fr] md:items-end lg:mb-24">
             <div>
               <TextReveal
@@ -298,7 +297,6 @@ useful.`}
           </div>
 
           <div className="grid grid-cols-1 gap-14 lg:grid-cols-[0.72fr_1.28fr] lg:gap-16">
-            {/* DETAILS */}
             <aside className="order-2 lg:order-1">
               <motion.div
                 initial="hidden"
@@ -437,7 +435,6 @@ useful.`}
               </motion.div>
             </aside>
 
-            {/* FORM */}
             <form
               onSubmit={handleSubmit}
               noValidate
@@ -457,7 +454,7 @@ useful.`}
                     as="h2"
                     mode="lines"
                     delay={0.05}
-                    className="text-[12vw] font-black uppercase leading-[0.9] tracking-[-0.045em] sm:text-[8vw] md:text-[5vw] lg:text-[4vw]"
+                    className="text-[10vw]  uppercase leading-[0.9] tracking-[-0.045em] sm:text-[8vw] md:text-[5vw] lg:text-[3vw]"
                   >
                     Start here
                   </TextReveal>
