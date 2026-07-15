@@ -375,12 +375,14 @@ type ImageBendSceneProps = {
   items: CarouselItem[];
   runtimeRef: MutableRefObject<CarouselRuntime>;
   onActiveProjectChange: (index: number) => void;
+  isDark: boolean;
 };
 
 function ImageBendScene({
   items,
   runtimeRef,
   onActiveProjectChange,
+  isDark,
 }: ImageBendSceneProps) {
   const textures = useCarouselImages(items);
   const { camera, size, gl } = useThree();
@@ -390,8 +392,8 @@ function ImageBendScene({
 
   useEffect(() => {
     gl.outputColorSpace = THREE.SRGBColorSpace;
-    gl.setClearColor(new THREE.Color("#fbfafa"), 1);
-  }, [gl]);
+    gl.setClearColor(new THREE.Color(isDark ? "#1e1c1c" : "#fbfafa"), 1);
+  }, [gl, isDark]);
 
   useEffect(() => {
     const perspectiveCamera = camera as THREE.PerspectiveCamera;
@@ -489,11 +491,13 @@ function ImageBendScene({
 type DesktopWorkCarouselProps = {
   activeProjectIndex: number;
   setActiveProjectIndex: React.Dispatch<React.SetStateAction<number>>;
+  isDark: boolean;
 };
 
 function DesktopWorkCarousel({
   activeProjectIndex,
   setActiveProjectIndex,
+  isDark,
 }: DesktopWorkCarouselProps) {
   const sectionRef = useRef<HTMLDivElement | null>(null);
   const touchStartXRef = useRef(0);
@@ -560,6 +564,7 @@ function DesktopWorkCarousel({
 
       runtimeRef.current.desiredOffset = firstItemIndex * cardStride;
       runtimeRef.current.hasMomentum = true;
+
       runtimeRef.current.desiredBend = Math.min(
         1,
         runtimeRef.current.desiredBend + 0.55,
@@ -574,6 +579,7 @@ function DesktopWorkCarousel({
   useEffect(() => {
     const handleWheel = (event: WheelEvent) => {
       const section = sectionRef.current;
+
       if (!section) return;
       if (window.innerWidth < 768) return;
 
@@ -603,7 +609,9 @@ function DesktopWorkCarousel({
       releaseMomentumSoon(150);
     };
 
-    window.addEventListener("wheel", handleWheel, { passive: false });
+    window.addEventListener("wheel", handleWheel, {
+      passive: false,
+    });
 
     return () => {
       window.removeEventListener("wheel", handleWheel);
@@ -651,6 +659,7 @@ function DesktopWorkCarousel({
     addBend(touchBend);
 
     runtimeRef.current.desiredOffset -= deltaX * carouselMotion.dragForce;
+
     runtimeRef.current.hasMomentum = true;
   };
 
@@ -680,7 +689,7 @@ function DesktopWorkCarousel({
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
-      className="relative hidden h-screen w-full overflow-hidden bg-[#fbfafa] text-[#161310] dark:bg-[#1e1c1c] dark:text-stone-300 md:block"
+      className="relative hidden h-screen w-full overflow-hidden bg-[#fbfafa] text-[#161310] transition-colors duration-500 dark:bg-[#1e1c1c] dark:text-stone-300 md:block"
     >
       <div className="absolute left-8 top-[112px] z-40">
         <p className="pointer-events-none text-[11px] font-black uppercase tracking-[0.28em] opacity-35">
@@ -711,7 +720,7 @@ function DesktopWorkCarousel({
           {activeProject.category} / {activeProject.year}
         </p>
 
-        <p className="text-[clamp(15px,1.15vw,20px)]  leading-[1.02] tracking-[-0.035em] opacity-70">
+        <p className="text-[clamp(15px,1.15vw,20px)] leading-[1.02] tracking-[-0.035em] opacity-70">
           {activeProject.about}
         </p>
       </div>
@@ -735,7 +744,9 @@ function DesktopWorkCarousel({
             items={items}
             runtimeRef={runtimeRef}
             onActiveProjectChange={setActiveProjectIndex}
+            isDark={isDark}
           />
+
           <Preload all />
         </Canvas>
       </div>
@@ -777,13 +788,36 @@ function DesktopWorkCarousel({
 
 const ProjectsClient = () => {
   const [activeProjectIndex, setActiveProjectIndex] = useState(0);
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    const htmlElement = document.documentElement;
+
+    const updateTheme = () => {
+      setIsDark(htmlElement.classList.contains("dark"));
+    };
+
+    updateTheme();
+
+    const observer = new MutationObserver(updateTheme);
+
+    observer.observe(htmlElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
 
   return (
     <SmoothScroll>
-      <section className="relative min-h-screen w-full bg-[#fbfafa] text-[#161310] dark:bg-[#1e1c1c] dark:text-stone-300 md:h-screen">
+      <section className="relative min-h-screen w-full bg-[#fbfafa] text-[#161310] transition-colors duration-500 dark:bg-[#1e1c1c] dark:text-stone-300 md:h-screen">
         <DesktopWorkCarousel
           activeProjectIndex={activeProjectIndex}
           setActiveProjectIndex={setActiveProjectIndex}
+          isDark={isDark}
         />
 
         <div className="px-6 pb-16 pt-28 md:hidden">
@@ -817,103 +851,101 @@ const ProjectsClient = () => {
           </div>
 
           <div className="mt-14 flex flex-col gap-16">
-            {projects.map((project, i) => {
-              return (
-                <motion.article key={project.title} className="flex flex-col">
-                  <div>
-                    <TextReveal
-                      active
-                      delay={0.12 + i * 0.06}
-                      as="p"
-                      className="mb-3 text-[10px] uppercase tracking-[0.28em] text-[#161310]/35 dark:text-stone-300/35"
-                    >
-                      {String(i + 1).padStart(2, "0")}
-                    </TextReveal>
-
-                    <TextReveal
-                      active
-                      delay={0.16 + i * 0.06}
-                      as="h2"
-                      className="mb-5 text-2xl uppercase leading-[0.95] tracking-[-0.04em] text-[#161310] dark:text-stone-200"
-                    >
-                      {project.title}
-                    </TextReveal>
-                  </div>
-
-                  <motion.a
-                    href={project.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    initial={false}
-                    animate={{
-                      opacity: 1,
-                    }}
-                    transition={{
-                      duration: 0.65,
-                      ease: TEXT_EASE,
-                    }}
-                    className="block"
+            {projects.map((project, i) => (
+              <motion.article key={project.title} className="flex flex-col">
+                <div>
+                  <TextReveal
+                    active
+                    delay={0.12 + i * 0.06}
+                    as="p"
+                    className="mb-3 text-[10px] uppercase tracking-[0.28em] text-[#161310]/35 dark:text-stone-300/35"
                   >
-                    <div className="relative h-[260px] w-full border border-[#161310]/20 p-4 dark:border-stone-300/20">
-                      <div className="relative h-full w-full">
-                        <Image
-                          src={`/projects/${project.images[0]}`}
-                          alt={project.title}
-                          fill
-                          sizes="100vw"
-                          className="object-contain transition-opacity duration-300 hover:opacity-90"
-                          draggable={false}
-                        />
-                      </div>
-                    </div>
-                  </motion.a>
+                    {String(i + 1).padStart(2, "0")}
+                  </TextReveal>
 
-                  <div className="mt-6 border-t border-[#161310]/15 pt-5 dark:border-stone-300/15">
-                    <TextReveal
-                      active
-                      delay={0.22 + i * 0.06}
-                      as="p"
-                      className="text-sm leading-relaxed text-[#161310]/75 dark:text-stone-300/75"
-                    >
-                      {project.about}
-                    </TextReveal>
+                  <TextReveal
+                    active
+                    delay={0.16 + i * 0.06}
+                    as="h2"
+                    className="mb-5 text-2xl uppercase leading-[0.95] tracking-[-0.04em] text-[#161310] dark:text-stone-200"
+                  >
+                    {project.title}
+                  </TextReveal>
+                </div>
 
-                    <div className="mt-5 flex flex-col gap-4 border-t border-[#161310]/15 pt-4 dark:border-stone-300/15">
-                      <div>
-                        <TextReveal
-                          active
-                          delay={0.28 + i * 0.06}
-                          as="p"
-                          className="mb-2 text-[10px] uppercase tracking-[0.22em] text-[#161310]/40 dark:text-stone-300/40"
-                        >
-                          Stack
-                        </TextReveal>
-
-                        <TextReveal
-                          active
-                          delay={0.32 + i * 0.06}
-                          as="p"
-                          className="text-sm leading-relaxed text-[#161310]/70 dark:text-stone-300/70"
-                        >
-                          {project.stack}
-                        </TextReveal>
-                      </div>
-
-                      <a
-                        href={project.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-block w-fit border border-[#161310] px-4 py-2 text-sm uppercase tracking-[0.18em] text-[#161310] dark:border-stone-300 dark:text-stone-300"
-                      >
-                        <TextReveal active delay={0.36 + i * 0.06} as="span">
-                          View Website
-                        </TextReveal>
-                      </a>
+                <motion.a
+                  href={project.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  initial={false}
+                  animate={{
+                    opacity: 1,
+                  }}
+                  transition={{
+                    duration: 0.65,
+                    ease: TEXT_EASE,
+                  }}
+                  className="block"
+                >
+                  <div className="relative h-[260px] w-full border border-[#161310]/20 p-4 dark:border-stone-300/20">
+                    <div className="relative h-full w-full">
+                      <Image
+                        src={`/projects/${project.images[0]}`}
+                        alt={project.title}
+                        fill
+                        sizes="100vw"
+                        className="object-contain transition-opacity duration-300 hover:opacity-90"
+                        draggable={false}
+                      />
                     </div>
                   </div>
-                </motion.article>
-              );
-            })}
+                </motion.a>
+
+                <div className="mt-6 border-t border-[#161310]/15 pt-5 dark:border-stone-300/15">
+                  <TextReveal
+                    active
+                    delay={0.22 + i * 0.06}
+                    as="p"
+                    className="text-sm leading-relaxed text-[#161310]/75 dark:text-stone-300/75"
+                  >
+                    {project.about}
+                  </TextReveal>
+
+                  <div className="mt-5 flex flex-col gap-4 border-t border-[#161310]/15 pt-4 dark:border-stone-300/15">
+                    <div>
+                      <TextReveal
+                        active
+                        delay={0.28 + i * 0.06}
+                        as="p"
+                        className="mb-2 text-[10px] uppercase tracking-[0.22em] text-[#161310]/40 dark:text-stone-300/40"
+                      >
+                        Stack
+                      </TextReveal>
+
+                      <TextReveal
+                        active
+                        delay={0.32 + i * 0.06}
+                        as="p"
+                        className="text-sm leading-relaxed text-[#161310]/70 dark:text-stone-300/70"
+                      >
+                        {project.stack}
+                      </TextReveal>
+                    </div>
+
+                    <a
+                      href={project.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block w-fit border border-[#161310] px-4 py-2 text-sm uppercase tracking-[0.18em] text-[#161310] dark:border-stone-300 dark:text-stone-300"
+                    >
+                      <TextReveal active delay={0.36 + i * 0.06} as="span">
+                        View Website
+                      </TextReveal>
+                    </a>
+                  </div>
+                </div>
+              </motion.article>
+            ))}
           </div>
         </div>
       </section>
