@@ -700,7 +700,7 @@ function DesktopWorkCarousel({
           <button
             type="button"
             onClick={handlePrev}
-            className="text-[22px] font-black uppercase leading-none tracking-[-0.04em] transition-opacity hover:opacity-55"
+            className="text-[22px] font-black cursor-pointer uppercase leading-none tracking-[-0.04em] transition-opacity hover:opacity-55"
           >
             Prev
           </button>
@@ -708,7 +708,7 @@ function DesktopWorkCarousel({
           <button
             type="button"
             onClick={handleNext}
-            className="text-[22px] font-black uppercase leading-none tracking-[-0.04em] transition-opacity hover:opacity-55"
+            className="text-[22px] font-black cursor-pointer uppercase leading-none tracking-[-0.04em] transition-opacity hover:opacity-55"
           >
             Next
           </button>
@@ -757,7 +757,7 @@ function DesktopWorkCarousel({
             key={project.title}
             type="button"
             onClick={() => jumpToProject(index)}
-            className={`whitespace-nowrap text-[clamp(19px,1.55vw,30px)] font-black uppercase leading-none tracking-[-0.055em] transition-all duration-500 ${
+            className={`whitespace-nowrap cursor-pointer text-[clamp(19px,1.55vw,30px)] font-black uppercase leading-none tracking-[-0.055em] transition-all duration-500 ${
               index === activeProjectIndex
                 ? "scale-110 opacity-100"
                 : "opacity-25 hover:opacity-60"
@@ -867,7 +867,7 @@ const ProjectsClient = () => {
                     active
                     delay={0.16 + i * 0.06}
                     as="h2"
-                    className="mb-5 text-2xl uppercase leading-[0.95] tracking-[-0.04em] text-[#161310] dark:text-stone-200"
+                    className="mb-5 text-2xl uppercase cursor-pointer leading-[0.95] tracking-[-0.04em] text-[#161310] dark:text-stone-200"
                   >
                     {project.title}
                   </TextReveal>
