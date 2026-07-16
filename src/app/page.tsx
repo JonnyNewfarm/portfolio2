@@ -3,6 +3,7 @@
 import Hero from "@/components/Hero";
 import PreLoadingShow from "@/components/PreLoadingShow";
 import ScrollSection from "@/components/SmoothScroll";
+import { AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 
 export default function Home() {
@@ -13,24 +14,29 @@ export default function Home() {
 
     if (preloaderShown) {
       setIsLoading(false);
-    } else {
-      const timer = setTimeout(() => {
-        setIsLoading(false);
-        sessionStorage.setItem("preloaderShown", "true");
-      }, 4000);
-      return () => clearTimeout(timer);
+      return;
     }
+
+    const timer = window.setTimeout(() => {
+      setIsLoading(false);
+      sessionStorage.setItem("preloaderShown", "true");
+    }, 3000);
+
+    return () => window.clearTimeout(timer);
   }, []);
 
-  if (isLoading) {
-    return <PreLoadingShow />;
-  }
-
   return (
-    <ScrollSection>
-      <div className="relative">
-        <Hero />
-      </div>
-    </ScrollSection>
+    <main className="relative min-h-screen">
+      {/* Innholdet rendres og laster bak preloaderen */}
+      <ScrollSection>
+        <div className="relative">
+          <Hero />
+        </div>
+      </ScrollSection>
+
+      <AnimatePresence>
+        {isLoading && <PreLoadingShow key="preloader" />}
+      </AnimatePresence>
+    </main>
   );
 }
