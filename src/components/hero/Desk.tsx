@@ -27,12 +27,11 @@ export default function Desk() {
   const gradientMaterial = new THREE.ShaderMaterial({
     uniforms: {
       uTime: { value: 0 },
-      uColor1: { value: new THREE.Color("#e6eefc") },
-      uColor2: { value: new THREE.Color("#ccd7eb") },
+      uColor1: { value: new THREE.Color("#eef3fc") },
+      uColor2: { value: new THREE.Color("#d9e2f1") },
     },
     vertexShader: `
-    varying vec2 vUv; 
-
+    varying vec2 vUv;
 
     void main() {
       vUv = uv;
@@ -48,17 +47,15 @@ export default function Desk() {
     void main() {
       vec2 uv = vUv;
 
-      // Create flowing, wavy pattern
-      float wave1 = sin(uv.x * 10.0 + uTime * 2.0);
-      float wave2 = cos(uv.y * 8.0 - uTime * 1.5);
-      float wave3 = sin((uv.x + uv.y) * 6.0 + uTime * 2.5);
+      float wave1 = sin(uv.x * 6.0 + uTime * 0.8);
+      float wave2 = cos(uv.y * 5.0 - uTime * 0.6);
+      float wave3 = sin((uv.x + uv.y) * 4.0 + uTime * 0.7);
 
       float mixValue = 0.5 + 0.5 * (wave1 + wave2 + wave3) / 3.0;
-
-      // Smooth the edges for a soft blob effect
-      mixValue = smoothstep(0.3, 0.7, mixValue);
+      mixValue = smoothstep(0.15, 0.85, mixValue);
 
       vec3 color = mix(uColor1, uColor2, mixValue);
+
       gl_FragColor = vec4(color, 1.0);
     }
   `,
@@ -119,7 +116,7 @@ export default function Desk() {
               metalness={0.2}
             />
           </mesh>
-        ))
+        )),
       )}
       {[-1.36, 1.27].map((x) => (
         <mesh

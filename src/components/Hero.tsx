@@ -94,7 +94,6 @@ export default function HeroSection() {
           <WallShelfWithCandle />
           <Floor />
           <Clock />
-          <Kitty />
           <Cloud />
 
           <CartoonModel scrollYProgress={scrollYProgress} />
@@ -112,10 +111,6 @@ export default function HeroSection() {
 
           <Preload all />
         </Canvas>
-
-        <div className="absolute left-5 bottom-14 z-50 font-anton text-xl uppercase tracking-wide text-[#c6cfc8] md:left-20 md:text-4xl">
-          newfarm studio
-        </div>
 
         <div className="absolute right-5 z-50 hidden md:top-1/2 md:block md:-translate-y-1/2">
           <DarkModeBtn />
