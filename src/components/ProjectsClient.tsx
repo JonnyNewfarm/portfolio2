@@ -292,6 +292,7 @@ function CurvedImageCard({
 
   useFrame(() => {
     const mesh = meshRef.current;
+
     if (!mesh) return;
 
     const geometry = mesh.geometry as THREE.PlaneGeometry;
@@ -375,25 +376,18 @@ type ImageBendSceneProps = {
   items: CarouselItem[];
   runtimeRef: MutableRefObject<CarouselRuntime>;
   onActiveProjectChange: (index: number) => void;
-  isDark: boolean;
 };
 
 function ImageBendScene({
   items,
   runtimeRef,
   onActiveProjectChange,
-  isDark,
 }: ImageBendSceneProps) {
   const textures = useCarouselImages(items);
-  const { camera, size, gl } = useThree();
+  const { camera, size } = useThree();
 
   const trackWidth = items.length * cardStride;
   const activeProjectRef = useRef(0);
-
-  useEffect(() => {
-    gl.outputColorSpace = THREE.SRGBColorSpace;
-    gl.setClearColor(new THREE.Color(isDark ? "#1e1c1c" : "#fbfafa"), 1);
-  }, [gl, isDark]);
 
   useEffect(() => {
     const perspectiveCamera = camera as THREE.PerspectiveCamera;
@@ -438,6 +432,7 @@ function ImageBendScene({
     }
 
     const speedRatio = averageSpeed / (runtime.highestSpeed + 0.001);
+
     const slowingDown = speedRatio < 0.7 && runtime.highestSpeed > 0.5;
 
     runtime.highestSpeed *= 0.99;
@@ -563,6 +558,7 @@ function DesktopWorkCarousel({
       if (firstItemIndex === -1) return;
 
       runtimeRef.current.desiredOffset = firstItemIndex * cardStride;
+
       runtimeRef.current.hasMomentum = true;
 
       runtimeRef.current.desiredBend = Math.min(
@@ -683,6 +679,8 @@ function DesktopWorkCarousel({
     }
   };
 
+  const canvasBackground = isDark ? "#1e1c1c" : "#fbfafa";
+
   return (
     <div
       ref={sectionRef}
@@ -700,7 +698,7 @@ function DesktopWorkCarousel({
           <button
             type="button"
             onClick={handlePrev}
-            className="text-[22px] font-black cursor-pointer uppercase leading-none tracking-[-0.04em] transition-opacity hover:opacity-55"
+            className="cursor-pointer text-[22px] font-black uppercase leading-none tracking-[-0.04em] transition-opacity hover:opacity-55"
           >
             Prev
           </button>
@@ -708,7 +706,7 @@ function DesktopWorkCarousel({
           <button
             type="button"
             onClick={handleNext}
-            className="text-[22px] font-black cursor-pointer uppercase leading-none tracking-[-0.04em] transition-opacity hover:opacity-55"
+            className="cursor-pointer text-[22px] font-black uppercase leading-none tracking-[-0.04em] transition-opacity hover:opacity-55"
           >
             Next
           </button>
@@ -725,7 +723,12 @@ function DesktopWorkCarousel({
         </p>
       </div>
 
-      <div className="absolute inset-0 z-10">
+      <div
+        className="absolute inset-0 z-10"
+        style={{
+          backgroundColor: canvasBackground,
+        }}
+      >
         <Canvas
           dpr={[1, 1.65]}
           gl={{
@@ -733,18 +736,24 @@ function DesktopWorkCarousel({
             alpha: false,
             powerPreference: "high-performance",
           }}
+          style={{
+            backgroundColor: canvasBackground,
+          }}
           camera={{
             fov: 43,
             near: 0.1,
             far: 100,
             position: [0, 0, 4.75],
           }}
+          onCreated={({ gl }) => {
+            gl.outputColorSpace = THREE.SRGBColorSpace;
+            gl.setClearColor(new THREE.Color(canvasBackground), 1);
+          }}
         >
           <ImageBendScene
             items={items}
             runtimeRef={runtimeRef}
             onActiveProjectChange={setActiveProjectIndex}
-            isDark={isDark}
           />
 
           <Preload all />
@@ -757,7 +766,7 @@ function DesktopWorkCarousel({
             key={project.title}
             type="button"
             onClick={() => jumpToProject(index)}
-            className={`whitespace-nowrap cursor-pointer text-[clamp(19px,1.55vw,30px)] font-black uppercase leading-none tracking-[-0.055em] transition-all duration-500 ${
+            className={`cursor-pointer whitespace-nowrap text-[clamp(19px,1.55vw,30px)] font-black uppercase leading-none tracking-[-0.055em] transition-all duration-500 ${
               index === activeProjectIndex
                 ? "scale-110 opacity-100"
                 : "opacity-25 hover:opacity-60"
@@ -788,7 +797,14 @@ function DesktopWorkCarousel({
 
 const ProjectsClient = () => {
   const [activeProjectIndex, setActiveProjectIndex] = useState(0);
-  const [isDark, setIsDark] = useState(false);
+
+  const [isDark, setIsDark] = useState(() => {
+    if (typeof document === "undefined") {
+      return false;
+    }
+
+    return document.documentElement.classList.contains("dark");
+  });
 
   useEffect(() => {
     const htmlElement = document.documentElement;
@@ -867,7 +883,7 @@ const ProjectsClient = () => {
                     active
                     delay={0.16 + i * 0.06}
                     as="h2"
-                    className="mb-5 text-2xl uppercase cursor-pointer leading-[0.95] tracking-[-0.04em] text-[#161310] dark:text-stone-200"
+                    className="mb-5 cursor-pointer text-2xl uppercase leading-[0.95] tracking-[-0.04em] text-[#161310] dark:text-stone-200"
                   >
                     {project.title}
                   </TextReveal>
