@@ -27,7 +27,6 @@ import ComputerTower from "./hero/ComputerTower";
 import Plant from "./hero/Plant";
 import Clock from "./hero/Clock";
 import Bird from "./hero/Bird";
-import Kitty from "./hero/Kitty";
 import Chest from "./hero/Chest";
 import Cloud from "./hero/Cloud";
 
@@ -38,8 +37,6 @@ export default function HeroSection() {
     target: ref,
     offset: ["start start", "end start"],
   });
-
-  const opacity = useTransform(scrollYProgress, [0.2, 0.26], [1, 0]);
 
   return (
     <section
