@@ -1,7 +1,7 @@
 "use client";
 
-import { useFrame } from "@react-three/fiber";
 import { Text } from "@react-three/drei";
+import { ThreeEvent, useFrame } from "@react-three/fiber";
 import { AnimatePresence, MotionValue } from "framer-motion";
 import { motion } from "framer-motion-3d";
 import { useRouter } from "next/navigation";
@@ -20,16 +20,8 @@ type ScreenButtonProps = {
   align?: "left" | "center" | "right";
 };
 
-/*
- * Plasseringen til det nye monitor-UI-et.
- * Dette endrer ikke Desk-komponenten.
- */
 const SCREEN_CENTER: [number, number, number] = [0.015, 1.76, 0.69];
 
-/*
- * Original plassering fra den første ScreenUI-versjonen.
- * MiniGame rendres i denne gruppen, helt separat fra det nye UI-et.
- */
 const ORIGINAL_GAME_POSITION: [number, number, number] = [0, 1.5, 6];
 
 const CONTENT_Z = 0;
@@ -64,16 +56,16 @@ function ScreenButton({
         anchorX={align}
         anchorY="middle"
         letterSpacing={-0.025}
-        onClick={(event) => {
+        onClick={(event: ThreeEvent<MouseEvent>) => {
           event.stopPropagation();
           onClick();
         }}
-        onPointerOver={(event) => {
+        onPointerOver={(event: ThreeEvent<PointerEvent>) => {
           event.stopPropagation();
           setHovered(true);
           setPointerCursor(true);
         }}
-        onPointerOut={(event) => {
+        onPointerOut={(event: ThreeEvent<PointerEvent>) => {
           event.stopPropagation();
           setHovered(false);
           setPointerCursor(false);
@@ -118,7 +110,6 @@ function ScreenHeader({
 
       <mesh position={[0, 0.355, -0.002]}>
         <planeGeometry args={[1.76, 0.006]} />
-
         <meshBasicMaterial color="#181818" transparent opacity={0.38} />
       </mesh>
     </group>
@@ -363,9 +354,6 @@ export default function ScreenUI({
   useFrame(() => {
     const progress = scrollYProgress.get();
 
-    /*
-     * Det nye monitor-UI-et bruker den nye, forsiktige bevegelsen.
-     */
     if (screenGroupRef.current) {
       screenGroupRef.current.position.z =
         SCREEN_CENTER[2] + (1 - progress) * 0.012;
@@ -373,10 +361,6 @@ export default function ScreenUI({
       screenGroupRef.current.rotation.y = Math.sin(progress * Math.PI) * 0.003;
     }
 
-    /*
-     * Original bevegelse fra den første ScreenUI-versjonen.
-     * Denne brukes bare av MiniGame.
-     */
     if (gameGroupRef.current) {
       gameGroupRef.current.position.z = -0.55 + (1 - progress) * 0.2;
 
@@ -401,7 +385,6 @@ export default function ScreenUI({
 
   return (
     <>
-      {/* Nytt UI på monitoren */}
       {page !== "game" && (
         <group ref={screenGroupRef} position={SCREEN_CENTER}>
           <AnimatePresence mode="wait">
@@ -425,7 +408,6 @@ export default function ScreenUI({
         </group>
       )}
 
-      {/* Original MiniGame med original plassering */}
       <AnimatePresence>
         {page === "game" && (
           <group ref={gameGroupRef} position={ORIGINAL_GAME_POSITION}>
