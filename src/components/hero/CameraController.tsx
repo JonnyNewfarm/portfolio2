@@ -32,7 +32,7 @@ export function CameraController({
     const baseZ = isSmall ? 5.3 : 4.7;
     camera.position.lerp(
       new THREE.Vector3(2.1, 1.6, baseZ - progress * 3),
-      0.2
+      0.2,
     );
     camera.lookAt(new THREE.Vector3(0.2, 0.8, 0));
   });

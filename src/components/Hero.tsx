@@ -16,7 +16,6 @@ import Wall from "./hero/Wall";
 import Wall2 from "./hero/Wall2";
 import WallShelfWithCandle from "./hero/WallShelfWithCandle";
 import Floor from "./hero/Floor";
-import CartoonModel from "./hero/CartoonModel";
 import ScreenUI from "./hero/ScreenUI";
 import ScreenHint from "./hero/ScreenHint";
 import { CameraController } from "./hero/CameraController";
@@ -29,6 +28,7 @@ import Clock from "./hero/Clock";
 import Bird from "./hero/Bird";
 import Chest from "./hero/Chest";
 import Cloud from "./hero/Cloud";
+import Chair from "./hero/Chair";
 
 export default function HeroSection() {
   const ref = useRef<HTMLDivElement>(null);
@@ -41,7 +41,7 @@ export default function HeroSection() {
   return (
     <section
       ref={ref}
-      className="h-[155vh] md:h-[140vh] bg-[#c6c0c0] dark:bg-[#757474] text-black dark:text-stone-300"
+      className="h-[178vh] md:h-[158vh] bg-[#c6c0c0] dark:bg-[#757474] text-black dark:text-stone-300"
     >
       <div
         style={{
@@ -93,8 +93,7 @@ export default function HeroSection() {
           <Clock />
           <Cloud />
 
-          <CartoonModel scrollYProgress={scrollYProgress} />
-
+          <Chair />
           <Suspense fallback={null}>
             <Skateboard />
           </Suspense>

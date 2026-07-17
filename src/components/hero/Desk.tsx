@@ -14,7 +14,7 @@ export default function Desk() {
 
   const { scene: cupScene } = useGLTF("/flower-cup.glb");
   const screenRef = useRef<THREE.Mesh>(null);
-  const { scene: keyboardScene } = useGLTF("/keyboard-small.glb");
+  const { scene: keyboardScene } = useGLTF("/keyboard_1.glb");
 
   useFrame(({ clock }) => {
     if (screenRef.current) {
@@ -118,7 +118,7 @@ export default function Desk() {
           </mesh>
         )),
       )}
-      {[-1.36, 1.27].map((x) => (
+      {[-1.3, 1.27].map((x) => (
         <mesh
           key={`bar-${x}`}
           position={[x, 0.73, 0]}
@@ -177,4 +177,4 @@ export default function Desk() {
 }
 
 useGLTF.preload("/flower-cup.glb");
-useGLTF.preload("/keyboard-small.glb");
+useGLTF.preload("/keyboard_1.glb");

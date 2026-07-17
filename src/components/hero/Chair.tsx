@@ -1,15 +1,9 @@
 "use client";
-import { useFrame } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
-import { MotionValue } from "framer-motion";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import * as THREE from "three";
 
-export default function Chair({
-  scrollYProgress,
-}: {
-  scrollYProgress: MotionValue<number>;
-}) {
+export default function Chair() {
   const { scene } = useGLTF("/chair_1.glb");
   const group = useRef<THREE.Group>(null);
 

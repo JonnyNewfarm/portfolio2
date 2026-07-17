@@ -32,7 +32,7 @@ export default function Kitty() {
     <group
       ref={group}
       scale={0.03}
-      position={[0.4, 0.1, 1.3]}
+      position={[-1.8, 0.1, 1.55]}
       rotation={[0, -1.9, 0]}
       onClick={handleClick}
       onPointerOver={() => (document.body.style.cursor = "pointer")}

@@ -58,7 +58,7 @@ export default function Steam({ count = 26 }) {
 
     vec3 pos = position;
 
-    pos.y += t * 0.2;
+    pos.y += t * 0.09;
 
     pos.x += turbulence(t * 6.0 + seed) * 0.015;
     pos.z += turbulence(t * 5.0 - seed) * 0.015;
