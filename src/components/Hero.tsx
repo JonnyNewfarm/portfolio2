@@ -111,8 +111,6 @@ export default function HeroSection() {
 
           <ScreenUI scrollYProgress={scrollYProgress} />
 
-          {!monitorFocused && <ScreenHint scrollYProgress={scrollYProgress} />}
-
           <CameraController
             scrollYProgress={scrollYProgress}
             monitorFocused={monitorFocused}

@@ -141,7 +141,7 @@ function IntroPage({ onNext }: { onNext: () => void }) {
 
       <Text
         position={[-0.88, 0.23, CONTENT_Z]}
-        fontSize={0.17}
+        fontSize={0.16}
         color="#151515"
         anchorX="left"
         anchorY="top"

@@ -6,8 +6,8 @@ import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 
 export default function RecordPlayer() {
-  const { scene: recordPlayerScene } = useGLTF("/record_player3.glb");
-  const { scene: stoolScene } = useGLTF("/stool_2.glb");
+  const { scene: recordPlayerScene } = useGLTF("/record_player2.glb");
+  const { scene: stoolScene } = useGLTF("/stool_1.glb");
 
   const recordPlayerGroup = useRef<THREE.Group | null>(null);
   const stoolGroup = useRef<THREE.Group | null>(null);
@@ -119,28 +119,29 @@ export default function RecordPlayer() {
           type="button"
           onClick={handleTogglePlay}
           aria-label={isPlaying ? "Stop music" : "Play music"}
-          className="flex size-9 cursor-pointer items-center justify-center rounded-full text-white transition-transform duration-300 ease-out hover:scale-110"
+          className="cursor-pointer rounded text-lg text-white transition-transform ease-in-out hover:scale-108"
+          style={{
+            fontFamily: "monospace",
+          }}
         >
           {isPlaying ? (
-            // Stop-ikon
             <svg
               viewBox="0 0 24 24"
-              width="19"
-              height="19"
+              width="20"
+              height="20"
               fill="currentColor"
               aria-hidden="true"
             >
-              <rect x="6" y="6" width="12" height="12" rx="1" />
+              <rect x="5" y="5" width="14" height="14" />
             </svg>
           ) : (
-            // Music-ikon
             <svg
               viewBox="0 0 24 24"
-              width="23"
-              height="23"
+              width="22"
+              height="22"
               fill="none"
               stroke="currentColor"
-              strokeWidth="1.8"
+              strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
               aria-hidden="true"
@@ -156,5 +157,5 @@ export default function RecordPlayer() {
   );
 }
 
-useGLTF.preload("/record_player3.glb");
-useGLTF.preload("/stool_2.glb");
+useGLTF.preload("/record_player2.glb");
+useGLTF.preload("/stool_1.glb");
