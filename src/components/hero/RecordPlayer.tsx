@@ -7,7 +7,7 @@ import * as THREE from "three";
 
 export default function RecordPlayer() {
   const { scene: recordPlayerScene } = useGLTF("/record_player2.glb");
-  const { scene: stoolScene } = useGLTF("/stool_1.glb");
+  const { scene: stoolScene } = useGLTF("/stool_2.glb");
 
   const recordPlayerGroup = useRef<THREE.Group | null>(null);
   const stoolGroup = useRef<THREE.Group | null>(null);
@@ -157,4 +157,4 @@ export default function RecordPlayer() {
 }
 
 useGLTF.preload("/record_player2.glb");
-useGLTF.preload("/stool_1.glb");
+useGLTF.preload("/stool_2.glb");

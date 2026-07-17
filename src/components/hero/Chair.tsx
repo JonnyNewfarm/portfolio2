@@ -4,7 +4,7 @@ import { useRef } from "react";
 import * as THREE from "three";
 
 export default function Chair() {
-  const { scene } = useGLTF("/chair_1.glb");
+  const { scene } = useGLTF("/chair_02.glb");
   const group = useRef<THREE.Group>(null);
 
   return (

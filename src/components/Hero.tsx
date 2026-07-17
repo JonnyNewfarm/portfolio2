@@ -38,7 +38,7 @@ export default function HeroSection() {
     offset: ["start start", "end end"],
   });
 
-  const CAMERA_STOP_PROGRESS = 0.68;
+  const CAMERA_STOP_PROGRESS = 0.53;
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     setIsAtEnd(latest >= CAMERA_STOP_PROGRESS);
   });
