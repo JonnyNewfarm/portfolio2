@@ -100,8 +100,8 @@ export default function RecordPlayer() {
       <primitive
         ref={recordPlayerGroup}
         object={recordPlayerScene}
-        scale={0.011}
-        position={[1.89, 0.76, 2]}
+        scale={0.009}
+        position={[1.89, 0.68, 2]}
         rotation={[Math.PI / 0.667, 0, 0]}
       />
 
@@ -109,21 +109,47 @@ export default function RecordPlayer() {
       <primitive
         ref={stoolGroup}
         object={stoolScene}
-        scale={0.27}
+        scale={0.24}
         position={[1.9, 0, 2]}
         rotation={[0, Math.PI / 1.035, 0]}
       />
 
-      <Html position={[1.7, 0.9, 0.4]} center>
+      <Html position={[1.7, 0.85, 1.3]} center>
         <button
           type="button"
           onClick={handleTogglePlay}
-          className="cursor-pointer rounded text-lg text-white transition-transform ease-in-out hover:scale-108"
-          style={{
-            fontFamily: "monospace",
-          }}
+          aria-label={isPlaying ? "Stop music" : "Play music"}
+          className="flex size-9 cursor-pointer items-center justify-center rounded-full text-white transition-transform duration-300 ease-out hover:scale-110"
         >
-          {isPlaying ? "Stop" : "Play"}
+          {isPlaying ? (
+            // Stop-ikon
+            <svg
+              viewBox="0 0 24 24"
+              width="19"
+              height="19"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <rect x="6" y="6" width="12" height="12" rx="1" />
+            </svg>
+          ) : (
+            // Music-ikon
+            <svg
+              viewBox="0 0 24 24"
+              width="23"
+              height="23"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M9 18V5l10-2v13" />
+              <circle cx="6" cy="18" r="3" fill="currentColor" stroke="none" />
+              <circle cx="16" cy="16" r="3" fill="currentColor" stroke="none" />
+            </svg>
+          )}
         </button>
       </Html>
     </>

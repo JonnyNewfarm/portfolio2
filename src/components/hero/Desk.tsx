@@ -152,10 +152,10 @@ export default function Desk() {
         </RoundedBox>
         <RoundedBox
           ref={screenRef}
-          args={[2.17, 1.24, 0.141]}
+          args={[2.16, 1.24, 0.141]}
           radius={0.02}
           smoothness={2}
-          position={[0.015, 0.8, 0]}
+          position={[0.01, 0.8, 0]}
           castShadow={false}
           receiveShadow={false}
           material={gradientMaterial}
