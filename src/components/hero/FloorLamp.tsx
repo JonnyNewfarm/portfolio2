@@ -92,13 +92,13 @@ export default function FloorLamp() {
       {/* SpotLight */}
       <spotLight
         ref={lightRef}
-        intensity={0.6}
-        position={[3, 2.4, 0.6]}
+        intensity={0.1}
+        position={[3, 1, 0.6]}
         angle={Math.PI / 5}
         penumbra={0.3}
         color="#fff1c1"
         castShadow={false}
-        target-position={[0, 0.6, 0]}
+        target-position={[0, 0.9, 0]}
       />
     </group>
   );
