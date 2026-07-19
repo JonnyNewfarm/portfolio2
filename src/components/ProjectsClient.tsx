@@ -96,25 +96,6 @@ const projects: Project[] = [
       "calero-06.jpg",
     ],
   },
-  {
-    title: "Petsaco",
-    year: "2025",
-    category: "E-commerce & Brand",
-    link: "https://petsaco.com",
-    about:
-      "E-commerce store with product browsing, authentication, checkout and animated brand experience.",
-    stack:
-      "React, Next.js, Prisma, GSAP, Motion, TailwindCSS, Neon, NextAuth, Stripe, Zustand.",
-    role: "Design, frontend, backend, auth, checkout and animations.",
-    images: [
-      "petsaco-01.jpg",
-      "petsaco-02.jpg",
-      "petsaco-03.jpg",
-      "petsaco-04.jpg",
-      "petsaco-05.jpg",
-      "petsaco-06.jpg",
-    ],
-  },
 ];
 
 const carouselMotion = {
