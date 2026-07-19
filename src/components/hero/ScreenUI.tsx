@@ -1,11 +1,11 @@
 "use client";
 
-import { Text } from "@react-three/drei";
+import { Image, Text } from "@react-three/drei";
 import { ThreeEvent, useFrame } from "@react-three/fiber";
 import { AnimatePresence, MotionValue } from "framer-motion";
 import { motion } from "framer-motion-3d";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 
 import MiniGame from "./MiniGame";
@@ -26,18 +26,43 @@ const ORIGINAL_GAME_POSITION: [number, number, number] = [0, 1.5, 6];
 
 const CONTENT_Z = 0;
 
+const MONTSERRAT_REGULAR =
+  "https://cdn.jsdelivr.net/gh/JulietaUla/Montserrat@master/fonts/ttf/Montserrat-Regular.ttf";
+
+const MONTSERRAT_SEMIBOLD =
+  "https://cdn.jsdelivr.net/gh/JulietaUla/Montserrat@master/fonts/ttf/Montserrat-SemiBold.ttf";
+
+const MONTSERRAT_BOLD =
+  "https://cdn.jsdelivr.net/gh/JulietaUla/Montserrat@master/fonts/ttf/Montserrat-Bold.ttf";
+
 function setPointerCursor(active: boolean) {
-  document.body.style.cursor = active ? "pointer" : "default";
+  if (typeof document === "undefined") return;
+
+  const cursor = active ? "pointer" : "";
+
+  document.body.style.cursor = cursor;
+  document.documentElement.style.cursor = cursor;
 }
 
 function ScreenButton({
   children,
   position,
   onClick,
-  fontSize = 0.14,
+  fontSize,
   align = "left",
 }: ScreenButtonProps) {
   const [hovered, setHovered] = useState(false);
+
+  const resetPointer = () => {
+    setHovered(false);
+    setPointerCursor(false);
+  };
+
+  useEffect(() => {
+    return () => {
+      setPointerCursor(false);
+    };
+  }, []);
 
   return (
     <motion.group
@@ -52,23 +77,34 @@ function ScreenButton({
     >
       <Text
         fontSize={fontSize}
+        font={MONTSERRAT_SEMIBOLD}
         color={hovered ? "#111111" : "#202020"}
         anchorX={align}
         anchorY="middle"
         letterSpacing={-0.025}
         onClick={(event: ThreeEvent<MouseEvent>) => {
           event.stopPropagation();
+
+          resetPointer();
           onClick();
         }}
-        onPointerOver={(event: ThreeEvent<PointerEvent>) => {
+        onPointerEnter={(event: ThreeEvent<PointerEvent>) => {
           event.stopPropagation();
+
           setHovered(true);
           setPointerCursor(true);
         }}
+        onPointerLeave={(event: ThreeEvent<PointerEvent>) => {
+          event.stopPropagation();
+          resetPointer();
+        }}
         onPointerOut={(event: ThreeEvent<PointerEvent>) => {
           event.stopPropagation();
-          setHovered(false);
-          setPointerCursor(false);
+          resetPointer();
+        }}
+        onPointerCancel={(event: ThreeEvent<PointerEvent>) => {
+          event.stopPropagation();
+          resetPointer();
         }}
       >
         {children}
@@ -87,8 +123,9 @@ function ScreenHeader({
   return (
     <group>
       <Text
-        position={[-0.88, 0.45, CONTENT_Z]}
-        fontSize={0.082}
+        position={[-0.88, 0.5, CONTENT_Z]}
+        font={MONTSERRAT_SEMIBOLD}
+        fontSize={0.065}
         color="#181818"
         anchorX="left"
         anchorY="middle"
@@ -98,8 +135,9 @@ function ScreenHeader({
       </Text>
 
       <Text
-        position={[0.88, 0.45, CONTENT_Z]}
-        fontSize={0.082}
+        position={[0.88, 0.5, CONTENT_Z]}
+        font={MONTSERRAT_SEMIBOLD}
+        fontSize={0.065}
         color="#181818"
         anchorX="right"
         anchorY="middle"
@@ -108,7 +146,7 @@ function ScreenHeader({
         {pageNumber}
       </Text>
 
-      <mesh position={[0, 0.355, -0.002]}>
+      <mesh position={[0, 0.44, -0.002]}>
         <planeGeometry args={[1.76, 0.006]} />
         <meshBasicMaterial color="#181818" transparent opacity={0.38} />
       </mesh>
@@ -137,39 +175,75 @@ function IntroPage({ onNext }: { onNext: () => void }) {
         ease: [0.76, 0, 0.24, 1],
       }}
     >
-      <ScreenHeader label="Introduction" pageNumber="01 / 03" />
+      <ScreenHeader label="Profile" pageNumber="01 / 03" />
+
+      <group position={[-0.88, 0.27, CONTENT_Z]}>
+        <Text
+          position={[0, -0.05, 0]}
+          font={MONTSERRAT_BOLD}
+          fontSize={0.18}
+          color="#151515"
+          anchorX="left"
+          anchorY="top"
+          maxWidth={0.95}
+          lineHeight={0.9}
+          letterSpacing={-0.025}
+        >
+          {"JONAS\nNYGAARD"}
+        </Text>
+
+        <Text
+          position={[0, -0.41, 0]}
+          font={MONTSERRAT_SEMIBOLD}
+          fontSize={0.066}
+          color="#292929"
+          anchorX="left"
+          anchorY="top"
+          lineHeight={1.35}
+          letterSpacing={0.015}
+        >
+          {"DESIGNER / DEVELOPER\nBASED IN OSLO, NORWAY"}
+        </Text>
+      </group>
+
+      <Image
+        url="/jonas-0003.jpg"
+        position={[0.7, 0.1, CONTENT_Z - 0.002]}
+        scale={[0.5, 0.6, 1]}
+        transparent
+      />
 
       <Text
-        position={[-0.88, 0.23, CONTENT_Z]}
-        fontSize={0.16}
-        color="#151515"
+        position={[0.45, -0.25, CONTENT_Z]}
+        font={MONTSERRAT_REGULAR}
+        fontSize={0.038}
+        color="#424242"
         anchorX="left"
-        anchorY="top"
-        maxWidth={1.65}
-        lineHeight={0.88}
-        letterSpacing={-0.045}
+        anchorY="middle"
+        letterSpacing={0.05}
       >
-        {"Hey — I’m Jonas.\nDesigner and developer\nbased in Norway."}
+        PORTRAIT / 2026
       </Text>
 
       <Text
-        position={[-0.88, -0.44, CONTENT_Z]}
-        fontSize={0.068}
+        position={[-0.88, -0.435, CONTENT_Z]}
+        font={MONTSERRAT_REGULAR}
+        fontSize={0.055}
         color="#303030"
         anchorX="left"
         anchorY="middle"
-        letterSpacing={0.015}
+        letterSpacing={0.025}
       >
-        INTERACTIVE PORTFOLIO / 2026
+        JONASNYGAARD.COM
       </Text>
 
       <ScreenButton
-        position={[0.95, -0.43, CONTENT_Z]}
+        position={[0.88, -0.435, CONTENT_Z]}
         align="right"
-        fontSize={0.14}
+        fontSize={0.125}
         onClick={onNext}
       >
-        NEXT →
+        EXPLORE →
       </ScreenButton>
     </motion.group>
   );
@@ -206,11 +280,12 @@ function ClickAroundPage({
 
       <Text
         position={[-0.88, 0.23, CONTENT_Z]}
+        font={MONTSERRAT_REGULAR}
         fontSize={0.151}
         color="#151515"
         anchorX="left"
         anchorY="top"
-        maxWidth={1.67}
+        maxWidth={1.8}
         lineHeight={0.9}
         letterSpacing={-0.04}
       >
@@ -271,6 +346,7 @@ function NavigationPage({
 
       <Text
         position={[-0.88, 0.22, CONTENT_Z]}
+        font={MONTSERRAT_REGULAR}
         fontSize={0.08}
         color="#303030"
         anchorX="left"
@@ -281,8 +357,8 @@ function NavigationPage({
       </Text>
 
       <ScreenButton
-        position={[-0.88, 0.03, CONTENT_Z]}
-        fontSize={0.17}
+        position={[-0.8, 0.03, CONTENT_Z]}
+        fontSize={0.13}
         align="left"
         onClick={() => onNavigate("/projects")}
       >
@@ -290,8 +366,8 @@ function NavigationPage({
       </ScreenButton>
 
       <ScreenButton
-        position={[-0.88, -0.18, CONTENT_Z]}
-        fontSize={0.17}
+        position={[-0.8, -0.18, CONTENT_Z]}
+        fontSize={0.13}
         align="left"
         onClick={() => onNavigate("/about")}
       >
@@ -299,8 +375,8 @@ function NavigationPage({
       </ScreenButton>
 
       <ScreenButton
-        position={[0.13, 0.03, CONTENT_Z]}
-        fontSize={0.17}
+        position={[0.25, 0.03, CONTENT_Z]}
+        fontSize={0.13}
         align="left"
         onClick={() => onNavigate("/contact")}
       >
@@ -308,8 +384,8 @@ function NavigationPage({
       </ScreenButton>
 
       <ScreenButton
-        position={[0.13, -0.18, CONTENT_Z]}
-        fontSize={0.17}
+        position={[0.25, -0.18, CONTENT_Z]}
+        fontSize={0.13}
         align="left"
         onClick={onGame}
       >
@@ -327,13 +403,14 @@ function NavigationPage({
 
       <Text
         position={[0.88, -0.42, CONTENT_Z]}
+        font={MONTSERRAT_REGULAR}
         fontSize={0.065}
         color="#303030"
         anchorX="right"
         anchorY="middle"
         letterSpacing={0.025}
       >
-        JONASNYGAARD.COM
+        LET&apos;S COLLABORATE
       </Text>
     </motion.group>
   );
@@ -350,6 +427,28 @@ export default function ScreenUI({
   const gameGroupRef = useRef<THREE.Group>(null);
 
   const [page, setPage] = useState<ScreenPage>("intro");
+
+  useEffect(() => {
+    const resetCursor = () => {
+      setPointerCursor(false);
+    };
+
+    resetCursor();
+
+    window.addEventListener("pageshow", resetCursor);
+    window.addEventListener("popstate", resetCursor);
+
+    return () => {
+      resetCursor();
+
+      window.removeEventListener("pageshow", resetCursor);
+      window.removeEventListener("popstate", resetCursor);
+    };
+  }, []);
+
+  useEffect(() => {
+    setPointerCursor(false);
+  }, [page]);
 
   useFrame(() => {
     const progress = scrollYProgress.get();
@@ -368,19 +467,22 @@ export default function ScreenUI({
     }
   });
 
+  const changePage = (nextPage: ScreenPage) => {
+    setPointerCursor(false);
+    setPage(nextPage);
+  };
+
   const navigateTo = (route: string) => {
     setPointerCursor(false);
     router.push(route);
   };
 
   const openGame = () => {
-    setPointerCursor(false);
-    setPage("game");
+    changePage("game");
   };
 
   const closeGame = () => {
-    setPointerCursor(false);
-    setPage("nav");
+    changePage("nav");
   };
 
   return (
@@ -391,18 +493,18 @@ export default function ScreenUI({
             {page === "clickAround" ? (
               <ClickAroundPage
                 key="click-around"
-                onBack={() => setPage("intro")}
-                onNext={() => setPage("nav")}
+                onBack={() => changePage("intro")}
+                onNext={() => changePage("nav")}
               />
             ) : page === "nav" ? (
               <NavigationPage
                 key="navigation"
-                onBack={() => setPage("clickAround")}
+                onBack={() => changePage("clickAround")}
                 onGame={openGame}
                 onNavigate={navigateTo}
               />
             ) : (
-              <IntroPage key="intro" onNext={() => setPage("clickAround")} />
+              <IntroPage key="intro" onNext={() => changePage("clickAround")} />
             )}
           </AnimatePresence>
         </group>
