@@ -1,21 +1,21 @@
 "use client";
 
 import { useLoader } from "@react-three/fiber";
-
 import { useEffect, useState } from "react";
-
 import * as THREE from "three";
 
 export default function WindowOnWall() {
-  const [isDark, setIsDark] = useState(
-    document.documentElement.classList.contains("dark")
-  );
+  const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
-    const checkDarkMode = () =>
+    const checkDarkMode = () => {
       setIsDark(document.documentElement.classList.contains("dark"));
+    };
+
+    checkDarkMode();
 
     const observer = new MutationObserver(checkDarkMode);
+
     observer.observe(document.documentElement, {
       attributes: true,
       attributeFilter: ["class"],
@@ -30,14 +30,13 @@ export default function WindowOnWall() {
   ]);
 
   useEffect(() => {
-    if (!lightView || !darkView) return;
-
-    const setupTexture = (tex: THREE.Texture) => {
-      tex.colorSpace = THREE.SRGBColorSpace;
-      tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
-      tex.repeat.x = -1;
-      tex.offset.x = 1;
-      tex.needsUpdate = true;
+    const setupTexture = (texture: THREE.Texture) => {
+      texture.colorSpace = THREE.SRGBColorSpace;
+      texture.wrapS = THREE.RepeatWrapping;
+      texture.wrapT = THREE.RepeatWrapping;
+      texture.repeat.x = -1;
+      texture.offset.x = 1;
+      texture.needsUpdate = true;
     };
 
     setupTexture(lightView);
@@ -48,6 +47,45 @@ export default function WindowOnWall() {
 
   const openAngle = Math.PI / 2.7;
   const paneWidth = 0.5;
+  const paneHeight = 1;
+
+  const frameThickness = 0.03;
+  const frameDepth = 0.055;
+
+  const leftPaneFrame = [
+    {
+      position: [0, 0, 0.015] as [number, number, number],
+      size: [frameThickness, paneHeight, frameDepth] as [
+        number,
+        number,
+        number,
+      ],
+    },
+    {
+      position: [paneWidth, 0, 0.015] as [number, number, number],
+      size: [frameThickness, paneHeight, frameDepth] as [
+        number,
+        number,
+        number,
+      ],
+    },
+    {
+      position: [paneWidth / 2, paneHeight / 2, 0.015] as [
+        number,
+        number,
+        number,
+      ],
+      size: [paneWidth, frameThickness, frameDepth] as [number, number, number],
+    },
+    {
+      position: [paneWidth / 2, -paneHeight / 2, 0.015] as [
+        number,
+        number,
+        number,
+      ],
+      size: [paneWidth, frameThickness, frameDepth] as [number, number, number],
+    },
+  ];
 
   return (
     <group
@@ -58,6 +96,7 @@ export default function WindowOnWall() {
       {bgTexture && (
         <mesh position={[0, 0, -0.0051]}>
           <planeGeometry args={[1, 1]} />
+
           <meshBasicMaterial
             map={bgTexture}
             side={THREE.DoubleSide}
@@ -67,11 +106,13 @@ export default function WindowOnWall() {
         </mesh>
       )}
 
-      {/* Left Pane */}
+      {/* Left pane */}
       <group position={[-paneWidth / 2, 0, 0]}>
         <group position={[-paneWidth / 2, 0, 0]} rotation={[0, openAngle, 0]}>
+          {/* Glass */}
           <mesh position={[paneWidth / 2, 0, 0]}>
-            <boxGeometry args={[0.5, 1, 0.05]} />
+            <boxGeometry args={[paneWidth, paneHeight, 0.02]} />
+
             <meshPhysicalMaterial
               color="#a0d8ff"
               transparent
@@ -83,16 +124,11 @@ export default function WindowOnWall() {
             />
           </mesh>
 
-          {[
-            [paneWidth / 1, 0, 0],
-            [paneWidth / 1, 0, 0],
-            [0, 0.5, 0],
-            [0, -0.5, 0],
-          ].map((pos, i) => (
-            <mesh key={`L${i}`} position={pos as [number, number, number]}>
-              <boxGeometry
-                args={i < 2 ? [0.03, 1, 0.05] : [paneWidth, 0.04, 0.05]}
-              />
+          {/* Frame */}
+          {leftPaneFrame.map(({ position, size }, index) => (
+            <mesh key={`left-frame-${index}`} position={position}>
+              <boxGeometry args={size} />
+
               <meshStandardMaterial
                 color="#656b66"
                 roughness={0.6}
@@ -103,10 +139,11 @@ export default function WindowOnWall() {
         </group>
       </group>
 
-      {/* Right Pane */}
+      {/* Right pane */}
       <group position={[paneWidth / 2, 0, 0]}>
         <mesh position={[0, 0, -0.01]}>
-          <boxGeometry args={[paneWidth, 1, 0.02]} />
+          <boxGeometry args={[paneWidth, paneHeight, 0.02]} />
+
           <meshPhysicalMaterial
             color="#a0c4ff"
             transparent
@@ -117,15 +154,42 @@ export default function WindowOnWall() {
         </mesh>
 
         {[
-          [-paneWidth / 2, 0, 0],
-          [paneWidth / 2, 0, 0],
-          [0, 0.5, 0],
-          [0, -0.5, 0],
-        ].map((pos, i) => (
-          <mesh key={`R${i}`} position={pos as [number, number, number]}>
-            <boxGeometry
-              args={i < 2 ? [0.03, 1, 0.05] : [paneWidth, 0.03, 0.05]}
-            />
+          {
+            position: [-paneWidth / 2, 0, 0] as [number, number, number],
+            size: [frameThickness, paneHeight, frameDepth] as [
+              number,
+              number,
+              number,
+            ],
+          },
+          {
+            position: [paneWidth / 2, 0, 0] as [number, number, number],
+            size: [frameThickness, paneHeight, frameDepth] as [
+              number,
+              number,
+              number,
+            ],
+          },
+          {
+            position: [0, paneHeight / 2, 0] as [number, number, number],
+            size: [paneWidth, frameThickness, frameDepth] as [
+              number,
+              number,
+              number,
+            ],
+          },
+          {
+            position: [0, -paneHeight / 2, 0] as [number, number, number],
+            size: [paneWidth, frameThickness, frameDepth] as [
+              number,
+              number,
+              number,
+            ],
+          },
+        ].map(({ position, size }, index) => (
+          <mesh key={`right-frame-${index}`} position={position}>
+            <boxGeometry args={size} />
+
             <meshStandardMaterial
               color="#656b66"
               roughness={0.6}
@@ -135,15 +199,28 @@ export default function WindowOnWall() {
         ))}
       </group>
 
-      {/* Outer Frame */}
+      {/* Outer frame */}
       {[
-        [-0.5, 0, 0],
-        [0.5, 0, 0],
-        [0, 0.5, 0],
-        [0, -0.5, 0],
-      ].map((pos, i) => (
-        <mesh key={`O${i}`} position={pos as [number, number, number]}>
-          <boxGeometry args={i < 2 ? [0.05, 1.05, 0.05] : [1.05, 0.05, 0.05]} />
+        {
+          position: [-0.5, 0, 0] as [number, number, number],
+          size: [0.05, 1.05, 0.05] as [number, number, number],
+        },
+        {
+          position: [0.5, 0, 0] as [number, number, number],
+          size: [0.05, 1.05, 0.05] as [number, number, number],
+        },
+        {
+          position: [0, 0.5, 0] as [number, number, number],
+          size: [1.05, 0.05, 0.05] as [number, number, number],
+        },
+        {
+          position: [0, -0.5, 0] as [number, number, number],
+          size: [1.05, 0.05, 0.05] as [number, number, number],
+        },
+      ].map(({ position, size }, index) => (
+        <mesh key={`outer-frame-${index}`} position={position}>
+          <boxGeometry args={size} />
+
           <meshStandardMaterial
             color="#656b66"
             roughness={0.6}
@@ -152,10 +229,11 @@ export default function WindowOnWall() {
         </mesh>
       ))}
 
-      {/* Handle */}
+      {/* Bottom sill */}
       <group position={[paneWidth / 2 + 0.03, 0, 0]}>
         <mesh position={[-0.3, -0.55, 0]}>
           <boxGeometry args={[1.07, 0.04, 0.15]} />
+
           <meshStandardMaterial
             color="#656b66"
             roughness={0.5}
