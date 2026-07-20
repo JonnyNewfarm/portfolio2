@@ -70,12 +70,10 @@ const projects: Project[] = [
       "React, Next.js, Prisma, GSAP, Motion, TailwindCSS, MongoDB, Uploadthing, NextAuth.",
     role: "Design, frontend and backend.",
     images: [
-      "kerimov-001.jpg",
-      "kerimov-002.jpg",
-      "kerimov-003.jpg",
-      "kerimov-04.jpg",
-      "kerimov-05.jpg",
-      "kerimov-06.jpg",
+      "rustam-01.jpg",
+      "rustam-03.jpg",
+      "rustam-02.jpg",
+      "rustam-04.jpg",
     ],
   },
   {
@@ -88,12 +86,10 @@ const projects: Project[] = [
     stack: "React, Prisma, Three.js, GSAP, TailwindCSS, Neon, Stripe.",
     role: "Design, frontend, backend, Stripe and motion.",
     images: [
-      "calero-01.jpg",
-      "calero-001.jpg",
-      "calero-03.jpg",
-      "calero-04.jpg",
-      "calero-05.jpg",
-      "calero-06.jpg",
+      "calero-studio-1.jpg",
+      "calero-studio-02.jpg",
+      "calero-studio-03.jpg",
+      "calero-studio-04.jpg",
     ],
   },
 ];

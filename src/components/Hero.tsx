@@ -16,7 +16,6 @@ import Wall2 from "./hero/Wall2";
 import WallShelfWithCandle from "./hero/WallShelfWithCandle";
 import Floor from "./hero/Floor";
 import ScreenUI from "./hero/ScreenUI";
-import ScreenHint from "./hero/ScreenHint";
 import { CameraController } from "./hero/CameraController";
 import Skateboard from "./hero/Skateboard";
 import RecordPlayer from "./hero/RecordPlayer";
