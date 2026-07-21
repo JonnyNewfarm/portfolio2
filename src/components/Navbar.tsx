@@ -1,35 +1,28 @@
 "use client";
 
-import BurgerMenu from "./BurgerMenu";
+import Link from "next/link";
 import { FaRegCopyright } from "react-icons/fa";
+
+import BurgerMenu from "./BurgerMenu";
 import WaveLinkText from "./WaveLinkText";
-import VerticalTransitionLink from "./TransitionLink";
 
 const Navbar = () => {
   const routes = [
     {
       label: "Home",
       url: "/",
-      linkLabel: "Home",
-      LinkToLabel: "Page",
     },
     {
       label: "My Work",
       url: "/projects",
-      linkLabel: "Project",
-      LinkToLabel: "Gallery",
     },
     {
       label: "Contact",
       url: "/contact",
-      linkLabel: "Contact",
-      LinkToLabel: "Details",
     },
     {
       label: "About",
       url: "/about",
-      linkLabel: "About",
-      LinkToLabel: "Jonas",
     },
   ];
 
@@ -37,14 +30,13 @@ const Navbar = () => {
     <header className="fixed top-0 z-50 w-full bg-transparent px-6 py-5 text-[#1c1a17] dark:text-stone-300 lg:px-12 xl:px-16">
       <div className="flex items-center justify-between">
         {/* Mobile logo */}
-        <VerticalTransitionLink
+        <Link
           href="/"
-          transitionLabel="Home"
           className="flex items-center gap-x-2 text-xs font-black uppercase tracking-[0.09em] lg:hidden"
         >
           <FaRegCopyright size={13} />
           <span>Newfarm Studio</span>
-        </VerticalTransitionLink>
+        </Link>
 
         {/* Mobile burger */}
         <div className="lg:hidden">
@@ -73,11 +65,9 @@ const Navbar = () => {
 
               <nav className="flex flex-wrap justify-end gap-x-3 gap-y-1 text-xl uppercase tracking-[0.08em]">
                 {routes.map((route, index) => (
-                  <VerticalTransitionLink
+                  <Link
                     key={route.label}
                     href={route.url}
-                    transitionLabel={route.linkLabel}
-                    transitionToLabel={route.LinkToLabel}
                     className="font-black"
                   >
                     <WaveLinkText text={route.label} />
@@ -85,7 +75,7 @@ const Navbar = () => {
                     {index < routes.length - 1 && (
                       <span aria-hidden="true">,</span>
                     )}
-                  </VerticalTransitionLink>
+                  </Link>
                 ))}
               </nav>
             </div>

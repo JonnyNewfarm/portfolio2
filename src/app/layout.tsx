@@ -6,7 +6,6 @@ import Navbar from "@/components/Navbar";
 import { Toaster } from "react-hot-toast";
 import Footer from "@/components/Footer";
 import { ThemeProvider } from "@/components/ThemeProvider";
-import VerticalPageTransitionWrapper from "@/components/VerticalTransitionWrapper";
 
 const anton = Anton({
   subsets: ["latin"],
@@ -38,13 +37,11 @@ export default function RootLayout({
         `}
       >
         <ThemeProvider>
-          <VerticalPageTransitionWrapper>
-            <div className="w-full min-h-screen">
-              <Navbar />
-              {children}
-              <Footer />
-            </div>
-          </VerticalPageTransitionWrapper>
+          <div className="w-full min-h-screen">
+            <Navbar />
+            {children}
+            <Footer />
+          </div>
         </ThemeProvider>
 
         <Toaster
