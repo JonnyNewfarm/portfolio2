@@ -113,14 +113,14 @@ export default function WindowOnWall() {
           <mesh position={[paneWidth / 2, 0, 0]}>
             <boxGeometry args={[paneWidth, paneHeight, 0.02]} />
 
-            <meshPhysicalMaterial
+            <meshStandardMaterial
               color="#a0d8ff"
               transparent
-              opacity={0.6}
-              roughness={0.1}
-              metalness={0.1}
-              transmission={0.9}
-              clearcoat={0.1}
+              opacity={0.5}
+              roughness={0.12}
+              metalness={0.12}
+              side={THREE.DoubleSide}
+              depthWrite={true}
             />
           </mesh>
 
@@ -143,13 +143,14 @@ export default function WindowOnWall() {
       <group position={[paneWidth / 2, 0, 0]}>
         <mesh position={[0, 0, -0.01]}>
           <boxGeometry args={[paneWidth, paneHeight, 0.02]} />
-
-          <meshPhysicalMaterial
+          <meshStandardMaterial
             color="#a0c4ff"
             transparent
-            opacity={0.32}
-            roughness={0.8}
+            opacity={0.3}
+            roughness={0.7}
             metalness={0.1}
+            side={THREE.DoubleSide}
+            depthWrite={true}
           />
         </mesh>
 

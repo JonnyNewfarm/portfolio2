@@ -353,15 +353,21 @@ type ImageBendSceneProps = {
   items: CarouselItem[];
   runtimeRef: MutableRefObject<CarouselRuntime>;
   onActiveProjectChange: (index: number) => void;
+  onReady: () => void;
 };
 
 function ImageBendScene({
   items,
   runtimeRef,
   onActiveProjectChange,
+  onReady,
 }: ImageBendSceneProps) {
   const textures = useCarouselImages(items);
   const { camera, size } = useThree();
+
+  useEffect(() => {
+    onReady();
+  }, [onReady]);
 
   const trackWidth = items.length * cardStride;
   const activeProjectRef = useRef(0);
@@ -460,6 +466,63 @@ function ImageBendScene({
   );
 }
 
+function DesktopImageSkeleton({ isDark }: { isDark: boolean }) {
+  const skeletons = [-2, -1, 0, 1, 2];
+
+  return (
+    <div
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center overflow-hidden"
+    >
+      <div className="flex w-max items-center gap-4">
+        {skeletons.map((position) => {
+          const distance = Math.abs(position);
+
+          return (
+            <motion.div
+              key={position}
+              initial={{ opacity: 0 }}
+              animate={{
+                opacity: distance > 1 ? 0.35 : distance === 1 ? 0.55 : 0.8,
+              }}
+              transition={{
+                duration: 0.45,
+                delay: (position + 2) * 0.06,
+                ease: TEXT_EASE,
+              }}
+              className="relative h-[clamp(210px,26vw,330px)] w-[clamp(370px,46vw,590px)] shrink-0 overflow-hidden"
+              style={{
+                transform: `scale(${distance > 1 ? 0.92 : distance === 1 ? 0.96 : 1})`,
+                backgroundColor: isDark
+                  ? "rgba(214, 211, 209, 0.07)"
+                  : "rgba(22, 19, 16, 0.065)",
+              }}
+            >
+              <motion.div
+                className="absolute inset-y-0 w-1/2"
+                style={{
+                  background: isDark
+                    ? "linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent)"
+                    : "linear-gradient(90deg, transparent, rgba(255,255,255,0.72), transparent)",
+                }}
+                animate={{
+                  x: ["-160%", "280%"],
+                }}
+                transition={{
+                  duration: 1.35,
+                  ease: "linear",
+                  repeat: Infinity,
+                  repeatDelay: 0.15,
+                }}
+              />
+            </motion.div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 type DesktopWorkCarouselProps = {
   activeProjectIndex: number;
   setActiveProjectIndex: React.Dispatch<React.SetStateAction<number>>;
@@ -478,6 +541,11 @@ function DesktopWorkCarousel({
 
   const items = useMemo(() => buildCarouselItems(), []);
   const activeProject = projects[activeProjectIndex];
+  const [isSceneReady, setIsSceneReady] = useState(false);
+
+  const handleSceneReady = useCallback(() => {
+    setIsSceneReady(true);
+  }, []);
 
   const runtimeRef = useRef<CarouselRuntime>({
     offset: 0,
@@ -700,6 +768,26 @@ function DesktopWorkCarousel({
         </p>
       </div>
 
+      <motion.div
+        initial={false}
+        animate={{
+          opacity: isSceneReady ? 0 : 1,
+          visibility: isSceneReady ? "hidden" : "visible",
+        }}
+        transition={{
+          opacity: {
+            duration: 0.55,
+            ease: TEXT_EASE,
+          },
+          visibility: {
+            delay: isSceneReady ? 0.55 : 0,
+          },
+        }}
+        className="absolute inset-0 z-20"
+      >
+        <DesktopImageSkeleton isDark={isDark} />
+      </motion.div>
+
       <div
         className="absolute inset-0 z-10"
         style={{
@@ -727,13 +815,16 @@ function DesktopWorkCarousel({
             gl.setClearColor(new THREE.Color(canvasBackground), 1);
           }}
         >
-          <ImageBendScene
-            items={items}
-            runtimeRef={runtimeRef}
-            onActiveProjectChange={setActiveProjectIndex}
-          />
+          <React.Suspense fallback={null}>
+            <ImageBendScene
+              items={items}
+              runtimeRef={runtimeRef}
+              onActiveProjectChange={setActiveProjectIndex}
+              onReady={handleSceneReady}
+            />
 
-          <Preload all />
+            <Preload all />
+          </React.Suspense>
         </Canvas>
       </div>
 

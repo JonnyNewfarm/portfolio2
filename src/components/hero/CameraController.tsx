@@ -2,11 +2,17 @@
 
 import { useFrame, useThree } from "@react-three/fiber";
 import { MotionValue } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import * as THREE from "three";
 
 export default function useIsSmallScreen() {
-  const [isSmall, setIsSmall] = useState(false);
+  const [isSmall, setIsSmall] = useState(() => {
+    if (typeof window === "undefined") {
+      return false;
+    }
+
+    return window.innerWidth < 640;
+  });
 
   useEffect(() => {
     const check = () => {
@@ -32,6 +38,8 @@ type CameraControllerProps = {
 
 const CAMERA_STOP_PROGRESS = 0.68;
 
+const DEFAULT_LOOK_AT = new THREE.Vector3(0.2, 0.8, 0);
+
 export function CameraController({
   scrollYProgress,
   monitorFocused,
@@ -39,11 +47,43 @@ export function CameraController({
   const { camera } = useThree();
   const isSmall = useIsSmallScreen();
 
+  const initialized = useRef(false);
+
   const cameraPosition = useRef(new THREE.Vector3());
-  const currentLookAt = useRef(new THREE.Vector3(0.2, 0.8, 0));
-  const wantedLookAt = useRef(new THREE.Vector3());
+  const currentLookAt = useRef(DEFAULT_LOOK_AT.clone());
+  const wantedLookAt = useRef(DEFAULT_LOOK_AT.clone());
+
+  useLayoutEffect(() => {
+    if (initialized.current) {
+      return;
+    }
+
+    const rawProgress = scrollYProgress.get();
+    const cameraProgress = Math.min(rawProgress, CAMERA_STOP_PROGRESS);
+    const baseZ = isSmall ? 5.3 : 4.7;
+
+    const initialPosition = new THREE.Vector3(
+      2.1,
+      1.6,
+      baseZ - cameraProgress * 2.25,
+    );
+
+    camera.position.copy(initialPosition);
+    camera.lookAt(DEFAULT_LOOK_AT);
+    camera.updateMatrixWorld(true);
+
+    cameraPosition.current.copy(initialPosition);
+    currentLookAt.current.copy(DEFAULT_LOOK_AT);
+    wantedLookAt.current.copy(DEFAULT_LOOK_AT);
+
+    initialized.current = true;
+  }, [camera, isSmall, scrollYProgress]);
 
   useFrame((_, delta) => {
+    if (!initialized.current) {
+      return;
+    }
+
     const rawProgress = scrollYProgress.get();
 
     // Kameraet får ikke bevege seg lenger enn dette punktet.
