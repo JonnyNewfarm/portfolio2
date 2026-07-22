@@ -19,7 +19,7 @@ import {
 const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 const introImage = {
-  src: "/jonas-0003.jpg",
+  src: "/jonas-01.jpg",
   alt: "Jonas Nygaard 3",
 };
 

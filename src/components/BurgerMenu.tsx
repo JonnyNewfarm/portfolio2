@@ -70,14 +70,6 @@ const BurgerMenu = () => {
           isOpen ? "text-white" : "text-[#1c1a17] dark:text-stone-300"
         }`}
       >
-        <span
-          className={`inline-block h-1.5 w-1.5 rounded-full transition-transform duration-300 ${
-            isOpen
-              ? "scale-150 bg-white"
-              : "scale-100 bg-[#1c1a17] dark:bg-stone-300"
-          }`}
-        />
-
         <span>{isOpen ? "Close" : "Menu"}</span>
       </button>
 
@@ -115,7 +107,7 @@ const BurgerMenu = () => {
               }}
               className="fixed inset-0 z-50 flex min-h-screen flex-col bg-[#141311] px-6 pb-10 pt-28 text-stone-100"
             >
-              <div className="border-b border-white/10 pb-6">
+              <div className=" pb-6">
                 <p className="mb-3 text-[10px] uppercase tracking-[0.28em] text-white/35">
                   Navigation
                 </p>
@@ -175,7 +167,7 @@ const BurgerMenu = () => {
                     duration: 0.35,
                     ease: "easeOut",
                   }}
-                  className="mt-12 border-t border-white/10 pt-6"
+                  className="mt-12  pt-6"
                 >
                   <p className="mb-2 text-[10px] uppercase tracking-[0.24em] text-white/35">
                     Studio

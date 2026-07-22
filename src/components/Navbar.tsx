@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FaRegCopyright } from "react-icons/fa";
+import { useEffect, useState } from "react";
 
 import BurgerMenu from "./BurgerMenu";
 import WaveLinkText from "./WaveLinkText";
 
 const Navbar = () => {
   const pathname = usePathname();
+  const [isDark, setIsDark] = useState(false);
 
   const routes = [
     {
@@ -29,6 +30,17 @@ const Navbar = () => {
     },
   ];
 
+  useEffect(() => {
+    setIsDark(document.documentElement.classList.contains("dark"));
+  }, []);
+
+  const setTheme = (theme: "light" | "dark") => {
+    const shouldBeDark = theme === "dark";
+
+    document.documentElement.classList.toggle("dark", shouldBeDark);
+    setIsDark(shouldBeDark);
+  };
+
   const isRouteActive = (url: string) => {
     if (url === "/") {
       return pathname === "/";
@@ -48,14 +60,41 @@ const Navbar = () => {
   return (
     <header className="fixed top-0 z-50 w-full bg-transparent px-6 py-5 text-[#1c1a17] dark:text-stone-300 lg:px-12 xl:px-16">
       <div className="flex items-center justify-between">
-        {/* Mobile logo */}
-        <Link
-          href="/"
-          className="flex items-center gap-x-2 text-xs font-black uppercase tracking-[0.09em] lg:hidden"
-        >
-          <FaRegCopyright size={13} />
-          <span>Newfarm Studio</span>
-        </Link>
+        {/* Mobile logo + theme */}
+        <div className="flex items-center gap-x-5 lg:hidden">
+          <Link
+            href="/"
+            className="text-[10px] font-black uppercase tracking-[0.09em]"
+          >
+            Newfarm Studio
+          </Link>
+
+          <div className="flex items-center gap-x-1 text-[10px] font-black uppercase tracking-[0.08em]">
+            <button
+              type="button"
+              onClick={() => setTheme("light")}
+              aria-pressed={!isDark}
+              className={`cursor-pointer uppercase transition-opacity duration-200 ${
+                !isDark ? "opacity-100" : "opacity-50 hover:opacity-100"
+              }`}
+            >
+              Light
+            </button>
+
+            <span className="opacity-50">/</span>
+
+            <button
+              type="button"
+              onClick={() => setTheme("dark")}
+              aria-pressed={isDark}
+              className={`cursor-pointer uppercase transition-opacity duration-200 ${
+                isDark ? "opacity-100" : "opacity-50 hover:opacity-100"
+              }`}
+            >
+              Dark
+            </button>
+          </div>
+        </div>
 
         {/* Mobile burger */}
         <div className="lg:hidden">
@@ -65,15 +104,49 @@ const Navbar = () => {
         {/* Desktop navbar */}
         <div className="hidden w-full lg:block">
           <div className="flex w-full items-start justify-between">
-            {/* Name – left */}
-            <div>
-              <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.22em] opacity-80">
-                Name:
-              </p>
+            {/* Name + theme – left */}
+            <div className="flex items-start gap-x-10">
+              <div>
+                <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.22em] opacity-80">
+                  Name:
+                </p>
 
-              <p className="text-sm font-black uppercase tracking-[0.08em]">
-                Jonas Nygaard
-              </p>
+                <p className="text-sm font-black uppercase tracking-[0.08em]">
+                  Jonas Nygaard
+                </p>
+              </div>
+
+              <div>
+                <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.22em] opacity-80">
+                  Theme:
+                </p>
+
+                <div className="flex items-center gap-x-1 text-sm font-black uppercase tracking-[0.08em]">
+                  <button
+                    type="button"
+                    onClick={() => setTheme("light")}
+                    aria-pressed={!isDark}
+                    className={`cursor-pointer transition-opacity duration-200 ${
+                      !isDark ? "opacity-100" : "opacity-65 hover:opacity-100"
+                    }`}
+                  >
+                    Light
+                  </button>
+
+                  <span>/</span>
+
+                  <button
+                    type="button"
+                    onClick={() => setTheme("dark")}
+                    aria-pressed={isDark}
+                    className={`cursor-pointer transition-opacity duration-200 ${
+                      isDark ? "opacity-100" : "opacity-65 hover:opacity-100"
+                    }`}
+                  >
+                    Dark
+                  </button>
+                </div>
+              </div>
             </div>
 
             {/* Navigation – right */}
@@ -83,7 +156,7 @@ const Navbar = () => {
               </p>
 
               <nav className="flex flex-wrap justify-end gap-x-3 gap-y-1 text-xl uppercase tracking-[0.08em]">
-                {routes.map((route, index) => {
+                {routes.map((route) => {
                   const isActive = isRouteActive(route.url);
 
                   return (
@@ -91,17 +164,12 @@ const Navbar = () => {
                       key={route.label}
                       href={route.url}
                       aria-current={isActive ? "page" : undefined}
-                      className="group relative flex items-center font-black"
+                      className={`group relative flex items-center font-black transition-opacity duration-200 ${
+                        isActive
+                          ? "opacity-100"
+                          : "opacity-65 hover:opacity-100"
+                      }`}
                     >
-                      <span
-                        aria-hidden="true"
-                        className={`mr-1.5 h-[4px] w-[4px] rounded-full bg-current transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-                          isActive
-                            ? "scale-100 opacity-100"
-                            : "scale-0 opacity-0"
-                        }`}
-                      />
-
                       <WaveLinkText text={route.label} />
                     </Link>
                   );

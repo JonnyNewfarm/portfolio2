@@ -904,15 +904,6 @@ const ProjectsClient = () => {
           <div>
             <TextReveal
               active
-              delay={0.05}
-              as="p"
-              className="mb-4 text-[10px] uppercase tracking-[0.3em] text-[#161310]/45 dark:text-stone-300/45"
-            >
-              Selected Work
-            </TextReveal>
-
-            <TextReveal
-              active
               delay={0.1}
               as="h1"
               className="text-4xl font-anton uppercase leading-[0.92] tracking-[-0.01em] text-[#161310] dark:text-stone-200"
@@ -924,7 +915,7 @@ const ProjectsClient = () => {
               active
               delay={0.16}
               as="p"
-              className="mt-4 text-sm uppercase tracking-[0.18em] text-[#161310]/55 dark:text-stone-300/55"
+              className="mt-4 text-sm uppercase tracking-[0.18em] text-[#161310]/80 dark:text-stone-300/80"
             >
               Code / Design / Fullstack
             </TextReveal>
@@ -1011,17 +1002,6 @@ const ProjectsClient = () => {
                         {project.stack}
                       </TextReveal>
                     </div>
-
-                    <a
-                      href={project.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-block w-fit border border-[#161310] px-4 py-2 text-sm uppercase tracking-[0.18em] text-[#161310] dark:border-stone-300 dark:text-stone-300"
-                    >
-                      <TextReveal active delay={0.36 + i * 0.06} as="span">
-                        View Website
-                      </TextReveal>
-                    </a>
                   </div>
                 </div>
               </motion.article>
