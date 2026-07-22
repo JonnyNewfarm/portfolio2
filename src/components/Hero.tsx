@@ -783,19 +783,20 @@ export default function Hero() {
           className="
             sticky
             top-0
-            h-[100svh]
+            min-h-[100svh]
             overflow-hidden
             px-5
-            pb-6
+            pb-8
             pt-28
             sm:px-8
             sm:pb-8
+            lg:h-[100svh]
             lg:px-14
             lg:pb-10
             lg:pt-32
           "
         >
-          <div className="relative h-full">
+          <div className="relative flex min-h-full flex-col lg:block lg:h-full">
             {/* Main heading */}
             <motion.h1
               initial={{
@@ -1081,17 +1082,22 @@ export default function Hero() {
                 ease,
               }}
               className="
-                absolute
-                bottom-0
-                left-0
-                h-[96px]
-                w-[330px]
+                relative
+                mt-10
+                min-h-[125px]
+                w-full
                 text-[12px]
                 font-black
                 uppercase
                 leading-[1.2]
                 tracking-[-0.015em]
+                lg:absolute
+                lg:bottom-0
+                lg:left-0
+                lg:mt-0
                 lg:h-[105px]
+                lg:min-h-0
+                lg:w-[330px]
                 lg:text-sm
               "
             >
@@ -1115,7 +1121,7 @@ export default function Hero() {
                         },
                       },
                     }}
-                    className="absolute bottom-0 left-0"
+                    className="absolute left-0 top-0 lg:bottom-0 lg:top-auto"
                   >
                     <motion.p
                       variants={{
@@ -1198,12 +1204,14 @@ export default function Hero() {
                     }}
                     className="
                       absolute
-                      bottom-0
                       left-0
+                      top-0
                       flex
                       min-w-[310px]
                       flex-col
                       items-start
+                      lg:bottom-0
+                      lg:top-auto
                     "
                   >
                     <motion.p

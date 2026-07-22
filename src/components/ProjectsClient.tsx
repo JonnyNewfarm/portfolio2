@@ -466,6 +466,17 @@ function ImageBendScene({
   );
 }
 
+function CanvasBackground({ color }: { color: string }) {
+  const { gl, scene } = useThree();
+
+  useEffect(() => {
+    gl.setClearColor(new THREE.Color(color), 1);
+    scene.background = new THREE.Color(color);
+  }, [color, gl, scene]);
+
+  return null;
+}
+
 function DesktopImageSkeleton({ isDark }: { isDark: boolean }) {
   const skeletons = [-2, -1, 0, 1, 2];
 
@@ -808,9 +819,10 @@ function DesktopWorkCarousel({
           }}
           onCreated={({ gl }) => {
             gl.outputColorSpace = THREE.SRGBColorSpace;
-            gl.setClearColor(new THREE.Color(canvasBackground), 1);
           }}
         >
+          <CanvasBackground color={canvasBackground} />
+
           <React.Suspense fallback={null}>
             <ImageBendScene
               items={items}

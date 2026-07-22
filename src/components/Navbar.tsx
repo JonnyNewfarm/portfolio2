@@ -126,7 +126,7 @@ const Navbar = () => {
                     type="button"
                     onClick={() => setTheme("light")}
                     aria-pressed={!isDark}
-                    className={`cursor-pointer transition-opacity duration-200 ${
+                    className={`cursor-pointer uppercase transition-opacity duration-200 ${
                       !isDark ? "opacity-100" : "opacity-65 hover:opacity-100"
                     }`}
                   >
@@ -139,7 +139,7 @@ const Navbar = () => {
                     type="button"
                     onClick={() => setTheme("dark")}
                     aria-pressed={isDark}
-                    className={`cursor-pointer transition-opacity duration-200 ${
+                    className={`cursor-pointer uppercase transition-opacity duration-200 ${
                       isDark ? "opacity-100" : "opacity-65 hover:opacity-100"
                     }`}
                   >
