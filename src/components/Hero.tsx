@@ -52,6 +52,14 @@ const overlayEase: [number, number, number, number] = [0.76, 0, 0.24, 1];
 
 const informationItems = ["location", "occupation"] as const;
 
+const capabilityItems = [
+  "Creative development, ",
+  "Interactive experiences, 3D & motion",
+  "UI / UX design",
+] as const;
+
+type InformationPanel = "information" | "selected-work" | "capabilities";
+
 const navigationItems = [
   {
     category: "Portfolio",
@@ -643,7 +651,8 @@ export default function Hero() {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [lineVisible, setLineVisible] = useState(false);
   const [localTime, setLocalTime] = useState("--:--");
-  const [showNavigation, setShowNavigation] = useState(false);
+  const [activePanel, setActivePanel] =
+    useState<InformationPanel>("information");
   const [show3DRoom, setShow3DRoom] = useState(false);
 
   const { scrollYProgress } = useScroll({
@@ -677,22 +686,21 @@ export default function Hero() {
     mass: 0.4,
   });
 
-  /*
-   * Bytter innhold basert på hvor langt brukeren har scrollet
-   * gjennom selve hero-seksjonen.
-   *
-   * Litt hysterese hindrer flimring rundt grensen:
-   * - Viser navigation etter 28 %
-   * - Viser informasjon igjen under 18 %
-   */
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    if (latest > 0.28) {
-      setShowNavigation(true);
-    }
+    setActivePanel((currentPanel) => {
+      if (currentPanel === "information") {
+        return latest > 0.3 ? "selected-work" : currentPanel;
+      }
 
-    if (latest < 0.18) {
-      setShowNavigation(false);
-    }
+      if (currentPanel === "selected-work") {
+        if (latest < 0.22) return "information";
+        if (latest > 0.68) return "capabilities";
+
+        return currentPanel;
+      }
+
+      return latest < 0.58 ? "selected-work" : currentPanel;
+    });
   });
 
   useEffect(() => {
@@ -772,7 +780,7 @@ export default function Hero() {
         ref={sectionRef}
         className="
           relative
-          min-h-[160dvh]
+          min-h-[220dvh]
           bg-[#fbfafa]
           text-[#161310]
           dark:bg-[#1e1c1c]
@@ -882,7 +890,7 @@ export default function Hero() {
                   text-right
                   text-[12px]
                   leading-[1.08]
-                  sm:block
+                  lg:block
                 "
               >
                 <p>
@@ -1018,6 +1026,28 @@ export default function Hero() {
                     blur-md
                   "
                 />
+
+                {/* Mobile panel counter */}
+                <div
+                  aria-hidden
+                  className="
+                    absolute
+                    bottom-2
+                    right-2
+                    z-[10]
+                    text-[10px]
+                    font-medium
+                    tracking-[0.08em]
+                    text-white
+                    lg:hidden
+                  "
+                >
+                  {activePanel === "information"
+                    ? "01 / 03"
+                    : activePanel === "selected-work"
+                      ? "02 / 03"
+                      : "03 / 03"}
+                </div>
               </motion.div>
             </div>
 
@@ -1039,11 +1069,11 @@ export default function Hero() {
                 ease,
               }}
               className="
-                mt-4
+                
                 h-[116px]
                 w-full
                 max-w-[330px]
-                text-[12px]
+                text-[11px]
                 font-black
                 uppercase
                 leading-[1.2]
@@ -1059,7 +1089,7 @@ export default function Hero() {
               "
             >
               <AnimatePresence initial={false} mode="wait">
-                {!showNavigation ? (
+                {activePanel === "information" && (
                   <motion.div
                     key="information"
                     initial="hidden"
@@ -1138,7 +1168,9 @@ export default function Hero() {
                       </motion.p>
                     ))}
                   </motion.div>
-                ) : (
+                )}
+
+                {activePanel === "selected-work" && (
                   <motion.nav
                     key="selected-work"
                     aria-label="Selected work"
@@ -1166,8 +1198,8 @@ export default function Hero() {
                       flex
                       w-full
                       flex-col
-                      lg:min-w-[310px]
                       items-start
+                      lg:min-w-[310px]
                     "
                   >
                     <motion.p
@@ -1193,7 +1225,7 @@ export default function Hero() {
                         ease,
                       }}
                       className="
-                        mb-4
+                        mb-3
                         text-[10px]
                         font-medium
                         uppercase
@@ -1222,7 +1254,7 @@ export default function Hero() {
                             },
                             exit: {
                               opacity: 0,
-                              y: 12,
+                              y: -14,
                               filter: "blur(4px)",
                             },
                           }}
@@ -1241,7 +1273,7 @@ export default function Hero() {
                               inline-flex
                               items-center
                               gap-2
-                              text-[12px]
+                              text-[11px]
                               font-black
                               uppercase
                               leading-none
@@ -1257,10 +1289,7 @@ export default function Hero() {
 
                             <motion.span
                               aria-hidden
-                              className="
-                                inline-block
-                                font-normal
-                              "
+                              className="inline-block font-normal"
                               initial={false}
                               whileHover={{
                                 x: 4,
@@ -1278,7 +1307,109 @@ export default function Hero() {
                     </div>
                   </motion.nav>
                 )}
+
+                {activePanel === "capabilities" && (
+                  <motion.div
+                    key="capabilities"
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                    variants={{
+                      hidden: {},
+                      visible: {
+                        transition: {
+                          staggerChildren: 0.07,
+                        },
+                      },
+                      exit: {
+                        transition: {
+                          staggerChildren: 0.05,
+                          staggerDirection: -1,
+                        },
+                      },
+                    }}
+                    className="absolute bottom-0 left-0 flex w-full flex-col items-start"
+                  >
+                    <motion.p
+                      variants={{
+                        hidden: {
+                          opacity: 0,
+                          y: 12,
+                          filter: "blur(4px)",
+                        },
+                        visible: {
+                          opacity: 0.8,
+                          y: 0,
+                          filter: "blur(0px)",
+                        },
+                        exit: {
+                          opacity: 0,
+                          y: -10,
+                          filter: "blur(4px)",
+                        },
+                      }}
+                      transition={{
+                        duration: 0.4,
+                        ease,
+                      }}
+                      className="
+                        mb-3
+                        text-[10px]
+                        font-medium
+                        uppercase
+                        tracking-[0.04em]
+                        opacity-80
+                        lg:text-[11px]
+                      "
+                    >
+                      Capabilities / 2026
+                    </motion.p>
+
+                    <div className="flex w-full flex-col gap-y-2">
+                      {capabilityItems.map((item) => (
+                        <motion.p
+                          className="text-[11px] lg:text-sm"
+                          key={item}
+                          variants={{
+                            hidden: {
+                              opacity: 0,
+                              y: 18,
+                              filter: "blur(5px)",
+                            },
+                            visible: {
+                              opacity: 1,
+                              y: 0,
+                              filter: "blur(0px)",
+                            },
+                            exit: {
+                              opacity: 0,
+                              y: -14,
+                              filter: "blur(4px)",
+                            },
+                          }}
+                          transition={{
+                            duration: 0.44,
+                            ease,
+                          }}
+                        >
+                          {item}
+                        </motion.p>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
               </AnimatePresence>
+
+              <div
+                aria-hidden
+                className="absolute right-0 top-0 hidden text-[12px] font-medium tracking-[0.08em]  lg:block"
+              >
+                {activePanel === "information"
+                  ? "01 / 03"
+                  : activePanel === "selected-work"
+                    ? "02 / 03"
+                    : "03 / 03"}
+              </div>
             </motion.div>
 
             {/* Mobile contact – bottom right */}
@@ -1306,7 +1437,7 @@ export default function Hero() {
                 text-right
                 text-[11px]
                 leading-[1.08]
-                sm:hidden
+                lg:hidden
               "
             >
               <p>
@@ -1355,7 +1486,7 @@ export default function Hero() {
                 right-0
                 hidden
                 justify-end
-                md:flex
+                lg:flex
               "
             >
               <button
