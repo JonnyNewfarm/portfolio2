@@ -1402,7 +1402,7 @@ export default function Hero() {
 
               <div
                 aria-hidden
-                className="absolute right-0 top-0 hidden text-[12px] font-medium tracking-[0.08em]  lg:block"
+                className="absolute right-0 top-0 hidden text-[13px] font-semibold tracking-[0.08em]  lg:block"
               >
                 {activePanel === "information"
                   ? "01 / 03"

@@ -105,7 +105,7 @@ const Navbar = () => {
         <div className="hidden w-full lg:block">
           <div className="flex w-full items-start justify-between">
             {/* Name + theme – left */}
-            <div className="flex items-start gap-x-10">
+            <div className="flex items-start gap-x-18">
               <div>
                 <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.22em] opacity-80">
                   Name:
