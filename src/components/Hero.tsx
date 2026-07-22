@@ -783,20 +783,19 @@ export default function Hero() {
           className="
             sticky
             top-0
-            min-h-[100svh]
+            h-[100svh]
             overflow-hidden
             px-5
-            pb-8
+            pb-6
             pt-28
             sm:px-8
             sm:pb-8
-            lg:h-[100svh]
             lg:px-14
             lg:pb-10
             lg:pt-32
           "
         >
-          <div className="relative flex min-h-full flex-col lg:block lg:h-full">
+          <div className="relative h-full">
             {/* Main heading */}
             <motion.h1
               initial={{
@@ -844,6 +843,7 @@ export default function Hero() {
                 max-w-[520px]
                 items-end
                 justify-center
+                gap-3
                 lg:absolute
                 lg:left-[55%]
                 lg:top-[7%]
@@ -1015,54 +1015,56 @@ export default function Hero() {
                   "
                 />
               </motion.div>
-            </div>
 
-            {/* Mobile availability */}
-            <motion.div
-              initial={{
-                opacity: 0,
-                y: 14,
-              }}
-              animate={{
-                opacity: 1,
-                y: 0,
-              }}
-              transition={{
-                duration: 0.7,
-                delay: 1,
-                ease,
-              }}
-              className="
-    mx-auto
-    mt-5
-    w-[48vw]
-    max-w-[225px]
-    text-right
-    text-[12px]
-    leading-[1.1]
-    sm:hidden
-  "
-            >
-              <p>
-                Available for selected
-                <br />
-                freelance projects.
-              </p>
-
-              <Link
-                href="/contact"
+              {/* Contact text – mobile, right of image */}
+              <motion.div
+                initial={{
+                  opacity: 0,
+                  x: -18,
+                  filter: "blur(7px)",
+                }}
+                animate={{
+                  opacity: imageLoaded ? 1 : 0,
+                  x: imageLoaded ? 0 : -18,
+                  filter: imageLoaded ? "blur(0px)" : "blur(7px)",
+                }}
+                transition={{
+                  duration: 0.8,
+                  delay: 0.65,
+                  ease,
+                }}
                 className="
-      mt-1
-      inline-block
-      text-base
-      font-black
-      lowercase
-      leading-none
-    "
+                  w-[125px]
+                  pb-1
+                  text-left
+                  text-[12px]
+                  leading-[1.08]
+                  sm:hidden
+                "
               >
-                <WaveLinkText text="contact" />
-              </Link>
-            </motion.div>
+                <p>
+                  Available for
+                  <br />
+                  selected freelance
+                  <br />
+                  projects.
+                </p>
+
+                <Link
+                  href="/contact"
+                  className="
+                    mt-1
+                    inline-block
+                    text-base
+                    font-black
+                    lowercase
+                    leading-none
+                  "
+                >
+                  <WaveLinkText text="contact" />
+                </Link>
+              </motion.div>
+            </div>
 
             {/* Information transforms into navigation */}
             <motion.div
@@ -1082,22 +1084,17 @@ export default function Hero() {
                 ease,
               }}
               className="
-                relative
-                mt-10
-                min-h-[125px]
-                w-full
+                absolute
+                bottom-0
+                left-0
+                h-[96px]
+                w-[330px]
                 text-[12px]
                 font-black
                 uppercase
                 leading-[1.2]
                 tracking-[-0.015em]
-                lg:absolute
-                lg:bottom-0
-                lg:left-0
-                lg:mt-0
                 lg:h-[105px]
-                lg:min-h-0
-                lg:w-[330px]
                 lg:text-sm
               "
             >
@@ -1121,7 +1118,7 @@ export default function Hero() {
                         },
                       },
                     }}
-                    className="absolute left-0 top-0 lg:bottom-0 lg:top-auto"
+                    className="absolute bottom-0 left-0"
                   >
                     <motion.p
                       variants={{
@@ -1204,14 +1201,12 @@ export default function Hero() {
                     }}
                     className="
                       absolute
+                      bottom-0
                       left-0
-                      top-0
                       flex
                       min-w-[310px]
                       flex-col
                       items-start
-                      lg:bottom-0
-                      lg:top-auto
                     "
                   >
                     <motion.p
