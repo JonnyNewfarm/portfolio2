@@ -837,13 +837,13 @@ export default function Hero() {
             {/* Image and contact text */}
             <div
               className="
-                mx-auto
+                mx-0
                 mt-10
                 flex
                 w-full
                 max-w-[520px]
                 items-end
-                justify-center
+                justify-start
                 gap-3
                 pr-1
                 sm:mt-16
@@ -1019,56 +1019,6 @@ export default function Hero() {
                   "
                 />
               </motion.div>
-
-              {/* Mobile availability – right of image */}
-              <motion.div
-                initial={{
-                  opacity: 0,
-                  x: -14,
-                  filter: "blur(6px)",
-                }}
-                animate={{
-                  opacity: imageLoaded ? 1 : 0,
-                  x: imageLoaded ? 0 : -14,
-                  filter: imageLoaded ? "blur(0px)" : "blur(6px)",
-                }}
-                transition={{
-                  duration: 0.75,
-                  delay: 0.75,
-                  ease,
-                }}
-                className="
-                  w-[120px]
-                  shrink-0
-                  pb-1
-                  text-left
-                  text-[11px]
-                  leading-[1.08]
-                  sm:hidden
-                "
-              >
-                <p>
-                  Available for
-                  <br />
-                  selected freelance
-                  <br />
-                  projects.
-                </p>
-
-                <Link
-                  href="/contact"
-                  className="
-                    mt-1
-                    inline-block
-                    text-base
-                    font-black
-                    lowercase
-                    leading-none
-                  "
-                >
-                  <WaveLinkText text="contact" />
-                </Link>
-              </motion.div>
             </div>
 
             {/* Information transforms into navigation */}
@@ -1089,17 +1039,19 @@ export default function Hero() {
                 ease,
               }}
               className="
-                absolute
-                bottom-0
-                left-0
+                mt-4
                 h-[116px]
-                w-[54%]
-                max-w-[215px]
+                w-full
+                max-w-[330px]
                 text-[12px]
                 font-black
                 uppercase
                 leading-[1.2]
                 tracking-[-0.015em]
+                lg:absolute
+                lg:bottom-0
+                lg:left-0
+                lg:mt-0
                 lg:h-[105px]
                 lg:w-[330px]
                 lg:max-w-none
@@ -1327,6 +1279,57 @@ export default function Hero() {
                   </motion.nav>
                 )}
               </AnimatePresence>
+            </motion.div>
+
+            {/* Mobile contact – bottom right */}
+            <motion.div
+              initial={{
+                opacity: 0,
+                x: 18,
+                filter: "blur(7px)",
+              }}
+              animate={{
+                opacity: imageLoaded ? 1 : 0,
+                x: imageLoaded ? 0 : 18,
+                filter: imageLoaded ? "blur(0px)" : "blur(7px)",
+              }}
+              transition={{
+                duration: 0.8,
+                delay: 0.65,
+                ease,
+              }}
+              className="
+                absolute
+                bottom-0
+                right-0
+                w-[125px]
+                text-right
+                text-[11px]
+                leading-[1.08]
+                sm:hidden
+              "
+            >
+              <p>
+                Available for
+                <br />
+                selected freelance
+                <br />
+                projects.
+              </p>
+
+              <Link
+                href="/contact"
+                className="
+                  mt-1
+                  inline-block
+                  text-base
+                  font-black
+                  lowercase
+                  leading-none
+                "
+              >
+                <WaveLinkText text="contact" />
+              </Link>
             </motion.div>
 
             {/* 3D version button */}
