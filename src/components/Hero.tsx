@@ -772,7 +772,7 @@ export default function Hero() {
         ref={sectionRef}
         className="
           relative
-          min-h-[160svh]
+          min-h-[160dvh]
           bg-[#fbfafa]
           text-[#161310]
           dark:bg-[#1e1c1c]
@@ -783,13 +783,14 @@ export default function Hero() {
           className="
             sticky
             top-0
-            h-[100svh]
+            h-[100dvh]
             overflow-hidden
             px-5
-            pb-6
+            pb-[calc(1.5rem+env(safe-area-inset-bottom))]
             pt-28
             sm:px-8
             sm:pb-8
+            lg:h-[100svh]
             lg:px-14
             lg:pb-10
             lg:pt-32
@@ -837,13 +838,17 @@ export default function Hero() {
             <div
               className="
                 mx-auto
-                mt-16
+                mt-10
                 flex
                 w-full
                 max-w-[520px]
                 items-end
                 justify-center
                 gap-3
+                pr-1
+                sm:mt-16
+                sm:gap-0
+                sm:pr-0
                 lg:absolute
                 lg:left-[55%]
                 lg:top-[7%]
@@ -928,13 +933,14 @@ export default function Hero() {
                 className="
                   relative
                   aspect-[4/5]
-                  w-[48vw]
-                  max-w-[225px]
+                  
+                  w-[42vw]
+                  max-w-[260px]
                   overflow-hidden
                   bg-stone-400/10
                   dark:bg-stone-200/5
                   sm:w-[220px]
-                  lg:w-[225px]
+                  lg:w-[240px]
                 "
               >
                 <Image
@@ -942,7 +948,6 @@ export default function Hero() {
                   alt="Jonas Nygaard"
                   fill
                   priority
-                  sizes="(max-width: 640px) 48vw, 225px"
                   onLoad={() => setImageLoaded(true)}
                   className="object-cover object-top"
                 />
@@ -960,7 +965,6 @@ export default function Hero() {
                     fill
                     priority
                     aria-hidden
-                    sizes="(max-width: 640px) 48vw, 225px"
                     className="object-cover object-top grayscale"
                   />
                 </motion.div>
@@ -1016,28 +1020,29 @@ export default function Hero() {
                 />
               </motion.div>
 
-              {/* Contact text – mobile, right of image */}
+              {/* Mobile availability – right of image */}
               <motion.div
                 initial={{
                   opacity: 0,
-                  x: -18,
-                  filter: "blur(7px)",
+                  x: -14,
+                  filter: "blur(6px)",
                 }}
                 animate={{
                   opacity: imageLoaded ? 1 : 0,
-                  x: imageLoaded ? 0 : -18,
-                  filter: imageLoaded ? "blur(0px)" : "blur(7px)",
+                  x: imageLoaded ? 0 : -14,
+                  filter: imageLoaded ? "blur(0px)" : "blur(6px)",
                 }}
                 transition={{
-                  duration: 0.8,
-                  delay: 0.65,
+                  duration: 0.75,
+                  delay: 0.75,
                   ease,
                 }}
                 className="
-                  w-[125px]
+                  w-[120px]
+                  shrink-0
                   pb-1
                   text-left
-                  text-[12px]
+                  text-[11px]
                   leading-[1.08]
                   sm:hidden
                 "
@@ -1087,14 +1092,17 @@ export default function Hero() {
                 absolute
                 bottom-0
                 left-0
-                h-[96px]
-                w-[330px]
+                h-[116px]
+                w-[54%]
+                max-w-[215px]
                 text-[12px]
                 font-black
                 uppercase
                 leading-[1.2]
                 tracking-[-0.015em]
                 lg:h-[105px]
+                lg:w-[330px]
+                lg:max-w-none
                 lg:text-sm
               "
             >
@@ -1204,8 +1212,9 @@ export default function Hero() {
                       bottom-0
                       left-0
                       flex
-                      min-w-[310px]
+                      w-full
                       flex-col
+                      lg:min-w-[310px]
                       items-start
                     "
                   >
