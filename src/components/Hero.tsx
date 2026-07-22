@@ -441,11 +441,12 @@ function Fullscreen3DRoom({ onClose }: Fullscreen3DRoomProps) {
                 className="
                   pointer-events-none
                   absolute
-                  bottom-7
-                  left-1/2
+                  bottom-10
+                  left-7
                   z-[70]
-                  -translate-x-1/2
-                  text-[10px]
+                  text-[14px]
+                  md:text-[26px]
+                  text-white
                   font-semibold
                   uppercase
                   tracking-[0.12em]
@@ -456,23 +457,23 @@ function Fullscreen3DRoom({ onClose }: Fullscreen3DRoomProps) {
               </div>
             )}
           </div>
+          <div
+            className="
+                  pointer-events-none
+                  absolute
+                  top-7
+                  left-10
+                  z-[70]
+                  text-[10px]
+                  md:text-[16px]
+                  font-black
+                  uppercase
+                  tracking-[0.12em]
+                "
+          >
+            NEWFARM STUDIO / 3D EXPERIENCE
+          </div>
         </section>
-      </div>
-
-      {/* Dark mode – desktop */}
-      <div
-        className="
-          pointer-events-auto
-          absolute
-          right-5
-          top-1/2
-          z-[120]
-          hidden
-          -translate-y-1/2
-          md:block
-        "
-      >
-        <DarkModeBtn />
       </div>
 
       {/* Dark mode – mobile */}
@@ -483,7 +484,6 @@ function Fullscreen3DRoom({ onClose }: Fullscreen3DRoomProps) {
           bottom-10
           right-5
           z-[120]
-          md:hidden
         "
       >
         <DarkModeBtn />
@@ -516,24 +516,25 @@ function Fullscreen3DRoom({ onClose }: Fullscreen3DRoomProps) {
         className="
     group
     absolute
-    right-5
+    right-7
     top-5
     z-[200]
     flex
     cursor-pointer
     items-center
-    gap-2
-    px-2
-    py-3
+    gap-x-1
+    
     text-black
     dark:text-stone-300
-    sm:right-8
-    sm:top-8
+    sm:right-7
+    sm:top-7
   "
       >
         <span
           className="
-      text-[16px]
+          text-[10px]
+
+      md:text-[16px]
       font-semibold
       uppercase
       tracking-[0.12em]
@@ -549,7 +550,8 @@ function Fullscreen3DRoom({ onClose }: Fullscreen3DRoomProps) {
         left-1/2
         top-1/2
         h-[2px]
-        w-4
+        w-3
+        md:w-4
         -translate-x-1/2
         -translate-y-1/2
         rotate-45
@@ -567,7 +569,8 @@ function Fullscreen3DRoom({ onClose }: Fullscreen3DRoomProps) {
         left-1/2
         top-1/2
         h-[2px]
-        w-4
+        w-3
+        md:w-4
         -translate-x-1/2
         -translate-y-1/2
         -rotate-45
