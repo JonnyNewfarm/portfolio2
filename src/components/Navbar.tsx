@@ -95,7 +95,7 @@ const Navbar = () => {
                     >
                       <span
                         aria-hidden="true"
-                        className={`mr-1.5 h-[6px] w-[6px] rounded-full bg-current transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                        className={`mr-1.5 h-[4px] w-[4px] rounded-full bg-current transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
                           isActive
                             ? "scale-100 opacity-100"
                             : "scale-0 opacity-0"

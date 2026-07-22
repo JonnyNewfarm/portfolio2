@@ -40,7 +40,7 @@ const SceneCanvas = memo(function SceneCanvas({
 }: SceneCanvasProps) {
   return (
     <Canvas
-      dpr={[1, 1.25]}
+      dpr={[1.2, 1.5]}
       shadows={false}
       gl={{
         antialias: false,

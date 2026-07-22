@@ -79,10 +79,10 @@ const projects: Project[] = [
   {
     title: "Calero Studio",
     year: "2026",
-    category: "E-commerce & 3D",
+    category: "E-commerce",
     link: "https://www.calero.studio/",
     about:
-      "E-commerce product page with visual direction, product storytelling, 3D presentation and smooth motion.",
+      "E-commerce product page with visual direction, product storytelling and smooth motion.",
     stack: "React, Prisma, Three.js, GSAP, TailwindCSS, Neon, Stripe.",
     role: "Design, frontend, backend, Stripe and motion.",
     images: [
@@ -735,10 +735,6 @@ function DesktopWorkCarousel({
       className="relative hidden h-screen w-full overflow-hidden bg-[#fbfafa] text-[#161310] transition-colors duration-500 dark:bg-[#1e1c1c] dark:text-stone-300 md:block"
     >
       <div className="absolute left-8 top-[112px] z-40">
-        <p className="pointer-events-none text-[11px] font-black uppercase tracking-[0.28em] opacity-35">
-          Selected Work
-        </p>
-
         <div className="mt-5 flex items-center gap-5">
           <button
             type="button"
@@ -759,7 +755,7 @@ function DesktopWorkCarousel({
       </div>
 
       <div className="pointer-events-none absolute right-8 top-[112px] z-40 max-w-[430px] text-right">
-        <p className="mb-4 text-[11px] font-black uppercase tracking-[0.28em] opacity-35">
+        <p className="mb-4 text-[11px] font-black uppercase tracking-[0.28em] ">
           {activeProject.category} / {activeProject.year}
         </p>
 
@@ -846,7 +842,7 @@ function DesktopWorkCarousel({
       </div>
 
       <div className="absolute bottom-8 right-8 z-40 flex flex-col items-end gap-4 text-right">
-        <p className="max-w-[360px] text-[12px] font-black uppercase leading-[1.15] tracking-[0.04em] opacity-45">
+        <p className="max-w-[360px] text-[12px] font-black uppercase leading-[1.15] tracking-[0.04em] ">
           {activeProject.role}
         </p>
 
