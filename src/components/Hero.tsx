@@ -283,7 +283,12 @@ function Fullscreen3DRoom({ onClose }: Fullscreen3DRoomProps) {
             md:h-[158vh]
           "
         >
-          <div className="sticky top-0 h-[100svh] w-full overflow-hidden">
+          <div
+            className="sticky
+top-0
+h-[100svh]
+overflow-hidden"
+          >
             <motion.div
               initial={{
                 opacity: 0,
@@ -784,8 +789,7 @@ export default function Hero() {
         ref={sectionRef}
         className="
           relative
-          min-h-[220dvh]
-          bg-[#fbfafa]
+min-h-[220svh]          bg-[#fbfafa]
           text-[#161310]
           dark:bg-[#1e1c1c]
           dark:text-stone-300
@@ -828,7 +832,8 @@ export default function Hero() {
               }}
               className="
                 max-w-[360px]
-                text-[clamp(1.65rem,3vw,2.2rem)]
+                 text-[clamp(1.4rem,2.6vw,1.8rem)]
+                sm:text-[clamp(1.65rem,3vw,2.2rem)]
                 font-black
                 uppercase
                 leading-[0.96]
@@ -850,7 +855,7 @@ export default function Hero() {
             <div
               className="
                 mx-0
-                mt-10
+                mt-7
                 flex
                 w-full
                 max-w-[520px]
@@ -1073,24 +1078,27 @@ export default function Hero() {
                 ease,
               }}
               className="
-                
-                h-[116px]
-                w-full
-                max-w-[330px]
-                text-[11px]
-                font-black
-                uppercase
-                leading-[1.2]
-                tracking-[-0.015em]
-                lg:absolute
-                lg:bottom-0
-                lg:left-0
-                lg:mt-0
-                lg:h-[105px]
-                lg:w-[330px]
-                lg:max-w-none
-                lg:text-sm
-              "
+  relative
+  mt-1
+  min-h-[116px]
+  w-full
+  max-w-[330px]
+  shrink-0
+  text-[11px]
+  font-black
+  uppercase
+  leading-[1.2]
+  tracking-[-0.015em]
+  lg:absolute
+  lg:bottom-0
+  lg:left-0
+  lg:mt-0
+  lg:h-[105px]
+  lg:min-h-0
+  lg:w-[330px]
+  lg:max-w-none
+  lg:text-sm
+"
             >
               <AnimatePresence initial={false} mode="wait">
                 {activePanel === "information" && (
