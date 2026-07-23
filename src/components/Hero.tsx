@@ -307,7 +307,7 @@ overflow-hidden"
               className="absolute inset-0"
             >
               <Canvas
-                dpr={[1, 1.25]}
+                dpr={[1, 1.05]}
                 shadows={false}
                 gl={{
                   antialias: true,
@@ -444,19 +444,20 @@ overflow-hidden"
             {!isAtEnd && !monitorFocused && (
               <div
                 className="
-                  pointer-events-none
-                  absolute
-                  bottom-10
-                  left-7
-                  z-[70]
-                  text-[14px]
-                  md:text-[26px]
-                  text-white
-                  font-semibold
-                  uppercase
-                  tracking-[0.12em]
-                  opacity-70
-                "
+    pointer-events-none
+    absolute
+    bottom-10
+    left-1/2
+    z-[70]
+    -translate-x-1/2
+    text-[14px]
+    md:text-[26px]
+    text-white
+    font-semibold
+    uppercase
+    tracking-[0.12em]
+    opacity-70
+  "
               >
                 Scroll
               </div>
@@ -855,7 +856,7 @@ min-h-[220svh]          bg-[#fbfafa]
             <div
               className="
                 mx-0
-                mt-7
+                mt-14
                 flex
                 w-full
                 max-w-[520px]
@@ -1035,29 +1036,28 @@ min-h-[220svh]          bg-[#fbfafa]
                     blur-md
                   "
                 />
-
-                {/* Mobile panel counter */}
-                <div
-                  aria-hidden
-                  className="
-                    absolute
-                    bottom-2
-                    right-2
-                    z-[10]
-                    text-[10px]
-                    font-medium
-                    tracking-[0.08em]
-                    text-white
-                    lg:hidden
-                  "
-                >
-                  {activePanel === "information"
-                    ? "01 / 03"
-                    : activePanel === "selected-work"
-                      ? "02 / 03"
-                      : "03 / 03"}
-                </div>
               </motion.div>
+            </div>
+
+            {/* Mobile panel counter */}
+            <div
+              aria-hidden
+              className="
+    absolute
+    bottom-0
+    right-0
+    z-[20]
+    text-[12px]
+    font-semibold
+    tracking-[0.08em]
+    lg:hidden
+  "
+            >
+              {activePanel === "information"
+                ? "01 / 03"
+                : activePanel === "selected-work"
+                  ? "02 / 03"
+                  : "03 / 03"}
             </div>
 
             {/* Information transforms into navigation */}
@@ -1176,7 +1176,7 @@ min-h-[220svh]          bg-[#fbfafa]
                       >
                         {item === "location"
                           ? "Location / Oslo, Norway"
-                          : "Occupation / Web designer & developer"}
+                          : "Occupation / Designer & developer"}
                       </motion.p>
                     ))}
                   </motion.div>
@@ -1242,7 +1242,7 @@ min-h-[220svh]          bg-[#fbfafa]
                         font-medium
                         uppercase
                         tracking-[0.04em]
-                        opacity-80
+                        opacity-90
                         lg:text-[11px]
                       "
                     >
@@ -1442,17 +1442,17 @@ min-h-[220svh]          bg-[#fbfafa]
                 ease,
               }}
               className="
-              
-                absolute
-                bottom-0
-                right-0
-                w-[125px]
-                text-right
-                text-[10px]
-                sm:text-[14px]
-                leading-[1.08]
-                lg:hidden
-              "
+  absolute
+  right-0
+  top-1/2
+  -translate-y-1/2
+  w-[125px]
+  text-right
+  text-[10px]
+  sm:text-[14px]
+  leading-[1.08]
+  lg:hidden
+"
             >
               <p className="">
                 Available for
