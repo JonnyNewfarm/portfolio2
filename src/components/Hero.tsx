@@ -1447,7 +1447,7 @@ export default function Hero() {
               "
             >
               <p className="">
-                Available for
+                Available for dgsyugfuygf
                 <br />
                 selected freelance
                 <br />
