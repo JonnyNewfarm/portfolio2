@@ -14,6 +14,7 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Preload, useTexture } from "@react-three/drei";
 import * as THREE from "three";
 import { motion } from "framer-motion";
+import WaveLinkText from "./WaveLinkText";
 
 type Project = {
   title: string;
@@ -101,11 +102,10 @@ const carouselMotion = {
   positionEase: 0.09,
   cardEase: 0.085,
   bendFade: 0.94,
-  bendLimit: 1.65,
-  bendInputScale: 0.14,
+  bendLimit: 1.05,
+  bendInputScale: 0.11,
   bendEase: 0.08,
 };
-
 const cardWidth = 2.85;
 const cardHeight = 1.62;
 const cardGap = 0.16;
@@ -864,7 +864,7 @@ function DesktopWorkCarousel({
           rel="noopener noreferrer"
           className="text-[30px] font-black uppercase leading-none tracking-[-0.04em] transition-opacity hover:opacity-55"
         >
-          Live Link
+          <WaveLinkText text="Live Link" />
         </a>
       </div>
     </div>

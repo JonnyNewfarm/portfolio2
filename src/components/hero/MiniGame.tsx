@@ -28,7 +28,9 @@ export default function MiniGame({ onExit }: { onExit: () => void }) {
   const paddleWidth = 0.3;
   const paddleHalfWidth = paddleWidth / 2;
 
-  const ballMinX = minX + ballRadius;
+  const leftWallOffset = 0.08;
+
+  const ballMinX = minX + ballRadius + leftWallOffset;
   const ballMaxX = maxX - ballRadius;
   const ballMaxY = maxY - ballRadius;
 

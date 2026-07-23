@@ -457,22 +457,6 @@ function Fullscreen3DRoom({ onClose }: Fullscreen3DRoomProps) {
               </div>
             )}
           </div>
-          <div
-            className="
-                  pointer-events-none
-                  absolute
-                  top-7
-                  left-10
-                  z-[70]
-                  text-[10px]
-                  md:text-[16px]
-                  font-black
-                  uppercase
-                  tracking-[0.12em]
-                "
-          >
-            NEWFARM STUDIO / 3D EXPERIENCE
-          </div>
         </section>
       </div>
 
@@ -487,6 +471,23 @@ function Fullscreen3DRoom({ onClose }: Fullscreen3DRoomProps) {
         "
       >
         <DarkModeBtn />
+      </div>
+
+      <div
+        className="
+                  pointer-events-none
+                  absolute
+                  top-7
+                  left-10
+                  z-[70]
+                  text-[10px]
+                  md:text-[16px]
+                  font-black
+                  uppercase
+                  tracking-[0.12em]
+                "
+      >
+        NEWFARM STUDIO / 3D EXPERIENCE
       </div>
 
       {/* Close */}
@@ -1111,7 +1112,7 @@ export default function Hero() {
                         },
                       },
                     }}
-                    className="absolute bottom-0 left-0"
+                    className="absolute top-4 left-0"
                   >
                     <motion.p
                       variants={{
@@ -1196,7 +1197,7 @@ export default function Hero() {
                     }}
                     className="
                       absolute
-                      bottom-0
+                      top-4
                       left-0
                       flex
                       w-full
@@ -1229,7 +1230,7 @@ export default function Hero() {
                       }}
                       className="
                         mb-3
-                        text-[10px]
+                        text-[11px]
                         font-medium
                         uppercase
                         tracking-[0.04em]
@@ -1331,7 +1332,7 @@ export default function Hero() {
                         },
                       },
                     }}
-                    className="absolute bottom-0 left-0 flex w-full flex-col items-start"
+                    className="absolute top-4 left-0 flex w-full flex-col items-start"
                   >
                     <motion.p
                       variants={{
@@ -1357,12 +1358,12 @@ export default function Hero() {
                       }}
                       className="
                         mb-3
-                        text-[10px]
+                        text-[11px]
                         font-medium
                         uppercase
                         tracking-[0.04em]
                         opacity-80
-                        lg:text-[11px]
+                        lg:text-sm
                       "
                     >
                       Capabilities / 2026
@@ -1433,17 +1434,19 @@ export default function Hero() {
                 ease,
               }}
               className="
+              
                 absolute
                 bottom-0
                 right-0
                 w-[125px]
                 text-right
-                text-[11px]
+                text-[10px]
+                sm:text-[14px]
                 leading-[1.08]
                 lg:hidden
               "
             >
-              <p>
+              <p className="">
                 Available for
                 <br />
                 selected freelance
@@ -1454,9 +1457,10 @@ export default function Hero() {
               <Link
                 href="/contact"
                 className="
-                  mt-1
+                  mt-0.5
                   inline-block
                   text-base
+                  sm:text-2xl
                   font-black
                   lowercase
                   leading-none
