@@ -441,7 +441,7 @@ overflow-hidden"
               {monitorFocused ? "Exit full screen" : "Full screen"}
             </button>
 
-            {!isAtEnd && !monitorFocused && (
+            {!isAtEnd && !monitorFocused && sceneLoaded && (
               <div
                 className="
     pointer-events-none
@@ -467,20 +467,23 @@ overflow-hidden"
       </div>
 
       {/* Dark mode – mobile */}
-      <div
-        className="
+
+      {sceneLoaded && (
+        <div
+          className="
           pointer-events-auto
           absolute
           bottom-10
           right-5
           z-[120]
         "
-      >
-        <DarkModeBtn />
-      </div>
-
-      <div
-        className="
+        >
+          <DarkModeBtn />
+        </div>
+      )}
+      {sceneLoaded && (
+        <div
+          className="
                   pointer-events-none
                   absolute
                   top-7
@@ -492,9 +495,10 @@ overflow-hidden"
                   uppercase
                   tracking-[0.12em]
                 "
-      >
-        NEWFARM STUDIO / 3D EXPERIENCE
-      </div>
+        >
+          NEWFARM STUDIO / 3D EXPERIENCE
+        </div>
+      )}
 
       {/* Close */}
       <motion.button
@@ -625,7 +629,7 @@ overflow-hidden"
           >
             <span
               className="
-                text-[10px]
+                text-[27px]
                 font-black
                 uppercase
                 tracking-[0.1em]
@@ -638,8 +642,8 @@ overflow-hidden"
               aria-hidden="true"
               className="
                 block
-                h-5
-                w-5
+                h-8
+                w-8
                 animate-spin
                 rounded-full
                 border
