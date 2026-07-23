@@ -307,10 +307,10 @@ overflow-hidden"
               className="absolute inset-0"
             >
               <Canvas
-                dpr={[1.2, 1.5]}
+                dpr={[1, 1.25]}
                 shadows={false}
                 gl={{
-                  antialias: false,
+                  antialias: true,
                   alpha: true,
                   powerPreference: "high-performance",
                   stencil: false,
