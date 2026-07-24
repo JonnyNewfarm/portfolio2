@@ -259,16 +259,14 @@ function Fullscreen3DRoom({ onClose }: Fullscreen3DRoomProps) {
 
       const keyboardStep = 0.035;
 
-      if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+      if (event.key === "ArrowRight" || event.key === "ArrowUp") {
         event.preventDefault();
-
         moveProgressBy(keyboardStep);
         return;
       }
 
-      if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+      if (event.key === "ArrowLeft" || event.key === "ArrowDown") {
         event.preventDefault();
-
         moveProgressBy(-keyboardStep);
         return;
       }
@@ -309,7 +307,7 @@ function Fullscreen3DRoom({ onClose }: Fullscreen3DRoomProps) {
       event.preventDefault();
       event.stopPropagation();
 
-      container.scrollTop += event.deltaY;
+      container.scrollTop -= event.deltaY;
     };
 
     window.addEventListener("wheel", handleWheel, {
