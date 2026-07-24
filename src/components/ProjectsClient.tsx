@@ -916,20 +916,27 @@ const ProjectsClient = () => {
           <div>
             <TextReveal
               active
+              delay={0.16}
+              as="p"
+              className="mb-2 text-xs uppercase tracking-[0.18em] text-[#161310]/90 dark:text-stone-300/90"
+            >
+              Code / Design / Fullstack
+            </TextReveal>
+            <TextReveal
+              active
               delay={0.1}
               as="h1"
               className="text-4xl font-anton uppercase leading-[0.92] tracking-[-0.01em] text-[#161310] dark:text-stone-200"
             >
-              My Work
+              selected
             </TextReveal>
-
             <TextReveal
               active
-              delay={0.16}
-              as="p"
-              className="mt-4 text-sm uppercase tracking-[0.18em] text-[#161310]/80 dark:text-stone-300/80"
+              delay={0.11}
+              as="h1"
+              className="text-4xl font-anton uppercase leading-[0.92] tracking-[-0.01em] text-[#161310] dark:text-stone-200"
             >
-              Code / Design / Fullstack
+              work
             </TextReveal>
           </div>
 
@@ -941,7 +948,7 @@ const ProjectsClient = () => {
                     active
                     delay={0.12 + i * 0.06}
                     as="p"
-                    className="mb-3 text-[10px] uppercase tracking-[0.28em] text-[#161310]/35 dark:text-stone-300/35"
+                    className="mb-3 text-[10px] uppercase tracking-[0.28em] text-[#161310]/80 dark:text-stone-300/80"
                   >
                     {String(i + 1).padStart(2, "0")}
                   </TextReveal>
@@ -950,7 +957,7 @@ const ProjectsClient = () => {
                     active
                     delay={0.16 + i * 0.06}
                     as="h2"
-                    className="mb-5 cursor-pointer text-2xl uppercase leading-[0.95] tracking-[-0.04em] text-[#161310] dark:text-stone-200"
+                    className="mb-5 cursor-pointer font-semibold text-2xl uppercase leading-[0.95] tracking-[-0.04em] text-[#161310] dark:text-stone-200"
                   >
                     {project.title}
                   </TextReveal>

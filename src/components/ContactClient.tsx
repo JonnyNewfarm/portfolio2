@@ -268,7 +268,7 @@ const ContactClient = () => {
                 as="p"
                 mode="words"
                 delay={0.05}
-                className="mb-6 text-xs font-black uppercase tracking-[0.28em] opacity-45"
+                className="mb-2 text-xs uppercase tracking-[0.28em] opacity-80"
               >
                 Contact / Availability
               </TextReveal>
@@ -289,7 +289,7 @@ useful.`}
               as="p"
               mode="words"
               delay={0.35}
-              className="max-w-[540px] text-base font-bold leading-[1.35] opacity-85 md:justify-self-end md:text-right md:text-lg"
+              className="max-w-[540px] text-base font-bold leading-[1.35]  md:justify-self-end md:text-right md:text-lg"
             >
               I design and build clean digital experiences, from visual identity
               and interface design to frontend development.
@@ -445,7 +445,7 @@ useful.`}
                   <TextReveal
                     as="p"
                     mode="words"
-                    className="mb-3 text-xs font-black uppercase tracking-[0.24em] opacity-40"
+                    className="mb-3 text-xs  uppercase tracking-[0.24em] opacity-90"
                   >
                     Send a message
                   </TextReveal>
@@ -454,7 +454,7 @@ useful.`}
                     as="h2"
                     mode="lines"
                     delay={0.05}
-                    className="text-[10vw]  uppercase leading-[0.9] tracking-[-0.045em] sm:text-[8vw] md:text-[5vw] lg:text-[3vw]"
+                    className="text-[6vw]  uppercase font-semibold leading-[0.9] tracking-[-0.045em] sm:text-[7vw] md:text-[4vw] lg:text-[2vw]"
                   >
                     Start here
                   </TextReveal>
@@ -484,7 +484,7 @@ useful.`}
 
                   <input
                     id="name"
-                    className="w-full border-b border-stone-700/50 bg-transparent py-5 text-lg font-bold outline-none transition duration-500 placeholder:opacity-30 focus:border-stone-900 dark:border-stone-300/40 dark:focus:border-stone-100 md:text-xl"
+                    className="w-full border-b border-stone-700/50 bg-transparent py-5 text-lg font-bold outline-none transition duration-500 placeholder:opacity-90 focus:border-stone-900 dark:border-stone-300/40 dark:focus:border-stone-100 md:text-xl"
                     placeholder="Your name"
                     name="name"
                     type="text"
@@ -512,7 +512,7 @@ useful.`}
 
                   <input
                     id="email"
-                    className="w-full border-b border-stone-700/50 bg-transparent py-5 text-lg font-bold outline-none transition duration-500 placeholder:opacity-30 focus:border-stone-900 dark:border-stone-300/40 dark:focus:border-stone-100 md:text-xl"
+                    className="w-full border-b border-stone-700/50 bg-transparent py-5 text-lg font-bold outline-none transition duration-500 placeholder:opacity-90 focus:border-stone-900 dark:border-stone-300/40 dark:focus:border-stone-100 md:text-xl"
                     placeholder="Your email"
                     name="email"
                     type="email"
@@ -540,7 +540,7 @@ useful.`}
 
                   <input
                     id="organization"
-                    className="w-full border-b border-stone-700/50 bg-transparent py-5 text-lg font-bold outline-none transition duration-500 placeholder:opacity-30 focus:border-stone-900 dark:border-stone-300/40 dark:focus:border-stone-100 md:text-xl"
+                    className="w-full border-b border-stone-700/50 bg-transparent py-5 text-lg font-bold outline-none transition duration-500 placeholder:opacity-90 focus:border-stone-900 dark:border-stone-300/40 dark:focus:border-stone-100 md:text-xl"
                     placeholder="Studio, company or project — optional"
                     name="organization"
                     type="text"
@@ -561,7 +561,7 @@ useful.`}
 
                   <textarea
                     id="message"
-                    className="min-h-[220px] w-full resize-none border-b border-stone-700/50 bg-transparent py-5 text-lg font-bold leading-[1.35] outline-none transition duration-500 placeholder:opacity-30 focus:border-stone-900 dark:border-stone-300/40 dark:focus:border-stone-100 md:text-xl"
+                    className="min-h-[220px] w-full resize-none border-b border-stone-700/50 bg-transparent py-5 text-lg font-bold leading-[1.35] outline-none transition duration-500 placeholder:opacity-90 focus:border-stone-900 dark:border-stone-300/40 dark:focus:border-stone-100 md:text-xl"
                     placeholder="Tell me about the project..."
                     name="message"
                     value={form.message}

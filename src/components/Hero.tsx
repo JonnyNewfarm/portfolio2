@@ -859,18 +859,16 @@ min-h-[220svh]          bg-[#fbfafa]
             {/* Image and contact text */}
             <div
               className="
-                mx-0
+                mx-auto
                 mt-14
                 flex
                 w-full
                 max-w-[520px]
-                items-end
-                justify-start
-                gap-3
-                pr-1
+                items-center
+                justify-center
+                gap-5
                 sm:mt-16
-                sm:gap-0
-                sm:pr-0
+                sm:gap-7
                 lg:absolute
                 lg:left-[55%]
                 lg:top-[7%]
@@ -878,6 +876,8 @@ min-h-[220svh]          bg-[#fbfafa]
                 lg:w-auto
                 lg:max-w-none
                 lg:-translate-x-1/2
+                lg:items-end
+                lg:gap-0
               "
             >
               <motion.div
@@ -1041,6 +1041,57 @@ min-h-[220svh]          bg-[#fbfafa]
                   "
                 />
               </motion.div>
+
+              {/* Mobile contact */}
+              <motion.div
+                initial={{
+                  opacity: 0,
+                  x: 18,
+                  filter: "blur(7px)",
+                }}
+                animate={{
+                  opacity: imageLoaded ? 1 : 0,
+                  x: imageLoaded ? 0 : 18,
+                  filter: imageLoaded ? "blur(0px)" : "blur(7px)",
+                }}
+                transition={{
+                  duration: 0.8,
+                  delay: 0.65,
+                  ease,
+                }}
+                className="
+                  w-[125px]
+                  shrink-0
+                  text-left
+                  text-[10px]
+                  leading-[1.08]
+                  sm:text-[14px]
+                  lg:hidden
+                "
+              >
+                <p>
+                  Available for
+                  <br />
+                  selected freelance
+                  <br />
+                  projects.
+                </p>
+
+                <Link
+                  href="/contact"
+                  className="
+                    mt-0.5
+                    inline-block
+                    text-base
+                    font-black
+                    lowercase
+                    leading-none
+                    sm:text-2xl
+                  "
+                >
+                  <WaveLinkText text="contact" />
+                </Link>
+              </motion.div>
             </div>
 
             {/* Mobile panel counter */}
@@ -1088,7 +1139,7 @@ min-h-[220svh]          bg-[#fbfafa]
   w-full
   max-w-[330px]
   shrink-0
-  text-[11px]
+  text-[13px]
   font-black
   uppercase
   leading-[1.2]
@@ -1101,7 +1152,8 @@ min-h-[220svh]          bg-[#fbfafa]
   lg:min-h-0
   lg:w-[330px]
   lg:max-w-none
-  lg:text-sm
+  lg:text-lg
+  lg:mb-8
 "
             >
               <AnimatePresence initial={false} mode="wait">
@@ -1241,13 +1293,13 @@ min-h-[220svh]          bg-[#fbfafa]
                         ease,
                       }}
                       className="
-                        mb-3
+                         mb-3
                         text-[11px]
                         font-medium
                         uppercase
                         tracking-[0.04em]
-                        opacity-90
-                        lg:text-[11px]
+                        opacity-80
+                        lg:text-sm
                       "
                     >
                       Selected Work / 2026
@@ -1289,12 +1341,12 @@ min-h-[220svh]          bg-[#fbfafa]
                               inline-flex
                               items-center
                               gap-2
-                              text-[11px]
+                              text-[13px]
                               font-black
                               uppercase
                               leading-none
                               tracking-[-0.015em]
-                              lg:text-sm
+                              lg:text-lg
                             "
                           >
                             <span>
@@ -1384,7 +1436,7 @@ min-h-[220svh]          bg-[#fbfafa]
                     <div className="flex w-full flex-col gap-y-2">
                       {capabilityItems.map((item) => (
                         <motion.p
-                          className="text-[11px] lg:text-sm"
+                          className="text-[13px] lg:text-lg whitespace-nowrap"
                           key={item}
                           variants={{
                             hidden: {
@@ -1426,60 +1478,6 @@ min-h-[220svh]          bg-[#fbfafa]
                     ? "02 / 03"
                     : "03 / 03"}
               </div>
-            </motion.div>
-
-            {/* Mobile contact – bottom right */}
-            <motion.div
-              initial={{
-                opacity: 0,
-                x: 18,
-                filter: "blur(7px)",
-              }}
-              animate={{
-                opacity: imageLoaded ? 1 : 0,
-                x: imageLoaded ? 0 : 18,
-                filter: imageLoaded ? "blur(0px)" : "blur(7px)",
-              }}
-              transition={{
-                duration: 0.8,
-                delay: 0.65,
-                ease,
-              }}
-              className="
-  absolute
-  right-0
-  top-1/2
-  -translate-y-1/2
-  w-[125px]
-  text-right
-  text-[10px]
-  sm:text-[14px]
-  leading-[1.08]
-  lg:hidden
-"
-            >
-              <p className="">
-                Available for
-                <br />
-                selected freelance
-                <br />
-                projects.
-              </p>
-
-              <Link
-                href="/contact"
-                className="
-                  mt-0.5
-                  inline-block
-                  text-base
-                  sm:text-2xl
-                  font-black
-                  lowercase
-                  leading-none
-                "
-              >
-                <WaveLinkText text="contact" />
-              </Link>
             </motion.div>
 
             {/* 3D version button */}
