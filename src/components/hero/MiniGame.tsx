@@ -340,8 +340,8 @@ export default function MiniGame({ onExit }: { onExit: () => void }) {
         {!isPlaying && (
           <>
             <Text
-              position={[0, 0.2, 0]}
-              fontSize={0.08}
+              position={[0.06, 0.21, 0]}
+              fontSize={0.07}
               color="#181818"
               anchorX="center"
               anchorY="middle"
@@ -370,7 +370,7 @@ export default function MiniGame({ onExit }: { onExit: () => void }) {
             </Text>
 
             <Text
-              position={[0, -0.19, 0]}
+              position={[0.04, -0.19, 0]}
               fontSize={playHovered ? 0.165 : 0.15}
               color={playHovered ? "#000000" : "#202020"}
               anchorX="center"
