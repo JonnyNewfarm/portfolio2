@@ -771,7 +771,7 @@ function Fullscreen3DRoom({ onClose }: Fullscreen3DRoomProps) {
             md:text-[16px]
           "
         >
-          Close
+          <IoMdClose size={25} />
         </motion.button>
       )}
 
