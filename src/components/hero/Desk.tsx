@@ -2,7 +2,7 @@
 
 import { RoundedBox, useGLTF } from "@react-three/drei";
 import { useFrame, useLoader } from "@react-three/fiber";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import * as THREE from "three";
 
 export default function Desk() {
