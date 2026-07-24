@@ -2,6 +2,8 @@
 
 import { Canvas } from "@react-three/fiber";
 import type { AnimationPlaybackControls, MotionValue } from "framer-motion";
+import { IoMdClose } from "react-icons/io";
+
 import {
   animate,
   AnimatePresence,
@@ -15,6 +17,7 @@ import {
 } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import * as THREE from "three";
 import {
   memo,
   Suspense,
@@ -129,6 +132,7 @@ const CAMERA_STOP_PROGRESS = 0.53;
 
 function Fullscreen3DRoom({ onClose }: Fullscreen3DRoomProps) {
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+
   const sectionRef = useRef<HTMLElement | null>(null);
   const isAtEndRef = useRef(false);
 
@@ -136,14 +140,59 @@ function Fullscreen3DRoom({ onClose }: Fullscreen3DRoomProps) {
   const [isAtEnd, setIsAtEnd] = useState(false);
   const [monitorFocused, setMonitorFocused] = useState(false);
 
+  const [roomProgress, setRoomProgressState] = useState(0);
+
   const { scrollYProgress: roomScrollProgress } = useScroll({
     container: scrollContainerRef,
     target: sectionRef,
     offset: ["start start", "end end"],
   });
 
+  const moveToProgress = useCallback((nextProgress: number) => {
+    const container = scrollContainerRef.current;
+
+    if (!container) {
+      return;
+    }
+
+    const clampedProgress = THREE.MathUtils.clamp(nextProgress, 0, 1);
+
+    const maxScroll = container.scrollHeight - container.clientHeight;
+
+    if (maxScroll <= 0) {
+      return;
+    }
+
+    container.scrollTop = maxScroll * clampedProgress;
+  }, []);
+
+  const moveProgressBy = useCallback(
+    (amount: number) => {
+      const container = scrollContainerRef.current;
+
+      if (!container) {
+        return;
+      }
+
+      const maxScroll = container.scrollHeight - container.clientHeight;
+
+      if (maxScroll <= 0) {
+        return;
+      }
+
+      const currentProgress = container.scrollTop / maxScroll;
+
+      moveToProgress(currentProgress + amount);
+    },
+    [moveToProgress],
+  );
+
   useMotionValueEvent(roomScrollProgress, "change", (latest) => {
-    const nextIsAtEnd = latest >= CAMERA_STOP_PROGRESS;
+    const safeProgress = THREE.MathUtils.clamp(latest, 0, 1);
+
+    setRoomProgressState(safeProgress);
+
+    const nextIsAtEnd = safeProgress >= CAMERA_STOP_PROGRESS;
 
     if (nextIsAtEnd === isAtEndRef.current) {
       return;
@@ -167,6 +216,7 @@ function Fullscreen3DRoom({ onClose }: Fullscreen3DRoomProps) {
 
   useEffect(() => {
     const previousBodyOverflow = document.body.style.overflow;
+
     const previousHtmlOverflow = document.documentElement.style.overflow;
 
     document.body.style.overflow = "hidden";
@@ -176,35 +226,85 @@ function Fullscreen3DRoom({ onClose }: Fullscreen3DRoomProps) {
 
     if (scrollContainer) {
       scrollContainer.scrollTop = 0;
-      scrollContainer.focus({ preventScroll: true });
+
+      scrollContainer.focus({
+        preventScroll: true,
+      });
     }
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== "Escape") return;
+      const activeElement = document.activeElement;
 
-      if (monitorFocused) {
-        setMonitorFocused(false);
+      const isRangeInput =
+        activeElement instanceof HTMLInputElement &&
+        activeElement.type === "range";
+
+      if (event.key === "Escape") {
+        if (monitorFocused) {
+          setMonitorFocused(false);
+          return;
+        }
+
+        onClose();
         return;
       }
 
-      onClose();
+      if (isRangeInput) {
+        return;
+      }
+
+      if (monitorFocused) {
+        return;
+      }
+
+      const keyboardStep = 0.035;
+
+      if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+        event.preventDefault();
+
+        moveProgressBy(keyboardStep);
+        return;
+      }
+
+      if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+        event.preventDefault();
+
+        moveProgressBy(-keyboardStep);
+        return;
+      }
+
+      if (event.key === "Home") {
+        event.preventDefault();
+
+        moveToProgress(0);
+        return;
+      }
+
+      if (event.key === "End") {
+        event.preventDefault();
+
+        moveToProgress(1);
+      }
     };
 
     window.addEventListener("keydown", handleKeyDown);
 
     return () => {
       document.body.style.overflow = previousBodyOverflow;
+
       document.documentElement.style.overflow = previousHtmlOverflow;
 
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [monitorFocused, onClose]);
+  }, [monitorFocused, moveProgressBy, moveToProgress, onClose]);
 
   useEffect(() => {
     const handleWheel = (event: WheelEvent) => {
       const container = scrollContainerRef.current;
 
-      if (!container || monitorFocused) return;
+      if (!container || monitorFocused) {
+        return;
+      }
 
       event.preventDefault();
       event.stopPropagation();
@@ -231,9 +331,15 @@ function Fullscreen3DRoom({ onClose }: Fullscreen3DRoomProps) {
       role="dialog"
       aria-modal="true"
       aria-label="3D room"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
+      initial={{
+        opacity: 0,
+      }}
+      animate={{
+        opacity: 1,
+      }}
+      exit={{
+        opacity: 0,
+      }}
       transition={{
         duration: 0.5,
         ease: overlayEase,
@@ -256,16 +362,16 @@ function Fullscreen3DRoom({ onClose }: Fullscreen3DRoomProps) {
         data-lenis-prevent-wheel
         data-lenis-prevent-touch
         className="
-    room-scroll
-    absolute
-    inset-0
-    z-0
-    overflow-x-hidden
-    overflow-y-auto
-    overscroll-contain
-    touch-pan-y
-    outline-none
-  "
+          room-scroll
+          absolute
+          inset-0
+          z-0
+          overflow-x-hidden
+          overflow-y-auto
+          overscroll-contain
+          touch-pan-y
+          outline-none
+        "
         style={{
           WebkitOverflowScrolling: "touch",
           scrollbarWidth: "none",
@@ -284,10 +390,12 @@ function Fullscreen3DRoom({ onClose }: Fullscreen3DRoomProps) {
           "
         >
           <div
-            className="sticky
-top-0
-h-[100svh]
-overflow-hidden"
+            className="
+              sticky
+              top-0
+              h-[100svh]
+              overflow-hidden
+            "
           >
             <motion.div
               initial={{
@@ -344,6 +452,131 @@ overflow-hidden"
                 </Suspense>
               </Canvas>
             </motion.div>
+
+            {/* Progressbar */}
+            {sceneLoaded && !monitorFocused && (
+              <div
+                className="
+                  absolute
+                  bottom-8
+                  left-4
+                  z-[150]
+                  flex
+                  w-[calc(100%-40px)]
+                  max-w-[440px]
+                  items-center
+                  gap-3
+                  rounded-[2px]
+                  bg-[#161310]
+                  px-3
+                  py-2
+                  text-stone-300
+                  dark:bg-stone-300
+                  dark:text-[#161310]
+                  md:bottom-10
+                  md:px-4
+                  md:py-3
+                "
+              >
+                <h1 className="uppercase text-xl hidden xl:block">Scroll</h1>
+                <h1 className="uppercase text-md ml-4 mr-4 hidden xl:block">
+                  Or
+                </h1>
+
+                <button
+                  type="button"
+                  aria-label="Move camera backwards"
+                  onClick={() => {
+                    moveProgressBy(-0.035);
+                  }}
+                  className="
+                    flex
+                    h-6
+                    w-6
+                    shrink-0
+                    cursor-pointer
+                    items-center
+                    justify-center
+                    text-base
+                    font-semibold
+                    leading-none
+                  "
+                >
+                  ←
+                </button>
+
+                <span
+                  className="
+                    hidden
+                    shrink-0
+                    text-[9px]
+                    font-semibold
+                    uppercase
+                    tracking-[0.1em]
+                    sm:block
+                  "
+                >
+                  00
+                </span>
+
+                <input
+                  type="range"
+                  aria-label="3D room progress"
+                  min={0}
+                  max={1}
+                  step={0.001}
+                  value={roomProgress}
+                  onChange={(event) => {
+                    moveToProgress(Number(event.target.value));
+                  }}
+                  className="
+                    h-[2px]
+                    min-w-0
+                    flex-1
+                    cursor-pointer
+                    accent-current
+                  "
+                />
+
+                <span
+                  className="
+                    min-w-[28px]
+                    shrink-0
+                    text-right
+                    text-[9px]
+                    font-semibold
+                    tabular-nums
+                    tracking-[0.08em]
+                  "
+                >
+                  {Math.round(roomProgress * 100)
+                    .toString()
+                    .padStart(2, "0")}
+                </span>
+
+                <button
+                  type="button"
+                  aria-label="Move camera forwards"
+                  onClick={() => {
+                    moveProgressBy(0.035);
+                  }}
+                  className="
+                    flex
+                    h-6
+                    w-6
+                    shrink-0
+                    cursor-pointer
+                    items-center
+                    justify-center
+                    text-base
+                    font-semibold
+                    leading-none
+                  "
+                >
+                  →
+                </button>
+              </div>
+            )}
 
             {/* Monitor focus – desktop */}
             <button
@@ -440,160 +673,109 @@ overflow-hidden"
             >
               {monitorFocused ? "Exit full screen" : "Full screen"}
             </button>
-
-            {!isAtEnd && !monitorFocused && sceneLoaded && (
-              <div
-                className="
-    pointer-events-none
-    absolute
-    bottom-10
-    left-1/2
-    z-[70]
-    -translate-x-1/2
-    text-[14px]
-    md:text-[26px]
-    text-white
-    font-semibold
-    uppercase
-    tracking-[0.12em]
-    opacity-70
-  "
-              >
-                Scroll
-              </div>
-            )}
           </div>
         </section>
       </div>
 
-      {/* Dark mode – mobile */}
-
+      {/* Dark mode */}
       {sceneLoaded && (
         <div
           className="
-          pointer-events-auto
-          absolute
-          bottom-10
-          right-5
-          z-[120]
-        "
+  pointer-events-auto
+  absolute
+  bottom-8
+  left-4
+  z-[120]
+  md:bottom-10
+  lg:left-auto
+  lg:right-5
+"
         >
           <DarkModeBtn />
         </div>
       )}
+
       {sceneLoaded && (
         <div
           className="
-                  pointer-events-none
-                  absolute
-                  top-7
-                  left-10
-                  z-[70]
-                  text-[10px]
-                  md:text-[16px]
-                  font-black
-                  uppercase
-                  tracking-[0.12em]
-                "
+            pointer-events-none
+            absolute
+            left-10
+            top-7
+            z-[200]
+            flex
+            items-center
+            justify-center
+            rounded-[2px]
+            bg-[#161310]
+            px-3
+            py-1
+            text-[10px]
+            font-black
+            uppercase
+            tracking-[0.12em]
+            text-stone-300
+            dark:bg-stone-300
+            dark:text-[#161310]
+            md:text-[16px]
+          "
         >
           NEWFARM STUDIO / 3D EXPERIENCE
         </div>
       )}
 
       {/* Close */}
-      <motion.button
-        type="button"
-        onClick={onClose}
-        aria-label="Close 3D room"
-        initial={{
-          opacity: 0,
-          y: -16,
-          filter: "blur(5px)",
-        }}
-        animate={{
-          opacity: 1,
-          y: 0,
-          filter: "blur(0px)",
-        }}
-        exit={{
-          opacity: 0,
-          y: -10,
-        }}
-        transition={{
-          duration: 0.5,
-          delay: 0.15,
-          ease: [0.22, 1, 0.36, 1],
-        }}
-        className="
-    group
-    absolute
-    right-7
-    top-5
-    z-[200]
-    flex
-    cursor-pointer
-    items-center
-    gap-x-1
-    
-    text-black
-    dark:text-stone-300
-    sm:right-7
-    sm:top-7
-  "
-      >
-        <span
+      {sceneLoaded && (
+        <motion.button
+          type="button"
+          onClick={onClose}
+          aria-label="Close 3D room"
+          initial={{
+            opacity: 0,
+            y: -16,
+            filter: "blur(5px)",
+          }}
+          animate={{
+            opacity: 1,
+            y: 0,
+            filter: "blur(0px)",
+          }}
+          exit={{
+            opacity: 0,
+            y: -10,
+          }}
+          transition={{
+            duration: 0.5,
+            delay: 0.15,
+            ease: [0.22, 1, 0.36, 1],
+          }}
           className="
-          text-[10px]
-
-      md:text-[16px]
-      font-semibold
-      uppercase
-      tracking-[0.12em]
-    "
+            absolute
+            right-10
+            top-7
+            z-[200]
+            flex
+            items-center
+            justify-center
+            rounded-[2px]
+            bg-[#161310]
+            px-3
+            py-1
+            text-[10px]
+            font-black
+            uppercase
+            gap-x-1
+            cursor-pointer
+            tracking-[0.12em]
+            text-stone-300
+            dark:bg-stone-300
+            dark:text-[#161310]
+            md:text-[16px]
+          "
         >
           Close
-        </span>
-
-        <span className="relative block h-8 w-8">
-          <span
-            className="
-        absolute
-        left-1/2
-        top-1/2
-        h-[2px]
-        w-3
-        md:w-4
-        -translate-x-1/2
-        -translate-y-1/2
-        rotate-45
-        bg-current
-        transition-transform
-        duration-300
-        ease-out
-        group-hover:rotate-[38deg]
-      "
-          />
-
-          <span
-            className="
-        absolute
-        left-1/2
-        top-1/2
-        h-[2px]
-        w-3
-        md:w-4
-        -translate-x-1/2
-        -translate-y-1/2
-        -rotate-45
-        bg-current
-        transition-transform
-        duration-300
-        ease-out
-        group-hover:-rotate-[38deg]
-      "
-          />
-        </span>
-      </motion.button>
+        </motion.button>
+      )}
 
       <AnimatePresence>
         {!sceneLoaded && (

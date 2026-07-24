@@ -31,7 +31,20 @@ const Navbar = () => {
   ];
 
   useEffect(() => {
-    setIsDark(document.documentElement.classList.contains("dark"));
+    const updateThemeState = () => {
+      setIsDark(document.documentElement.classList.contains("dark"));
+    };
+
+    updateThemeState();
+
+    const observer = new MutationObserver(updateThemeState);
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => observer.disconnect();
   }, []);
 
   const setTheme = (theme: "light" | "dark") => {

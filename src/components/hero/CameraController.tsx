@@ -1,7 +1,7 @@
 "use client";
 
 import { useFrame, useThree } from "@react-three/fiber";
-import { MotionValue } from "framer-motion";
+import type { MotionValue } from "framer-motion";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import * as THREE from "three";
 
@@ -86,7 +86,6 @@ export function CameraController({
 
     const rawProgress = scrollYProgress.get();
 
-    // Kameraet får ikke bevege seg lenger enn dette punktet.
     const cameraProgress = Math.min(rawProgress, CAMERA_STOP_PROGRESS);
 
     if (monitorFocused) {
