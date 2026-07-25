@@ -16,7 +16,6 @@ import {
   useTransform,
 } from "framer-motion";
 import Image from "next/image";
-import Link from "next/link";
 import * as THREE from "three";
 import {
   memo,
@@ -48,20 +47,17 @@ import WallShelfWithCandle from "./hero/WallShelfWithCandle";
 import WindowOnWall from "./hero/WindowOnWall";
 import DarkModeBtn from "./DarkModeBtn";
 import WaveLinkText from "./WaveLinkText";
+import Link from "next/link";
 
 const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 const overlayEase: [number, number, number, number] = [0.76, 0, 0.24, 1];
-
-const informationItems = ["location", "occupation"] as const;
 
 const capabilityItems = [
   "Creative development, ",
   "Interactive experiences, 3D & motion",
   "UI / UX design",
 ] as const;
-
-type InformationPanel = "information" | "selected-work" | "capabilities";
 
 const navigationItems = [
   {
@@ -838,6 +834,267 @@ function Fullscreen3DRoom({ onClose }: Fullscreen3DRoomProps) {
   );
 }
 
+type ScrollMarqueeProps = {
+  scrollYProgress: MotionValue<number>;
+  localTime: string;
+};
+
+type MarqueeItem =
+  | {
+      type: "text";
+      label: string;
+    }
+  | {
+      type: "heading";
+      label: string;
+    }
+  | {
+      type: "link";
+      label: string;
+      href: string;
+    };
+
+function ScrollMarquee({ scrollYProgress, localTime }: ScrollMarqueeProps) {
+  const setRef = useRef<HTMLDivElement | null>(null);
+  const [setWidth, setSetWidth] = useState(0);
+
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 55,
+    damping: 22,
+    mass: 0.8,
+    restDelta: 0.0001,
+  });
+
+  useEffect(() => {
+    const element = setRef.current;
+
+    if (!element) {
+      return;
+    }
+
+    const updateWidth = () => {
+      setSetWidth(element.getBoundingClientRect().width);
+    };
+
+    updateWidth();
+
+    const observer = new ResizeObserver(updateWidth);
+
+    observer.observe(element);
+    window.addEventListener("resize", updateWidth);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", updateWidth);
+    };
+  }, []);
+
+  const marqueeX = useTransform(smoothProgress, (progress) => {
+    if (setWidth <= 0) {
+      return 0;
+    }
+
+    const scrollDistance = progress * setWidth * 2;
+
+    return -(scrollDistance % setWidth);
+  });
+
+  const marqueeItems: MarqueeItem[] = [
+    {
+      type: "heading",
+      label: "Local time",
+    },
+    {
+      type: "text",
+      label: localTime,
+    },
+    {
+      type: "heading",
+      label: "Location",
+    },
+    {
+      type: "text",
+      label: "Oslo, Norway",
+    },
+    {
+      type: "heading",
+      label: "Selected work",
+    },
+    {
+      type: "link",
+      label: "Kerimov Designs",
+      href: "https://www.kerimovdesigns.com/",
+    },
+    {
+      type: "link",
+      label: "Calero",
+      href: "https://calero.studio/",
+    },
+    {
+      type: "heading",
+      label: "Capabilities",
+    },
+    ...capabilityItems.map(
+      (item): MarqueeItem => ({
+        type: "text",
+        label: item,
+      }),
+    ),
+  ];
+
+  const renderSet = (duplicate = false) => (
+    <div
+      ref={duplicate ? undefined : setRef}
+      aria-hidden={duplicate}
+      className="
+        flex
+        shrink-0
+        items-center
+        gap-x-8
+        pr-8
+        sm:gap-x-12
+        sm:pr-12
+        lg:gap-x-16
+        lg:pr-16
+      "
+    >
+      {marqueeItems.map((item, index) => {
+        const key = `${
+          duplicate ? "duplicate" : "original"
+        }-${item.label}-${index}`;
+
+        if (item.type === "link") {
+          return (
+            <a
+              key={key}
+              href={item.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              tabIndex={duplicate ? -1 : undefined}
+              className="
+                pointer-events-auto
+                shrink-0
+                whitespace-nowrap
+                text-xl
+                font-black
+                uppercase
+                leading-none
+                tracking-[-0.015em]
+                underline
+                underline-offset-[2px]
+                transition-opacity
+                duration-300
+                hover:opacity-50
+                sm:text-[15px]
+                lg:text-lg
+              "
+            >
+              {item.label}
+            </a>
+          );
+        }
+
+        if (item.type === "heading") {
+          return (
+            <span
+              key={key}
+              className="
+        flex
+        shrink-0
+        items-center
+        gap-x-3
+        whitespace-nowrap
+        text-xl
+        font-black
+        uppercase
+        leading-none
+        tracking-[-0.015em]
+        sm:text-[15px]
+        lg:text-lg
+      "
+            >
+              {item.label}
+
+              <span
+                aria-hidden="true"
+                className="
+          inline-block
+          font-medium
+          leading-none
+        "
+              >
+                →
+              </span>
+            </span>
+          );
+        }
+
+        return (
+          <span
+            key={key}
+            className="
+              shrink-0
+              whitespace-nowrap
+              text-xl
+              font-black
+              uppercase
+              leading-none
+              tracking-[-0.015em]
+              sm:text-[15px]
+              lg:text-lg
+            "
+          >
+            {item.label}
+          </span>
+        );
+      })}
+    </div>
+  );
+
+  return (
+    <motion.div
+      initial={{
+        opacity: 0,
+        y: 18,
+        filter: "blur(7px)",
+      }}
+      animate={{
+        opacity: 1,
+        y: 0,
+        filter: "blur(0px)",
+      }}
+      transition={{
+        duration: 0.8,
+        delay: 0.9,
+        ease,
+      }}
+      className="
+        absolute
+        bottom-0
+        left-0
+        z-[25]
+        w-full
+        overflow-hidden
+        pb-[calc(0.15rem+env(safe-area-inset-bottom))]
+      "
+    >
+      <motion.div
+        style={{
+          x: marqueeX,
+        }}
+        className="
+          flex
+          w-max
+          items-center
+          will-change-transform
+        "
+      >
+        {renderSet()}
+        {renderSet(true)}
+      </motion.div>
+    </motion.div>
+  );
+}
 export default function Hero() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const imageRef = useRef<HTMLDivElement | null>(null);
@@ -845,8 +1102,6 @@ export default function Hero() {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [lineVisible, setLineVisible] = useState(false);
   const [localTime, setLocalTime] = useState("--:--");
-  const [activePanel, setActivePanel] =
-    useState<InformationPanel>("information");
   const [show3DRoom, setShow3DRoom] = useState(false);
 
   const { scrollYProgress } = useScroll({
@@ -878,23 +1133,6 @@ export default function Hero() {
     stiffness: 90,
     damping: 22,
     mass: 0.4,
-  });
-
-  useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    setActivePanel((currentPanel) => {
-      if (currentPanel === "information") {
-        return latest > 0.3 ? "selected-work" : currentPanel;
-      }
-
-      if (currentPanel === "selected-work") {
-        if (latest < 0.22) return "information";
-        if (latest > 0.68) return "capabilities";
-
-        return currentPanel;
-      }
-
-      return latest < 0.58 ? "selected-work" : currentPanel;
-    });
   });
 
   useEffect(() => {
@@ -1036,21 +1274,50 @@ min-h-[220svh]          bg-[#fbfafa]
               digital experiences.
             </motion.h1>
 
-            {/* Image and contact text */}
+            <motion.div
+              initial={{
+                opacity: 0,
+                y: 24,
+                filter: "blur(8px)",
+              }}
+              animate={{
+                opacity: 1,
+                y: 0,
+                filter: "blur(0px)",
+              }}
+              transition={{
+                duration: 0.9,
+                delay: 0.15,
+                ease,
+              }}
+              className=" absolute font-semibold
+              right-0 bottom-20 text-right
+                md:left-0 md:bottom-20 md:text-left
+              "
+            >
+              <p className="mb-1 uppercase text-sm md:text-md tracking-[0.025]">
+                Available for <br />
+                selected freelance <br />
+                projects. <br />{" "}
+              </p>
+            </motion.div>
+
+            {/* Image */}
             <div
               className="
                 mx-auto
-                mt-14
+                mt-12
                 flex
                 w-full
                 max-w-[520px]
                 items-center
-                justify-center
                 gap-5
-                sm:mt-16
+                sm:mt-12
                 sm:gap-7
+md:-mr-20              
+lg:mr-0  
                 lg:absolute
-                lg:left-[55%]
+                lg:left-[66%]
                 lg:top-[7%]
                 lg:mt-0
                 lg:w-auto
@@ -1058,58 +1325,9 @@ min-h-[220svh]          bg-[#fbfafa]
                 lg:-translate-x-1/2
                 lg:items-end
                 lg:gap-0
+                xl:left-[60%]
               "
             >
-              <motion.div
-                initial={{
-                  opacity: 0,
-                  x: 18,
-                  filter: "blur(7px)",
-                }}
-                animate={{
-                  opacity: imageLoaded ? 1 : 0,
-                  x: imageLoaded ? 0 : 18,
-                  filter: imageLoaded ? "blur(0px)" : "blur(7px)",
-                }}
-                transition={{
-                  duration: 0.8,
-                  delay: 0.65,
-                  ease,
-                }}
-                className="
-                  mr-3
-                  hidden
-                  w-[125px]
-                  pb-1
-                  text-right
-                  text-[12px]
-                  leading-[1.08]
-                  lg:block
-                "
-              >
-                <p>
-                  Available for
-                  <br />
-                  selected freelance
-                  <br />
-                  projects.
-                </p>
-
-                <Link
-                  href="/contact"
-                  className="
-                    mt-1
-                    inline-block
-                    text-base
-                    font-black
-                    lowercase
-                    leading-none
-                  "
-                >
-                  <WaveLinkText text="contact" />
-                </Link>
-              </motion.div>
-
               <motion.div
                 ref={imageRef}
                 onMouseMove={handleImageMove}
@@ -1221,446 +1439,15 @@ min-h-[220svh]          bg-[#fbfafa]
                   "
                 />
               </motion.div>
-
-              {/* Mobile contact */}
-              <motion.div
-                initial={{
-                  opacity: 0,
-                  x: 18,
-                  filter: "blur(7px)",
-                }}
-                animate={{
-                  opacity: imageLoaded ? 1 : 0,
-                  x: imageLoaded ? 0 : 18,
-                  filter: imageLoaded ? "blur(0px)" : "blur(7px)",
-                }}
-                transition={{
-                  duration: 0.8,
-                  delay: 0.65,
-                  ease,
-                }}
-                className="
-                  w-[125px]
-                  shrink-0
-                  text-left
-                  text-[10px]
-                  leading-[1.08]
-                  sm:text-[14px]
-                  lg:hidden
-                "
-              >
-                <p>
-                  Available for
-                  <br />
-                  selected freelance
-                  <br />
-                  projects.
-                </p>
-
-                <Link
-                  href="/contact"
-                  className="
-                    mt-0.5
-                    inline-block
-                    text-base
-                    font-black
-                    lowercase
-                    leading-none
-                    sm:text-2xl
-                  "
-                >
-                  <WaveLinkText text="contact" />
-                </Link>
-              </motion.div>
             </div>
 
-            {/* Mobile panel counter */}
-            <div
-              aria-hidden
-              className="
-    absolute
-    bottom-0
-    right-0
-    z-[20]
-    text-[12px]
-    font-semibold
-    tracking-[0.08em]
-    lg:hidden
-  "
-            >
-              {activePanel === "information"
-                ? "01 / 03"
-                : activePanel === "selected-work"
-                  ? "02 / 03"
-                  : "03 / 03"}
-            </div>
+            {/* Smooth scroll-linked marquee */}
+            <ScrollMarquee
+              scrollYProgress={scrollYProgress}
+              localTime={localTime}
+            />
 
-            {/* Information transforms into navigation */}
-            <motion.div
-              initial={{
-                opacity: 0,
-                y: 20,
-                filter: "blur(6px)",
-              }}
-              animate={{
-                opacity: 1,
-                y: 0,
-                filter: "blur(0px)",
-              }}
-              transition={{
-                duration: 0.8,
-                delay: 0.8,
-                ease,
-              }}
-              className="
-  relative
-  mt-1
-  min-h-[116px]
-  w-full
-  max-w-[330px]
-  shrink-0
-  text-[13px]
-  font-black
-  uppercase
-  leading-[1.2]
-  tracking-[-0.015em]
-  lg:absolute
-  lg:bottom-0
-  lg:left-0
-  lg:mt-0
-  lg:h-[105px]
-  lg:min-h-0
-  lg:w-[330px]
-  lg:max-w-none
-  lg:text-lg
-  lg:mb-8
-"
-            >
-              <AnimatePresence initial={false} mode="wait">
-                {activePanel === "information" && (
-                  <motion.div
-                    key="information"
-                    initial="hidden"
-                    animate="visible"
-                    exit="exit"
-                    variants={{
-                      hidden: {},
-                      visible: {
-                        transition: {
-                          staggerChildren: 0.07,
-                        },
-                      },
-                      exit: {
-                        transition: {
-                          staggerChildren: 0.07,
-                        },
-                      },
-                    }}
-                    className="absolute top-4 left-0"
-                  >
-                    <motion.p
-                      variants={{
-                        hidden: {
-                          opacity: 0,
-                          y: 16,
-                          filter: "blur(4px)",
-                        },
-                        visible: {
-                          opacity: 1,
-                          y: 0,
-                          filter: "blur(0px)",
-                        },
-                        exit: {
-                          opacity: 0,
-                          y: -20,
-                          filter: "blur(5px)",
-                        },
-                      }}
-                      transition={{
-                        duration: 0.42,
-                        ease,
-                      }}
-                    >
-                      Local time / {localTime}
-                    </motion.p>
-
-                    {informationItems.map((item) => (
-                      <motion.p
-                        key={item}
-                        variants={{
-                          hidden: {
-                            opacity: 0,
-                            y: 16,
-                            filter: "blur(4px)",
-                          },
-                          visible: {
-                            opacity: 1,
-                            y: 0,
-                            filter: "blur(0px)",
-                          },
-                          exit: {
-                            opacity: 0,
-                            y: -20,
-                            filter: "blur(5px)",
-                          },
-                        }}
-                        transition={{
-                          duration: 0.42,
-                          ease,
-                        }}
-                        className="mt-3"
-                      >
-                        {item === "location"
-                          ? "Location / Oslo, Norway"
-                          : "Occupation / Designer & developer"}
-                      </motion.p>
-                    ))}
-                  </motion.div>
-                )}
-
-                {activePanel === "selected-work" && (
-                  <motion.nav
-                    key="selected-work"
-                    aria-label="Selected work"
-                    initial="hidden"
-                    animate="visible"
-                    exit="exit"
-                    variants={{
-                      hidden: {},
-                      visible: {
-                        transition: {
-                          staggerChildren: 0.08,
-                        },
-                      },
-                      exit: {
-                        transition: {
-                          staggerChildren: 0.05,
-                          staggerDirection: -1,
-                        },
-                      },
-                    }}
-                    className="
-                      absolute
-                      top-4
-                      left-0
-                      flex
-                      w-full
-                      flex-col
-                      items-start
-                      lg:min-w-[310px]
-                    "
-                  >
-                    <motion.p
-                      variants={{
-                        hidden: {
-                          opacity: 0,
-                          y: 12,
-                          filter: "blur(4px)",
-                        },
-                        visible: {
-                          opacity: 0.8,
-                          y: 0,
-                          filter: "blur(0px)",
-                        },
-                        exit: {
-                          opacity: 0,
-                          y: -10,
-                          filter: "blur(4px)",
-                        },
-                      }}
-                      transition={{
-                        duration: 0.4,
-                        ease,
-                      }}
-                      className="
-                         mb-3
-                        text-[11px]
-                        font-medium
-                        uppercase
-                        tracking-[0.04em]
-                        opacity-80
-                        lg:text-sm
-                      "
-                    >
-                      Selected Work / 2026
-                    </motion.p>
-
-                    <div className="flex w-full flex-col gap-y-3">
-                      {navigationItems.map((item) => (
-                        <motion.div
-                          key={item.href}
-                          variants={{
-                            hidden: {
-                              opacity: 0,
-                              y: 18,
-                              filter: "blur(5px)",
-                            },
-                            visible: {
-                              opacity: 1,
-                              y: 0,
-                              filter: "blur(0px)",
-                            },
-                            exit: {
-                              opacity: 0,
-                              y: -14,
-                              filter: "blur(4px)",
-                            },
-                          }}
-                          transition={{
-                            duration: 0.44,
-                            ease,
-                          }}
-                          className="w-full"
-                        >
-                          <Link
-                            href={item.href}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="
-                              group
-                              inline-flex
-                              items-center
-                              gap-2
-                              text-[13px]
-                              font-black
-                              uppercase
-                              leading-none
-                              tracking-[-0.015em]
-                              lg:text-lg
-                            "
-                          >
-                            <span>
-                              <WaveLinkText
-                                text={`${item.category} / ${item.title}`}
-                              />
-                            </span>
-
-                            <motion.span
-                              aria-hidden
-                              className="inline-block font-normal"
-                              initial={false}
-                              whileHover={{
-                                x: 4,
-                              }}
-                              transition={{
-                                duration: 0.22,
-                                ease,
-                              }}
-                            >
-                              →
-                            </motion.span>
-                          </Link>
-                        </motion.div>
-                      ))}
-                    </div>
-                  </motion.nav>
-                )}
-
-                {activePanel === "capabilities" && (
-                  <motion.div
-                    key="capabilities"
-                    initial="hidden"
-                    animate="visible"
-                    exit="exit"
-                    variants={{
-                      hidden: {},
-                      visible: {
-                        transition: {
-                          staggerChildren: 0.07,
-                        },
-                      },
-                      exit: {
-                        transition: {
-                          staggerChildren: 0.05,
-                          staggerDirection: -1,
-                        },
-                      },
-                    }}
-                    className="absolute top-4 left-0 flex w-full flex-col items-start"
-                  >
-                    <motion.p
-                      variants={{
-                        hidden: {
-                          opacity: 0,
-                          y: 12,
-                          filter: "blur(4px)",
-                        },
-                        visible: {
-                          opacity: 0.8,
-                          y: 0,
-                          filter: "blur(0px)",
-                        },
-                        exit: {
-                          opacity: 0,
-                          y: -10,
-                          filter: "blur(4px)",
-                        },
-                      }}
-                      transition={{
-                        duration: 0.4,
-                        ease,
-                      }}
-                      className="
-                        mb-3
-                        text-[11px]
-                        font-medium
-                        uppercase
-                        tracking-[0.04em]
-                        opacity-80
-                        lg:text-sm
-                      "
-                    >
-                      Capabilities / 2026
-                    </motion.p>
-
-                    <div className="flex w-full flex-col gap-y-2">
-                      {capabilityItems.map((item) => (
-                        <motion.p
-                          className="text-[13px] lg:text-lg whitespace-nowrap"
-                          key={item}
-                          variants={{
-                            hidden: {
-                              opacity: 0,
-                              y: 18,
-                              filter: "blur(5px)",
-                            },
-                            visible: {
-                              opacity: 1,
-                              y: 0,
-                              filter: "blur(0px)",
-                            },
-                            exit: {
-                              opacity: 0,
-                              y: -14,
-                              filter: "blur(4px)",
-                            },
-                          }}
-                          transition={{
-                            duration: 0.44,
-                            ease,
-                          }}
-                        >
-                          {item}
-                        </motion.p>
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              <div
-                aria-hidden
-                className="absolute right-0 top-0 hidden text-[13px] font-semibold tracking-[0.08em]  lg:block"
-              >
-                {activePanel === "information"
-                  ? "01 / 03"
-                  : activePanel === "selected-work"
-                    ? "02 / 03"
-                    : "03 / 03"}
-              </div>
-            </motion.div>
-
-            {/* 3D version button */}
+            {/* 3D version button – separate from the marquee */}
             <motion.div
               initial={{
                 opacity: 0,
@@ -1678,12 +1465,15 @@ min-h-[220svh]          bg-[#fbfafa]
                 ease,
               }}
               className="
+              hidden
                 absolute
-                bottom-0
+                bottom-12
                 right-0
-                hidden
-                justify-end
+                z-[30]
                 lg:flex
+                justify-end
+                sm:bottom-14
+                lg:bottom-16
               "
             >
               <button
@@ -1694,20 +1484,22 @@ min-h-[220svh]          bg-[#fbfafa]
                   flex
                   cursor-pointer
                   items-center
-                  gap-4
-                  text-[clamp(1.8rem,3vw,2.8rem)]
+                  gap-3
+                  text-[clamp(1.15rem,2.4vw,2.4rem)]
                   font-black
                   uppercase
                   leading-none
                   tracking-[-0.045em]
+                  sm:gap-4
                 "
               >
                 <motion.span
                   aria-hidden
                   className="
                     inline-block
-                    text-xl
+                    text-lg
                     font-normal
+                    sm:text-xl
                   "
                   initial={false}
                   whileHover={{
