@@ -1290,10 +1290,23 @@ min-h-[220svh]          bg-[#fbfafa]
                 delay: 0.15,
                 ease,
               }}
-              className=" absolute font-semibold
-              right-0 bottom-20 text-right
-                md:left-0 md:bottom-20 md:text-left
-              "
+              className="
+  absolute
+  right-0
+  bottom-20
+  text-right
+  font-semibold
+
+  md:right-auto
+  md:left-0
+  md:bottom-20
+  md:text-left
+
+  lg:left-0
+  lg:top-[56%]
+  lg:bottom-auto
+  lg:text-left
+"
             >
               <p className="mb-1 uppercase text-sm md:text-md tracking-[0.025]">
                 Available for <br />
@@ -1328,29 +1341,30 @@ lg:mr-0
                 xl:left-[60%]
               "
             >
-              <motion.div
-                ref={imageRef}
-                onMouseMove={handleImageMove}
-                onMouseLeave={handleImageLeave}
-                style={{
-                  x: smoothMouseX,
-                  y: smoothMouseY,
-                }}
-                initial={{
-                  clipPath: "inset(100% 0% 0% 0%)",
-                  filter: "blur(12px)",
-                }}
-                animate={{
-                  clipPath: imageLoaded
-                    ? "inset(0% 0% 0% 0%)"
-                    : "inset(100% 0% 0% 0%)",
-                  filter: imageLoaded ? "blur(0px)" : "blur(12px)",
-                }}
-                transition={{
-                  duration: 1.1,
-                  ease,
-                }}
-                className="
+              <div className="flex flex-col items-start">
+                <motion.div
+                  ref={imageRef}
+                  onMouseMove={handleImageMove}
+                  onMouseLeave={handleImageLeave}
+                  style={{
+                    x: smoothMouseX,
+                    y: smoothMouseY,
+                  }}
+                  initial={{
+                    clipPath: "inset(100% 0% 0% 0%)",
+                    filter: "blur(12px)",
+                  }}
+                  animate={{
+                    clipPath: imageLoaded
+                      ? "inset(0% 0% 0% 0%)"
+                      : "inset(100% 0% 0% 0%)",
+                    filter: imageLoaded ? "blur(0px)" : "blur(12px)",
+                  }}
+                  transition={{
+                    duration: 1.1,
+                    ease,
+                  }}
+                  className="
                   relative
                   aspect-[4/5]
                   
@@ -1362,46 +1376,46 @@ lg:mr-0
                   sm:w-[220px]
                   lg:w-[240px]
                 "
-              >
-                <Image
-                  src="/jonas-0003.jpg"
-                  alt="Jonas Nygaard"
-                  fill
-                  priority
-                  onLoad={() => setImageLoaded(true)}
-                  className="object-cover object-top"
-                />
-
-                {/* Grayscale reveal layer */}
-                <motion.div
-                  style={{
-                    clipPath: revealClipPath,
-                  }}
-                  className="absolute inset-0 z-[2]"
                 >
                   <Image
                     src="/jonas-0003.jpg"
-                    alt=""
+                    alt="Jonas Nygaard"
                     fill
                     priority
-                    aria-hidden
-                    className="object-cover object-top grayscale"
+                    onLoad={() => setImageLoaded(true)}
+                    className="object-cover object-top"
                   />
-                </motion.div>
 
-                {/* Sharp reveal line */}
-                <motion.div
-                  style={{
-                    left: revealLineLeft,
-                  }}
-                  animate={{
-                    opacity: lineVisible ? 1 : 0,
-                  }}
-                  transition={{
-                    duration: 0.18,
-                    ease,
-                  }}
-                  className="
+                  {/* Grayscale reveal layer */}
+                  <motion.div
+                    style={{
+                      clipPath: revealClipPath,
+                    }}
+                    className="absolute inset-0 z-[2]"
+                  >
+                    <Image
+                      src="/jonas-0003.jpg"
+                      alt=""
+                      fill
+                      priority
+                      aria-hidden
+                      className="object-cover object-top grayscale"
+                    />
+                  </motion.div>
+
+                  {/* Sharp reveal line */}
+                  <motion.div
+                    style={{
+                      left: revealLineLeft,
+                    }}
+                    animate={{
+                      opacity: lineVisible ? 1 : 0,
+                    }}
+                    transition={{
+                      duration: 0.18,
+                      ease,
+                    }}
+                    className="
                     pointer-events-none
                     absolute
                     top-0
@@ -1412,21 +1426,21 @@ lg:mr-0
                     bg-white
                     mix-blend-difference
                   "
-                />
+                  />
 
-                {/* Reveal glow */}
-                <motion.div
-                  style={{
-                    left: revealLineLeft,
-                  }}
-                  animate={{
-                    opacity: lineVisible ? 0.45 : 0,
-                  }}
-                  transition={{
-                    duration: 0.18,
-                    ease,
-                  }}
-                  className="
+                  {/* Reveal glow */}
+                  <motion.div
+                    style={{
+                      left: revealLineLeft,
+                    }}
+                    animate={{
+                      opacity: lineVisible ? 0.45 : 0,
+                    }}
+                    transition={{
+                      duration: 0.18,
+                      ease,
+                    }}
+                    className="
                     pointer-events-none
                     absolute
                     top-0
@@ -1437,8 +1451,23 @@ lg:mr-0
                     bg-white/10
                     blur-md
                   "
-                />
-              </motion.div>
+                  />
+                </motion.div>
+
+                <p
+                  className="
+                  mt-2
+                  text-[10px]
+                  font-semibold
+                  uppercase
+                  leading-none
+                  tracking-[0.08em]
+                  opacity-80
+                "
+                >
+                  Portrait / 2026
+                </p>
+              </div>
             </div>
 
             {/* Smooth scroll-linked marquee */}
@@ -1476,45 +1505,63 @@ lg:mr-0
                 lg:bottom-16
               "
             >
-              <button
-                type="button"
-                onClick={open3DRoom}
-                className="
-                  group
-                  flex
-                  cursor-pointer
-                  items-center
-                  gap-3
-                  text-[clamp(1.15rem,2.4vw,2.4rem)]
-                  font-black
-                  uppercase
-                  leading-none
-                  tracking-[-0.045em]
-                  sm:gap-4
-                "
-              >
-                <motion.span
-                  aria-hidden
+              <div className="flex flex-col items-end gap-3">
+                <p
                   className="
+                    max-w-[260px]
+                    text-right
+                    text-[12px]
+                    font-semibold
+                    uppercase
+                    leading-[1.15]
+                    tracking-[0.025em]
+                    opacity-70
+                  "
+                >
+                  I had some fun experimenting with Three.js and built an
+                  interactive 3D version of the experience.
+                </p>
+
+                <button
+                  type="button"
+                  onClick={open3DRoom}
+                  className="
+                    group
+                    flex
+                    cursor-pointer
+                    items-center
+                    gap-3
+                    text-[clamp(1.15rem,2.4vw,2.4rem)]
+                    font-black
+                    uppercase
+                    leading-none
+                    tracking-[-0.045em]
+                    sm:gap-4
+                  "
+                >
+                  <motion.span
+                    aria-hidden
+                    className="
                     inline-block
                     text-lg
                     font-normal
                     sm:text-xl
                   "
-                  initial={false}
-                  whileHover={{
-                    x: -5,
-                  }}
-                  transition={{
-                    duration: 0.25,
-                    ease,
-                  }}
-                >
-                  ←
-                </motion.span>
+                    initial={false}
+                    whileHover={{
+                      x: -5,
+                    }}
+                    transition={{
+                      duration: 0.25,
+                      ease,
+                    }}
+                  >
+                    ←
+                  </motion.span>
 
-                <WaveLinkText text="3D Version" />
-              </button>
+                  <WaveLinkText text="3D Version" />
+                </button>
+              </div>
             </motion.div>
           </div>
         </div>
