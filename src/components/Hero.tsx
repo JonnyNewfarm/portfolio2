@@ -943,7 +943,7 @@ export default function Hero() {
   });
 
   useMotionValueEvent(heroScrollProgress, "change", (latest) => {
-    const nextStep: 0 | 1 | 2 = latest < 0.22 ? 0 : latest < 0.48 ? 1 : 2;
+    const nextStep: 0 | 1 | 2 = latest < 0.16 ? 0 : latest < 0.42 ? 1 : 2;
 
     setCopyStep((current) => (current === nextStep ? current : nextStep));
   });
@@ -1287,7 +1287,11 @@ lg:mr-0
                   />
                 </motion.div>
 
-                <p
+                <motion.p
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 0.6, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.35, ease }}
                   className="
                   mt-2
                   text-[10px]
@@ -1299,7 +1303,7 @@ lg:mr-0
                 "
                 >
                   Portrait / 2026
-                </p>
+                </motion.p>
               </div>
             </div>
 
@@ -1461,7 +1465,7 @@ lg:mr-0
                       </TextReveal>
 
                       <a
-                        href="https://calerostudio.com"
+                        href="https://calero.studio"
                         target="_blank"
                         rel="noreferrer"
                         className="
