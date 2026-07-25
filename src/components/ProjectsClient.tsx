@@ -926,7 +926,7 @@ const ProjectsClient = () => {
               active
               delay={0.1}
               as="h1"
-              className="text-4xl font-anton uppercase leading-[0.92] tracking-[-0.01em] text-[#161310] dark:text-stone-200"
+              className="text-4xl font-black uppercase leading-[0.92] tracking-[-0.035em] text-[#161310] dark:text-stone-200"
             >
               selected
             </TextReveal>
@@ -934,7 +934,7 @@ const ProjectsClient = () => {
               active
               delay={0.11}
               as="h1"
-              className="text-4xl font-anton uppercase leading-[0.92] tracking-[-0.01em] text-[#161310] dark:text-stone-200"
+              className="text-4xl font-black uppercase leading-[0.92] tracking-[-0.035em] text-[#161310] dark:text-stone-200"
             >
               work
             </TextReveal>

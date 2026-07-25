@@ -16,6 +16,7 @@ import {
   useTransform,
 } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 import * as THREE from "three";
 import {
   memo,
@@ -51,6 +52,92 @@ import WaveLinkText from "./WaveLinkText";
 const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 const overlayEase: [number, number, number, number] = [0.76, 0, 0.24, 1];
+
+type TextRevealProps = {
+  children: string;
+  as?: "p" | "h1" | "h2" | "h3" | "span" | "label";
+  className?: string;
+  delay?: number;
+  once?: boolean;
+  mode?: "words" | "lines";
+  htmlFor?: string;
+};
+
+function TextReveal({
+  children,
+  as = "p",
+  className = "",
+  delay = 0,
+  once = true,
+  mode = "words",
+  htmlFor,
+}: TextRevealProps) {
+  const MotionTag = motion[as] as any;
+
+  const items =
+    mode === "lines"
+      ? children.split("\n").filter((line) => line.trim().length > 0)
+      : children.split(" ");
+
+  const containerVariants = {
+    hidden: {},
+    visible: {
+      transition: {
+        delayChildren: delay,
+        staggerChildren: mode === "lines" ? 0.11 : 0.028,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: {
+      y: "115%",
+      opacity: 0,
+      rotate: 0,
+      filter: "blur(10px)",
+    },
+    visible: {
+      y: "0%",
+      opacity: 1,
+      rotate: 0,
+      filter: "blur(0px)",
+      transition: {
+        duration: mode === "lines" ? 1 : 0.75,
+        ease,
+      },
+    },
+  };
+
+  return (
+    <MotionTag
+      htmlFor={htmlFor}
+      variants={containerVariants}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once, amount: 0.35 }}
+      className={className}
+    >
+      {items.map((item, index) => (
+        <span
+          key={`${item}-${index}`}
+          className={
+            mode === "lines"
+              ? "block overflow-hidden py-[0.08em] -my-[0.08em]"
+              : "inline-block overflow-hidden py-[0.04em] -my-[0.04em] align-top"
+          }
+        >
+          <motion.span
+            variants={itemVariants}
+            className="inline-block will-change-transform"
+          >
+            {item}
+            {mode === "words" && index !== items.length - 1 ? "\u00A0" : null}
+          </motion.span>
+        </span>
+      ))}
+    </MotionTag>
+  );
+}
 
 type RoomSceneProps = {
   scrollYProgress: MotionValue<number>;
@@ -815,12 +902,19 @@ function Fullscreen3DRoom({ onClose }: Fullscreen3DRoomProps) {
 }
 
 export default function Hero() {
+  const heroSectionRef = useRef<HTMLElement | null>(null);
   const imageRef = useRef<HTMLDivElement | null>(null);
 
   const [imageLoaded, setImageLoaded] = useState(false);
   const [lineVisible, setLineVisible] = useState(false);
   const [localTime, setLocalTime] = useState("--:--");
   const [show3DRoom, setShow3DRoom] = useState(false);
+  const [copyStep, setCopyStep] = useState<0 | 1 | 2>(0);
+
+  const { scrollYProgress: heroScrollProgress } = useScroll({
+    target: heroSectionRef,
+    offset: ["start start", "end end"],
+  });
 
   const revealProgress = useMotionValue(0);
 
@@ -846,6 +940,12 @@ export default function Hero() {
     stiffness: 90,
     damping: 22,
     mass: 0.4,
+  });
+
+  useMotionValueEvent(heroScrollProgress, "change", (latest) => {
+    const nextStep: 0 | 1 | 2 = latest < 0.22 ? 0 : latest < 0.48 ? 1 : 2;
+
+    setCopyStep((current) => (current === nextStep ? current : nextStep));
   });
 
   useEffect(() => {
@@ -922,9 +1022,11 @@ export default function Hero() {
   return (
     <>
       <section
+        ref={heroSectionRef}
         className="
           relative
-min-h-[220svh]          bg-[#fbfafa]
+min-h-[300svh]
+          bg-[#fbfafa]
           text-[#161310]
           dark:bg-[#1e1c1c]
           dark:text-stone-300
@@ -948,84 +1050,103 @@ min-h-[220svh]          bg-[#fbfafa]
           "
         >
           <div className="relative h-full">
-            {/* Main heading */}
-            <motion.h1
-              initial={{
-                opacity: 0,
-                y: 24,
-                filter: "blur(8px)",
-              }}
-              animate={{
-                opacity: 1,
-                y: 0,
-                filter: "blur(0px)",
-              }}
-              transition={{
-                duration: 0.9,
-                delay: 0.15,
-                ease,
-              }}
+            {/* Scroll-changing copy */}
+            <div
               className="
                 max-w-[360px]
-                 text-[clamp(1.4rem,2.6vw,1.8rem)]
-                sm:text-[clamp(1.65rem,3vw,2.2rem)]
-                font-black
-                uppercase
-                leading-[0.96]
-                tracking-[-0.045em]
                 sm:max-w-[430px]
                 lg:absolute
                 lg:left-0
                 lg:top-[12%]
               "
             >
-              Designer &amp; developer
-              <br />
-              crafting interactive
-              <br />
-              digital experiences.
-            </motion.h1>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={`heading-${copyStep}`}
+                  initial={{ opacity: 0, y: 18, filter: "blur(8px)" }}
+                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                  exit={{ opacity: 0, y: -16, filter: "blur(8px)" }}
+                  transition={{ duration: 0.45, ease }}
+                >
+                  <motion.p
+                    initial={{ opacity: 0, y: 8, filter: "blur(5px)" }}
+                    animate={{ opacity: 0.6, y: 0, filter: "blur(0px)" }}
+                    exit={{ opacity: 0, y: -8, filter: "blur(5px)" }}
+                    transition={{ duration: 0.35, ease }}
+                    className="mb-3 text-[10px] font-black uppercase tracking-[0.1em] sm:text-[11px]"
+                  >
+                    {`${String(copyStep + 1).padStart(2, "0")} / 03`}
+                  </motion.p>
 
-            <motion.div
-              initial={{
-                opacity: 0,
-                y: 24,
-                filter: "blur(8px)",
-              }}
-              animate={{
-                opacity: 1,
-                y: 0,
-                filter: "blur(0px)",
-              }}
-              transition={{
-                duration: 0.9,
-                delay: 0.15,
-                ease,
-              }}
+                  <TextReveal
+                    as="h1"
+                    mode="lines"
+                    once={false}
+                    className="
+                      text-[clamp(1.4rem,2.6vw,1.8rem)]
+                      font-black
+                      uppercase
+                      leading-[0.96]
+                      tracking-[-0.045em]
+                      sm:text-[clamp(1.65rem,3vw,2.2rem)]
+                    "
+                  >
+                    {copyStep === 0
+                      ? "Designer & developer\ncrafting interactive\ndigital experiences."
+                      : copyStep === 1
+                        ? "Building thoughtful\ninterfaces through\nmotion and code."
+                        : "Turning ideas into\nclear and memorable\ndigital products."}
+                  </TextReveal>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            <div
               className="
-  absolute
-  right-0
-  bottom-20
-  text-right
-  font-semibold
-
-  md:right-auto
-  md:left-0
-  md:bottom-20
-  md:text-left
-
-  lg:left-0
-  lg:top-[56%]
-  lg:bottom-auto
-  lg:text-left
-"
+                absolute
+                bottom-20
+                right-0
+                text-right
+                font-semibold
+                md:bottom-20
+                md:left-0
+                md:right-auto
+                md:text-left
+                lg:bottom-auto
+                lg:left-0
+                lg:top-[56%]
+                lg:text-left
+              "
             >
-              <p className="mb-1 uppercase text-[10px] md:text-[13px] tracking-[0.025]">
-                Available for <br />
-                selected freelance <br />
-                projects. <br />{" "}
-              </p>
-            </motion.div>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={`availability-${copyStep}`}
+                  initial={{ opacity: 0, y: 14, filter: "blur(7px)" }}
+                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                  exit={{ opacity: 0, y: -12, filter: "blur(7px)" }}
+                  transition={{ duration: 0.4, ease }}
+                >
+                  <TextReveal
+                    mode="lines"
+                    once={false}
+                    className="
+                      mb-1
+                      text-[10px]
+                      font-semibold
+                      uppercase
+                      tracking-[0.025em]
+                      md:text-[13px]
+                    "
+                  >
+                    {copyStep === 0
+                      ? "Available for\nselected freelance\nprojects."
+                      : copyStep === 1
+                        ? "Currently creating\nfocused digital\nexperiences."
+                        : "Designed with care\nbuilt with purpose\nand attention."}
+                  </TextReveal>
+                </motion.div>
+              </AnimatePresence>
+            </div>
 
             {/* Image */}
             <div
@@ -1182,7 +1303,7 @@ lg:mr-0
               </div>
             </div>
 
-            {/* Local time and location */}
+            {/* Local information / selected work / disciplines */}
             <motion.div
               initial={{
                 opacity: 0,
@@ -1204,8 +1325,6 @@ lg:mr-0
                 bottom-0
                 left-0
                 z-[25]
-                flex
-                gap-x-8
                 pb-[calc(0.15rem+env(safe-area-inset-bottom))]
                 text-[11px]
                 font-black
@@ -1216,20 +1335,228 @@ lg:mr-0
                 lg:text-[15px]
               "
             >
-              <p>Local time / {localTime}</p>
-              <p>Location / Oslo, Norway</p>
+              <AnimatePresence mode="wait">
+                {copyStep === 0 ? (
+                  <motion.div
+                    key="local-information"
+                    initial={{ opacity: 0, y: 12, filter: "blur(6px)" }}
+                    animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                    exit={{ opacity: 0, y: -10, filter: "blur(6px)" }}
+                    transition={{ duration: 0.4, ease }}
+                    className="flex flex-wrap gap-x-8 gap-y-2"
+                  >
+                    <TextReveal as="span" once={false}>
+                      {`Local time / ${localTime}`}
+                    </TextReveal>
+
+                    <TextReveal as="span" once={false}>
+                      Location / Oslo, Norway
+                    </TextReveal>
+                  </motion.div>
+                ) : copyStep === 1 ? (
+                  <motion.div
+                    key="selected-work"
+                    initial={{
+                      opacity: 0,
+                      y: 12,
+                      filter: "blur(6px)",
+                    }}
+                    animate={{
+                      opacity: 1,
+                      y: 0,
+                      filter: "blur(0px)",
+                    }}
+                    exit={{
+                      opacity: 0,
+                      y: -10,
+                      filter: "blur(6px)",
+                    }}
+                    transition={{
+                      duration: 0.4,
+                      ease,
+                    }}
+                    className="
+    pointer-events-auto
+    relative
+    z-[100]
+    flex
+    flex-wrap
+    gap-x-8
+    gap-y-2
+  "
+                  >
+                    <p className="flex items-center">
+                      <TextReveal as="span" once={false}>
+                        Portfolio /
+                      </TextReveal>
+
+                      <a
+                        href="https://kerimovdesigns.com"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="
+        group
+        pointer-events-auto
+        relative
+        z-[101]
+        ml-1
+        inline-block
+        cursor-pointer
+        pb-[3px]
+      "
+                      >
+                        <TextReveal as="span" once={false}>
+                          Kerimov
+                        </TextReveal>
+
+                        <span
+                          className="
+          pointer-events-none
+          absolute
+          bottom-0
+          left-0
+          h-px
+          w-full
+          overflow-hidden
+        "
+                        >
+                          {/* Synlig strek som forsvinner mot høyre */}
+                          <span
+                            className="
+            absolute
+            inset-0
+            origin-right
+            scale-x-100
+            bg-current
+            transition-transform
+            duration-300
+            ease-[cubic-bezier(0.76,0,0.24,1)]
+            group-hover:scale-x-0
+          "
+                          />
+
+                          {/* Ny strek som kommer inn fra venstre */}
+                          <span
+                            className="
+            absolute
+            inset-0
+            origin-left
+            scale-x-0
+            bg-current
+            transition-transform
+            duration-300
+            delay-0
+            ease-[cubic-bezier(0.76,0,0.24,1)]
+            group-hover:scale-x-100
+            group-hover:delay-[180ms]
+          "
+                          />
+                        </span>
+                      </a>
+                    </p>
+
+                    <p className="flex items-center">
+                      <TextReveal as="span" once={false}>
+                        E-commerce /
+                      </TextReveal>
+
+                      <a
+                        href="https://calerostudio.com"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="
+        group
+        pointer-events-auto
+        relative
+        z-[101]
+        ml-1
+        inline-block
+        cursor-pointer
+        pb-[3px]
+      "
+                      >
+                        <TextReveal as="span" once={false}>
+                          Calero
+                        </TextReveal>
+
+                        <span
+                          className="
+          pointer-events-none
+          absolute
+          bottom-0
+          left-0
+          h-px
+          w-full
+          overflow-hidden
+        "
+                        >
+                          {/* Synlig strek som forsvinner mot høyre */}
+                          <span
+                            className="
+            absolute
+            inset-0
+            origin-right
+            scale-x-100
+            bg-current
+            transition-transform
+            duration-500
+            ease-[cubic-bezier(0.76,0,0.24,1)]
+            group-hover:scale-x-0
+          "
+                          />
+
+                          {/* Ny strek som kommer inn fra venstre */}
+                          <span
+                            className="
+            absolute
+            inset-0
+            origin-left
+            scale-x-0
+            bg-current
+            transition-transform
+            duration-500
+            delay-0
+            ease-[cubic-bezier(0.76,0,0.24,1)]
+            group-hover:scale-x-100
+            group-hover:delay-[180ms]
+          "
+                          />
+                        </span>
+                      </a>
+                    </p>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="disciplines"
+                    initial={{ opacity: 0, y: 12, filter: "blur(6px)" }}
+                    animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                    exit={{ opacity: 0, y: -10, filter: "blur(6px)" }}
+                    transition={{ duration: 0.4, ease }}
+                    className="flex flex-wrap gap-x-8 gap-y-2"
+                  >
+                    <TextReveal as="span" once={false}>
+                      Code / Frontend
+                    </TextReveal>
+
+                    <TextReveal as="span" once={false}>
+                      UI / UX DESIGN
+                    </TextReveal>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </motion.div>
 
             {/* 3D version button – separate from the marquee */}
+            {/* 3D version button */}
             <motion.div
               initial={{
                 opacity: 0,
-                x: 24,
-                filter: "blur(6px)",
+                y: 18,
+                filter: "blur(7px)",
               }}
               animate={{
                 opacity: 1,
-                x: 0,
+                y: 0,
                 filter: "blur(0px)",
               }}
               transition={{
@@ -1238,74 +1565,57 @@ lg:mr-0
                 ease,
               }}
               className="
-              hidden
-                absolute
-                bottom-12
-                right-0
-                z-[30]
-                lg:flex
-                justify-end
-                sm:bottom-14
-                lg:bottom-16
-              "
+    absolute
+    bottom-0
+    right-0
+    z-[30]
+    hidden
+    pb-[calc(0.15rem+env(safe-area-inset-bottom))]
+    lg:block
+  "
             >
-              <div className="flex flex-col items-end gap-3">
-                <p
+              <button
+                type="button"
+                onClick={open3DRoom}
+                className="
+    group
+    flex
+    cursor-pointer
+    items-center
+    gap-3
+    text-[11px]
+    font-black
+    uppercase
+    leading-none
+    tracking-[-0.015em]
+    sm:text-[14px]
+    lg:text-[15px]
+  "
+              >
+                <motion.span
+                  aria-hidden
                   className="
-                    max-w-[260px]
-                    text-right
-                    text-[12px]
-                    font-semibold
-                    uppercase
-                    leading-[1.15]
-                    tracking-[0.025em]
-                    opacity-70
-                  "
+  inline-flex
+  items-center
+  justify-center
+  -translate-y-[1px]
+  font-normal
+  leading-none
+"
+                  initial={false}
+                  whileHover={{
+                    x: -5,
+                  }}
+                  transition={{
+                    duration: 0.25,
+                    ease,
+                  }}
                 >
-                  I had some fun experimenting with Three.js and built an
-                  interactive 3D version of the experience.
-                </p>
+                  ←
+                </motion.span>
 
-                <button
-                  type="button"
-                  onClick={open3DRoom}
-                  className="
-                    group
-                    flex
-                    cursor-pointer
-                    items-center
-                    gap-3
-                    text-[clamp(1.15rem,2.4vw,2.4rem)]
-                    font-black
-                    uppercase
-                    leading-none
-                    tracking-[-0.045em]
-                    sm:gap-4
-                  "
-                >
-                  <motion.span
-                    aria-hidden
-                    className="
-                    inline-block
-                    text-lg
-                    font-normal
-                    sm:text-xl
-                  "
-                    initial={false}
-                    whileHover={{
-                      x: -5,
-                    }}
-                    transition={{
-                      duration: 0.25,
-                      ease,
-                    }}
-                  >
-                    ←
-                  </motion.span>
-
-                  <WaveLinkText text="3D Version" />
-                </button>
-              </div>
+                <WaveLinkText text="3D Version" />
+              </button>
             </motion.div>
           </div>
         </div>
