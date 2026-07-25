@@ -152,31 +152,6 @@ const BurgerMenu = () => {
                     </motion.div>
                   ))}
                 </nav>
-
-                <motion.div
-                  initial={{
-                    opacity: 0,
-                    y: 14,
-                  }}
-                  animate={{
-                    opacity: 1,
-                    y: 0,
-                  }}
-                  transition={{
-                    delay: 0.22,
-                    duration: 0.35,
-                    ease: "easeOut",
-                  }}
-                  className="mt-12  pt-6"
-                >
-                  <p className="mb-2 text-[10px] uppercase tracking-[0.24em] text-white/35">
-                    Studio
-                  </p>
-
-                  <p className="max-w-[260px] text-sm leading-relaxed text-white/65">
-                    Design and development
-                  </p>
-                </motion.div>
               </div>
             </motion.div>
           </>

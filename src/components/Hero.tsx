@@ -47,30 +47,10 @@ import WallShelfWithCandle from "./hero/WallShelfWithCandle";
 import WindowOnWall from "./hero/WindowOnWall";
 import DarkModeBtn from "./DarkModeBtn";
 import WaveLinkText from "./WaveLinkText";
-import Link from "next/link";
 
 const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 const overlayEase: [number, number, number, number] = [0.76, 0, 0.24, 1];
-
-const capabilityItems = [
-  "Creative development, ",
-  "Interactive experiences, 3D & motion",
-  "UI / UX design",
-] as const;
-
-const navigationItems = [
-  {
-    category: "Portfolio",
-    title: "Kerimov Designs",
-    href: "https://www.kerimovdesigns.com/",
-  },
-  {
-    category: "E-commerce",
-    title: "Calero",
-    href: "https://calero.studio/",
-  },
-];
 
 type RoomSceneProps = {
   scrollYProgress: MotionValue<number>;
@@ -128,8 +108,8 @@ const CAMERA_STOP_PROGRESS = 0.53;
 
 function Fullscreen3DRoom({ onClose }: Fullscreen3DRoomProps) {
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
-
   const sectionRef = useRef<HTMLElement | null>(null);
+
   const isAtEndRef = useRef(false);
 
   const [sceneLoaded, setSceneLoaded] = useState(false);
@@ -834,280 +814,13 @@ function Fullscreen3DRoom({ onClose }: Fullscreen3DRoomProps) {
   );
 }
 
-type ScrollMarqueeProps = {
-  scrollYProgress: MotionValue<number>;
-  localTime: string;
-};
-
-type MarqueeItem =
-  | {
-      type: "text";
-      label: string;
-    }
-  | {
-      type: "heading";
-      label: string;
-    }
-  | {
-      type: "link";
-      label: string;
-      href: string;
-    };
-
-function ScrollMarquee({ scrollYProgress, localTime }: ScrollMarqueeProps) {
-  const setRef = useRef<HTMLDivElement | null>(null);
-  const [setWidth, setSetWidth] = useState(0);
-
-  const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 55,
-    damping: 22,
-    mass: 0.8,
-    restDelta: 0.0001,
-  });
-
-  useEffect(() => {
-    const element = setRef.current;
-
-    if (!element) {
-      return;
-    }
-
-    const updateWidth = () => {
-      setSetWidth(element.getBoundingClientRect().width);
-    };
-
-    updateWidth();
-
-    const observer = new ResizeObserver(updateWidth);
-
-    observer.observe(element);
-    window.addEventListener("resize", updateWidth);
-
-    return () => {
-      observer.disconnect();
-      window.removeEventListener("resize", updateWidth);
-    };
-  }, []);
-
-  const marqueeX = useTransform(smoothProgress, (progress) => {
-    if (setWidth <= 0) {
-      return 0;
-    }
-
-    const scrollDistance = progress * setWidth * 2;
-
-    return -(scrollDistance % setWidth);
-  });
-
-  const marqueeItems: MarqueeItem[] = [
-    {
-      type: "heading",
-      label: "Local time",
-    },
-    {
-      type: "text",
-      label: localTime,
-    },
-    {
-      type: "heading",
-      label: "Location",
-    },
-    {
-      type: "text",
-      label: "Oslo, Norway",
-    },
-    {
-      type: "heading",
-      label: "Selected work",
-    },
-    {
-      type: "link",
-      label: "Kerimov Designs",
-      href: "https://www.kerimovdesigns.com/",
-    },
-    {
-      type: "link",
-      label: "Calero",
-      href: "https://calero.studio/",
-    },
-    {
-      type: "heading",
-      label: "Capabilities",
-    },
-    ...capabilityItems.map(
-      (item): MarqueeItem => ({
-        type: "text",
-        label: item,
-      }),
-    ),
-  ];
-
-  const renderSet = (duplicate = false) => (
-    <div
-      ref={duplicate ? undefined : setRef}
-      aria-hidden={duplicate}
-      className="
-        flex
-        shrink-0
-        items-center
-        gap-x-8
-        pr-8
-        sm:gap-x-12
-        sm:pr-12
-        lg:gap-x-16
-        lg:pr-16
-      "
-    >
-      {marqueeItems.map((item, index) => {
-        const key = `${
-          duplicate ? "duplicate" : "original"
-        }-${item.label}-${index}`;
-
-        if (item.type === "link") {
-          return (
-            <a
-              key={key}
-              href={item.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              tabIndex={duplicate ? -1 : undefined}
-              className="
-                pointer-events-auto
-                shrink-0
-                whitespace-nowrap
-                text-xl
-                font-black
-                uppercase
-                leading-none
-                tracking-[-0.015em]
-                underline
-                underline-offset-[2px]
-                transition-opacity
-                duration-300
-                hover:opacity-50
-                sm:text-[15px]
-                lg:text-lg
-              "
-            >
-              {item.label}
-            </a>
-          );
-        }
-
-        if (item.type === "heading") {
-          return (
-            <span
-              key={key}
-              className="
-        flex
-        shrink-0
-        items-center
-        gap-x-3
-        whitespace-nowrap
-        text-xl
-        font-black
-        uppercase
-        leading-none
-        tracking-[-0.015em]
-        sm:text-[15px]
-        lg:text-lg
-      "
-            >
-              {item.label}
-
-              <span
-                aria-hidden="true"
-                className="
-          inline-block
-          font-medium
-          leading-none
-        "
-              >
-                →
-              </span>
-            </span>
-          );
-        }
-
-        return (
-          <span
-            key={key}
-            className="
-              shrink-0
-              whitespace-nowrap
-              text-xl
-              font-black
-              uppercase
-              leading-none
-              tracking-[-0.015em]
-              sm:text-[15px]
-              lg:text-lg
-            "
-          >
-            {item.label}
-          </span>
-        );
-      })}
-    </div>
-  );
-
-  return (
-    <motion.div
-      initial={{
-        opacity: 0,
-        y: 18,
-        filter: "blur(7px)",
-      }}
-      animate={{
-        opacity: 1,
-        y: 0,
-        filter: "blur(0px)",
-      }}
-      transition={{
-        duration: 0.8,
-        delay: 0.9,
-        ease,
-      }}
-      className="
-        absolute
-        bottom-0
-        left-0
-        z-[25]
-        w-full
-        overflow-hidden
-        pb-[calc(0.15rem+env(safe-area-inset-bottom))]
-      "
-    >
-      <motion.div
-        style={{
-          x: marqueeX,
-        }}
-        className="
-          flex
-          w-max
-          items-center
-          will-change-transform
-        "
-      >
-        {renderSet()}
-        {renderSet(true)}
-      </motion.div>
-    </motion.div>
-  );
-}
 export default function Hero() {
-  const sectionRef = useRef<HTMLElement | null>(null);
   const imageRef = useRef<HTMLDivElement | null>(null);
 
   const [imageLoaded, setImageLoaded] = useState(false);
   const [lineVisible, setLineVisible] = useState(false);
   const [localTime, setLocalTime] = useState("--:--");
   const [show3DRoom, setShow3DRoom] = useState(false);
-
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start start", "end end"],
-  });
 
   const revealProgress = useMotionValue(0);
 
@@ -1209,7 +922,6 @@ export default function Hero() {
   return (
     <>
       <section
-        ref={sectionRef}
         className="
           relative
 min-h-[220svh]          bg-[#fbfafa]
@@ -1308,7 +1020,7 @@ min-h-[220svh]          bg-[#fbfafa]
   lg:text-left
 "
             >
-              <p className="mb-1 uppercase text-sm md:text-md tracking-[0.025]">
+              <p className="mb-1 uppercase text-[10px] md:text-[13px] tracking-[0.025]">
                 Available for <br />
                 selected freelance <br />
                 projects. <br />{" "}
@@ -1470,11 +1182,43 @@ lg:mr-0
               </div>
             </div>
 
-            {/* Smooth scroll-linked marquee */}
-            <ScrollMarquee
-              scrollYProgress={scrollYProgress}
-              localTime={localTime}
-            />
+            {/* Local time and location */}
+            <motion.div
+              initial={{
+                opacity: 0,
+                y: 18,
+                filter: "blur(7px)",
+              }}
+              animate={{
+                opacity: 1,
+                y: 0,
+                filter: "blur(0px)",
+              }}
+              transition={{
+                duration: 0.8,
+                delay: 0.9,
+                ease,
+              }}
+              className="
+                absolute
+                bottom-0
+                left-0
+                z-[25]
+                flex
+                gap-x-8
+                pb-[calc(0.15rem+env(safe-area-inset-bottom))]
+                text-[11px]
+                font-black
+                uppercase
+                leading-none
+                tracking-[-0.015em]
+                sm:text-[13px]
+                lg:text-[15px]
+              "
+            >
+              <p>Local time / {localTime}</p>
+              <p>Location / Oslo, Norway</p>
+            </motion.div>
 
             {/* 3D version button – separate from the marquee */}
             <motion.div
