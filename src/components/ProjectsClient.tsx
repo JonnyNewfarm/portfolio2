@@ -111,6 +111,13 @@ const cardHeight = 1.62;
 const cardGap = 0.16;
 const cardStride = cardWidth + cardGap;
 
+function getColorZoneRatio(viewportWidth: number) {
+  if (viewportWidth < 1024) return 0.95;
+  if (viewportWidth < 1280) return 0.87;
+
+  return 0.76;
+}
+
 function wrapIndex(index: number, length: number) {
   return ((index % length) + length) % length;
 }
@@ -249,9 +256,18 @@ function CurvedImageCard({
   const baseVerticesRef = useRef<Float32Array | null>(null);
   const animatedXRef = useRef(index * cardStride - trackWidth / 2);
   const intendedXRef = useRef(index * cardStride - trackWidth / 2);
+  const { gl, size } = useThree();
 
   const material = useMemo(() => {
-    return new THREE.MeshBasicMaterial({
+    const resolutionUniform = {
+      value: new THREE.Vector2(1, 1),
+    };
+
+    const colorZoneRatioUniform = {
+      value: getColorZoneRatio(size.width),
+    };
+
+    const basicMaterial = new THREE.MeshBasicMaterial({
       map: texture,
       color: new THREE.Color(0xffffff),
       side: THREE.DoubleSide,
@@ -259,7 +275,82 @@ function CurvedImageCard({
       transparent: false,
       opacity: 1,
     });
-  }, [texture]);
+
+    basicMaterial.userData.colorZoneResolution = resolutionUniform;
+    basicMaterial.userData.colorZoneRatio = colorZoneRatioUniform;
+
+    basicMaterial.onBeforeCompile = (shader) => {
+      shader.uniforms.uColorZoneResolution = resolutionUniform;
+      shader.uniforms.uColorZoneRatio = colorZoneRatioUniform;
+
+      shader.fragmentShader = shader.fragmentShader
+        .replace(
+          "#include <common>",
+          `#include <common>
+          uniform vec2 uColorZoneResolution;
+          uniform float uColorZoneRatio;`,
+        )
+        .replace(
+          "#include <map_fragment>",
+          `#include <map_fragment>
+
+          float colorZoneScreenX =
+            gl_FragCoord.x / uColorZoneResolution.x;
+
+          float colorZoneLeft =
+            0.5 - uColorZoneRatio * 0.5;
+
+          float colorZoneRight =
+            0.5 + uColorZoneRatio * 0.5;
+
+          float colorZoneFeather =
+            1.5 / uColorZoneResolution.x;
+
+          float colorZoneInsideLeft = smoothstep(
+            colorZoneLeft - colorZoneFeather,
+            colorZoneLeft + colorZoneFeather,
+            colorZoneScreenX
+          );
+
+          float colorZoneInsideRight = 1.0 - smoothstep(
+            colorZoneRight - colorZoneFeather,
+            colorZoneRight + colorZoneFeather,
+            colorZoneScreenX
+          );
+
+          float colorZoneMask =
+            colorZoneInsideLeft * colorZoneInsideRight;
+
+          float colorZoneGray = dot(
+            diffuseColor.rgb,
+            vec3(0.299, 0.587, 0.114)
+          );
+
+          diffuseColor.rgb = mix(
+            vec3(colorZoneGray),
+            diffuseColor.rgb,
+            colorZoneMask
+          );`,
+        );
+    };
+
+    basicMaterial.customProgramCacheKey = () => "carousel-screen-color-zone-v1";
+
+    return basicMaterial;
+  }, [size.width, texture]);
+
+  useEffect(() => {
+    const resolutionUniform = material.userData.colorZoneResolution as {
+      value: THREE.Vector2;
+    };
+
+    const colorZoneRatioUniform = material.userData.colorZoneRatio as {
+      value: number;
+    };
+
+    gl.getDrawingBufferSize(resolutionUniform.value);
+    colorZoneRatioUniform.value = getColorZoneRatio(size.width);
+  }, [gl, material, size.height, size.width]);
 
   useEffect(() => {
     return () => {
