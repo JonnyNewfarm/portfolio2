@@ -1,436 +1,427 @@
 "use client";
 
-import Image from "next/image";
-import { useCallback, useEffect, useRef } from "react";
+import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
+import {
+  type MutableRefObject,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import * as THREE from "three";
 
-type PixelRevealImageProps = {
+type LiquidLensImageProps = {
   src: string;
   alt: string;
-
-  /**
-   * Tailwind-klasser for wrapperen.
-   * Wrapperen må ha bredde/høyde eller aspect-ratio.
-   */
   className?: string;
-
-  /**
-   * Samme funksjon som object-position.
-   *
-   * Eksempler:
-   * "center top"
-   * "center center"
-   * "50% 30%"
-   */
-  objectPosition?: string;
-
-  /**
-   * Next/Image sizes.
-   */
-  sizes?: string;
-
-  /**
-   * Total animasjonslengde i millisekunder.
-   */
-  duration?: number;
-
-  /**
-   * Størrelsen på dissolve-rutene.
-   */
-  tileSize?: number;
-
-  /**
-   * Maks devicePixelRatio.
-   * 2 gir skarpt bilde uten å bli unødvendig tungt.
-   */
-  maxDpr?: number;
-
-  /**
-   * Kalles når bildet er lastet og canvasen er klar.
-   */
+  radius?: number;
+  strength?: number;
+  smoothing?: number;
   onReady?: () => void;
 };
 
-export default function PixelRevealImage({
+type PointerState = {
+  x: number;
+  y: number;
+  targetX: number;
+  targetY: number;
+  amount: number;
+  targetAmount: number;
+};
+
+type BulgePlaneProps = {
+  src: string;
+  radius: number;
+  strength: number;
+  smoothing: number;
+  pointerRef: MutableRefObject<PointerState>;
+  onReady?: () => void;
+};
+
+/*
+ * Canvaset er 30 % større enn bildeområdet.
+ * Plane-meshet skaleres tilbake slik at selve bildet
+ * fyller den opprinnelige HTML-wrapperen nøyaktig.
+ */
+const OVERSCAN = 1.3;
+
+const vertexShader = /* glsl */ `
+  varying vec2 vUv;
+
+  uniform vec2 uPointer;
+  uniform float uRadius;
+  uniform float uStrength;
+  uniform float uImageAspect;
+
+  void main() {
+    vUv = uv;
+
+    vec3 transformed = position;
+
+    vec2 offset = uv - uPointer;
+
+    /*
+     * Korriger avstanden slik at bulgen blir sirkulær
+     * på både stående og liggende bilder.
+     */
+    vec2 correctedOffset = vec2(
+      offset.x * uImageAspect,
+      offset.y
+    );
+
+    float distanceToPointer = length(correctedOffset);
+
+    float influence = 1.0 - smoothstep(
+      0.0,
+      max(uRadius, 0.0001),
+      distanceToPointer
+    );
+
+    /*
+     * Myk overgang.
+     */
+    influence = influence * influence;
+    influence = influence * (3.0 - 2.0 * influence);
+
+    vec2 direction = vec2(0.0);
+
+    if (distanceToPointer > 0.0001) {
+      direction = normalize(correctedOffset);
+      direction.x /= max(uImageAspect, 0.0001);
+    }
+
+    /*
+     * Deformer selve geometrien.
+     * Derfor bøyes også ytterkantene på bildet.
+     */
+    float displacement = influence * uStrength;
+
+    transformed.x += direction.x * displacement;
+    transformed.y += direction.y * displacement;
+
+    /*
+     * Svak Z-bulge for mer naturlig gummifølelse.
+     */
+    transformed.z += influence * abs(uStrength) * 0.35;
+
+    gl_Position = projectionMatrix
+      * modelViewMatrix
+      * vec4(transformed, 1.0);
+  }
+`;
+
+const fragmentShader = /* glsl */ `
+  uniform sampler2D uTexture;
+
+  varying vec2 vUv;
+
+  void main() {
+    vec4 textureColor = texture2D(uTexture, vUv);
+
+    /*
+     * Ingen tint, blur, brightness, contrast eller RGB-effekt.
+     */
+    gl_FragColor = textureColor;
+
+    #include <colorspace_fragment>
+  }
+`;
+
+function BulgePlane({
   src,
-  alt,
-  className = "",
-  objectPosition = "center top",
-  sizes = "100vw",
-  duration = 1850,
-  tileSize = 14,
-  maxDpr = 2,
+  radius,
+  strength,
+  smoothing,
+  pointerRef,
   onReady,
-}: PixelRevealImageProps) {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+}: BulgePlaneProps) {
+  const materialRef = useRef<THREE.ShaderMaterial | null>(null);
+  const readyCalledRef = useRef(false);
 
-  const animationFrameRef = useRef<number | null>(null);
-  const startFrameRef = useRef<number | null>(null);
+  const texture = useLoader(THREE.TextureLoader, src);
 
-  const hasStartedRef = useRef(false);
+  const { viewport } = useThree();
+
+  const imageAspect = useMemo(() => {
+    const image = texture.image as HTMLImageElement | ImageBitmap | undefined;
+
+    if (!image || !image.width || !image.height) {
+      return 1;
+    }
+
+    return image.width / image.height;
+  }, [texture]);
+
+  /*
+   * Canvaset er større enn den synlige bilde-wrapperen.
+   * Derfor deler vi viewporten på OVERSCAN for at bildet
+   * fortsatt skal fylle wrapperen nøyaktig.
+   */
+  const planeWidth = viewport.width / OVERSCAN;
+  const planeHeight = viewport.height / OVERSCAN;
 
   useEffect(() => {
-    return () => {
-      if (startFrameRef.current !== null) {
-        window.cancelAnimationFrame(startFrameRef.current);
-      }
-
-      if (animationFrameRef.current !== null) {
-        window.cancelAnimationFrame(animationFrameRef.current);
-      }
-    };
-  }, []);
-
-  const startPixelReveal = useCallback(
-    (image: HTMLImageElement) => {
-      if (hasStartedRef.current) {
-        return;
-      }
-
-      const canvas = canvasRef.current;
-
-      if (!canvas) {
-        onReady?.();
-        return;
-      }
-
-      const prefersReducedMotion = window.matchMedia(
-        "(prefers-reduced-motion: reduce)",
-      ).matches;
-
-      startFrameRef.current = window.requestAnimationFrame(() => {
-        const context = canvas.getContext("2d");
-
-        if (!context) {
-          onReady?.();
-          return;
-        }
-
-        const rect = canvas.getBoundingClientRect();
-
-        const displayWidth = Math.max(1, Math.round(rect.width));
-
-        const displayHeight = Math.max(1, Math.round(rect.height));
-
-        const imageWidth = image.naturalWidth;
-        const imageHeight = image.naturalHeight;
-
-        if (
-          !image.complete ||
-          imageWidth <= 0 ||
-          imageHeight <= 0 ||
-          displayWidth <= 0 ||
-          displayHeight <= 0
-        ) {
-          onReady?.();
-          return;
-        }
-
-        hasStartedRef.current = true;
-        onReady?.();
-
-        const dpr = Math.min(window.devicePixelRatio || 1, maxDpr);
-
-        const renderWidth = Math.max(1, Math.round(displayWidth * dpr));
-
-        const renderHeight = Math.max(1, Math.round(displayHeight * dpr));
-
-        canvas.width = renderWidth;
-        canvas.height = renderHeight;
-
-        canvas.style.width = `${displayWidth}px`;
-        canvas.style.height = `${displayHeight}px`;
-
-        const coverCanvas = document.createElement("canvas");
-        const coverContext = coverCanvas.getContext("2d");
-
-        const pixelCanvas = document.createElement("canvas");
-        const pixelContext = pixelCanvas.getContext("2d");
-
-        if (!coverContext || !pixelContext) {
-          return;
-        }
-
-        coverCanvas.width = renderWidth;
-        coverCanvas.height = renderHeight;
-
-        const coverScale = Math.max(
-          renderWidth / imageWidth,
-          renderHeight / imageHeight,
-        );
-
-        const renderedImageWidth = imageWidth * coverScale;
-
-        const renderedImageHeight = imageHeight * coverScale;
-
-        const parsedPosition = parseObjectPosition(objectPosition);
-
-        const remainingX = renderWidth - renderedImageWidth;
-
-        const remainingY = renderHeight - renderedImageHeight;
-
-        const offsetX = remainingX * parsedPosition.x;
-
-        const offsetY = remainingY * parsedPosition.y;
-
-        coverContext.clearRect(0, 0, renderWidth, renderHeight);
-
-        coverContext.imageSmoothingEnabled = true;
-        coverContext.imageSmoothingQuality = "high";
-
-        coverContext.drawImage(
-          image,
-          offsetX,
-          offsetY,
-          renderedImageWidth,
-          renderedImageHeight,
-        );
-
-        if (prefersReducedMotion) {
-          context.clearRect(0, 0, renderWidth, renderHeight);
-
-          context.imageSmoothingEnabled = true;
-          context.imageSmoothingQuality = "high";
-
-          context.drawImage(coverCanvas, 0, 0, renderWidth, renderHeight);
-
-          return;
-        }
-
-        const pixelSteps = [
-          52, 44, 37, 31, 26, 21, 17, 14, 11, 9, 7, 5, 4, 3, 2, 1,
-        ];
-
-        const revealDuration = 0.72;
-        const startTime = window.performance.now();
-
-        const easeOutCubic = (value: number) => {
-          return 1 - Math.pow(1 - value, 3);
-        };
-
-        const getNoise = (x: number, y: number) => {
-          const value = Math.sin(x * 127.1 + y * 311.7) * 43758.5453123;
-
-          return value - Math.floor(value);
-        };
-
-        const renderFrame = (currentTime: number) => {
-          if (!canvasRef.current || canvasRef.current !== canvas) {
-            return;
-          }
-
-          const elapsed = currentTime - startTime;
-
-          const progress = Math.min(Math.max(elapsed / duration, 0), 1);
-
-          const easedProgress = easeOutCubic(progress);
-
-          const stepIndex = Math.min(
-            pixelSteps.length - 1,
-            Math.max(0, Math.floor(easedProgress * pixelSteps.length)),
-          );
-
-          const currentPixelSize = (pixelSteps[stepIndex] ?? 1) * dpr;
-
-          const reducedWidth = Math.max(
-            1,
-            Math.ceil(renderWidth / currentPixelSize),
-          );
-
-          const reducedHeight = Math.max(
-            1,
-            Math.ceil(renderHeight / currentPixelSize),
-          );
-
-          if (pixelCanvas.width !== reducedWidth) {
-            pixelCanvas.width = reducedWidth;
-          }
-
-          if (pixelCanvas.height !== reducedHeight) {
-            pixelCanvas.height = reducedHeight;
-          }
-
-          if (pixelCanvas.width <= 0 || pixelCanvas.height <= 0) {
-            animationFrameRef.current =
-              window.requestAnimationFrame(renderFrame);
-
-            return;
-          }
-
-          pixelContext.clearRect(0, 0, reducedWidth, reducedHeight);
-
-          pixelContext.imageSmoothingEnabled = true;
-          pixelContext.imageSmoothingQuality = "high";
-
-          pixelContext.drawImage(
-            coverCanvas,
-            0,
-            0,
-            renderWidth,
-            renderHeight,
-            0,
-            0,
-            reducedWidth,
-            reducedHeight,
-          );
-
-          context.clearRect(0, 0, renderWidth, renderHeight);
-
-          context.imageSmoothingEnabled = false;
-
-          context.drawImage(
-            pixelCanvas,
-            0,
-            0,
-            reducedWidth,
-            reducedHeight,
-            0,
-            0,
-            renderWidth,
-            renderHeight,
-          );
-
-          const revealProgress = Math.min(
-            Math.max(progress / revealDuration, 0),
-            1,
-          );
-
-          if (revealProgress < 1) {
-            const renderedTileSize = Math.max(1, Math.round(tileSize * dpr));
-
-            for (let y = 0; y < renderHeight; y += renderedTileSize) {
-              for (let x = 0; x < renderWidth; x += renderedTileSize) {
-                const tileX = Math.floor(x / renderedTileSize);
-
-                const tileY = Math.floor(y / renderedTileSize);
-
-                const noise = getNoise(tileX, tileY);
-
-                const verticalBias = (y / renderHeight) * 0.12;
-
-                const threshold = Math.min(1, noise * 0.88 + verticalBias);
-
-                if (revealProgress < threshold) {
-                  context.clearRect(
-                    x,
-                    y,
-                    renderedTileSize + 1,
-                    renderedTileSize + 1,
-                  );
-                }
-              }
-            }
-          }
-
-          if (progress < 1) {
-            animationFrameRef.current =
-              window.requestAnimationFrame(renderFrame);
-
-            return;
-          }
-
-          context.clearRect(0, 0, renderWidth, renderHeight);
-
-          context.imageSmoothingEnabled = true;
-          context.imageSmoothingQuality = "high";
-
-          context.drawImage(coverCanvas, 0, 0, renderWidth, renderHeight);
-
-          animationFrameRef.current = null;
-        };
-
-        animationFrameRef.current = window.requestAnimationFrame(renderFrame);
-      });
-    },
-    [duration, maxDpr, objectPosition, onReady, tileSize],
+    texture.colorSpace = THREE.SRGBColorSpace;
+
+    texture.wrapS = THREE.ClampToEdgeWrapping;
+    texture.wrapT = THREE.ClampToEdgeWrapping;
+
+    texture.minFilter = THREE.LinearFilter;
+    texture.magFilter = THREE.LinearFilter;
+
+    texture.generateMipmaps = true;
+    texture.needsUpdate = true;
+
+    if (!readyCalledRef.current) {
+      readyCalledRef.current = true;
+      onReady?.();
+    }
+  }, [texture, onReady]);
+
+  const uniforms = useMemo(
+    () => ({
+      uTexture: {
+        value: texture,
+      },
+
+      uPointer: {
+        value: new THREE.Vector2(0.5, 0.5),
+      },
+
+      uRadius: {
+        value: radius,
+      },
+
+      uStrength: {
+        value: 0,
+      },
+
+      uImageAspect: {
+        value: imageAspect,
+      },
+    }),
+    [texture, radius, imageAspect],
   );
 
-  return (
-    <div
-      className={`
-        relative
-        overflow-hidden
-        ${className}
-      `}
-    >
-      <Image
-        src={src}
-        alt=""
-        fill
-        priority
-        aria-hidden
-        sizes={sizes}
-        onLoad={(event) => {
-          startPixelReveal(event.currentTarget);
-        }}
-        className="
-          pointer-events-none
-          absolute
-          inset-0
-          opacity-0
-        "
-      />
+  useEffect(() => {
+    const material = materialRef.current;
 
-      <canvas
-        ref={canvasRef}
-        role="img"
-        aria-label={alt}
-        className="
-          absolute
-          inset-0
-          block
-          h-full
-          w-full
-          [image-rendering:auto]
-        "
+    if (!material) {
+      return;
+    }
+
+    material.uniforms.uRadius.value = radius;
+    material.uniforms.uImageAspect.value = imageAspect;
+  }, [radius, imageAspect]);
+
+  useFrame(() => {
+    const material = materialRef.current;
+
+    if (!material) {
+      return;
+    }
+
+    const pointer = pointerRef.current;
+
+    pointer.x = THREE.MathUtils.lerp(pointer.x, pointer.targetX, smoothing);
+
+    pointer.y = THREE.MathUtils.lerp(pointer.y, pointer.targetY, smoothing);
+
+    pointer.amount = THREE.MathUtils.lerp(
+      pointer.amount,
+      pointer.targetAmount,
+      smoothing,
+    );
+
+    material.uniforms.uPointer.value.set(pointer.x, pointer.y);
+
+    material.uniforms.uRadius.value = radius;
+
+    /*
+     * Styrken skaleres mot den faktiske størrelsen på plane-meshet.
+     */
+    const baseSize = Math.min(planeWidth, planeHeight);
+
+    material.uniforms.uStrength.value =
+      pointer.amount * strength * baseSize * 0.12;
+  });
+
+  return (
+    <mesh>
+      <planeGeometry args={[planeWidth, planeHeight, 96, 120]} />
+
+      <shaderMaterial
+        ref={materialRef}
+        uniforms={uniforms}
+        vertexShader={vertexShader}
+        fragmentShader={fragmentShader}
+        transparent
+        depthWrite={false}
+        depthTest={false}
+        toneMapped={false}
+        side={THREE.DoubleSide}
       />
-    </div>
+    </mesh>
   );
 }
 
-function parseObjectPosition(position: string) {
-  const values = position.trim().toLowerCase().split(/\s+/);
+export default function LiquidLensImage({
+  src,
+  alt,
+  className = "",
+  radius = 0.4,
+  strength = 0.9,
+  smoothing = 0.15,
+  onReady,
+}: LiquidLensImageProps) {
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
-  const first = values[0] ?? "center";
-  const second = values[1];
+  const [loaded, setLoaded] = useState(false);
 
-  let horizontal = 0.5;
-  let vertical = 0.5;
+  const pointerRef = useRef<PointerState>({
+    x: 0.5,
+    y: 0.5,
+    targetX: 0.5,
+    targetY: 0.5,
+    amount: 0,
+    targetAmount: 0,
+  });
 
-  const parseValue = (value: string | undefined, axis: "x" | "y") => {
-    if (!value) {
-      return 0.5;
+  useEffect(() => {
+    const container = containerRef.current;
+
+    if (!container) {
+      return;
     }
 
-    if (value === "left") return 0;
-    if (value === "right") return 1;
-    if (value === "top") return 0;
-    if (value === "bottom") return 1;
-    if (value === "center") return 0.5;
+    const updatePointer = (clientX: number, clientY: number) => {
+      const bounds = container.getBoundingClientRect();
 
-    if (value.endsWith("%")) {
-      const percentage = Number.parseFloat(value) / 100;
-
-      if (Number.isFinite(percentage)) {
-        return Math.min(1, Math.max(0, percentage));
+      if (bounds.width <= 0 || bounds.height <= 0) {
+        return;
       }
-    }
 
-    return axis === "x" ? 0.5 : 0.5;
-  };
+      const x = (clientX - bounds.left) / bounds.width;
 
-  if (!second) {
-    if (first === "top" || first === "bottom") {
-      vertical = parseValue(first, "y");
-    } else {
-      horizontal = parseValue(first, "x");
-    }
-  } else {
-    horizontal = parseValue(first, "x");
-    vertical = parseValue(second, "y");
-  }
+      const y = (clientY - bounds.top) / bounds.height;
 
-  return {
-    x: horizontal,
-    y: vertical,
-  };
+      pointerRef.current.targetX = THREE.MathUtils.clamp(x, 0, 1);
+
+      /*
+       * DOM starter øverst.
+       * WebGL UV starter nederst.
+       */
+      pointerRef.current.targetY = THREE.MathUtils.clamp(1 - y, 0, 1);
+
+      pointerRef.current.targetAmount = 1;
+    };
+
+    const handlePointerEnter = (event: PointerEvent) => {
+      updatePointer(event.clientX, event.clientY);
+    };
+
+    const handlePointerMove = (event: PointerEvent) => {
+      updatePointer(event.clientX, event.clientY);
+    };
+
+    const handlePointerLeave = () => {
+      pointerRef.current.targetAmount = 0;
+    };
+
+    container.addEventListener("pointerenter", handlePointerEnter);
+
+    container.addEventListener("pointermove", handlePointerMove);
+
+    container.addEventListener("pointerleave", handlePointerLeave);
+
+    return () => {
+      container.removeEventListener("pointerenter", handlePointerEnter);
+
+      container.removeEventListener("pointermove", handlePointerMove);
+
+      container.removeEventListener("pointerleave", handlePointerLeave);
+    };
+  }, []);
+
+  return (
+    <div
+      ref={containerRef}
+      role="img"
+      aria-label={alt}
+      className={`
+        relative
+        isolate
+        overflow-visible
+        ${className}
+      `}
+    >
+      {/*
+       * Canvaset er større bare for å gi plass til bøyde kanter.
+       * Det visuelle bildet fyller fortsatt wrapperen 100 %.
+       *
+       * Ingen border.
+       * Ingen bakgrunn.
+       * Ingen padding.
+       * Ingen border-radius.
+       */}
+      <div
+        className="
+          pointer-events-none
+          absolute
+          left-1/2
+          top-1/2
+          h-[130%]
+          w-[130%]
+          -translate-x-1/2
+          -translate-y-1/2
+        "
+      >
+        <Canvas
+          orthographic
+          dpr={[1, 1.5]}
+          camera={{
+            position: [0, 0, 5],
+            zoom: 100,
+            near: 0.1,
+            far: 20,
+          }}
+          gl={{
+            alpha: true,
+            antialias: true,
+            powerPreference: "high-performance",
+            premultipliedAlpha: false,
+          }}
+          onCreated={({ gl }) => {
+            gl.outputColorSpace = THREE.SRGBColorSpace;
+
+            gl.toneMapping = THREE.NoToneMapping;
+
+            gl.toneMappingExposure = 1;
+
+            gl.setClearColor(new THREE.Color(0x000000), 0);
+          }}
+          style={{
+            display: "block",
+            width: "100%",
+            height: "100%",
+            background: "transparent",
+            opacity: loaded ? 1 : 0,
+            transition: "opacity 300ms ease",
+          }}
+        >
+          <BulgePlane
+            src={src}
+            radius={radius}
+            strength={strength}
+            smoothing={smoothing}
+            pointerRef={pointerRef}
+            onReady={() => {
+              setLoaded(true);
+              onReady?.();
+            }}
+          />
+        </Canvas>
+      </div>
+    </div>
+  );
 }

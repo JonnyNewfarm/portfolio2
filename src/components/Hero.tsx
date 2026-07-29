@@ -44,7 +44,6 @@ import WallShelfWithCandle from "./hero/WallShelfWithCandle";
 import WindowOnWall from "./hero/WindowOnWall";
 import DarkModeBtn from "./DarkModeBtn";
 import WaveLinkText from "./WaveLinkText";
-import PixelRevealImage from "./PIxelRevealImage";
 
 const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
@@ -912,21 +911,6 @@ export default function Hero() {
     offset: ["start start", "end end"],
   });
 
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-
-  const smoothMouseX = useSpring(mouseX, {
-    stiffness: 90,
-    damping: 22,
-    mass: 0.4,
-  });
-
-  const smoothMouseY = useSpring(mouseY, {
-    stiffness: 90,
-    damping: 22,
-    mass: 0.4,
-  });
-
   useMotionValueEvent(heroScrollProgress, "change", (latest) => {
     const nextStep: 0 | 1 | 2 = latest < 0.16 ? 0 : latest < 0.42 ? 1 : 2;
 
@@ -951,27 +935,6 @@ export default function Hero() {
 
     return () => window.clearInterval(interval);
   }, []);
-
-  const handleImageMove = (event: React.MouseEvent<HTMLDivElement>) => {
-    const rect = event.currentTarget.getBoundingClientRect();
-
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-
-    const moveX = ((x - centerX) / centerX) * 7;
-    const moveY = ((y - centerY) / centerY) * 7;
-
-    mouseX.set(moveX);
-    mouseY.set(moveY);
-  };
-
-  const handleImageLeave = () => {
-    mouseX.set(0);
-    mouseY.set(0);
-  };
 
   const open3DRoom = () => {
     setShow3DRoom(true);
@@ -1139,12 +1102,6 @@ export default function Hero() {
               <div className="flex flex-col items-start">
                 <motion.div
                   ref={imageRef}
-                  onMouseMove={handleImageMove}
-                  onMouseLeave={handleImageLeave}
-                  style={{
-                    x: smoothMouseX,
-                    y: smoothMouseY,
-                  }}
                   initial={{
                     opacity: 0,
                     scale: 1.025,
@@ -1158,38 +1115,27 @@ export default function Hero() {
                     ease,
                   }}
                   className="
-                    relative
-                    aspect-[4/5]
-                    w-[42vw]
-                    max-w-[260px]
-                    overflow-hidden
-                    bg-stone-400/10
-                    dark:bg-stone-200/5
-                    sm:w-[220px]
-                    lg:w-[240px]
-                  "
-                >
-                  <PixelRevealImage
-                    src="/jonas-0003.jpg"
-                    alt="Jonas Nygaard"
-                    objectPosition="center top"
-                    sizes="
-    (max-width: 640px) 42vw,
-    (max-width: 1024px) 220px,
-    240px
-  "
-                    duration={1850}
-                    tileSize={14}
-                    onReady={() => setImageLoaded(true)}
-                    className="
+    relative
     aspect-[4/5]
     w-[42vw]
     max-w-[260px]
+    overflow-hidden
     bg-stone-400/10
     dark:bg-stone-200/5
     sm:w-[220px]
     lg:w-[240px]
   "
+                >
+                  <Image
+                    src="/jonas-0003.jpg"
+                    alt="Jonas Nygaard"
+                    fill
+                    priority
+                    sizes="(max-width: 640px) 42vw, 240px"
+                    className="object-cover"
+                    onLoad={() => {
+                      setImageLoaded(true);
+                    }}
                   />
                 </motion.div>
 
