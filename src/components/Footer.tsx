@@ -71,13 +71,6 @@ const Footer = () => {
                 </Link>
 
                 <Link
-                  href="/about"
-                  className="w-fit transition hover:opacity-60"
-                >
-                  <WaveLinkText text="About" />
-                </Link>
-
-                <Link
                   href="/contact"
                   className="w-fit transition hover:opacity-60"
                 >

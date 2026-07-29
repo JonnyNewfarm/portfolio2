@@ -24,10 +24,6 @@ const Navbar = () => {
       label: "Contact",
       url: "/contact",
     },
-    {
-      label: "About",
-      url: "/about",
-    },
   ];
 
   useEffect(() => {

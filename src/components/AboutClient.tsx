@@ -1,26 +1,24 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
-import ScrollSection from "@/components/SmoothScroll";
-import WaveLinkText from "./WaveLinkText";
-import type { AnimationPlaybackControls } from "framer-motion";
 import {
-  animate,
   motion,
-  useMotionTemplate,
   useMotionValue,
   useScroll,
   useSpring,
   useTransform,
 } from "framer-motion";
 
+import ScrollSection from "@/components/SmoothScroll";
+import PixelRevealImage from "./PIxelRevealImage";
+import WaveLinkText from "./WaveLinkText";
+
 const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 const introImage = {
   src: "/jonas-01.jpg",
-  alt: "Jonas Nygaard 3",
+  alt: "Jonas Nygaard",
 };
 
 const imageStats = [
@@ -96,7 +94,10 @@ function TextReveal({
       : {
           initial: "hidden",
           whileInView: "visible",
-          viewport: { once, amount: 0.35 },
+          viewport: {
+            once,
+            amount: 0.35,
+          },
         };
 
   return (
@@ -154,7 +155,10 @@ function FadeIn({
         y: 0,
         filter: "blur(0px)",
       }}
-      viewport={{ once: true, amount }}
+      viewport={{
+        once: true,
+        amount,
+      }}
       transition={{
         duration: 0.9,
         delay,
@@ -170,20 +174,7 @@ function FadeIn({
 export default function AboutClient() {
   const imageRef = useRef<HTMLDivElement | null>(null);
 
-  const [imageLoaded, setImageLoaded] = useState(false);
   const [introDone, setIntroDone] = useState(false);
-  const [lineVisible, setLineVisible] = useState(false);
-
-  const revealProgress = useMotionValue(0);
-
-  const revealRight = useTransform(
-    revealProgress,
-    (value) => `${100 - value}%`,
-  );
-
-  const revealClipPath = useMotionTemplate`inset(0% ${revealRight} 0% 0%)`;
-
-  const revealLineLeft = useTransform(revealProgress, (value) => `${value}%`);
 
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -207,8 +198,26 @@ export default function AboutClient() {
 
   const imageScale = useTransform(scrollYProgress, [0, 1], [1.04, 1]);
 
+  /*
+   * Starter intro-teksten uavhengig av bildet.
+   */
   useEffect(() => {
-    if (introDone) return;
+    const introTimer = window.setTimeout(() => {
+      setIntroDone(true);
+    }, 450);
+
+    return () => {
+      window.clearTimeout(introTimer);
+    };
+  }, []);
+
+  /*
+   * Låser scroll mens den korte introen kjører.
+   */
+  useEffect(() => {
+    if (introDone) {
+      return;
+    }
 
     const scrollY = window.scrollY;
 
@@ -247,8 +256,14 @@ export default function AboutClient() {
     document.body.style.top = `-${scrollY}px`;
     document.body.style.width = "100%";
 
-    window.addEventListener("wheel", preventDefault, { passive: false });
-    window.addEventListener("touchmove", preventDefault, { passive: false });
+    window.addEventListener("wheel", preventDefault, {
+      passive: false,
+    });
+
+    window.addEventListener("touchmove", preventDefault, {
+      passive: false,
+    });
+
     window.addEventListener("keydown", preventScrollKeys);
 
     return () => {
@@ -266,53 +281,11 @@ export default function AboutClient() {
     };
   }, [introDone]);
 
-  useEffect(() => {
-    if (!imageLoaded) return;
+  const handleImageMove = (event: React.MouseEvent<HTMLDivElement>) => {
+    const rect = event.currentTarget.getBoundingClientRect();
 
-    let controls: AnimationPlaybackControls | null = null;
-    let introTimer: number | null = null;
-    let doneTimer: number | null = null;
-
-    const startTimer = window.setTimeout(() => {
-      setLineVisible(true);
-
-      controls = animate(revealProgress, 100, {
-        duration: 2.35,
-        ease,
-        onComplete: () => {
-          setLineVisible(false);
-
-          doneTimer = window.setTimeout(() => {
-            setIntroDone(true);
-          }, 80);
-        },
-      });
-
-      introTimer = window.setTimeout(() => {
-        setIntroDone(true);
-      }, 1650);
-    }, 450);
-
-    return () => {
-      window.clearTimeout(startTimer);
-
-      if (introTimer) {
-        window.clearTimeout(introTimer);
-      }
-
-      if (doneTimer) {
-        window.clearTimeout(doneTimer);
-      }
-
-      controls?.stop();
-    };
-  }, [imageLoaded, revealProgress]);
-
-  const handleImageMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
 
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
@@ -331,8 +304,33 @@ export default function AboutClient() {
 
   return (
     <ScrollSection>
-      <section className="relative min-h-screen overflow-hidden bg-[#fbfafa] text-[#161310] dark:bg-[#1e1c1c] dark:text-stone-300">
-        <div className="absolute right-0 top-[6.2rem] z-[1] w-[54vw] sm:w-[42vw] md:w-[34vw] lg:top-[5.7rem] lg:w-[27vw] xl:w-[24vw] 2xl:w-[23vw]">
+      <section
+        className="
+          relative
+          min-h-screen
+          overflow-hidden
+          bg-[#fbfafa]
+          text-[#161310]
+          dark:bg-[#1e1c1c]
+          dark:text-stone-300
+        "
+      >
+        {/* Portrait */}
+        <div
+          className="
+            absolute
+            right-0
+            top-[6.2rem]
+            z-[1]
+            w-[54vw]
+            sm:w-[42vw]
+            md:w-[34vw]
+            lg:top-[5.7rem]
+            lg:w-[27vw]
+            xl:w-[24vw]
+            2xl:w-[23vw]
+          "
+        >
           <motion.div
             ref={imageRef}
             onMouseMove={handleImageMove}
@@ -343,102 +341,112 @@ export default function AboutClient() {
               scale: imageScale,
             }}
             initial={{
-              clipPath: "inset(100% 0% 0% 0%)",
-              filter: "blur(12px)",
+              opacity: 0,
             }}
             animate={{
-              clipPath: imageLoaded
-                ? "inset(0% 0% 0% 0%)"
-                : "inset(100% 0% 0% 0%)",
-              filter: imageLoaded ? "blur(0px)" : "blur(12px)",
+              opacity: 1,
             }}
             transition={{
-              duration: 1.1,
+              duration: 0.35,
               ease,
             }}
-            className="relative aspect-[4/5] w-full overflow-hidden bg-stone-400/10 dark:bg-stone-200/5"
+            className="
+              relative
+              aspect-[4/5]
+              w-full
+              bg-stone-400/10
+              dark:bg-stone-200/5
+            "
           >
-            <Image
+            <PixelRevealImage
               src={introImage.src}
               alt={introImage.alt}
-              fill
-              priority
-              onLoad={() => setImageLoaded(true)}
-              className="object-cover object-top"
-              sizes="(max-width: 640px) 54vw, (max-width: 768px) 42vw, (max-width: 1024px) 34vw, 27vw"
+              objectPosition="center top"
+              sizes="
+                (max-width: 640px) 54vw,
+                (max-width: 768px) 42vw,
+                (max-width: 1024px) 34vw,
+                27vw
+              "
+              duration={1850}
+              tileSize={14}
+              maxDpr={2}
+              className="
+                absolute
+                inset-0
+                h-full
+                w-full
+              "
             />
 
-            <motion.div
-              style={{
-                clipPath: revealClipPath,
-              }}
-              className="absolute inset-0 z-[2]"
+            <div
+              className="
+                pointer-events-none
+                absolute
+                inset-0
+                z-10
+                flex
+                items-end
+                justify-between
+                p-3
+                mix-blend-difference
+              "
             >
-              <Image
-                src={introImage.src}
-                alt={introImage.alt}
-                fill
-                priority
-                className="object-cover object-top grayscale"
-                sizes="(max-width: 640px) 54vw, (max-width: 768px) 42vw, (max-width: 1024px) 34vw, 27vw"
-              />
-            </motion.div>
-
-            <motion.div
-              style={{
-                left: revealLineLeft,
-              }}
-              animate={{
-                opacity: lineVisible ? 1 : 0,
-              }}
-              transition={{
-                duration: 0.18,
-                ease,
-              }}
-              className="pointer-events-none absolute top-0 z-[4] h-full w-px -translate-x-1/2 bg-white mix-blend-difference"
-            />
-
-            <motion.div
-              style={{
-                left: revealLineLeft,
-              }}
-              animate={{
-                opacity: lineVisible ? 0.45 : 0,
-              }}
-              transition={{
-                duration: 0.18,
-                ease,
-              }}
-              className="pointer-events-none absolute top-0 z-[3] h-full w-8 -translate-x-1/2 bg-white/10 blur-md"
-            />
-
-            <div className="pointer-events-none absolute inset-0 z-10 flex items-end justify-between p-3 mix-blend-difference">
               <motion.p
-                initial={{ opacity: 0, y: 12 }}
-                animate={{
-                  opacity: imageLoaded ? 1 : 0,
-                  y: imageLoaded ? 0 : 12,
+                initial={{
+                  opacity: 0,
+                  y: 12,
                 }}
-                transition={{ duration: 0.65, delay: 0.25, ease }}
-                className="text-[11px] font-black uppercase leading-none tracking-[0.22em] text-white"
+                animate={{
+                  opacity: 1,
+                  y: 0,
+                }}
+                transition={{
+                  duration: 0.65,
+                  delay: 0.25,
+                  ease,
+                }}
+                className="
+                  text-[11px]
+                  font-black
+                  uppercase
+                  leading-none
+                  tracking-[0.22em]
+                  text-white
+                "
               >
                 Jonas
               </motion.p>
 
               <motion.p
-                initial={{ opacity: 0, y: 10 }}
-                animate={{
-                  opacity: imageLoaded ? 1 : 0,
-                  y: imageLoaded ? 0 : 10,
+                initial={{
+                  opacity: 0,
+                  y: 10,
                 }}
-                transition={{ duration: 0.35, ease }}
-                className="text-[11px] font-black uppercase leading-none tracking-[0.22em] text-white"
+                animate={{
+                  opacity: 1,
+                  y: 0,
+                }}
+                transition={{
+                  duration: 0.35,
+                  delay: 0.25,
+                  ease,
+                }}
+                className="
+                  text-[11px]
+                  font-black
+                  uppercase
+                  leading-none
+                  tracking-[0.22em]
+                  text-white
+                "
               >
-                2026{" "}
+                2026
               </motion.p>
             </div>
           </motion.div>
 
+          {/* Image information */}
           <motion.div
             initial="hidden"
             animate={introDone ? "visible" : "hidden"}
@@ -451,7 +459,22 @@ export default function AboutClient() {
                 },
               },
             }}
-            className="mt-5 hidden grid-cols-1 gap-4 text-[10px] font-black uppercase leading-[1.25] tracking-[0.16em] sm:grid sm:grid-cols-2 sm:gap-6 lg:text-xs lg:tracking-[0.18em]"
+            className="
+              mt-5
+              hidden
+              grid-cols-1
+              gap-4
+              text-[10px]
+              font-black
+              uppercase
+              leading-[1.25]
+              tracking-[0.16em]
+              sm:grid
+              sm:grid-cols-2
+              sm:gap-6
+              lg:text-xs
+              lg:tracking-[0.18em]
+            "
           >
             {imageStats.map((item) => (
               <motion.div
@@ -479,14 +502,45 @@ export default function AboutClient() {
             ))}
           </motion.div>
         </div>
-        <div className="relative z-[2] px-4 sm:px-8 md:px-10 lg:pl-16 lg:pr-[28vw] xl:pr-[26vw] 2xl:pr-[24vw]">
-          <div className="flex min-h-screen flex-col justify-end pb-10 pt-28 lg:pt-36">
+
+        {/* Page content */}
+        <div
+          className="
+            relative
+            z-[2]
+            px-4
+            sm:px-8
+            md:px-10
+            lg:pl-16
+            lg:pr-[28vw]
+            xl:pr-[26vw]
+            2xl:pr-[24vw]
+          "
+        >
+          <div
+            className="
+              flex
+              min-h-screen
+              flex-col
+              justify-end
+              pb-10
+              pt-28
+              lg:pt-36
+            "
+          >
             <TextReveal
               as="h1"
               mode="lines"
               delay={0.05}
               trigger={introDone}
-              className="max-w-[980px] text-[clamp(3rem,7vw,7rem)] font-black uppercase leading-[0.92] tracking-[-0.065em]"
+              className="
+                max-w-[980px]
+                text-[clamp(3rem,7vw,7rem)]
+                font-black
+                uppercase
+                leading-[0.92]
+                tracking-[-0.065em]
+              "
             >
               {`Designer &
 frontend
@@ -496,12 +550,25 @@ developer.`}
 
           <div className="pb-16 lg:pb-24">
             <div className="pt-8">
-              <div className="grid max-w-[900px] grid-cols-1 gap-6 md:grid-cols-2">
+              <div
+                className="
+                  grid
+                  max-w-[900px]
+                  grid-cols-1
+                  gap-6
+                  md:grid-cols-2
+                "
+              >
                 <TextReveal
                   as="p"
                   mode="words"
                   delay={0.05}
-                  className="text-base leading-[1.65] opacity-80 md:text-lg"
+                  className="
+                    text-base
+                    leading-[1.65]
+                    opacity-80
+                    md:text-lg
+                  "
                 >
                   I like being creative in both design and development, building
                   digital experiences with focus on layout, interaction, motion
@@ -512,7 +579,12 @@ developer.`}
                   as="p"
                   mode="words"
                   delay={0.13}
-                  className="text-base leading-[1.65] opacity-80 md:text-lg"
+                  className="
+                    text-base
+                    leading-[1.65]
+                    opacity-80
+                    md:text-lg
+                  "
                 >
                   My work is about making websites feel sharp, responsive and
                   alive — from the first idea to the final interface.
@@ -521,12 +593,28 @@ developer.`}
             </div>
 
             <div className="mt-16 pt-8">
-              <div className="grid grid-cols-1 gap-8 md:grid-cols-[1fr_0.35fr] md:items-end">
+              <div
+                className="
+                  grid
+                  grid-cols-1
+                  gap-8
+                  md:grid-cols-[1fr_0.35fr]
+                  md:items-end
+                "
+              >
                 <TextReveal
                   as="p"
                   mode="lines"
                   delay={0.05}
-                  className="max-w-[760px] text-3xl font-black uppercase leading-[1] tracking-[-0.05em] md:text-5xl"
+                  className="
+                    max-w-[760px]
+                    text-3xl
+                    font-black
+                    uppercase
+                    leading-[1]
+                    tracking-[-0.05em]
+                    md:text-5xl
+                  "
                 >
                   {`Available for
 selected freelance
@@ -536,7 +624,18 @@ projects.`}
                 <FadeIn delay={0.25} y={20} className="md:justify-self-end">
                   <Link
                     href="/contact"
-                    className="group relative block w-fit overflow-hidden text-sm font-black uppercase tracking-[0.22em] md:text-base"
+                    className="
+                      group
+                      relative
+                      block
+                      w-fit
+                      overflow-hidden
+                      text-sm
+                      font-black
+                      uppercase
+                      tracking-[0.22em]
+                      md:text-base
+                    "
                   >
                     <WaveLinkText text="Contact Me" />
                   </Link>

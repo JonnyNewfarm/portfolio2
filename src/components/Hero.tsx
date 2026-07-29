@@ -1,22 +1,18 @@
 "use client";
 
 import { Canvas } from "@react-three/fiber";
-import type { AnimationPlaybackControls, MotionValue } from "framer-motion";
+import type { MotionValue } from "framer-motion";
 import { IoMdClose } from "react-icons/io";
 
 import {
-  animate,
   AnimatePresence,
   motion,
-  useMotionTemplate,
   useMotionValue,
   useMotionValueEvent,
   useScroll,
   useSpring,
-  useTransform,
 } from "framer-motion";
 import Image from "next/image";
-import Link from "next/link";
 import * as THREE from "three";
 import {
   memo,
@@ -48,6 +44,7 @@ import WallShelfWithCandle from "./hero/WallShelfWithCandle";
 import WindowOnWall from "./hero/WindowOnWall";
 import DarkModeBtn from "./DarkModeBtn";
 import WaveLinkText from "./WaveLinkText";
+import PixelRevealImage from "./PIxelRevealImage";
 
 const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
@@ -906,7 +903,6 @@ export default function Hero() {
   const imageRef = useRef<HTMLDivElement | null>(null);
 
   const [imageLoaded, setImageLoaded] = useState(false);
-  const [lineVisible, setLineVisible] = useState(false);
   const [localTime, setLocalTime] = useState("--:--");
   const [show3DRoom, setShow3DRoom] = useState(false);
   const [copyStep, setCopyStep] = useState<0 | 1 | 2>(0);
@@ -915,17 +911,6 @@ export default function Hero() {
     target: heroSectionRef,
     offset: ["start start", "end end"],
   });
-
-  const revealProgress = useMotionValue(0);
-
-  const revealRight = useTransform(
-    revealProgress,
-    (value) => `${100 - value}%`,
-  );
-
-  const revealClipPath = useMotionTemplate`inset(0% ${revealRight} 0% 0%)`;
-
-  const revealLineLeft = useTransform(revealProgress, (value) => `${value}%`);
 
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -967,29 +952,6 @@ export default function Hero() {
     return () => window.clearInterval(interval);
   }, []);
 
-  useEffect(() => {
-    if (!imageLoaded) return;
-
-    let controls: AnimationPlaybackControls | null = null;
-
-    const startTimer = window.setTimeout(() => {
-      setLineVisible(true);
-
-      controls = animate(revealProgress, 100, {
-        duration: 2.2,
-        ease,
-        onComplete: () => {
-          setLineVisible(false);
-        },
-      });
-    }, 500);
-
-    return () => {
-      window.clearTimeout(startTimer);
-      controls?.stop();
-    };
-  }, [imageLoaded, revealProgress]);
-
   const handleImageMove = (event: React.MouseEvent<HTMLDivElement>) => {
     const rect = event.currentTarget.getBoundingClientRect();
 
@@ -1025,7 +987,7 @@ export default function Hero() {
         ref={heroSectionRef}
         className="
           relative
-min-h-[300svh]
+          min-h-[300svh]
           bg-[#fbfafa]
           text-[#161310]
           dark:bg-[#1e1c1c]
@@ -1160,8 +1122,8 @@ min-h-[300svh]
                 gap-5
                 sm:mt-12
                 sm:gap-7
-md:-mr-20              
-lg:mr-0  
+                md:-mr-20
+                lg:mr-0
                 lg:absolute
                 lg:left-[66%]
                 lg:top-[7%]
@@ -1184,106 +1146,50 @@ lg:mr-0
                     y: smoothMouseY,
                   }}
                   initial={{
-                    clipPath: "inset(100% 0% 0% 0%)",
-                    filter: "blur(12px)",
+                    opacity: 0,
+                    scale: 1.025,
                   }}
                   animate={{
-                    clipPath: imageLoaded
-                      ? "inset(0% 0% 0% 0%)"
-                      : "inset(100% 0% 0% 0%)",
-                    filter: imageLoaded ? "blur(0px)" : "blur(12px)",
+                    opacity: imageLoaded ? 1 : 0,
+                    scale: imageLoaded ? 1 : 1.025,
                   }}
                   transition={{
-                    duration: 1.1,
+                    duration: 0.45,
                     ease,
                   }}
                   className="
-                  relative
-                  aspect-[4/5]
-                  
-                  w-[42vw]
-                  max-w-[260px]
-                  overflow-hidden
-                  bg-stone-400/10
-                  dark:bg-stone-200/5
-                  sm:w-[220px]
-                  lg:w-[240px]
-                "
+                    relative
+                    aspect-[4/5]
+                    w-[42vw]
+                    max-w-[260px]
+                    overflow-hidden
+                    bg-stone-400/10
+                    dark:bg-stone-200/5
+                    sm:w-[220px]
+                    lg:w-[240px]
+                  "
                 >
-                  <Image
+                  <PixelRevealImage
                     src="/jonas-0003.jpg"
                     alt="Jonas Nygaard"
-                    fill
-                    priority
-                    onLoad={() => setImageLoaded(true)}
-                    className="object-cover object-top"
-                  />
-
-                  {/* Grayscale reveal layer */}
-                  <motion.div
-                    style={{
-                      clipPath: revealClipPath,
-                    }}
-                    className="absolute inset-0 z-[2]"
-                  >
-                    <Image
-                      src="/jonas-0003.jpg"
-                      alt=""
-                      fill
-                      priority
-                      aria-hidden
-                      className="object-cover object-top grayscale"
-                    />
-                  </motion.div>
-
-                  {/* Sharp reveal line */}
-                  <motion.div
-                    style={{
-                      left: revealLineLeft,
-                    }}
-                    animate={{
-                      opacity: lineVisible ? 1 : 0,
-                    }}
-                    transition={{
-                      duration: 0.18,
-                      ease,
-                    }}
+                    objectPosition="center top"
+                    sizes="
+    (max-width: 640px) 42vw,
+    (max-width: 1024px) 220px,
+    240px
+  "
+                    duration={1850}
+                    tileSize={14}
+                    onReady={() => setImageLoaded(true)}
                     className="
-                    pointer-events-none
-                    absolute
-                    top-0
-                    z-[4]
-                    h-full
-                    w-px
-                    -translate-x-1/2
-                    bg-white
-                    mix-blend-difference
-                  "
-                  />
-
-                  {/* Reveal glow */}
-                  <motion.div
-                    style={{
-                      left: revealLineLeft,
-                    }}
-                    animate={{
-                      opacity: lineVisible ? 0.45 : 0,
-                    }}
-                    transition={{
-                      duration: 0.18,
-                      ease,
-                    }}
-                    className="
-                    pointer-events-none
-                    absolute
-                    top-0
-                    z-[3]
-                    h-full
-                    w-8
-                    -translate-x-1/2
-                    bg-white/10
-                    blur-md
-                  "
+    aspect-[4/5]
+    w-[42vw]
+    max-w-[260px]
+    bg-stone-400/10
+    dark:bg-stone-200/5
+    sm:w-[220px]
+    lg:w-[240px]
+  "
                   />
                 </motion.div>
 
@@ -1293,14 +1199,14 @@ lg:mr-0
                   exit={{ opacity: 0, y: -8 }}
                   transition={{ duration: 0.35, ease }}
                   className="
-                  mt-2
-                  text-[10px]
-                  font-semibold
-                  uppercase
-                  leading-none
-                  tracking-[0.08em]
-                  opacity-80
-                "
+                    mt-2
+                    text-[10px]
+                    font-semibold
+                    uppercase
+                    leading-none
+                    tracking-[0.08em]
+                    opacity-80
+                  "
                 >
                   Portrait / 2026
                 </motion.p>
@@ -1380,14 +1286,14 @@ lg:mr-0
                       ease,
                     }}
                     className="
-    pointer-events-auto
-    relative
-    z-[100]
-    flex
-    flex-wrap
-    gap-x-8
-    gap-y-2
-  "
+                      pointer-events-auto
+                      relative
+                      z-[100]
+                      flex
+                      flex-wrap
+                      gap-x-8
+                      gap-y-2
+                    "
                   >
                     <p className="flex items-center">
                       <TextReveal as="span" once={false}>
@@ -1399,15 +1305,15 @@ lg:mr-0
                         target="_blank"
                         rel="noreferrer"
                         className="
-        group
-        pointer-events-auto
-        relative
-        z-[101]
-        ml-1
-        inline-block
-        cursor-pointer
-        pb-[3px]
-      "
+                          group
+                          pointer-events-auto
+                          relative
+                          z-[101]
+                          ml-1
+                          inline-block
+                          cursor-pointer
+                          pb-[3px]
+                        "
                       >
                         <TextReveal as="span" once={false}>
                           Kerimov
@@ -1415,45 +1321,43 @@ lg:mr-0
 
                         <span
                           className="
-          pointer-events-none
-          absolute
-          bottom-0
-          left-0
-          h-px
-          w-full
-          overflow-hidden
-        "
+                            pointer-events-none
+                            absolute
+                            bottom-0
+                            left-0
+                            h-px
+                            w-full
+                            overflow-hidden
+                          "
                         >
-                          {/* Synlig strek som forsvinner mot høyre */}
                           <span
                             className="
-            absolute
-            inset-0
-            origin-right
-            scale-x-100
-            bg-current
-            transition-transform
-            duration-300
-            ease-[cubic-bezier(0.76,0,0.24,1)]
-            group-hover:scale-x-0
-          "
+                              absolute
+                              inset-0
+                              origin-right
+                              scale-x-100
+                              bg-current
+                              transition-transform
+                              duration-300
+                              ease-[cubic-bezier(0.76,0,0.24,1)]
+                              group-hover:scale-x-0
+                            "
                           />
 
-                          {/* Ny strek som kommer inn fra venstre */}
                           <span
                             className="
-            absolute
-            inset-0
-            origin-left
-            scale-x-0
-            bg-current
-            transition-transform
-            duration-300
-            delay-0
-            ease-[cubic-bezier(0.76,0,0.24,1)]
-            group-hover:scale-x-100
-            group-hover:delay-[180ms]
-          "
+                              absolute
+                              inset-0
+                              origin-left
+                              scale-x-0
+                              bg-current
+                              transition-transform
+                              duration-300
+                              delay-0
+                              ease-[cubic-bezier(0.76,0,0.24,1)]
+                              group-hover:scale-x-100
+                              group-hover:delay-[180ms]
+                            "
                           />
                         </span>
                       </a>
@@ -1469,15 +1373,15 @@ lg:mr-0
                         target="_blank"
                         rel="noreferrer"
                         className="
-        group
-        pointer-events-auto
-        relative
-        z-[101]
-        ml-1
-        inline-block
-        cursor-pointer
-        pb-[3px]
-      "
+                          group
+                          pointer-events-auto
+                          relative
+                          z-[101]
+                          ml-1
+                          inline-block
+                          cursor-pointer
+                          pb-[3px]
+                        "
                       >
                         <TextReveal as="span" once={false}>
                           Calero
@@ -1485,45 +1389,43 @@ lg:mr-0
 
                         <span
                           className="
-          pointer-events-none
-          absolute
-          bottom-0
-          left-0
-          h-px
-          w-full
-          overflow-hidden
-        "
+                            pointer-events-none
+                            absolute
+                            bottom-0
+                            left-0
+                            h-px
+                            w-full
+                            overflow-hidden
+                          "
                         >
-                          {/* Synlig strek som forsvinner mot høyre */}
                           <span
                             className="
-            absolute
-            inset-0
-            origin-right
-            scale-x-100
-            bg-current
-            transition-transform
-            duration-500
-            ease-[cubic-bezier(0.76,0,0.24,1)]
-            group-hover:scale-x-0
-          "
+                              absolute
+                              inset-0
+                              origin-right
+                              scale-x-100
+                              bg-current
+                              transition-transform
+                              duration-500
+                              ease-[cubic-bezier(0.76,0,0.24,1)]
+                              group-hover:scale-x-0
+                            "
                           />
 
-                          {/* Ny strek som kommer inn fra venstre */}
                           <span
                             className="
-            absolute
-            inset-0
-            origin-left
-            scale-x-0
-            bg-current
-            transition-transform
-            duration-500
-            delay-0
-            ease-[cubic-bezier(0.76,0,0.24,1)]
-            group-hover:scale-x-100
-            group-hover:delay-[180ms]
-          "
+                              absolute
+                              inset-0
+                              origin-left
+                              scale-x-0
+                              bg-current
+                              transition-transform
+                              duration-500
+                              delay-0
+                              ease-[cubic-bezier(0.76,0,0.24,1)]
+                              group-hover:scale-x-100
+                              group-hover:delay-[180ms]
+                            "
                           />
                         </span>
                       </a>
@@ -1550,7 +1452,6 @@ lg:mr-0
               </AnimatePresence>
             </motion.div>
 
-            {/* 3D version button – separate from the marquee */}
             {/* 3D version button */}
             <motion.div
               initial={{
@@ -1569,43 +1470,43 @@ lg:mr-0
                 ease,
               }}
               className="
-    absolute
-    bottom-0
-    right-0
-    z-[30]
-    hidden
-    pb-[calc(0.15rem+env(safe-area-inset-bottom))]
-    lg:block
-  "
+                absolute
+                bottom-0
+                right-0
+                z-[30]
+                hidden
+                pb-[calc(0.15rem+env(safe-area-inset-bottom))]
+                lg:block
+              "
             >
               <button
                 type="button"
                 onClick={open3DRoom}
                 className="
-    group
-    flex
-    cursor-pointer
-    items-center
-    gap-3
-    text-[11px]
-    font-black
-    uppercase
-    leading-none
-    tracking-[-0.015em]
-    sm:text-[14px]
-    lg:text-[15px]
-  "
+                  group
+                  flex
+                  cursor-pointer
+                  items-center
+                  gap-3
+                  text-[11px]
+                  font-black
+                  uppercase
+                  leading-none
+                  tracking-[-0.015em]
+                  sm:text-[14px]
+                  lg:text-[15px]
+                "
               >
                 <motion.span
                   aria-hidden
                   className="
-  inline-flex
-  items-center
-  justify-center
-  -translate-y-[1px]
-  font-normal
-  leading-none
-"
+                    inline-flex
+                    items-center
+                    justify-center
+                    -translate-y-[1px]
+                    font-normal
+                    leading-none
+                  "
                   initial={false}
                   whileHover={{
                     x: -5,
