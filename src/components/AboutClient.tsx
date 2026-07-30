@@ -358,27 +358,6 @@ export default function AboutClient() {
               dark:bg-stone-200/5
             "
           >
-            <PixelRevealImage
-              src={introImage.src}
-              alt={introImage.alt}
-              objectPosition="center top"
-              sizes="
-                (max-width: 640px) 54vw,
-                (max-width: 768px) 42vw,
-                (max-width: 1024px) 34vw,
-                27vw
-              "
-              duration={1850}
-              tileSize={14}
-              maxDpr={2}
-              className="
-                absolute
-                inset-0
-                h-full
-                w-full
-              "
-            />
-
             <div
               className="
                 pointer-events-none
