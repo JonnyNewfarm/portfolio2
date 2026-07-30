@@ -1,6 +1,12 @@
 "use client";
 
-import { Canvas } from "@react-three/fiber";
+import {
+  Canvas,
+  useFrame,
+  useLoader,
+  useThree,
+  type ThreeEvent,
+} from "@react-three/fiber";
 import type { MotionValue } from "framer-motion";
 import { IoMdClose } from "react-icons/io";
 
@@ -12,13 +18,13 @@ import {
   useScroll,
   useSpring,
 } from "framer-motion";
-import Image from "next/image";
 import * as THREE from "three";
 import {
   memo,
   Suspense,
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -897,6 +903,268 @@ function Fullscreen3DRoom({ onClose }: Fullscreen3DRoomProps) {
   );
 }
 
+const portraitVertexShader = `
+  varying vec2 vUv;
+
+  uniform vec2 uDelta;
+  uniform float uAmplitude;
+
+  const float PI = 3.141592653589793238;
+
+  void main() {
+    vUv = uv;
+
+    vec3 newPosition = position;
+
+    // Samme prinsipp som eksempelet:
+    // horisontal musehastighet bøyer de vertikale sidene,
+    // vertikal musehastighet bøyer topp og bunn.
+    newPosition.x +=
+      sin(uv.y * PI) *
+      uDelta.x *
+      uAmplitude;
+
+    newPosition.y +=
+      sin(uv.x * PI) *
+      uDelta.y *
+      uAmplitude;
+
+    // Litt dybde gjør at deformasjonen kjennes mykere,
+    // uten å endre selve prinsippet fra referansen.
+    float speed = length(uDelta);
+    newPosition.z +=
+      sin(uv.x * PI) *
+      sin(uv.y * PI) *
+      speed *
+      uAmplitude *
+      0.16;
+
+    gl_Position =
+      projectionMatrix *
+      modelViewMatrix *
+      vec4(newPosition, 1.0);
+  }
+`;
+
+const portraitFragmentShader = `
+  varying vec2 vUv;
+
+  uniform sampler2D uTexture;
+  uniform float uAlpha;
+
+  void main() {
+    vec4 textureColor = texture2D(uTexture, vUv);
+    gl_FragColor = vec4(textureColor.rgb, textureColor.a * uAlpha);
+
+    #include <tonemapping_fragment>
+    #include <colorspace_fragment>
+  }
+`;
+
+type AnimatedPortraitPlaneProps = {
+  onLoaded: () => void;
+};
+
+function AnimatedPortraitPlane({ onLoaded }: AnimatedPortraitPlaneProps) {
+  const meshRef = useRef<THREE.Mesh | null>(null);
+  const materialRef = useRef<THREE.ShaderMaterial | null>(null);
+
+  const texture = useLoader(THREE.TextureLoader, "/jonas-0003.jpg");
+  const { viewport } = useThree();
+
+  // Canvaset er større enn bildeområdet, slik at bølgene ikke klippes.
+  const canvasScale = 1.6;
+  const portraitWidth = viewport.width / canvasScale;
+  const portraitHeight = viewport.height / canvasScale;
+
+  const pointerTarget = useRef(new THREE.Vector2(0.5, 0.5));
+  const smoothPointer = useRef(new THREE.Vector2(0.5, 0.5));
+
+  // Fjær for selve bildeposisjonen.
+  const positionTarget = useRef(new THREE.Vector2(0, 0));
+  const positionCurrent = useRef(
+    new THREE.Vector2(-portraitWidth * 0.16, portraitHeight * 0.025),
+  );
+  const positionVelocity = useRef(new THREE.Vector2(0, 0));
+
+  // Starter bøyd og slipper tilbake med spring på load.
+  const bendCurrent = useRef(new THREE.Vector2(-155, 28));
+  const bendVelocity = useRef(new THREE.Vector2(0, 0));
+
+  // Shader-opacity gir fade inn uten å fade hele Canvas-elementet.
+  const alphaCurrent = useRef(0);
+  const alphaVelocity = useRef(0);
+  const hasStartedLoadAnimation = useRef(false);
+
+  const hovered = useRef(false);
+
+  const uniforms = useMemo(
+    () => ({
+      uTexture: { value: texture },
+      uDelta: { value: new THREE.Vector2(-155, 28) },
+      uAmplitude: { value: 0.00155 },
+      uAlpha: { value: 0 },
+    }),
+    [texture],
+  );
+
+  useEffect(() => {
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.minFilter = THREE.LinearFilter;
+    texture.magFilter = THREE.LinearFilter;
+    texture.needsUpdate = true;
+
+    onLoaded();
+  }, [onLoaded, texture]);
+
+  useFrame((_, rawDelta) => {
+    const mesh = meshRef.current;
+    const material = materialRef.current;
+
+    if (!mesh || !material) {
+      return;
+    }
+
+    // Unngår store hopp dersom fanen har vært inaktiv.
+    const delta = Math.min(rawDelta, 1 / 30);
+
+    if (!hasStartedLoadAnimation.current) {
+      hasStartedLoadAnimation.current = true;
+
+      // Gir fjæren et lite ekstra dytt, så returen overskyter svakt.
+      bendVelocity.current.set(310, -54);
+      positionVelocity.current.set(
+        portraitWidth * 0.95,
+        -portraitHeight * 0.12,
+      );
+    }
+
+    // Fade inn med en lett underdempet spring.
+    const alphaTarget = 1;
+    const alphaStiffness = 72;
+    const alphaDamping = 14;
+
+    alphaVelocity.current +=
+      (alphaTarget - alphaCurrent.current) * alphaStiffness * delta;
+
+    alphaVelocity.current *= Math.exp(-alphaDamping * delta);
+    alphaCurrent.current += alphaVelocity.current * delta;
+    alphaCurrent.current = THREE.MathUtils.clamp(alphaCurrent.current, 0, 1);
+
+    // Samme etterslep som lerp-oppsettet i koden du sendte.
+    const pointerFollow = 1 - Math.exp(-delta * 8.5);
+    smoothPointer.current.lerp(pointerTarget.current, pointerFollow);
+
+    const rawDifferenceX = pointerTarget.current.x - smoothPointer.current.x;
+    const rawDifferenceY = pointerTarget.current.y - smoothPointer.current.y;
+
+    // Gjør UV-forskjellen om til omtrentlige pikselverdier,
+    // slik at uAmplitude kan oppføre seg som i referanseshaderen.
+    const targetBendX = hovered.current ? rawDifferenceX * 520 : 0;
+    const targetBendY = hovered.current ? rawDifferenceY * 520 : 0;
+
+    // Under-dempet spring: følger bevegelsen og gir et lite tilbakeslag.
+    const bendStiffness = hovered.current ? 115 : 88;
+    const bendDamping = hovered.current ? 15 : 10.5;
+
+    bendVelocity.current.x +=
+      (targetBendX - bendCurrent.current.x) * bendStiffness * delta;
+    bendVelocity.current.y +=
+      (targetBendY - bendCurrent.current.y) * bendStiffness * delta;
+
+    bendVelocity.current.multiplyScalar(Math.exp(-bendDamping * delta));
+
+    bendCurrent.current.addScaledVector(bendVelocity.current, delta);
+
+    // Bildet følger musa litt, men forlater aldri sin egen plass.
+    const maxFollowX = portraitWidth * 0.42;
+    const maxFollowY = portraitHeight * 0.22;
+
+    positionTarget.current.set(
+      hovered.current ? (pointerTarget.current.x - 0.5) * maxFollowX : 0,
+      hovered.current ? (pointerTarget.current.y - 0.5) * maxFollowY : 0,
+    );
+
+    const positionStiffness = hovered.current ? 34 : 78;
+    const positionDamping = hovered.current ? 7.5 : 8.5;
+
+    positionVelocity.current.x +=
+      (positionTarget.current.x - positionCurrent.current.x) *
+      positionStiffness *
+      delta;
+
+    positionVelocity.current.y +=
+      (positionTarget.current.y - positionCurrent.current.y) *
+      positionStiffness *
+      delta;
+
+    positionVelocity.current.multiplyScalar(Math.exp(-positionDamping * delta));
+
+    positionCurrent.current.addScaledVector(positionVelocity.current, delta);
+
+    mesh.position.x = positionCurrent.current.x;
+    mesh.position.y = positionCurrent.current.y;
+
+    material.uniforms.uDelta.value.set(
+      bendCurrent.current.x,
+      bendCurrent.current.y,
+    );
+
+    material.uniforms.uAlpha.value = alphaCurrent.current;
+  });
+
+  const handlePointerEnter = (event: ThreeEvent<PointerEvent>) => {
+    event.stopPropagation();
+    hovered.current = true;
+
+    if (event.uv) {
+      pointerTarget.current.copy(event.uv);
+      smoothPointer.current.copy(event.uv);
+    }
+  };
+
+  const handlePointerMove = (event: ThreeEvent<PointerEvent>) => {
+    event.stopPropagation();
+
+    if (!event.uv) {
+      return;
+    }
+
+    pointerTarget.current.copy(event.uv);
+  };
+
+  const handlePointerLeave = (event: ThreeEvent<PointerEvent>) => {
+    event.stopPropagation();
+    hovered.current = false;
+
+    // Musens mål går tilbake til midten. Spring-fysikken sørger for
+    // at både posisjonen og bøyen slipper og overskyter svakt tilbake.
+    pointerTarget.current.set(0.5, 0.5);
+  };
+
+  return (
+    <mesh
+      ref={meshRef}
+      onPointerEnter={handlePointerEnter}
+      onPointerMove={handlePointerMove}
+      onPointerLeave={handlePointerLeave}
+    >
+      <planeGeometry args={[portraitWidth, portraitHeight, 24, 30]} />
+
+      <shaderMaterial
+        ref={materialRef}
+        uniforms={uniforms}
+        vertexShader={portraitVertexShader}
+        fragmentShader={portraitFragmentShader}
+        toneMapped={false}
+        transparent
+        depthWrite={false}
+        side={THREE.DoubleSide}
+      />
+    </mesh>
+  );
+}
+
 export default function Hero() {
   const heroSectionRef = useRef<HTMLElement | null>(null);
   const imageRef = useRef<HTMLDivElement | null>(null);
@@ -1076,74 +1344,70 @@ export default function Hero() {
             {/* Image */}
             <div
               className="
-                mx-auto
-                mt-12
-                flex
-                w-full
-                max-w-[520px]
-                items-center
-                gap-5
-                sm:mt-12
-                sm:gap-7
-                md:-mr-20
-                lg:mr-0
-                lg:absolute
+                absolute
+                left-1/2
+                top-[24%]
+                w-[42vw]
+                max-w-[260px]
+                -translate-x-1/2
+                sm:top-[22%]
+                sm:w-[220px]
+                md:left-auto
+                md:right-0
+                md:top-[18%]
+                md:translate-x-0
+                lg:right-auto
                 lg:left-[66%]
                 lg:top-[7%]
-                lg:mt-0
-                lg:w-auto
-                lg:max-w-none
+                lg:w-[240px]
                 lg:-translate-x-1/2
-                lg:items-end
-                lg:gap-0
                 xl:left-[60%]
               "
             >
               <div className="flex flex-col items-start">
-                <motion.div
+                <div
                   ref={imageRef}
-                  initial={{
-                    opacity: 0,
-                    scale: 1.025,
-                  }}
-                  animate={{
-                    opacity: imageLoaded ? 1 : 0,
-                    scale: imageLoaded ? 1 : 1.025,
-                  }}
-                  transition={{
-                    duration: 0.45,
-                    ease,
-                  }}
                   className="
-    relative
-    aspect-[4/5]
-    w-[42vw]
-    max-w-[260px]
-    overflow-hidden
-    bg-stone-400/10
-    dark:bg-stone-200/5
-    sm:w-[220px]
-    lg:w-[240px]
-  "
+                    relative
+                    aspect-[4/5]
+                    w-full
+                    overflow-visible
+                  "
                 >
-                  <Image
-                    src="/jonas-0003.jpg"
-                    alt="Jonas Nygaard"
-                    fill
-                    priority
-                    sizes="(max-width: 640px) 42vw, 240px"
-                    className="object-cover"
-                    onLoad={() => {
-                      setImageLoaded(true);
+                  <Canvas
+                    dpr={[1, 1.35]}
+                    gl={{
+                      alpha: true,
+                      antialias: true,
+                      powerPreference: "high-performance",
+                      stencil: false,
                     }}
-                  />
-                </motion.div>
+                    camera={{
+                      position: [0, 0, 2.2],
+                      fov: 34,
+                      near: 0.1,
+                      far: 10,
+                    }}
+                    style={{
+                      position: "absolute",
+                      left: "-30%",
+                      top: "-30%",
+                      width: "160%",
+                      height: "160%",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <Suspense fallback={null}>
+                      <AnimatedPortraitPlane
+                        onLoaded={() => {
+                          setImageLoaded(true);
+                        }}
+                      />
+                    </Suspense>
+                  </Canvas>
+                </div>
 
-                <motion.p
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 0.6, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  transition={{ duration: 0.35, ease }}
+                <p
                   className="
                     mt-2
                     text-[10px]
@@ -1151,11 +1415,11 @@ export default function Hero() {
                     uppercase
                     leading-none
                     tracking-[0.08em]
-                    opacity-80
+                    opacity-60
                   "
                 >
                   Portrait / 2026
-                </motion.p>
+                </p>
               </div>
             </div>
 

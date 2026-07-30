@@ -20,10 +20,6 @@ const links: {
     label: "Contact",
     url: "/contact",
   },
-  {
-    label: "About",
-    url: "/about",
-  },
 ];
 
 const BurgerMenu = () => {
