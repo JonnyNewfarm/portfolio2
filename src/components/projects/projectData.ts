@@ -12,8 +12,8 @@ export const projects: Project[] = [
       "React, Next.js, Prisma, GSAP, Motion, TailwindCSS, MongoDB, Uploadthing, NextAuth.",
     role: "Design, frontend and backend.",
     images: [
-      "rustam-01.jpg",
-      "rustam-03.jpg",
+      "keri-01.jpg",
+      "keri-02.jpg",
       "rustam-02.jpg",
       "rustam-04.jpg",
     ],

@@ -21,7 +21,7 @@ export default function AnimatedLatestProjectPlane({
   const meshRef = useRef<THREE.Mesh | null>(null);
   const materialRef = useRef<THREE.ShaderMaterial | null>(null);
 
-  const texture = useLoader(THREE.TextureLoader, "/projects/rustam-01.jpg");
+  const texture = useLoader(THREE.TextureLoader, "/projects/keri-01.jpg");
 
   const { viewport } = useThree();
 
