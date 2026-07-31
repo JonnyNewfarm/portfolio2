@@ -13,7 +13,7 @@ const Navbar = () => {
 
   const routes = [
     {
-      label: "Home",
+      label: "Index",
       url: "/",
     },
     {
@@ -114,23 +114,19 @@ const Navbar = () => {
         <div className="hidden w-full lg:block">
           <div className="flex w-full items-start justify-between">
             {/* Name + theme – left */}
-            <div className="flex items-start gap-x-18">
+            <div className="flex items-start gap-x-16 lg:gap-x-14 xl:gap-x-34">
               <div>
-                <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.22em] opacity-80">
-                  Name:
-                </p>
-
-                <p className="text-sm font-black uppercase tracking-[0.08em]">
-                  Jonas Nygaard
+                <p className="text-xs xl:text-sm font-black uppercase tracking-[0.08em]">
+                  name / Jonas Nygaard
                 </p>
               </div>
-
               <div>
-                <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.22em] opacity-80">
-                  Theme:
+                <p className="text-xs xl:text-sm font-black uppercase tracking-[0.08em]">
+                  designer / developer
                 </p>
-
-                <div className="flex items-center gap-x-1 text-sm font-black uppercase tracking-[0.08em]">
+              </div>
+              <div>
+                <div className="flex items-center gap-x-1 text-xs xl:text-sm font-black uppercase tracking-[0.08em]">
                   <button
                     type="button"
                     onClick={() => setTheme("light")}
@@ -160,11 +156,7 @@ const Navbar = () => {
 
             {/* Navigation – right */}
             <div className="text-right">
-              <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.22em] opacity-80">
-                Navigation:
-              </p>
-
-              <nav className="flex flex-wrap justify-end gap-x-3 gap-y-1 text-xl uppercase tracking-[0.08em]">
+              <nav className="flex flex-wrap justify-end gap-x-5 gap-y-1 text-lg xl:text-xl uppercase tracking-[0.08em]">
                 {routes.map((route) => {
                   const isActive = isRouteActive(route.url);
 

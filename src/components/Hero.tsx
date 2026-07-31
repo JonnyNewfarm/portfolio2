@@ -13,10 +13,8 @@ import { IoMdClose } from "react-icons/io";
 import {
   AnimatePresence,
   motion,
-  useMotionValue,
   useMotionValueEvent,
   useScroll,
-  useSpring,
 } from "framer-motion";
 import * as THREE from "three";
 import {
@@ -49,7 +47,6 @@ import Wall2 from "./hero/Wall2";
 import WallShelfWithCandle from "./hero/WallShelfWithCandle";
 import WindowOnWall from "./hero/WindowOnWall";
 import DarkModeBtn from "./DarkModeBtn";
-import WaveLinkText from "./WaveLinkText";
 
 const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
@@ -969,7 +966,7 @@ function AnimatedPortraitPlane({ onLoaded }: AnimatedPortraitPlaneProps) {
   const meshRef = useRef<THREE.Mesh | null>(null);
   const materialRef = useRef<THREE.ShaderMaterial | null>(null);
 
-  const texture = useLoader(THREE.TextureLoader, "/jonas-0003.jpg");
+  const texture = useLoader(THREE.TextureLoader, "/newfarm-4.jpg");
   const { viewport } = useThree();
 
   // Canvaset er større enn bildeområdet, slik at bølgene ikke klippes.
@@ -1010,8 +1007,12 @@ function AnimatedPortraitPlane({ onLoaded }: AnimatedPortraitPlaneProps) {
 
   useEffect(() => {
     texture.colorSpace = THREE.SRGBColorSpace;
-    texture.minFilter = THREE.LinearFilter;
+
+    texture.minFilter = THREE.LinearMipmapLinearFilter;
     texture.magFilter = THREE.LinearFilter;
+
+    texture.generateMipmaps = true;
+    texture.anisotropy = 8;
     texture.needsUpdate = true;
 
     onLoaded();
@@ -1165,6 +1166,58 @@ function AnimatedPortraitPlane({ onLoaded }: AnimatedPortraitPlaneProps) {
   );
 }
 
+const heroHeadings = [
+  "Designer & developer\ncrafting interactive\ndigital experiences.",
+  "Building thoughtful\ninterfaces through\nmotion and code.",
+  "Turning ideas into\nclear and memorable\ndigital products.",
+] as const;
+
+function AnimatedUnderline() {
+  return (
+    <span
+      className="
+        pointer-events-none
+        absolute
+        bottom-0
+        left-0
+        h-px
+        w-full
+        overflow-hidden
+      "
+    >
+      <span
+        className="
+          absolute
+          inset-0
+          origin-right
+          scale-x-100
+          bg-current
+          transition-transform
+          duration-500
+          ease-[cubic-bezier(0.76,0,0.24,1)]
+          group-hover:scale-x-0
+        "
+      />
+
+      <span
+        className="
+          absolute
+          inset-0
+          origin-left
+          scale-x-0
+          bg-current
+          transition-transform
+          duration-500
+          delay-0
+          ease-[cubic-bezier(0.76,0,0.24,1)]
+          group-hover:scale-x-100
+          group-hover:delay-[180ms]
+        "
+      />
+    </span>
+  );
+}
+
 export default function Hero() {
   const heroSectionRef = useRef<HTMLElement | null>(null);
   const imageRef = useRef<HTMLDivElement | null>(null);
@@ -1180,7 +1233,7 @@ export default function Hero() {
   });
 
   useMotionValueEvent(heroScrollProgress, "change", (latest) => {
-    const nextStep: 0 | 1 | 2 = latest < 0.16 ? 0 : latest < 0.42 ? 1 : 2;
+    const nextStep: 0 | 1 | 2 = latest < 0.33 ? 0 : latest < 0.66 ? 1 : 2;
 
     setCopyStep((current) => (current === nextStep ? current : nextStep));
   });
@@ -1229,44 +1282,52 @@ export default function Hero() {
           className="
             sticky
             top-0
-            h-[100dvh]
+            h-[100svh]
             overflow-hidden
             px-5
-            pb-[calc(1.5rem+env(safe-area-inset-bottom))]
-            pt-28
             sm:px-8
-            sm:pb-8
-            lg:h-[100svh]
-            lg:px-14
-            lg:pb-10
-            lg:pt-32
+            lg:px-[3vw]
           "
         >
-          <div className="relative h-full">
-            {/* Scroll-changing copy */}
+          <div className="relative h-full w-full">
+            {/* Only this heading changes on scroll */}
             <div
               className="
-                max-w-[360px]
-                sm:max-w-[430px]
-                lg:absolute
-                lg:left-0
-                lg:top-[12%]
+                absolute
+                left-0
+                top-[16%]
+                z-20
+                max-w-[260px]
+                sm:max-w-[320px]
+                
+                lg:top-[30%]
+                lg:max-w-[340px]
               "
             >
               <AnimatePresence mode="wait">
                 <motion.div
                   key={`heading-${copyStep}`}
-                  initial={{ opacity: 0, y: 18, filter: "blur(8px)" }}
+                  initial={{ opacity: 0, y: 16, filter: "blur(7px)" }}
                   animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                  exit={{ opacity: 0, y: -16, filter: "blur(8px)" }}
+                  exit={{ opacity: 0, y: -14, filter: "blur(7px)" }}
                   transition={{ duration: 0.45, ease }}
                 >
                   <motion.p
-                    initial={{ opacity: 0, y: 8, filter: "blur(5px)" }}
-                    animate={{ opacity: 0.6, y: 0, filter: "blur(0px)" }}
-                    exit={{ opacity: 0, y: -8, filter: "blur(5px)" }}
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 0.55, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
                     transition={{ duration: 0.35, ease }}
-                    className="mb-3 text-[10px] font-black uppercase tracking-[0.1em] sm:text-[11px]"
+                    className="
+                      mb-3
+                      text-[10px]
+                      font-black
+                      uppercase
+                      leading-none
+                      tracking-[0.08em]
+                      sm:text-[11px]
+                      lg:mb-4
+                      lg:text-[12px]
+                    "
                   >
                     {`${String(copyStep + 1).padStart(2, "0")} / 03`}
                   </motion.p>
@@ -1276,461 +1337,158 @@ export default function Hero() {
                     mode="lines"
                     once={false}
                     className="
-                      text-[clamp(1.4rem,2.6vw,1.8rem)]
+                      text-[17px]
                       font-black
                       uppercase
-                      leading-[0.96]
+                      leading-[0.98]
                       tracking-[-0.045em]
-                      sm:text-[clamp(1.65rem,3vw,2.2rem)]
+                      sm:text-[19px]
+                      lg:text-[21px]
+                      xl:text-[22px]
                     "
                   >
-                    {copyStep === 0
-                      ? "Designer & developer\ncrafting interactive\ndigital experiences."
-                      : copyStep === 1
-                        ? "Building thoughtful\ninterfaces through\nmotion and code."
-                        : "Turning ideas into\nclear and memorable\ndigital products."}
+                    {heroHeadings[copyStep]}
                   </TextReveal>
                 </motion.div>
               </AnimatePresence>
             </div>
 
-            <div
-              className="
-                absolute
-                bottom-20
-                right-0
-                text-right
-                font-semibold
-                md:bottom-20
-                md:left-0
-                md:right-auto
-                md:text-left
-                lg:bottom-auto
-                lg:left-0
-                lg:top-[56%]
-                lg:text-left
-              "
-            >
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={`availability-${copyStep}`}
-                  initial={{ opacity: 0, y: 14, filter: "blur(7px)" }}
-                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                  exit={{ opacity: 0, y: -12, filter: "blur(7px)" }}
-                  transition={{ duration: 0.4, ease }}
-                >
-                  <TextReveal
-                    mode="lines"
-                    once={false}
-                    className="
-                      mb-1
-                      text-[10px]
-                      font-semibold
-                      uppercase
-                      tracking-[0.025em]
-                      md:text-[13px]
-                    "
-                  >
-                    {copyStep === 0
-                      ? "Available for\nselected freelance\nprojects."
-                      : copyStep === 1
-                        ? "Currently creating\nfocused digital\nexperiences."
-                        : "Designed with care\nbuilt with purpose\nand attention."}
-                  </TextReveal>
-                </motion.div>
-              </AnimatePresence>
-            </div>
-
-            {/* Image */}
-            <div
-              className="
-                absolute
-                left-1/2
-                top-[24%]
-                w-[42vw]
-                max-w-[260px]
-                -translate-x-1/2
-                sm:top-[22%]
-                sm:w-[220px]
-                md:left-auto
-                md:right-0
-                md:top-[18%]
-                md:translate-x-0
-                lg:right-auto
-                lg:left-[66%]
-                lg:top-[7%]
-                lg:w-[240px]
-                lg:-translate-x-1/2
-                xl:left-[60%]
-              "
-            >
-              <div className="flex flex-col items-start">
-                <div
-                  ref={imageRef}
-                  className="
-                    relative
-                    aspect-[4/5]
-                    w-full
-                    overflow-visible
-                  "
-                >
-                  <Canvas
-                    dpr={[1, 1.35]}
-                    gl={{
-                      alpha: true,
-                      antialias: true,
-                      powerPreference: "high-performance",
-                      stencil: false,
-                    }}
-                    camera={{
-                      position: [0, 0, 2.2],
-                      fov: 34,
-                      near: 0.1,
-                      far: 10,
-                    }}
-                    style={{
-                      position: "absolute",
-                      left: "-30%",
-                      top: "-30%",
-                      width: "160%",
-                      height: "160%",
-                      cursor: "pointer",
-                    }}
-                  >
-                    <Suspense fallback={null}>
-                      <AnimatedPortraitPlane
-                        onLoaded={() => {
-                          setImageLoaded(true);
-                        }}
-                      />
-                    </Suspense>
-                  </Canvas>
-                </div>
-
-                <p
-                  className="
-                    mt-2
-                    text-[10px]
-                    font-semibold
-                    uppercase
-                    leading-none
-                    tracking-[0.08em]
-                    opacity-60
-                  "
-                >
-                  Portrait / 2026
-                </p>
-              </div>
-            </div>
-
-            {/* Local information / selected work / disciplines */}
+            {/* Portrait stays fixed */}
             <motion.div
-              initial={{
-                opacity: 0,
-                y: 18,
-                filter: "blur(7px)",
-              }}
+              initial={{ opacity: 0, y: 18, filter: "blur(8px)" }}
               animate={{
-                opacity: 1,
-                y: 0,
-                filter: "blur(0px)",
+                opacity: imageLoaded ? 1 : 0,
+                y: imageLoaded ? 0 : 18,
+                filter: imageLoaded ? "blur(0px)" : "blur(8px)",
               }}
-              transition={{
-                duration: 0.8,
-                delay: 0.9,
-                ease,
-              }}
+              transition={{ duration: 0.8, ease }}
+              className="
+  absolute
+  left-1/2
+  top-1/2
+  w-[44vw]
+  max-w-[205px]
+  -translate-x-1/2
+  -translate-y-1/2
+  sm:w-[220px]
+  lg:w-[17vw]
+  lg:max-w-[260px]
+"
+            >
+              <div
+                ref={imageRef}
+                className="relative aspect-[4/5] w-full overflow-visible"
+              >
+                <Canvas
+                  dpr={[1.5, 2]}
+                  gl={{
+                    alpha: true,
+                    antialias: true,
+                    powerPreference: "high-performance",
+                    stencil: false,
+                  }}
+                  camera={{
+                    position: [0, 0, 2.2],
+                    fov: 34,
+                    near: 0.1,
+                    far: 10,
+                  }}
+                  style={{
+                    position: "absolute",
+                    left: "-30%",
+                    top: "-30%",
+                    width: "157%",
+                    height: "157%",
+                  }}
+                >
+                  <Suspense fallback={null}>
+                    <AnimatedPortraitPlane
+                      onLoaded={() => {
+                        setImageLoaded(true);
+                      }}
+                    />
+                  </Suspense>
+                </Canvas>
+              </div>
+              <p className="absolute tracking-[0.045] uppercase text-[10px] lg:hidden">
+                portrait / 2026
+              </p>
+            </motion.div>
+
+            {/* Bottom information */}
+            <motion.div
+              initial={{ opacity: 0, y: 14, filter: "blur(7px)" }}
+              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              transition={{ duration: 0.8, delay: 0.85, ease }}
               className="
                 absolute
-                bottom-0
+                bottom-[3.5%]
                 left-0
-                z-[25]
-                pb-[calc(0.15rem+env(safe-area-inset-bottom))]
-                text-[11px]
+                right-0
+                z-30
+               flex flex-col
+                items-end
+                gap-x-5
+                gap-y-4
+                text-[9px]
                 font-black
                 uppercase
                 leading-none
                 tracking-[-0.015em]
-                sm:text-[13px]
-                lg:text-[15px]
+                sm:text-sm
+                lg:flex-row
+                lg:justify-between
+                lg:text-sm
               "
             >
-              <AnimatePresence mode="wait">
-                {copyStep === 0 ? (
-                  <motion.div
-                    key="local-information"
-                    initial={{ opacity: 0, y: 12, filter: "blur(6px)" }}
-                    animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                    exit={{ opacity: 0, y: -10, filter: "blur(6px)" }}
-                    transition={{ duration: 0.4, ease }}
-                    className="flex flex-wrap gap-x-8 gap-y-2"
-                  >
-                    <TextReveal as="span" once={false}>
-                      {`Local time / ${localTime}`}
-                    </TextReveal>
+              <div className="lg:text-left">
+                <TextReveal as="span">{`Local time / ${localTime} (CEST)`}</TextReveal>
+              </div>
 
-                    <TextReveal as="span" once={false}>
-                      Location / Oslo, Norway
-                    </TextReveal>
-                  </motion.div>
-                ) : copyStep === 1 ? (
-                  <motion.div
-                    key="selected-work"
-                    initial={{
-                      opacity: 0,
-                      y: 12,
-                      filter: "blur(6px)",
-                    }}
-                    animate={{
-                      opacity: 1,
-                      y: 0,
-                      filter: "blur(0px)",
-                    }}
-                    exit={{
-                      opacity: 0,
-                      y: -10,
-                      filter: "blur(6px)",
-                    }}
-                    transition={{
-                      duration: 0.4,
-                      ease,
-                    }}
-                    className="
-                      pointer-events-auto
-                      relative
-                      z-[100]
-                      flex
-                      flex-wrap
-                      gap-x-8
-                      gap-y-2
-                    "
-                  >
-                    <p className="flex items-center">
-                      <TextReveal as="span" once={false}>
-                        Portfolio /
-                      </TextReveal>
+              <div className="text-right lg:text-center">
+                <TextReveal as="span">Location / Oslo, Norway</TextReveal>
+              </div>
 
-                      <a
-                        href="https://kerimovdesigns.com"
-                        target="_blank"
-                        rel="noreferrer"
-                        className="
-                          group
-                          pointer-events-auto
-                          relative
-                          z-[101]
-                          ml-1
-                          inline-block
-                          cursor-pointer
-                          pb-[3px]
-                        "
-                      >
-                        <TextReveal as="span" once={false}>
-                          Kerimov
-                        </TextReveal>
-
-                        <span
-                          className="
-                            pointer-events-none
-                            absolute
-                            bottom-0
-                            left-0
-                            h-px
-                            w-full
-                            overflow-hidden
-                          "
-                        >
-                          <span
-                            className="
-                              absolute
-                              inset-0
-                              origin-right
-                              scale-x-100
-                              bg-current
-                              transition-transform
-                              duration-300
-                              ease-[cubic-bezier(0.76,0,0.24,1)]
-                              group-hover:scale-x-0
-                            "
-                          />
-
-                          <span
-                            className="
-                              absolute
-                              inset-0
-                              origin-left
-                              scale-x-0
-                              bg-current
-                              transition-transform
-                              duration-300
-                              delay-0
-                              ease-[cubic-bezier(0.76,0,0.24,1)]
-                              group-hover:scale-x-100
-                              group-hover:delay-[180ms]
-                            "
-                          />
-                        </span>
-                      </a>
-                    </p>
-
-                    <p className="flex items-center">
-                      <TextReveal as="span" once={false}>
-                        E-commerce /
-                      </TextReveal>
-
-                      <a
-                        href="https://calero.studio"
-                        target="_blank"
-                        rel="noreferrer"
-                        className="
-                          group
-                          pointer-events-auto
-                          relative
-                          z-[101]
-                          ml-1
-                          inline-block
-                          cursor-pointer
-                          pb-[3px]
-                        "
-                      >
-                        <TextReveal as="span" once={false}>
-                          Calero
-                        </TextReveal>
-
-                        <span
-                          className="
-                            pointer-events-none
-                            absolute
-                            bottom-0
-                            left-0
-                            h-px
-                            w-full
-                            overflow-hidden
-                          "
-                        >
-                          <span
-                            className="
-                              absolute
-                              inset-0
-                              origin-right
-                              scale-x-100
-                              bg-current
-                              transition-transform
-                              duration-500
-                              ease-[cubic-bezier(0.76,0,0.24,1)]
-                              group-hover:scale-x-0
-                            "
-                          />
-
-                          <span
-                            className="
-                              absolute
-                              inset-0
-                              origin-left
-                              scale-x-0
-                              bg-current
-                              transition-transform
-                              duration-500
-                              delay-0
-                              ease-[cubic-bezier(0.76,0,0.24,1)]
-                              group-hover:scale-x-100
-                              group-hover:delay-[180ms]
-                            "
-                          />
-                        </span>
-                      </a>
-                    </p>
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="disciplines"
-                    initial={{ opacity: 0, y: 12, filter: "blur(6px)" }}
-                    animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                    exit={{ opacity: 0, y: -10, filter: "blur(6px)" }}
-                    transition={{ duration: 0.4, ease }}
-                    className="flex flex-wrap gap-x-8 gap-y-2"
-                  >
-                    <TextReveal as="span" once={false}>
-                      Code / Frontend
-                    </TextReveal>
-
-                    <TextReveal as="span" once={false}>
-                      UI / UX DESIGN
-                    </TextReveal>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
-
-            {/* 3D version button */}
-            <motion.div
-              initial={{
-                opacity: 0,
-                y: 18,
-                filter: "blur(7px)",
-              }}
-              animate={{
-                opacity: 1,
-                y: 0,
-                filter: "blur(0px)",
-              }}
-              transition={{
-                duration: 0.8,
-                delay: 0.95,
-                ease,
-              }}
-              className="
-                absolute
-                bottom-0
-                right-0
-                z-[30]
-                hidden
-                pb-[calc(0.15rem+env(safe-area-inset-bottom))]
-                lg:block
-              "
-            >
-              <button
-                type="button"
-                onClick={open3DRoom}
-                className="
-                  group
-                  flex
-                  cursor-pointer
-                  items-center
-                  gap-3
-                  text-[11px]
-                  font-black
-                  uppercase
-                  leading-none
-                  tracking-[-0.015em]
-                  sm:text-[14px]
-                  lg:text-[15px]
-                "
-              >
-                <motion.span
-                  aria-hidden
+              <div className="col-span-2 hidden lg:block text-right lg:col-span-1 lg:text-center">
+                <a
+                  href="https://kerimovdesigns.com"
+                  target="_blank"
+                  rel="noreferrer"
                   className="
-                    inline-flex
-                    items-center
-                    justify-center
-                    -translate-y-[1px]
-                    font-normal
-                    leading-none
+                    group
+                    relative
+                    inline-block
+                    cursor-pointer
+                    pb-[3px]
                   "
-                  initial={false}
-                  whileHover={{
-                    x: -5,
-                  }}
-                  transition={{
-                    duration: 0.25,
-                    ease,
-                  }}
                 >
-                  ←
-                </motion.span>
+                  <TextReveal as="span">Latest project / Kerimov</TextReveal>
+                  <AnimatedUnderline />
+                </a>
+              </div>
 
-                <WaveLinkText text="3D Version" />
-              </button>
+              {/* Hidden below lg */}
+              <div className="hidden text-right lg:block">
+                <button
+                  type="button"
+                  onClick={open3DRoom}
+                  className="
+                    group
+                    relative
+                    inline-block
+                    cursor-pointer
+                    pb-[3px]
+                    text-sm
+                    font-black
+                    uppercase
+                    leading-none
+                    tracking-[-0.015em]
+                  "
+                >
+                  <TextReveal as="span">3D version / Open room</TextReveal>
+                  <AnimatedUnderline />
+                </button>
+              </div>
             </motion.div>
           </div>
         </div>

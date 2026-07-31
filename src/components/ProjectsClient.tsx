@@ -111,13 +111,6 @@ const cardHeight = 1.62;
 const cardGap = 0.16;
 const cardStride = cardWidth + cardGap;
 
-function getColorZoneRatio(viewportWidth: number) {
-  if (viewportWidth < 1024) return 0.95;
-  if (viewportWidth < 1280) return 0.87;
-
-  return 0.76;
-}
-
 function wrapIndex(index: number, length: number) {
   return ((index % length) + length) % length;
 }
@@ -256,18 +249,8 @@ function CurvedImageCard({
   const baseVerticesRef = useRef<Float32Array | null>(null);
   const animatedXRef = useRef(index * cardStride - trackWidth / 2);
   const intendedXRef = useRef(index * cardStride - trackWidth / 2);
-  const { gl, size } = useThree();
-
   const material = useMemo(() => {
-    const resolutionUniform = {
-      value: new THREE.Vector2(1, 1),
-    };
-
-    const colorZoneRatioUniform = {
-      value: getColorZoneRatio(size.width),
-    };
-
-    const basicMaterial = new THREE.MeshBasicMaterial({
+    return new THREE.MeshBasicMaterial({
       map: texture,
       color: new THREE.Color(0xffffff),
       side: THREE.DoubleSide,
@@ -275,82 +258,7 @@ function CurvedImageCard({
       transparent: false,
       opacity: 1,
     });
-
-    basicMaterial.userData.colorZoneResolution = resolutionUniform;
-    basicMaterial.userData.colorZoneRatio = colorZoneRatioUniform;
-
-    basicMaterial.onBeforeCompile = (shader) => {
-      shader.uniforms.uColorZoneResolution = resolutionUniform;
-      shader.uniforms.uColorZoneRatio = colorZoneRatioUniform;
-
-      shader.fragmentShader = shader.fragmentShader
-        .replace(
-          "#include <common>",
-          `#include <common>
-          uniform vec2 uColorZoneResolution;
-          uniform float uColorZoneRatio;`,
-        )
-        .replace(
-          "#include <map_fragment>",
-          `#include <map_fragment>
-
-          float colorZoneScreenX =
-            gl_FragCoord.x / uColorZoneResolution.x;
-
-          float colorZoneLeft =
-            0.5 - uColorZoneRatio * 0.5;
-
-          float colorZoneRight =
-            0.5 + uColorZoneRatio * 0.5;
-
-          float colorZoneFeather =
-            1.5 / uColorZoneResolution.x;
-
-          float colorZoneInsideLeft = smoothstep(
-            colorZoneLeft - colorZoneFeather,
-            colorZoneLeft + colorZoneFeather,
-            colorZoneScreenX
-          );
-
-          float colorZoneInsideRight = 1.0 - smoothstep(
-            colorZoneRight - colorZoneFeather,
-            colorZoneRight + colorZoneFeather,
-            colorZoneScreenX
-          );
-
-          float colorZoneMask =
-            colorZoneInsideLeft * colorZoneInsideRight;
-
-          float colorZoneGray = dot(
-            diffuseColor.rgb,
-            vec3(0.299, 0.587, 0.114)
-          );
-
-          diffuseColor.rgb = mix(
-            vec3(colorZoneGray),
-            diffuseColor.rgb,
-            colorZoneMask
-          );`,
-        );
-    };
-
-    basicMaterial.customProgramCacheKey = () => "carousel-screen-color-zone-v1";
-
-    return basicMaterial;
-  }, [size.width, texture]);
-
-  useEffect(() => {
-    const resolutionUniform = material.userData.colorZoneResolution as {
-      value: THREE.Vector2;
-    };
-
-    const colorZoneRatioUniform = material.userData.colorZoneRatio as {
-      value: number;
-    };
-
-    gl.getDrawingBufferSize(resolutionUniform.value);
-    colorZoneRatioUniform.value = getColorZoneRatio(size.width);
-  }, [gl, material, size.height, size.width]);
+  }, [texture]);
 
   useEffect(() => {
     return () => {
@@ -581,43 +489,19 @@ function DesktopImageSkeleton({ isDark }: { isDark: boolean }) {
           const distance = Math.abs(position);
 
           return (
-            <motion.div
+            <div
               key={position}
-              initial={{ opacity: 0 }}
-              animate={{
-                opacity: distance > 1 ? 0.35 : distance === 1 ? 0.55 : 0.8,
-              }}
-              transition={{
-                duration: 0.45,
-                delay: (position + 2) * 0.06,
-                ease: TEXT_EASE,
-              }}
-              className="relative h-[clamp(210px,26vw,330px)] w-[clamp(370px,46vw,590px)] shrink-0 overflow-hidden"
+              className="h-[clamp(210px,26vw,330px)] w-[clamp(370px,46vw,590px)] shrink-0"
               style={{
-                transform: `scale(${distance > 1 ? 0.92 : distance === 1 ? 0.96 : 1})`,
+                transform: `scale(${
+                  distance > 1 ? 0.92 : distance === 1 ? 0.96 : 1
+                })`,
+                opacity: distance > 1 ? 0.35 : distance === 1 ? 0.55 : 0.8,
                 backgroundColor: isDark
                   ? "rgba(214, 211, 209, 0.07)"
                   : "rgba(22, 19, 16, 0.065)",
               }}
-            >
-              <motion.div
-                className="absolute inset-y-0 w-1/2"
-                style={{
-                  background: isDark
-                    ? "linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent)"
-                    : "linear-gradient(90deg, transparent, rgba(255,255,255,0.72), transparent)",
-                }}
-                animate={{
-                  x: ["-160%", "280%"],
-                }}
-                transition={{
-                  duration: 1.35,
-                  ease: "linear",
-                  repeat: Infinity,
-                  repeatDelay: 0.15,
-                }}
-              />
-            </motion.div>
+            />
           );
         })}
       </div>
@@ -866,25 +750,11 @@ function DesktopWorkCarousel({
         </p>
       </div>
 
-      <motion.div
-        initial={false}
-        animate={{
-          opacity: isSceneReady ? 0 : 1,
-          visibility: isSceneReady ? "hidden" : "visible",
-        }}
-        transition={{
-          opacity: {
-            duration: 0.55,
-            ease: TEXT_EASE,
-          },
-          visibility: {
-            delay: isSceneReady ? 0.55 : 0,
-          },
-        }}
-        className="absolute inset-0 z-20"
-      >
-        <DesktopImageSkeleton isDark={isDark} />
-      </motion.div>
+      {!isSceneReady && (
+        <div className="absolute inset-0 z-20">
+          <DesktopImageSkeleton isDark={isDark} />
+        </div>
+      )}
 
       <div
         className="absolute inset-0 z-10"
@@ -1059,27 +929,22 @@ const ProjectsClient = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   initial={false}
-                  animate={{
-                    opacity: 1,
-                  }}
+                  animate={{ opacity: 1 }}
                   transition={{
                     duration: 0.65,
                     ease: TEXT_EASE,
                   }}
-                  className="block"
+                  className="block w-full"
                 >
-                  <div className="relative h-[260px] w-full border border-[#161310]/20 p-4 dark:border-stone-300/20">
-                    <div className="relative h-full w-full">
-                      <Image
-                        src={`/projects/${project.images[0]}`}
-                        alt={project.title}
-                        fill
-                        sizes="100vw"
-                        className="object-contain transition-opacity duration-300 hover:opacity-90"
-                        draggable={false}
-                      />
-                    </div>
-                  </div>
+                  <Image
+                    src={`/projects/${project.images[0]}`}
+                    alt={project.title}
+                    width={1600}
+                    height={1200}
+                    sizes="100vw"
+                    className="h-auto w-full object-contain"
+                    draggable={false}
+                  />
                 </motion.a>
 
                 <div className="mt-6 border-t border-[#161310]/15 pt-5 dark:border-stone-300/15">
