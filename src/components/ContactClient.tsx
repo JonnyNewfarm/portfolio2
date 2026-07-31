@@ -585,14 +585,53 @@ useful.`}
                 <button
                   type="submit"
                   disabled={isSending}
-                  className="relative w-fit cursor-pointer overflow-hidden border border-[#161310] px-8 py-4 text-sm font-black uppercase tracking-[0.2em] text-[#161310] transition disabled:cursor-not-allowed disabled:opacity-40 dark:border-stone-300 dark:text-stone-300"
+                  className="
+    group
+    relative
+    w-fit
+    cursor-pointer
+    overflow-hidden
+    border
+    border-[#161310]
+    px-8
+    py-4
+    text-sm
+    font-black
+    uppercase
+    tracking-[0.2em]
+    text-[#161310]
+    transition-colors
+    duration-500
+    ease-[cubic-bezier(0.76,0,0.24,1)]
+    hover:text-[#fbfafa]
+    disabled:cursor-not-allowed
+    disabled:opacity-40
+    dark:border-stone-300
+    dark:text-stone-300
+    dark:hover:text-[#1e1c1c]
+  "
                 >
-                  <WaveLinkText
-                    text={isSending ? "Sending..." : "Send message"}
+                  <span
+                    className="
+      absolute
+      inset-0
+      origin-bottom
+      scale-y-0
+      bg-[#161310]
+      transition-transform
+      duration-500
+      ease-[cubic-bezier(0.76,0,0.24,1)]
+      group-hover:scale-y-100
+      dark:bg-stone-300
+    "
                   />
+
+                  <span className="relative z-10">
+                    {isSending ? "Sending..." : "Send message"}
+                  </span>
                 </button>
 
-                <p className="max-w-[360px] text-sm font-bold leading-[1.35] opacity-45">
+                <p className="max-w-[360px] text-sm font-bold leading-[1.35] opacity-70">
                   Open for freelance and selected collaborations.
                 </p>
               </FadeIn>

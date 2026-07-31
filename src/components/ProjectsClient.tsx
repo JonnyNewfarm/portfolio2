@@ -14,7 +14,6 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Preload, useTexture } from "@react-three/drei";
 import * as THREE from "three";
 import { motion } from "framer-motion";
-import WaveLinkText from "./WaveLinkText";
 
 type Project = {
   title: string;
@@ -37,7 +36,7 @@ type CarouselItem = {
 type TextRevealTag = "p" | "span" | "h1" | "h2" | "label" | "div";
 
 type TextRevealProps = {
-  children: string;
+  children: React.ReactNode;
   as?: TextRevealTag;
   className?: string;
   delay?: number;
@@ -127,10 +126,18 @@ function TextReveal({
 }: TextRevealProps) {
   const MotionTag = motion[as] as any;
 
-  const items =
-    mode === "lines"
-      ? children.split("\n").filter((line) => line.trim().length > 0)
-      : children.split(" ");
+  const childArray = React.Children.toArray(children);
+  const canSplitText = childArray.every(
+    (child) => typeof child === "string" || typeof child === "number",
+  );
+  const textContent = canSplitText ? childArray.join("") : null;
+
+  const items: React.ReactNode[] =
+    textContent !== null
+      ? mode === "lines"
+        ? textContent.split("\n").filter((line) => line.trim().length > 0)
+        : textContent.split(" ")
+      : childArray;
 
   const containerVariants = {
     hidden: {},
@@ -180,7 +187,7 @@ function TextReveal({
     >
       {items.map((item, index) => (
         <span
-          key={`${item}-${index}`}
+          key={`${typeof item === "string" || typeof item === "number" ? item : "item"}-${index}`}
           className={
             mode === "lines"
               ? "block overflow-hidden py-[0.08em] -my-[0.08em]"
@@ -192,7 +199,11 @@ function TextReveal({
             className="inline-block will-change-transform"
           >
             {item}
-            {mode === "words" && index !== items.length - 1 ? "\u00A0" : null}
+            {textContent !== null &&
+            mode === "words" &&
+            index !== items.length - 1
+              ? "\u00A0"
+              : null}
           </motion.span>
         </span>
       ))}
@@ -364,12 +375,9 @@ function ImageBendScene({
   const textures = useCarouselImages(items);
   const { camera, size } = useThree();
 
-  useEffect(() => {
-    onReady();
-  }, [onReady]);
-
   const trackWidth = items.length * cardStride;
   const activeProjectRef = useRef(0);
+  const hasReportedReadyRef = useRef(false);
 
   useEffect(() => {
     const perspectiveCamera = camera as THREE.PerspectiveCamera;
@@ -380,6 +388,11 @@ function ImageBendScene({
   }, [camera, size.width]);
 
   useFrame((_, delta) => {
+    if (!hasReportedReadyRef.current) {
+      hasReportedReadyRef.current = true;
+      onReady();
+    }
+
     const runtime = runtimeRef.current;
 
     const safeDelta = delta || 0.016;
@@ -727,7 +740,9 @@ function DesktopWorkCarousel({
             onClick={handlePrev}
             className="cursor-pointer text-[22px] font-black uppercase leading-none tracking-[-0.04em] transition-opacity hover:opacity-55"
           >
-            Prev
+            <TextReveal active delay={0.12} as="span">
+              Prev
+            </TextReveal>
           </button>
 
           <button
@@ -735,29 +750,68 @@ function DesktopWorkCarousel({
             onClick={handleNext}
             className="cursor-pointer text-[22px] font-black uppercase leading-none tracking-[-0.04em] transition-opacity hover:opacity-55"
           >
-            Next
+            <TextReveal active delay={0.16} as="span">
+              Next
+            </TextReveal>
           </button>
         </div>
       </div>
 
       <div className="pointer-events-none absolute right-8 top-[112px] z-40 max-w-[430px] text-right">
-        <p className="mb-4 text-[11px] font-black uppercase tracking-[0.28em] ">
-          {activeProject.category} / {activeProject.year}
-        </p>
+        <TextReveal
+          key={`meta-${activeProjectIndex}`}
+          active
+          delay={0.08}
+          as="p"
+          className="mb-4 text-[11px] font-black uppercase tracking-[0.28em]"
+        >
+          {`${activeProject.category} / ${activeProject.year}`}
+        </TextReveal>
 
-        <p className="text-[clamp(15px,1.15vw,20px)] leading-[1.02] tracking-[-0.035em] opacity-70">
+        <TextReveal
+          key={`about-${activeProjectIndex}`}
+          active
+          delay={0.13}
+          as="p"
+          className="text-[clamp(15px,1.15vw,20px)] leading-[1.02] tracking-[-0.035em] opacity-70"
+        >
           {activeProject.about}
-        </p>
+        </TextReveal>
       </div>
 
-      {!isSceneReady && (
-        <div className="absolute inset-0 z-20">
-          <DesktopImageSkeleton isDark={isDark} />
-        </div>
-      )}
+      <motion.div
+        aria-hidden="true"
+        initial={false}
+        animate={{
+          opacity: isSceneReady ? 0 : 1,
+          visibility: isSceneReady ? "hidden" : "visible",
+        }}
+        transition={{
+          opacity: {
+            duration: 0.8,
+            ease: TEXT_EASE,
+          },
+          visibility: {
+            delay: isSceneReady ? 0.8 : 0,
+          },
+        }}
+        className="pointer-events-none absolute inset-0 z-20"
+      >
+        <DesktopImageSkeleton isDark={isDark} />
+      </motion.div>
 
-      <div
-        className="absolute inset-0 z-10"
+      <motion.div
+        initial={{ opacity: 0, scale: 1.008 }}
+        animate={{
+          opacity: isSceneReady ? 1 : 0,
+          scale: isSceneReady ? 1 : 1.008,
+        }}
+        transition={{
+          duration: 1.15,
+          delay: isSceneReady ? 0.08 : 0,
+          ease: [0.22, 1, 0.36, 1],
+        }}
+        className="absolute inset-0 z-10 will-change-[opacity,transform]"
         style={{
           backgroundColor: canvasBackground,
         }}
@@ -795,7 +849,7 @@ function DesktopWorkCarousel({
             <Preload all />
           </React.Suspense>
         </Canvas>
-      </div>
+      </motion.div>
 
       <div className="absolute bottom-8 left-8 z-40 flex items-center justify-start gap-9">
         {projects.map((project, index) => (
@@ -809,15 +863,28 @@ function DesktopWorkCarousel({
                 : "opacity-25 hover:opacity-60"
             }`}
           >
-            {project.title}
+            <TextReveal
+              key={`${project.title}-${index === activeProjectIndex}`}
+              active
+              delay={0.18 + index * 0.04}
+              as="span"
+            >
+              {project.title}
+            </TextReveal>
           </button>
         ))}
       </div>
 
       <div className="absolute bottom-8 right-8 z-40 flex flex-col items-end gap-4 text-right">
-        <p className="max-w-[360px] text-[12px] font-black uppercase leading-[1.15] tracking-[0.04em] ">
+        <TextReveal
+          key={`role-${activeProjectIndex}`}
+          active
+          delay={0.16}
+          as="p"
+          className="max-w-[360px] text-[12px] font-black uppercase leading-[1.15] tracking-[0.04em]"
+        >
           {activeProject.role}
-        </p>
+        </TextReveal>
 
         <a
           href={activeProject.link}
@@ -825,7 +892,9 @@ function DesktopWorkCarousel({
           rel="noopener noreferrer"
           className="text-[30px] font-black uppercase leading-none tracking-[-0.04em] transition-opacity hover:opacity-55"
         >
-          <WaveLinkText text="Live Link" />
+          <TextReveal active delay={0.22} as="span">
+            Live Link
+          </TextReveal>
         </a>
       </div>
     </div>
