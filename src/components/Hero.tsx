@@ -440,22 +440,22 @@ function Fullscreen3DRoom({ onClose }: Fullscreen3DRoomProps) {
         <section
           ref={sectionRef}
           className="
-            relative
-            h-[178svh]
-            bg-[#c6c0c0]
-            text-black
-            dark:bg-[#757474]
-            dark:text-stone-300
-            md:h-[158vh]
-          "
+    relative
+    h-[178dvh]
+    bg-[#c6c0c0]
+    text-black
+    dark:bg-[#757474]
+    dark:text-stone-300
+    md:h-[158dvh]
+  "
         >
           <div
             className="
-              sticky
-              top-0
-              h-[100svh]
-              overflow-hidden
-            "
+      sticky
+      top-0
+      h-dvh
+      overflow-hidden
+    "
           >
             <motion.div
               initial={{
@@ -1270,24 +1270,24 @@ export default function Hero() {
       <section
         ref={heroSectionRef}
         className="
-          relative
-          min-h-[300svh]
-          bg-[#fbfafa]
-          text-[#161310]
-          dark:bg-[#1e1c1c]
-          dark:text-stone-300
-        "
+    relative
+    h-[300dvh]
+    bg-[#fbfafa]
+    text-[#161310]
+    dark:bg-[#1e1c1c]
+    dark:text-stone-300
+  "
       >
         <div
           className="
-            sticky
-            top-0
-            h-[100svh]
-            overflow-hidden
-            px-5
-            sm:px-8
-            lg:px-[3vw]
-          "
+      sticky
+      top-0
+      h-dvh
+      overflow-hidden
+      px-5
+      sm:px-8
+      lg:px-[3vw]
+    "
         >
           <div className="relative h-full w-full">
             {/* Only this heading changes on scroll */}
