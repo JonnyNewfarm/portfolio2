@@ -1,5 +1,5 @@
 import React from "react";
-import ContactClient from "@/components/ContactClient";
+import ContactClient from "@/components/contact/ContactClient";
 import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Jonas Nygaard | Contact",

@@ -1,4 +1,4 @@
-import ProjectsClient from "@/components/ProjectsClient";
+import ProjectsClient from "@/components/projects/ProjectsClient";
 import React from "react";
 import { Metadata } from "next";
 
