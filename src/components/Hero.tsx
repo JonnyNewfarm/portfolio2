@@ -1365,11 +1365,12 @@ export default function Hero() {
               className="
   absolute
   left-1/2
-  top-1/2
+  top-[56%]
   w-[44vw]
   max-w-[205px]
   -translate-x-1/2
   -translate-y-1/2
+  sm:top-1/2
   sm:w-[220px]
   lg:w-[17vw]
   lg:max-w-[260px]
