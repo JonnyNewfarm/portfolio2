@@ -54,12 +54,12 @@ export default function DarkModeBtn() {
     >
       {isDark ? (
         <>
-          Light mode
+          <span className="-mb-1">Light mode</span>
           <CiSun size={20} />
         </>
       ) : (
         <>
-          Dark mode
+          <span className="-mb-1">Dark mode</span>
           <IoMoonOutline size={20} />
         </>
       )}

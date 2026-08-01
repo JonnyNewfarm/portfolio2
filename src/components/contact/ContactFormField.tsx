@@ -43,7 +43,7 @@ export default function ContactFormField({
         className="
           mb-3
           block
-          text-xs
+          text-lg
           font-black
           uppercase
           tracking-[0.24em]
@@ -72,6 +72,7 @@ export default function ContactFormField({
             bg-transparent
             py-5
             text-lg
+            tracking-[0.05em]
             font-bold
             leading-[1.35]
             outline-none
@@ -102,6 +103,7 @@ export default function ContactFormField({
             bg-transparent
             py-5
             text-lg
+            tracking-[0.05em]
             font-bold
             outline-none
             transition

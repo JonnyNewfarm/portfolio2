@@ -44,11 +44,11 @@ export default function LatestProjectPreview() {
         className="
           mb-2
           ml-1
-          text-xs
-          font-black
+          text-md
+          font-semibold
           uppercase
           leading-none
-          tracking-[-0.015em]
+          tracking-[0.04em]
         "
       >
         Latest project

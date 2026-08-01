@@ -62,10 +62,13 @@ const BurgerMenu = () => {
         onClick={() => setIsOpen((prev) => !prev)}
         aria-label={isOpen ? "Close menu" : "Open menu"}
         aria-expanded={isOpen}
-        className={`relative z-[60] flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.2em] transition-colors duration-300 ${
+        className={`relative z-[60] flex items-center  gap-3 text-md font-semibold uppercase tracking-[0.2em] transition-colors duration-300 ${
           isOpen ? "text-white" : "text-[#1c1a17] dark:text-stone-300"
         }`}
       >
+        <span
+          className={`rounded-full h-1 w-1  ${isOpen ? "bg-white" : "bg-black"} -mt-1`}
+        />
         <span>{isOpen ? "Close" : "Menu"}</span>
       </button>
 
@@ -108,7 +111,7 @@ const BurgerMenu = () => {
                   Navigation
                 </p>
 
-                <h2 className="text-4xl font-black uppercase leading-[0.9] tracking-[-0.05em]">
+                <h2 className="text-4xl font-black uppercase leading-[0.9] tracking-[0.01em]">
                   Menu
                 </h2>
               </div>
@@ -137,7 +140,7 @@ const BurgerMenu = () => {
                         onClick={() => setIsOpen(false)}
                         className="flex items-center justify-between border-b border-white/10 py-6"
                       >
-                        <span className="text-2xl uppercase tracking-[-0.04em]">
+                        <span className="text-2xl uppercase tracking-[0.01em]">
                           {link.label}
                         </span>
 

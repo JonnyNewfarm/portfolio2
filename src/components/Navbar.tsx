@@ -73,12 +73,12 @@ const Navbar = () => {
         <div className="flex items-center gap-x-5 lg:hidden">
           <Link
             href="/"
-            className="text-[10px] font-black uppercase tracking-[0.09em]"
+            className="text-md font-black uppercase tracking-[0.09em]"
           >
             Newfarm Studio
           </Link>
 
-          <div className="flex items-center gap-x-1 text-[10px] font-black uppercase tracking-[0.08em]">
+          <div className="flex items-center gap-x-1 text-md font-black uppercase tracking-[0.08em]">
             <button
               type="button"
               onClick={() => setTheme("light")}
@@ -116,17 +116,17 @@ const Navbar = () => {
             {/* Name + theme – left */}
             <div className="flex items-start gap-x-16 lg:gap-x-14 xl:gap-x-34">
               <div>
-                <p className="text-xs xl:text-sm font-black uppercase tracking-[0.08em]">
+                <p className="text-lg xl:text-xl font-semibold uppercase tracking-[0.04em]">
                   name / Jonas Nygaard
                 </p>
               </div>
               <div>
-                <p className="text-xs xl:text-sm font-black uppercase tracking-[0.08em]">
+                <p className="text-lg xl:text-xl font-semibold uppercase tracking-[0.04em]">
                   designer / developer
                 </p>
               </div>
               <div>
-                <div className="flex items-center gap-x-1 text-xs xl:text-sm font-black uppercase tracking-[0.08em]">
+                <div className="flex items-center gap-x-1 text-lg xl:text-xl font-semibold uppercase tracking-[0.04em]">
                   <button
                     type="button"
                     onClick={() => setTheme("light")}
@@ -156,7 +156,7 @@ const Navbar = () => {
 
             {/* Navigation – right */}
             <div className="text-right">
-              <nav className="flex flex-wrap justify-end gap-x-5 gap-y-1 text-lg xl:text-xl uppercase tracking-[0.08em]">
+              <nav className="flex flex-wrap justify-end gap-x-12 gap-y-1 text-2xl xl:text-3xl uppercase tracking-[0.04em]">
                 {routes.map((route) => {
                   const isActive = isRouteActive(route.url);
 
@@ -165,7 +165,7 @@ const Navbar = () => {
                       key={route.label}
                       href={route.url}
                       aria-current={isActive ? "page" : undefined}
-                      className={`group relative flex items-center font-black transition-opacity duration-200 ${
+                      className={`group relative flex items-center font-semibold transition-opacity duration-200 ${
                         isActive
                           ? "opacity-100"
                           : "opacity-65 hover:opacity-100"

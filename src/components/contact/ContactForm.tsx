@@ -126,7 +126,7 @@ export default function ContactForm() {
               font-semibold
               uppercase
               leading-[0.9]
-              tracking-[-0.045em]
+              tracking-[0.01em]
               sm:text-[7vw]
               md:text-[4vw]
               lg:text-[2vw]
@@ -144,7 +144,7 @@ export default function ContactForm() {
             hidden
             max-w-[260px]
             text-right
-            text-sm
+            text-lg
             leading-[1.35]
             md:block
           "
@@ -242,10 +242,11 @@ export default function ContactForm() {
             border-[#161310]
             px-8
             py-4
-            text-sm
-            font-black
+            text-lg
+            sm:text-xl
+            font-semibold
             uppercase
-            tracking-[0.2em]
+            tracking-[0.3em]
             text-[#161310]
             transition-colors
             duration-500
@@ -281,8 +282,8 @@ export default function ContactForm() {
         <p
           className="
             max-w-[360px]
-            text-sm
-            font-bold
+            text-md
+            font-normal
             leading-[1.35]
             opacity-70
           "

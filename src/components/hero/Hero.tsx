@@ -48,7 +48,7 @@ export default function Hero() {
           "
         >
           <div className="relative h-full w-full">
-            <HeroPortrait heroSectionRef={heroSectionRef} />
+            <HeroPortrait />
 
             <motion.div
               initial={{
@@ -69,26 +69,29 @@ export default function Hero() {
               className="
                 absolute
                 left-0
-                top-[67%]
+                top-[64%]
                 z-20
-                hidden
-                max-w-[170px]
-                text-[10px]
-                font-semibold
+                text-[28px]
+                
+                font-black
                 uppercase
                 leading-[0.95]
-                tracking-[-0.02em]
+    tracking-[0.04em]
+                sm:top-[60%]
 
                 sm:block
-                lg:top-1/2
-                <lg:-translate-y-12
-                lg:max-w-[230px]
-                lg:text-[20px]
+                sm:text-[40px]
+                lg:top-[20vh]
+                lg:text-[50px]
+                
+                xl:text-[70px]
               "
             >
               <TextReveal as="p" mode="lines">
-                Available for selected projects
+                Designer & developer
               </TextReveal>
+              <TextReveal>crafting interactive digital</TextReveal>
+              <TextReveal>experiences.</TextReveal>
             </motion.div>
 
             <HeroBottomInfo onOpenRoomAction={open3DRoom} />

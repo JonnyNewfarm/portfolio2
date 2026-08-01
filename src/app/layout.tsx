@@ -31,7 +31,7 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={`
-          font-satoshi ${anton.variable}
+          font-bueno ${anton.variable}
           bg-[#fbfafa] text-[#161310]
           dark:bg-[#2e2b2b] dark:text-stone-300
         `}

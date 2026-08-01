@@ -35,6 +35,7 @@ import {
   buildCarouselItems,
   createCarouselRuntime,
 } from "./carousel/carouselUtils";
+import WaveLinkText from "../WaveLinkText";
 
 type DesktopWorkCarouselProps = {
   activeProjectIndex: number;
@@ -297,17 +298,17 @@ export default function DesktopWorkCarousel({
           z-40
         "
       >
-        <div className="mt-5 flex items-center gap-5">
+        <div className="mt-5 flex items-center gap-7">
           <button
             type="button"
             onClick={handlePrev}
             className="
               cursor-pointer
-              text-[22px]
-              font-black
+              text-[35px]
+              font
               uppercase
               leading-none
-              tracking-[-0.04em]
+              tracking-[0.01em]
               transition-opacity
               hover:opacity-55
             "
@@ -322,11 +323,11 @@ export default function DesktopWorkCarousel({
             onClick={handleNext}
             className="
               cursor-pointer
-              text-[22px]
-              font-black
+              text-[35px]
+              font-normal
               uppercase
               leading-none
-              tracking-[-0.04em]
+              tracking-[0.01em]
               transition-opacity
               hover:opacity-55
             "
@@ -356,7 +357,7 @@ export default function DesktopWorkCarousel({
           as="p"
           className="
             mb-4
-            text-[11px]
+            text-[16px]
             font-black
             uppercase
             tracking-[0.28em]
@@ -371,10 +372,10 @@ export default function DesktopWorkCarousel({
           delay={0.13}
           as="p"
           className="
-            text-[clamp(15px,1.15vw,20px)]
+            text-[clamp(18px,1.3vw,24px)]
             leading-[1.02]
-            tracking-[-0.035em]
-            opacity-70
+            tracking-[0.01em]
+            font-thin
           "
         >
           {activeProject.about}
@@ -493,18 +494,18 @@ export default function DesktopWorkCarousel({
             className={`
                 cursor-pointer
                 whitespace-nowrap
-                text-[clamp(19px,1.55vw,30px)]
-                font-black
+                text-[clamp(26px,2vw,40px)]
+                font-semibold
                 uppercase
                 leading-none
-                tracking-[-0.055em]
+                tracking-[0.01em]
                 transition-transform
                 duration-500
 
                 ${
                   index === activeProjectIndex
                     ? "scale-110 opacity-100"
-                    : "opacity-25 hover:opacity-60"
+                    : "opacity-60 hover:opacity-90"
                 }
               `}
           >
@@ -526,39 +527,22 @@ export default function DesktopWorkCarousel({
           text-right
         "
       >
-        <ProjectsTextReveal
-          key={`role-${activeProjectIndex}`}
-          active
-          delay={0.16}
-          as="p"
-          className="
-            max-w-[360px]
-            text-[12px]
-            font-black
-            uppercase
-            leading-[1.15]
-            tracking-[0.04em]
-          "
-        >
-          {activeProject.role}
-        </ProjectsTextReveal>
-
         <a
           href={activeProject.link}
           target="_blank"
           rel="noopener noreferrer"
           className="
-            text-[30px]
-            font-black
+            text-[38px]
+            font-semibold
             uppercase
             leading-none
-            tracking-[-0.04em]
+            tracking-[0.02em]
             transition-opacity
             hover:opacity-55
           "
         >
           <ProjectsTextReveal active delay={0.22} as="span">
-            Live Link
+            <WaveLinkText text="Live Link" />
           </ProjectsTextReveal>
         </a>
       </div>

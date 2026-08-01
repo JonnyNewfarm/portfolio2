@@ -15,37 +15,22 @@ export default function ContactHeader() {
     >
       <div>
         <ContactTextReveal
-          as="p"
-          mode="words"
-          delay={0.05}
-          className="
-            mb-2
-            text-xs
-            uppercase
-            tracking-[0.28em]
-            opacity-80
-          "
-        >
-          Contact / Availability
-        </ContactTextReveal>
-
-        <ContactTextReveal
           as="h1"
           mode="lines"
           delay={0.12}
           className="
             max-w-[1250px]
             text-[11vw]
-            font-black
+            font-semibold
             uppercase
             leading-[0.86]
-            tracking-[-0.045em]
+            tracking-[0.04em]
             sm:text-[14vw]
             md:text-[10vw]
-            lg:text-[8vw]
+            lg:text-[7vw]
           "
         >
-          {"Let's build\nsomething\nuseful."}
+          {"Let's build\nsomething useful."}
         </ContactTextReveal>
       </div>
     </div>

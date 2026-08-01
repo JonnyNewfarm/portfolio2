@@ -72,10 +72,10 @@ export default function HeroBottomInfo({
           items-end
           gap-y-4
           text-[9px]
-          font-black
+          font-semibold
           uppercase
           leading-none
-          tracking-[-0.015em]
+          tracking-[0.04em]
 
           sm:text-[11px]
 
@@ -83,7 +83,7 @@ export default function HeroBottomInfo({
           lg:grid-cols-[1fr_auto_auto_auto]
           lg:items-end
           lg:gap-x-[clamp(55px,7vw,120px)]
-          lg:text-sm
+          lg:text-xl
         "
       >
         <div
@@ -121,11 +121,11 @@ export default function HeroBottomInfo({
             cursor-pointer
             whitespace-nowrap
             pb-[3px]
-            text-sm
-            font-black
+            text-xl
+            font-semibold
             uppercase
             leading-none
-            tracking-[-0.015em]
+            tracking-[0.04em]
 
             lg:inline-block
           "
@@ -142,6 +142,7 @@ export default function HeroBottomInfo({
             items-end
             gap-y-2
             text-right
+            text-[16px]
 
             lg:hidden
           "

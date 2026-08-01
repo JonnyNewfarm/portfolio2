@@ -49,7 +49,7 @@ export default function RoomOverlayUI({
             px-3
             py-1
             text-[10px]
-            font-black
+            font-semibold
             uppercase
             tracking-[0.12em]
             text-stone-300

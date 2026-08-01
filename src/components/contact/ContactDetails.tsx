@@ -49,7 +49,6 @@ export default function ContactDetails() {
           font-black
           uppercase
           tracking-[0.18em]
-          opacity-75
           sm:grid-cols-2
           lg:sticky
           lg:top-28
@@ -60,9 +59,8 @@ export default function ContactDetails() {
           <p
             className="
               mb-3
-              text-xs
+              text-lg
               tracking-[0.24em]
-              opacity-40
             "
           >
             Details
@@ -72,7 +70,9 @@ export default function ContactDetails() {
             className="
               flex
               flex-col
+              text-lg
               items-start
+              font-normal
               gap-2
             "
           >
@@ -84,7 +84,6 @@ export default function ContactDetails() {
                 w-fit
                 transition
                 duration-500
-                hover:opacity-60
               "
             >
               <WaveLinkText text="Jonas Nygaard" />
@@ -95,7 +94,7 @@ export default function ContactDetails() {
               className="
                 w-fit
                 normal-case
-                tracking-normal
+                tracking-[0.05]
                 transition
                 duration-500
                 hover:opacity-60
@@ -124,9 +123,8 @@ export default function ContactDetails() {
           <p
             className="
               mb-3
-              text-xs
+              text-lg
               tracking-[0.24em]
-              opacity-40
             "
           >
             Social
@@ -137,6 +135,8 @@ export default function ContactDetails() {
               flex
               flex-col
               items-start
+              text-lg
+              font-normal
               gap-2
             "
           >
@@ -153,20 +153,6 @@ export default function ContactDetails() {
             >
               <WaveLinkText text="LinkedIn" />
             </a>
-
-            <a
-              href="https://www.jonasnygaard.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="
-                w-fit
-                transition
-                duration-500
-                hover:opacity-60
-              "
-            >
-              <WaveLinkText text="Portfolio" />
-            </a>
           </div>
         </motion.div>
 
@@ -174,9 +160,8 @@ export default function ContactDetails() {
           <p
             className="
               mb-3
-              text-xs
-              tracking-[0.24em]
-              opacity-40
+              text-lg
+              tracking-[0.1em]
             "
           >
             Work
@@ -185,12 +170,11 @@ export default function ContactDetails() {
           <p
             className="
               max-w-[340px]
-              text-base
-              font-bold
+              text-lg
+              font-normal
               normal-case
               leading-[1.35]
               tracking-normal
-              opacity-85
             "
           >
             Available for freelance work, web design, frontend builds and

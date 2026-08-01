@@ -1,40 +1,14 @@
 "use client";
 
 import { Canvas } from "@react-three/fiber";
-import {
-  AnimatePresence,
-  motion,
-  useMotionValueEvent,
-  useScroll,
-} from "framer-motion";
-import type { RefObject } from "react";
+import { motion } from "framer-motion";
 import { Suspense, useState } from "react";
 
-import TextReveal from "@/components/TextReveal";
-
 import AnimatedPortraitPlane from "./AnimatedPortraitPlane";
-import { heroEase, heroHeadings, type HeroCopyStep } from "./heroConstants";
+import { heroEase } from "./heroConstants";
 
-type HeroPortraitProps = {
-  heroSectionRef: RefObject<HTMLElement>;
-};
-
-export default function HeroPortrait({ heroSectionRef }: HeroPortraitProps) {
+export default function HeroPortrait() {
   const [imageLoaded, setImageLoaded] = useState(false);
-  const [copyStep, setCopyStep] = useState<HeroCopyStep>(0);
-
-  const { scrollYProgress } = useScroll({
-    target: heroSectionRef,
-    offset: ["start start", "end end"],
-  });
-
-  useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    const nextStep: HeroCopyStep = latest < 0.33 ? 0 : latest < 0.66 ? 1 : 2;
-
-    setCopyStep((currentStep) =>
-      currentStep === nextStep ? currentStep : nextStep,
-    );
-  });
 
   return (
     <motion.div
@@ -55,14 +29,14 @@ export default function HeroPortrait({ heroSectionRef }: HeroPortraitProps) {
       className="
         absolute
         left-0
-        top-[31%]
+        top-[24%]
         z-20
 
         sm:left-auto
         sm:right-0
         sm:top-[20%]
 
-        lg:top-[19%]
+        lg:top-[35%]
       "
     >
       <div
@@ -74,100 +48,6 @@ export default function HeroPortrait({ heroSectionRef }: HeroPortraitProps) {
           sm:items-end
         "
       >
-        <div
-          className="
-            mb-4
-            w-[260px]
-            text-left
-
-            sm:mb-5
-            sm:w-[250px]
-            sm:text-right
-
-            lg:mb-6
-            lg:w-[300px]
-          "
-        >
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={`heading-${copyStep}`}
-              initial={{
-                opacity: 0,
-                y: 16,
-                filter: "blur(7px)",
-              }}
-              animate={{
-                opacity: 1,
-                y: 0,
-                filter: "blur(0px)",
-              }}
-              exit={{
-                opacity: 0,
-                y: -14,
-                filter: "blur(7px)",
-              }}
-              transition={{
-                duration: 0.45,
-                ease: heroEase,
-              }}
-            >
-              <motion.p
-                initial={{
-                  opacity: 0,
-                  y: 6,
-                }}
-                animate={{
-                  opacity: 0.55,
-                  y: 0,
-                }}
-                exit={{
-                  opacity: 0,
-                  y: -6,
-                }}
-                transition={{
-                  duration: 0.35,
-                  ease: heroEase,
-                }}
-                className="
-                  mb-2
-                  text-[10px]
-                  font-black
-                  uppercase
-                  leading-none
-                  tracking-[0.08em]
-
-                  sm:text-[10px]
-                  lg:text-[11px]
-                "
-              >
-                {`${String(copyStep + 1).padStart(2, "0")} / 03`}
-              </motion.p>
-
-              <TextReveal
-                as="h1"
-                mode="lines"
-                once={false}
-                className="
-                  text-[18px]
-                  font-black
-                  uppercase
-                  leading-[0.95]
-                  tracking-[-0.025em]
-
-                  sm:text-[15px]
-
-                  md:text-[17px]
-
-                  lg:text-[20px]
-                  
-                "
-              >
-                {heroHeadings[copyStep]}
-              </TextReveal>
-            </motion.div>
-          </AnimatePresence>
-        </div>
-
         <div
           className="
             relative
@@ -202,8 +82,8 @@ export default function HeroPortrait({ heroSectionRef }: HeroPortraitProps) {
               position: "absolute",
               left: "-30%",
               top: "-30%",
-              width: "157%",
-              height: "157%",
+              width: "165%",
+              height: "165%",
             }}
           >
             <Suspense fallback={null}>
@@ -220,7 +100,7 @@ export default function HeroPortrait({ heroSectionRef }: HeroPortraitProps) {
               absolute
               left-0
               top-full
-              mt-2
+              mt-3.5
               text-[10px]
               uppercase
               tracking-[0.045em]
