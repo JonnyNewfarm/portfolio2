@@ -2,13 +2,28 @@
 
 import { Canvas } from "@react-three/fiber";
 import { motion } from "framer-motion";
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 
 import AnimatedLatestProjectPlane from "./AnimatedLatestProjectPlane";
 import { heroEase } from "./heroConstants";
 
 export default function LatestProjectPreview() {
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [animationActive, setAnimationActive] = useState(false);
+
+  useEffect(() => {
+    if (!imageLoaded) {
+      return;
+    }
+
+    const timeout = window.setTimeout(() => {
+      setAnimationActive(true);
+    }, 850);
+
+    return () => {
+      window.clearTimeout(timeout);
+    };
+  }, [imageLoaded]);
 
   return (
     <motion.a
@@ -32,13 +47,13 @@ export default function LatestProjectPreview() {
         ease: heroEase,
       }}
       className="
-  group
-  relative
-  hidden
-  w-[clamp(200px,14vw,260px)]
-  cursor-pointer
-  sm:block
-"
+        group
+        relative
+        hidden
+        w-[clamp(200px,14vw,260px)]
+        cursor-pointer
+        sm:block
+      "
     >
       <p
         className="
@@ -79,6 +94,7 @@ export default function LatestProjectPreview() {
         >
           <Suspense fallback={null}>
             <AnimatedLatestProjectPlane
+              active={animationActive}
               onLoadedAction={() => {
                 setImageLoaded(true);
               }}

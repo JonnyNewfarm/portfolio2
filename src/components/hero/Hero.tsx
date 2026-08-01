@@ -73,10 +73,10 @@ export default function Hero() {
                 z-20
                 text-[28px]
                 
-                font-black
+                font-bold
                 uppercase
                 leading-[0.95]
-    tracking-[0.04em]
+    tracking-[0.02em]
                 sm:top-[60%]
 
                 sm:block
@@ -84,7 +84,7 @@ export default function Hero() {
                 lg:top-[20vh]
                 lg:text-[50px]
                 
-                xl:text-[70px]
+                xl:text-[60px]
               "
             >
               <TextReveal as="p" mode="lines">

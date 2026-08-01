@@ -12,10 +12,12 @@ import * as THREE from "three";
 import { portraitFragmentShader, portraitVertexShader } from "./heroShaders";
 
 type AnimatedLatestProjectPlaneProps = {
+  active: boolean;
   onLoadedAction: () => void;
 };
 
 export default function AnimatedLatestProjectPlane({
+  active,
   onLoadedAction,
 }: AnimatedLatestProjectPlaneProps) {
   const meshRef = useRef<THREE.Mesh | null>(null);
@@ -23,7 +25,7 @@ export default function AnimatedLatestProjectPlane({
 
   const texture = useLoader(THREE.TextureLoader, "/projects/keri-01.jpg");
 
-  const { viewport } = useThree();
+  const { viewport, gl } = useThree();
 
   const imageWidth = viewport.width / 1.3;
   const imageHeight = imageWidth / 1.78;
@@ -33,13 +35,15 @@ export default function AnimatedLatestProjectPlane({
 
   const positionTarget = useRef(new THREE.Vector2(0, 0));
 
+  // Starter på høyre side.
   const positionCurrent = useRef(
-    new THREE.Vector2(-imageWidth * 0.13, imageHeight * 0.02),
+    new THREE.Vector2(imageWidth * 0.22, imageHeight * 0.025),
   );
 
   const positionVelocity = useRef(new THREE.Vector2(0, 0));
 
-  const bendCurrent = useRef(new THREE.Vector2(-130, 22));
+  // Positiv X fordi bildet kommer inn fra høyre.
+  const bendCurrent = useRef(new THREE.Vector2(155, 28));
   const bendVelocity = useRef(new THREE.Vector2(0, 0));
 
   const alphaCurrent = useRef(0);
@@ -55,11 +59,11 @@ export default function AnimatedLatestProjectPlane({
       },
 
       uDelta: {
-        value: new THREE.Vector2(-130, 22),
+        value: new THREE.Vector2(155, 28),
       },
 
       uAmplitude: {
-        value: 0.00145,
+        value: 0.00155,
       },
 
       uAlpha: {
@@ -71,14 +75,21 @@ export default function AnimatedLatestProjectPlane({
 
   useEffect(() => {
     texture.colorSpace = THREE.SRGBColorSpace;
+
+    texture.wrapS = THREE.ClampToEdgeWrapping;
+    texture.wrapT = THREE.ClampToEdgeWrapping;
+
     texture.minFilter = THREE.LinearMipmapLinearFilter;
     texture.magFilter = THREE.LinearFilter;
+
     texture.generateMipmaps = true;
-    texture.anisotropy = 8;
+
+    texture.anisotropy = Math.min(gl.capabilities.getMaxAnisotropy(), 16);
+
     texture.needsUpdate = true;
 
     onLoadedAction();
-  }, [onLoadedAction, texture]);
+  }, [gl, onLoadedAction, texture]);
 
   useFrame((_, rawDelta) => {
     const mesh = meshRef.current;
@@ -90,12 +101,34 @@ export default function AnimatedLatestProjectPlane({
 
     const delta = Math.min(rawDelta, 1 / 30);
 
+    /*
+     * Hold bildet på startposisjonen helt til parentens
+     * fade-in faktisk begynner.
+     */
+    if (!active) {
+      mesh.position.x = positionCurrent.current.x;
+      mesh.position.y = positionCurrent.current.y;
+
+      material.uniforms.uDelta.value.set(
+        bendCurrent.current.x,
+        bendCurrent.current.y,
+      );
+
+      material.uniforms.uAlpha.value = 0;
+
+      return;
+    }
+
     if (!hasStartedAnimation.current) {
       hasStartedAnimation.current = true;
 
-      bendVelocity.current.set(260, -44);
+      /*
+       * Negativ velocity sender bildet fra høyre mot midten.
+       * Den relativt lave dampingen lager en synlig bounce.
+       */
+      positionVelocity.current.set(-imageWidth * 1.35, -imageHeight * 0.14);
 
-      positionVelocity.current.set(imageWidth * 0.8, -imageHeight * 0.1);
+      bendVelocity.current.set(-340, -58);
     }
 
     const alphaTarget = 1;
@@ -145,8 +178,12 @@ export default function AnimatedLatestProjectPlane({
       hovered.current ? (pointerTarget.current.y - 0.5) * maxFollowY : 0,
     );
 
-    const positionStiffness = hovered.current ? 34 : 78;
-    const positionDamping = hovered.current ? 7.5 : 8.5;
+    /*
+     * Lavere damping enn tidligere gjør at den går litt forbi
+     * sluttpunktet og bouncer tilbake.
+     */
+    const positionStiffness = hovered.current ? 34 : 72;
+    const positionDamping = hovered.current ? 7.5 : 6.8;
 
     positionVelocity.current.x +=
       (positionTarget.current.x - positionCurrent.current.x) *
@@ -219,6 +256,7 @@ export default function AnimatedLatestProjectPlane({
         transparent
         depthWrite={false}
         side={THREE.DoubleSide}
+        precision="highp"
       />
     </mesh>
   );

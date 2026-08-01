@@ -28,174 +28,77 @@ body::-webkit-scrollbar {
 
 @font-face {
   font-family: "Bueno";
-  src: url("/fonts/bueno-regular.woff2") format("woff2");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-.font-bueno {
-  font-family: "Bueno", Arial, Helvetica, sans-serif;
-}
-
-@font-face {
-  font-family: "Nohemi";
-  src: url("/fonts/Nohemi-Regular.woff2") format("woff2");
-  font-weight: 400;
+  src: url("/fonts/Bueno-Thin.woff2") format("woff2");
+  font-weight: 100;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: "Nohemi";
-  src: url("/fonts/Nohemi-Medium.woff2") format("woff2");
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Nohemi";
-  src: url("/fonts/Nohemi-Bold.woff2") format("woff2");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Nohemi";
-  src: url("/fonts/Nohemi-Black.woff2") format("woff2");
-  font-weight: 900;
-  font-style: normal;
-  font-display: swap;
-}
-
-.font-nohemi {
-  font-family: "Nohemi", Arial, Helvetica, sans-serif;
-}
-
-.nohemi-regular {
-  font-family: "Nohemi", Arial, Helvetica, sans-serif;
-  font-weight: 400;
-}
-
-.nohemi-medium {
-  font-family: "Nohemi", Arial, Helvetica, sans-serif;
-  font-weight: 500;
-}
-
-.nohemi-bold {
-  font-family: "Nohemi", Arial, Helvetica, sans-serif;
-  font-weight: 700;
-}
-
-.nohemi-black {
-  font-family: "Nohemi", Arial, Helvetica, sans-serif;
-  font-weight: 900;
-}
-
-
-
-/* MERCHANT — NORMAL WIDTH */
-
-@font-face {
-  font-family: "Merchant";
-  src: url("/fonts/Merchant-ExtraLight.woff2") format("woff2");
+  font-family: "Bueno";
+  src: url("/fonts/Bueno-ExtraLight.woff2") format("woff2");
   font-weight: 200;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: "Merchant";
-  src: url("/fonts/Merchant-Light.woff2") format("woff2");
+  font-family: "Bueno";
+  src: url("/fonts/Bueno-Light.woff2") format("woff2");
   font-weight: 300;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: "Merchant";
-  src: url("/fonts/Merchant-Regular.woff2") format("woff2");
+  font-family: "Bueno";
+  src: url("/fonts/Bueno-Regular.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: "Merchant";
-  src: url("/fonts/Merchant-Bold.woff2") format("woff2");
+  font-family: "Bueno";
+  src: url("/fonts/Bueno-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Bueno";
+  src: url("/fonts/Bueno-SemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Bueno";
+  src: url("/fonts/Bueno-Bold.woff2") format("woff2");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: "Merchant";
-  src: url("/fonts/Merchant-ExtraBold.woff2") format("woff2");
+  font-family: "Bueno";
+  src: url("/fonts/Bueno-ExtraBold.woff2") format("woff2");
   font-weight: 800;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: "Merchant";
-  src: url("/fonts/Merchant-Black.woff2") format("woff2");
+  font-family: "Bueno";
+  src: url("/fonts/Bueno-Black.woff2") format("woff2");
   font-weight: 900;
   font-style: normal;
   font-display: swap;
 }
 
-
-/* MERCHANT — CONDENSED */
-
-@font-face {
-  font-family: "Merchant Condensed";
-  src: url("/fonts/Merchant-Condensed.woff2") format("woff2");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Merchant Condensed";
-  src: url("/fonts/Merchant-BoldCondensed.woff2") format("woff2");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-
-/* MERCHANT — EXPANDED */
-
-@font-face {
-  font-family: "Merchant Expanded";
-  src: url("/fonts/Merchant-Expanded.woff2") format("woff2");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Merchant Expanded";
-  src: url("/fonts/Merchant-BoldExpanded.woff2") format("woff2");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-
-/* UTILITY-KLASSER */
-
-.font-merchant {
-  font-family: "Merchant", Arial, Helvetica, sans-serif;
-}
-
-.font-merchant-condensed {
-  font-family: "Merchant Condensed", Arial, Helvetica, sans-serif;
-}
-
-.font-merchant-expanded {
-  font-family: "Merchant Expanded", Arial, Helvetica, sans-serif;
+.font-bueno {
+  font-family: "Bueno", Arial, Helvetica, sans-serif;
 }
 

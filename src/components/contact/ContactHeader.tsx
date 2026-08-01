@@ -24,7 +24,7 @@ export default function ContactHeader() {
             font-semibold
             uppercase
             leading-[0.86]
-            tracking-[0.04em]
+            tracking-[0.02em]
             sm:text-[14vw]
             md:text-[10vw]
             lg:text-[7vw]

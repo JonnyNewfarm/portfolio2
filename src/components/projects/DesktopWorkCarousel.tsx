@@ -305,7 +305,7 @@ export default function DesktopWorkCarousel({
             className="
               cursor-pointer
               text-[35px]
-              font
+              font-semibold
               uppercase
               leading-none
               tracking-[0.01em]
@@ -324,7 +324,7 @@ export default function DesktopWorkCarousel({
             className="
               cursor-pointer
               text-[35px]
-              font-normal
+              font-semibold
               uppercase
               leading-none
               tracking-[0.01em]
@@ -375,7 +375,7 @@ export default function DesktopWorkCarousel({
             text-[clamp(18px,1.3vw,24px)]
             leading-[1.02]
             tracking-[0.01em]
-            font-thin
+            font-normal
           "
         >
           {activeProject.about}

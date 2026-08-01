@@ -73,12 +73,12 @@ const Navbar = () => {
         <div className="flex items-center gap-x-5 lg:hidden">
           <Link
             href="/"
-            className="text-md font-black uppercase tracking-[0.09em]"
+            className="text-md font-semibold uppercase tracking-[0.09em]"
           >
             Newfarm Studio
           </Link>
 
-          <div className="flex items-center gap-x-1 text-md font-black uppercase tracking-[0.08em]">
+          <div className="flex items-center gap-x-1 text-md font-semibold uppercase tracking-[0.08em]">
             <button
               type="button"
               onClick={() => setTheme("light")}
