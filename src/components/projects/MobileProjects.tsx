@@ -134,19 +134,29 @@ export default function MobileProjects() {
                 will-change-[opacity,transform,filter]
               "
             >
-              <Image
-                src={`/projects/${project.images[0]}`}
-                alt={project.title}
-                width={1600}
-                height={1200}
-                sizes="100vw"
+              <div
                 className="
-                  h-auto
-                  w-full
-                  object-contain
-                "
-                draggable={false}
-              />
+    bg-[#6b7368]
+    p-[6px]
+    dark:bg-[#8e968c]
+
+  "
+              >
+                <Image
+                  src={`/projects/${project.images[0]}`}
+                  alt={project.title}
+                  width={1600}
+                  height={1200}
+                  sizes="100vw"
+                  className="
+      block
+      h-auto
+      w-full
+      object-contain
+    "
+                  draggable={false}
+                />
+              </div>
             </motion.a>
 
             <div
@@ -208,8 +218,8 @@ export default function MobileProjects() {
                     className="
                       text-sm
                       leading-relaxed
-                      text-[#161310]
-                      dark:text-stone-300
+text-[#211f1e]
+dark:text-[#e7e3dd]
                     "
                   >
                     {project.stack}

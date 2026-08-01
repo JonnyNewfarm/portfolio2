@@ -32,9 +32,10 @@ const Footer = () => {
 
   return (
     <footer
-      className={`relative overflow-hidden bg-[#fbfafa] px-4 py-10 text-[#161310] dark:bg-[#1e1c1c] dark:text-stone-300 md:px-10 lg:px-16 ${
-        isProjectsPage ? "md:hidden" : ""
-      }`}
+      className={`relative overflow-hidden  px-4 py-10 bg-[#ececec] 
+text-[#211f1e]
+dark:bg-[#1e1c1a]
+dark:text-[#e7e3dd] md:px-10 lg:px-16 ${isProjectsPage ? "md:hidden" : ""}`}
     >
       <div className="mx-auto flex min-h-[520px] w-full max-w-[1800px] flex-col justify-between pt-8">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-[1.2fr_0.8fr] md:items-start">

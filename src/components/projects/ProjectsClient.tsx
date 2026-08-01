@@ -40,12 +40,14 @@ export default function ProjectsClient() {
           relative
           min-h-screen
           w-full
-          bg-[#fbfafa]
-          text-[#161310]
+          bg-[#ececec] 
+text-[#211f1e]
+dark:bg-[#1e1c1a]
+dark:text-[#e7e3dd]
+          
           transition-colors
           duration-500
-          dark:bg-[#1e1c1c]
-          dark:text-stone-300
+          
           md:h-screen
         "
       >

@@ -4,7 +4,7 @@ export const projects: Project[] = [
   {
     title: "Kerimov Designs",
     year: "2026",
-    category: "Web Design & Branding",
+    category: "Design & code",
     link: "https://kerimovdesigns.com",
     about:
       "Portfolio website for graphic designer Rustam Kerimov.",
@@ -21,10 +21,10 @@ export const projects: Project[] = [
   {
     title: "Calero Studio",
     year: "2026",
-    category: "E-commerce",
+    category: "Design & code",
     link: "https://www.calero.studio/",
     about:
-      "E-commerce product page with visual direction, product storytelling and smooth motion.",
+      "E-commerce store with visual direction, product storytelling and smooth motion.",
     stack:
       "React, Prisma, Three.js, GSAP, TailwindCSS, Neon, Stripe.",
     role:

@@ -46,7 +46,7 @@ export default function ContactDetails() {
           grid-cols-1
           gap-10
           text-sm
-          font-black
+          font-bold
           uppercase
           tracking-[0.18em]
           sm:grid-cols-2
@@ -58,7 +58,7 @@ export default function ContactDetails() {
         <motion.div variants={itemVariants}>
           <p
             className="
-              mb-3
+              mb-1
               text-lg
               tracking-[0.24em]
             "
@@ -70,25 +70,12 @@ export default function ContactDetails() {
             className="
               flex
               flex-col
-              text-lg
+              text-xl
               items-start
               font-normal
               gap-2
             "
           >
-            <a
-              href="https://www.jonasnygaard.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="
-                w-fit
-                transition
-                duration-500
-              "
-            >
-              <WaveLinkText text="Jonas Nygaard" />
-            </a>
-
             <a
               href="mailto:jonasnygaard96@gmail.com"
               className="
@@ -122,7 +109,7 @@ export default function ContactDetails() {
         <motion.div variants={itemVariants}>
           <p
             className="
-              mb-3
+              mb-1
               text-lg
               tracking-[0.24em]
             "
@@ -135,7 +122,7 @@ export default function ContactDetails() {
               flex
               flex-col
               items-start
-              text-lg
+              text-2xl
               font-normal
               gap-2
             "
@@ -159,7 +146,7 @@ export default function ContactDetails() {
         <motion.div variants={itemVariants}>
           <p
             className="
-              mb-3
+              mb-1
               text-lg
               tracking-[0.1em]
             "
@@ -170,14 +157,14 @@ export default function ContactDetails() {
           <p
             className="
               max-w-[340px]
-              text-lg
+              text-2xl
               font-normal
               normal-case
               leading-[1.35]
               tracking-normal
             "
           >
-            Available for freelance work, web design, frontend builds and
+            Available for freelance work, web design, web app builds and
             selected collaborations.
           </p>
         </motion.div>

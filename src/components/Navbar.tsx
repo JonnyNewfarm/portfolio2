@@ -67,7 +67,11 @@ const Navbar = () => {
   };
 
   return (
-    <header className="fixed top-0 z-50 w-full bg-transparent px-6 py-5 text-[#1c1a17] dark:text-stone-300 lg:px-12 xl:px-16">
+    <header
+      className="fixed top-0 z-50 w-full bg-transparent px-6 py-5
+text-[#211f1e]
+dark:text-[#e7e3dd] lg:px-12 xl:px-16"
+    >
       <div className="flex items-center justify-between">
         {/* Mobile logo + theme */}
         <div className="flex items-center gap-x-5 lg:hidden">

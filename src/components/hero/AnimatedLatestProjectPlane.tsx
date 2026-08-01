@@ -13,15 +13,28 @@ import { portraitFragmentShader, portraitVertexShader } from "./heroShaders";
 
 type AnimatedLatestProjectPlaneProps = {
   active: boolean;
+  isDark: boolean;
   onLoadedAction: () => void;
 };
 
+const frameFragmentShader = `
+  uniform vec3 uColor;
+  uniform float uAlpha;
+
+  void main() {
+    gl_FragColor = vec4(uColor, uAlpha);
+  }
+`;
+
 export default function AnimatedLatestProjectPlane({
   active,
+  isDark,
   onLoadedAction,
 }: AnimatedLatestProjectPlaneProps) {
-  const meshRef = useRef<THREE.Mesh | null>(null);
-  const materialRef = useRef<THREE.ShaderMaterial | null>(null);
+  const groupRef = useRef<THREE.Group | null>(null);
+
+  const imageMaterialRef = useRef<THREE.ShaderMaterial | null>(null);
+  const frameMaterialRef = useRef<THREE.ShaderMaterial | null>(null);
 
   const texture = useLoader(THREE.TextureLoader, "/projects/keri-01.jpg");
 
@@ -30,19 +43,23 @@ export default function AnimatedLatestProjectPlane({
   const imageWidth = viewport.width / 1.3;
   const imageHeight = imageWidth / 1.78;
 
+  /*
+   * Hvor mye av rammen som er synlig rundt bildet.
+   */
+  const frameWidth = imageWidth * 1.07;
+  const frameHeight = imageHeight * 1.13;
+
   const pointerTarget = useRef(new THREE.Vector2(0.5, 0.5));
   const smoothPointer = useRef(new THREE.Vector2(0.5, 0.5));
 
   const positionTarget = useRef(new THREE.Vector2(0, 0));
 
-  // Starter på høyre side.
   const positionCurrent = useRef(
     new THREE.Vector2(imageWidth * 0.22, imageHeight * 0.025),
   );
 
   const positionVelocity = useRef(new THREE.Vector2(0, 0));
 
-  // Positiv X fordi bildet kommer inn fra høyre.
   const bendCurrent = useRef(new THREE.Vector2(155, 28));
   const bendVelocity = useRef(new THREE.Vector2(0, 0));
 
@@ -52,26 +69,51 @@ export default function AnimatedLatestProjectPlane({
   const hovered = useRef(false);
   const hasStartedAnimation = useRef(false);
 
-  const uniforms = useMemo(
+  const imageUniforms = useMemo(
     () => ({
       uTexture: {
         value: texture,
       },
-
       uDelta: {
         value: new THREE.Vector2(155, 28),
       },
-
       uAmplitude: {
         value: 0.00155,
       },
-
       uAlpha: {
         value: 0,
       },
     }),
     [texture],
   );
+
+  const frameUniforms = useMemo(
+    () => ({
+      uColor: {
+        value: new THREE.Color(isDark ? "#4a4540" : "#7a1e16"),
+      },
+      uDelta: {
+        value: new THREE.Vector2(155, 28),
+      },
+      uAmplitude: {
+        value: 0.00155,
+      },
+      uAlpha: {
+        value: 0,
+      },
+    }),
+    [],
+  );
+
+  useEffect(() => {
+    const frameMaterial = frameMaterialRef.current;
+
+    if (!frameMaterial) {
+      return;
+    }
+
+    frameMaterial.uniforms.uColor.value.set(isDark ? "#b64b3b" : "#b94f3d");
+  }, [isDark]);
 
   useEffect(() => {
     texture.colorSpace = THREE.SRGBColorSpace;
@@ -92,29 +134,32 @@ export default function AnimatedLatestProjectPlane({
   }, [gl, onLoadedAction, texture]);
 
   useFrame((_, rawDelta) => {
-    const mesh = meshRef.current;
-    const material = materialRef.current;
+    const group = groupRef.current;
+    const imageMaterial = imageMaterialRef.current;
+    const frameMaterial = frameMaterialRef.current;
 
-    if (!mesh || !material) {
+    if (!group || !imageMaterial || !frameMaterial) {
       return;
     }
 
     const delta = Math.min(rawDelta, 1 / 30);
 
-    /*
-     * Hold bildet på startposisjonen helt til parentens
-     * fade-in faktisk begynner.
-     */
     if (!active) {
-      mesh.position.x = positionCurrent.current.x;
-      mesh.position.y = positionCurrent.current.y;
+      group.position.x = positionCurrent.current.x;
+      group.position.y = positionCurrent.current.y;
 
-      material.uniforms.uDelta.value.set(
+      imageMaterial.uniforms.uDelta.value.set(
         bendCurrent.current.x,
         bendCurrent.current.y,
       );
 
-      material.uniforms.uAlpha.value = 0;
+      frameMaterial.uniforms.uDelta.value.set(
+        bendCurrent.current.x,
+        bendCurrent.current.y,
+      );
+
+      imageMaterial.uniforms.uAlpha.value = 0;
+      frameMaterial.uniforms.uAlpha.value = 0;
 
       return;
     }
@@ -122,10 +167,6 @@ export default function AnimatedLatestProjectPlane({
     if (!hasStartedAnimation.current) {
       hasStartedAnimation.current = true;
 
-      /*
-       * Negativ velocity sender bildet fra høyre mot midten.
-       * Den relativt lave dampingen lager en synlig bounce.
-       */
       positionVelocity.current.set(-imageWidth * 1.35, -imageHeight * 0.14);
 
       bendVelocity.current.set(-340, -58);
@@ -153,7 +194,6 @@ export default function AnimatedLatestProjectPlane({
     const differenceY = pointerTarget.current.y - smoothPointer.current.y;
 
     const targetBendX = hovered.current ? differenceX * 460 : 0;
-
     const targetBendY = hovered.current ? differenceY * 460 : 0;
 
     const bendStiffness = hovered.current ? 115 : 88;
@@ -174,14 +214,9 @@ export default function AnimatedLatestProjectPlane({
 
     positionTarget.current.set(
       hovered.current ? (pointerTarget.current.x - 0.5) * maxFollowX : 0,
-
       hovered.current ? (pointerTarget.current.y - 0.5) * maxFollowY : 0,
     );
 
-    /*
-     * Lavere damping enn tidligere gjør at den går litt forbi
-     * sluttpunktet og bouncer tilbake.
-     */
     const positionStiffness = hovered.current ? 34 : 72;
     const positionDamping = hovered.current ? 7.5 : 6.8;
 
@@ -199,15 +234,22 @@ export default function AnimatedLatestProjectPlane({
 
     positionCurrent.current.addScaledVector(positionVelocity.current, delta);
 
-    mesh.position.x = positionCurrent.current.x;
-    mesh.position.y = positionCurrent.current.y;
+    group.position.x = positionCurrent.current.x;
+    group.position.y = positionCurrent.current.y;
 
-    material.uniforms.uDelta.value.set(
+    imageMaterial.uniforms.uDelta.value.set(
       bendCurrent.current.x,
       bendCurrent.current.y,
     );
 
-    material.uniforms.uAlpha.value = alphaCurrent.current;
+    frameMaterial.uniforms.uDelta.value.set(
+      bendCurrent.current.x,
+      bendCurrent.current.y,
+    );
+
+    imageMaterial.uniforms.uAlpha.value = alphaCurrent.current;
+
+    frameMaterial.uniforms.uAlpha.value = alphaCurrent.current * 0.96;
   });
 
   const handlePointerEnter = (event: ThreeEvent<PointerEvent>) => {
@@ -239,25 +281,45 @@ export default function AnimatedLatestProjectPlane({
   };
 
   return (
-    <mesh
-      ref={meshRef}
-      onPointerEnter={handlePointerEnter}
-      onPointerMove={handlePointerMove}
-      onPointerLeave={handlePointerLeave}
-    >
-      <planeGeometry args={[imageWidth, imageHeight, 24, 18]} />
+    <group ref={groupRef}>
+      {/* Frame */}
+      <mesh position={[0, 0, -0.025]}>
+        <planeGeometry args={[frameWidth, frameHeight, 24, 18]} />
 
-      <shaderMaterial
-        ref={materialRef}
-        uniforms={uniforms}
-        vertexShader={portraitVertexShader}
-        fragmentShader={portraitFragmentShader}
-        toneMapped={false}
-        transparent
-        depthWrite={false}
-        side={THREE.DoubleSide}
-        precision="highp"
-      />
-    </mesh>
+        <shaderMaterial
+          ref={frameMaterialRef}
+          uniforms={frameUniforms}
+          vertexShader={portraitVertexShader}
+          fragmentShader={frameFragmentShader}
+          toneMapped={false}
+          transparent
+          depthWrite={false}
+          side={THREE.DoubleSide}
+          precision="highp"
+        />
+      </mesh>
+
+      {/* Selve bildet */}
+      <mesh
+        position={[0, 0, 0]}
+        onPointerEnter={handlePointerEnter}
+        onPointerMove={handlePointerMove}
+        onPointerLeave={handlePointerLeave}
+      >
+        <planeGeometry args={[imageWidth, imageHeight, 24, 18]} />
+
+        <shaderMaterial
+          ref={imageMaterialRef}
+          uniforms={imageUniforms}
+          vertexShader={portraitVertexShader}
+          fragmentShader={portraitFragmentShader}
+          toneMapped={false}
+          transparent
+          depthWrite={false}
+          side={THREE.DoubleSide}
+          precision="highp"
+        />
+      </mesh>
+    </group>
   );
 }

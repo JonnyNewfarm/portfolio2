@@ -10,6 +10,28 @@ import { heroEase } from "./heroConstants";
 export default function LatestProjectPreview() {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [animationActive, setAnimationActive] = useState(false);
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    const root = document.documentElement;
+
+    const updateTheme = () => {
+      setIsDark(root.classList.contains("dark"));
+    };
+
+    updateTheme();
+
+    const observer = new MutationObserver(updateTheme);
+
+    observer.observe(root, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     if (!imageLoaded) {
@@ -95,6 +117,7 @@ export default function LatestProjectPreview() {
           <Suspense fallback={null}>
             <AnimatedLatestProjectPlane
               active={animationActive}
+              isDark={isDark}
               onLoadedAction={() => {
                 setImageLoaded(true);
               }}

@@ -14,13 +14,13 @@ export default function ContactClient() {
           min-h-screen
           w-full
           overflow-hidden
-          bg-[#fbfafa]
           px-4
           pb-12
           pt-28
-          text-[#161310]
-          dark:bg-[#1e1c1c]
-          dark:text-stone-300
+          bg-[#ececec] 
+text-[#211f1e]
+dark:bg-[#1e1c1a]
+dark:text-[#e7e3dd]
           sm:px-8
           md:px-10
           lg:px-16

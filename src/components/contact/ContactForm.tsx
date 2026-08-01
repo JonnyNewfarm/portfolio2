@@ -135,7 +135,6 @@ export default function ContactForm() {
             Start here
           </ContactTextReveal>
         </div>
-
         <ContactTextReveal
           as="p"
           mode="words"
@@ -144,7 +143,7 @@ export default function ContactForm() {
             hidden
             max-w-[260px]
             text-right
-            text-lg
+            text-2xl
             leading-[1.35]
             md:block
           "
@@ -238,15 +237,15 @@ export default function ContactForm() {
             w-fit
             cursor-pointer
             overflow-hidden
-            border
+            border-2
             border-[#161310]
             px-8
             py-4
             text-lg
             sm:text-xl
-            font-semibold
+            font-black
             uppercase
-            tracking-[0.3em]
+            tracking-[0.2em]
             text-[#161310]
             transition-colors
             duration-500
@@ -282,13 +281,12 @@ export default function ContactForm() {
         <p
           className="
             max-w-[360px]
-            text-md
+            text-lg
             font-normal
             leading-[1.35]
-            opacity-70
           "
         >
-          Open for freelance and selected collaborations.
+          Open for freelance collaborations.
         </p>
       </FadeIn>
     </form>

@@ -267,7 +267,7 @@ export default function DesktopWorkCarousel({
     }, 800);
   };
 
-  const canvasBackground = isDark ? "#1e1c1c" : "#fbfafa";
+  const canvasBackground = isDark ? "#1e1c1a" : "#ececec";
 
   return (
     <div
@@ -281,12 +281,13 @@ export default function DesktopWorkCarousel({
         h-screen
         w-full
         overflow-hidden
-        bg-[#fbfafa]
-        text-[#161310]
+        bg-[#ececec] 
+text-[#211f1e]
+dark:bg-[#1e1c1a]
+dark:text-[#e7e3dd]
         transition-colors
         duration-500
-        dark:bg-[#1e1c1c]
-        dark:text-stone-300
+        
         md:block
       "
     >
@@ -358,9 +359,9 @@ export default function DesktopWorkCarousel({
           className="
             mb-4
             text-[16px]
-            font-black
+            font-semibold
             uppercase
-            tracking-[0.28em]
+            tracking-[0.2em]
           "
         >
           {`${activeProject.category} / ${activeProject.year}`}

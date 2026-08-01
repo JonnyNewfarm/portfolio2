@@ -44,9 +44,9 @@ export default function ContactFormField({
           mb-3
           block
           text-lg
-          font-black
+          font-semibold
           uppercase
-          tracking-[0.24em]
+          tracking-[0.1em]
           opacity-80
         "
       >

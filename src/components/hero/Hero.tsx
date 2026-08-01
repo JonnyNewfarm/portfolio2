@@ -1,18 +1,15 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
-import { useCallback, useRef, useState } from "react";
+import { AnimatePresence } from "framer-motion";
+import { useCallback, useState } from "react";
 
 import TextReveal from "@/components/TextReveal";
 
 import HeroBottomInfo from "./HeroBottomInfo";
 import HeroPortrait from "./HeroPortrait";
-import { heroEase } from "./heroConstants";
 import Fullscreen3DRoom from "./room/Fullscreen3DRoom";
 
 export default function Hero() {
-  const heroSectionRef = useRef<HTMLElement | null>(null);
-
   const [show3DRoom, setShow3DRoom] = useState(false);
 
   const open3DRoom = useCallback(() => {
@@ -26,14 +23,13 @@ export default function Hero() {
   return (
     <>
       <section
-        ref={heroSectionRef}
         className="
           relative
-          h-[300dvh]
-          bg-[#fbfafa]
-          text-[#161310]
-          dark:bg-[#1e1c1c]
-          dark:text-stone-300
+          h-[120dvh]
+          bg-[#ececec]
+          text-[#211f1e]
+          dark:bg-[#1e1c1a]
+          dark:text-[#e7e3dd]
         "
       >
         <div
@@ -50,49 +46,36 @@ export default function Hero() {
           <div className="relative h-full w-full">
             <HeroPortrait />
 
-            <motion.div
-              initial={{
-                opacity: 0,
-                x: -12,
-                filter: "blur(6px)",
-              }}
-              animate={{
-                opacity: 1,
-                x: 0,
-                filter: "blur(0px)",
-              }}
-              transition={{
-                duration: 0.8,
-                delay: 0.95,
-                ease: heroEase,
-              }}
+            <div
               className="
                 absolute
                 left-0
                 top-[64%]
                 z-20
-                text-[28px]
-                
-                font-bold
-                uppercase
-                leading-[0.95]
-    tracking-[0.02em]
                 sm:top-[60%]
-
-                sm:block
-                sm:text-[40px]
                 lg:top-[20vh]
-                lg:text-[50px]
-                
-                xl:text-[60px]
               "
             >
-              <TextReveal as="p" mode="lines">
-                Designer & developer
+              <TextReveal
+                as="h1"
+                mode="lines"
+                delay={0.95}
+                className="
+                  text-[28px]
+                  font-bold
+                  uppercase
+                  leading-[0.95]
+                  tracking-[0em]
+                  sm:text-[40px]
+                  lg:text-[50px]
+                  xl:text-[60px]
+                "
+              >
+                {
+                  "Designer & developer\ncrafting interactive digital\nexperiences."
+                }
               </TextReveal>
-              <TextReveal>crafting interactive digital</TextReveal>
-              <TextReveal>experiences.</TextReveal>
-            </motion.div>
+            </div>
 
             <HeroBottomInfo onOpenRoomAction={open3DRoom} />
           </div>

@@ -67,7 +67,7 @@ const BurgerMenu = () => {
         }`}
       >
         <span
-          className={`rounded-full h-1 w-1  ${isOpen ? "bg-white" : "bg-black"} -mt-1`}
+          className={`rounded-full h-1 w-1  ${isOpen ? "bg-white " : "bg-black dark:bg-white"} -mt-1`}
         />
         <span>{isOpen ? "Close" : "Menu"}</span>
       </button>
@@ -140,7 +140,7 @@ const BurgerMenu = () => {
                         onClick={() => setIsOpen(false)}
                         className="flex items-center justify-between border-b border-white/10 py-6"
                       >
-                        <span className="text-2xl uppercase tracking-[0.01em]">
+                        <span className="text-2xl uppercase tracking-[0.02em]">
                           {link.label}
                         </span>
 
