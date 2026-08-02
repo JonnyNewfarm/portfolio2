@@ -5,26 +5,26 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import BurgerMenu from "./BurgerMenu";
-import WaveLinkText from "./WaveLinkText";
+import TextReveal from "./TextReveal";
+
+const routes = [
+  {
+    label: "Index",
+    url: "/",
+  },
+  {
+    label: "My Work",
+    url: "/projects",
+  },
+  {
+    label: "Contact",
+    url: "/contact",
+  },
+];
 
 const Navbar = () => {
   const pathname = usePathname();
   const [isDark, setIsDark] = useState(false);
-
-  const routes = [
-    {
-      label: "Index",
-      url: "/",
-    },
-    {
-      label: "My Work",
-      url: "/projects",
-    },
-    {
-      label: "Contact",
-      url: "/contact",
-    },
-  ];
 
   useEffect(() => {
     const updateThemeState = () => {
@@ -40,7 +40,9 @@ const Navbar = () => {
       attributeFilter: ["class"],
     });
 
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+    };
   }, []);
 
   const setTheme = (theme: "light" | "dark") => {
@@ -68,21 +70,55 @@ const Navbar = () => {
 
   return (
     <header
-      className="fixed top-0 z-50 w-full bg-transparent px-6 py-5
-text-[#211f1e]
-dark:text-[#e7e3dd] lg:px-12 xl:px-16"
+      className="
+        fixed
+        top-0
+        z-50
+        w-full
+        bg-transparent
+        px-6
+        py-5
+        text-[#211f1e]
+        dark:text-[#e7e3dd]
+        lg:px-12
+        xl:px-16
+      "
     >
       <div className="flex items-center justify-between">
-        {/* Mobile logo + theme */}
         <div className="flex items-center gap-x-5 lg:hidden">
           <Link
             href="/"
             className="text-md font-semibold uppercase tracking-[0.09em]"
           >
-            Newfarm Studio
+            <TextReveal
+              as="span"
+              mode="words"
+              viewport={false}
+              delay={0.08}
+              stagger={0.04}
+              duration={0.8}
+            >
+              Newfarm Studio
+            </TextReveal>
           </Link>
 
-          <div className="flex items-center gap-x-1 text-md font-semibold uppercase tracking-[0.08em]">
+          <TextReveal
+            as="div"
+            mode="words"
+            viewport={false}
+            delay={0.16}
+            stagger={0.04}
+            duration={0.8}
+            className="
+              flex
+              items-center
+              gap-x-1
+              text-md
+              font-semibold
+              uppercase
+              tracking-[0.08em]
+            "
+          >
             <button
               type="button"
               onClick={() => setTheme("light")}
@@ -106,81 +142,136 @@ dark:text-[#e7e3dd] lg:px-12 xl:px-16"
             >
               Dark
             </button>
-          </div>
+          </TextReveal>
         </div>
 
-        {/* Mobile burger */}
         <div className="lg:hidden">
           <BurgerMenu />
         </div>
 
-        {/* Desktop navbar */}
         <div className="hidden w-full lg:block">
           <div className="flex w-full items-start justify-between">
-            {/* Name + theme – left */}
-            <div className="flex items-start gap-x-16 lg:gap-x-14 xl:gap-x-34">
-              <div>
-                <p className="text-lg xl:text-xl font-semibold uppercase tracking-[0.04em]">
-                  name / Jonas Nygaard
-                </p>
-              </div>
-              <div>
-                <p className="text-lg xl:text-xl font-semibold uppercase tracking-[0.04em]">
-                  designer / developer
-                </p>
-              </div>
-              <div>
-                <div className="flex items-center gap-x-1 text-lg xl:text-xl font-semibold uppercase tracking-[0.04em]">
-                  <button
-                    type="button"
-                    onClick={() => setTheme("light")}
-                    aria-pressed={!isDark}
-                    className={`cursor-pointer uppercase transition-opacity duration-200 ${
-                      !isDark ? "opacity-100" : "opacity-65 hover:opacity-100"
-                    }`}
-                  >
-                    Light
-                  </button>
+            <div className="flex items-start gap-x-14 xl:gap-x-34">
+              <TextReveal
+                as="p"
+                mode="words"
+                viewport={false}
+                delay={0.08}
+                stagger={0.035}
+                duration={0.85}
+                className="
+                  text-lg
+                  font-semibold
+                  uppercase
+                  tracking-[0.04em]
+                  xl:text-xl
+                "
+              >
+                name / Jonas Nygaard
+              </TextReveal>
 
-                  <span>/</span>
+              <TextReveal
+                as="p"
+                mode="words"
+                viewport={false}
+                delay={0.16}
+                stagger={0.035}
+                duration={0.85}
+                className="
+                  text-lg
+                  font-semibold
+                  uppercase
+                  tracking-[0.04em]
+                  xl:text-xl
+                "
+              >
+                designer / developer
+              </TextReveal>
 
-                  <button
-                    type="button"
-                    onClick={() => setTheme("dark")}
-                    aria-pressed={isDark}
-                    className={`cursor-pointer uppercase transition-opacity duration-200 ${
-                      isDark ? "opacity-100" : "opacity-65 hover:opacity-100"
-                    }`}
-                  >
-                    Dark
-                  </button>
-                </div>
-              </div>
+              <TextReveal
+                as="div"
+                mode="words"
+                viewport={false}
+                delay={0.24}
+                stagger={0.035}
+                duration={0.85}
+                className="
+                  flex
+                  items-center
+                  gap-x-1
+                  text-lg
+                  font-semibold
+                  uppercase
+                  tracking-[0.04em]
+                  xl:text-xl
+                "
+              >
+                <button
+                  type="button"
+                  onClick={() => setTheme("light")}
+                  aria-pressed={!isDark}
+                  className={`cursor-pointer uppercase transition-opacity duration-200 ${
+                    !isDark ? "opacity-100" : "opacity-65 hover:opacity-100"
+                  }`}
+                >
+                  Light
+                </button>
+
+                <span>/</span>
+
+                <button
+                  type="button"
+                  onClick={() => setTheme("dark")}
+                  aria-pressed={isDark}
+                  className={`cursor-pointer uppercase transition-opacity duration-200 ${
+                    isDark ? "opacity-100" : "opacity-65 hover:opacity-100"
+                  }`}
+                >
+                  Dark
+                </button>
+              </TextReveal>
             </div>
 
-            {/* Navigation – right */}
-            <div className="text-right">
-              <nav className="flex flex-wrap justify-end gap-x-12 gap-y-1 text-2xl xl:text-3xl uppercase tracking-[0.04em]">
-                {routes.map((route) => {
-                  const isActive = isRouteActive(route.url);
+            <nav
+              className="
+                flex
+                flex-wrap
+                justify-end
+                gap-x-12
+                gap-y-1
+                text-right
+                text-2xl
+                uppercase
+                tracking-[0.04em]
+                xl:text-3xl
+              "
+            >
+              {routes.map((route, index) => {
+                const isActive = isRouteActive(route.url);
 
-                  return (
-                    <Link
-                      key={route.label}
-                      href={route.url}
-                      aria-current={isActive ? "page" : undefined}
-                      className={`group relative flex items-center font-semibold transition-opacity duration-200 ${
-                        isActive
-                          ? "opacity-100"
-                          : "opacity-65 hover:opacity-100"
-                      }`}
+                return (
+                  <Link
+                    key={route.label}
+                    href={route.url}
+                    aria-current={isActive ? "page" : undefined}
+                    className={`group relative flex items-center font-semibold transition-opacity duration-200 ${
+                      isActive ? "opacity-100" : "opacity-65 hover:opacity-100"
+                    }`}
+                  >
+                    <TextReveal
+                      as="span"
+                      mode="words"
+                      viewport={false}
+                      delay={0.3 + index * 0.08}
+                      stagger={0.04}
+                      duration={0.9}
                     >
-                      <WaveLinkText text={route.label} />
-                    </Link>
-                  );
-                })}
-              </nav>
-            </div>
+                      {route.label}
+                    </TextReveal>
+                  </Link>
+                );
+              })}
+            </nav>
           </div>
         </div>
       </div>

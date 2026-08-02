@@ -112,7 +112,7 @@ export default function AnimatedLatestProjectPlane({
       return;
     }
 
-    frameMaterial.uniforms.uColor.value.set(isDark ? "#b64b3b" : "#b94f3d");
+    frameMaterial.uniforms.uColor.value.set(isDark ? "#8e968c" : "#6b7368");
   }, [isDark]);
 
   useEffect(() => {
