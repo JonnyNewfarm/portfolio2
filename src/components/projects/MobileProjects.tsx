@@ -136,8 +136,8 @@ export default function MobileProjects() {
             >
               <div
                 className="
-    bg-[#6b7368]
-    p-[6px]
+    bg-[#737a70]
+    p-[10px]
     dark:bg-[#8e968c]
 
   "

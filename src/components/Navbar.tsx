@@ -1,11 +1,15 @@
 "use client";
 
+import { motion } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import BurgerMenu from "./BurgerMenu";
 import TextReveal from "./TextReveal";
+import WaveLinkText from "./WaveLinkText";
+
+const NAVBAR_EASE = [0.22, 1, 0.36, 1] as const;
 
 const routes = [
   {
@@ -85,10 +89,16 @@ const Navbar = () => {
       "
     >
       <div className="flex items-center justify-between">
+        {/* Mobile */}
         <div className="flex items-center gap-x-5 lg:hidden">
           <Link
             href="/"
-            className="text-md font-semibold uppercase tracking-[0.09em]"
+            className="
+              text-md
+              font-semibold
+              uppercase
+              tracking-[0.09em]
+            "
           >
             <TextReveal
               as="span"
@@ -123,22 +133,32 @@ const Navbar = () => {
               type="button"
               onClick={() => setTheme("light")}
               aria-pressed={!isDark}
-              className={`cursor-pointer uppercase transition-opacity duration-200 ${
-                !isDark ? "opacity-100" : "opacity-50 hover:opacity-100"
-              }`}
+              className={`
+                mr-0.5
+                cursor-pointer
+                uppercase
+                transition-opacity
+                duration-200
+                ${!isDark ? "opacity-100" : "opacity-50 hover:opacity-100"}
+              `}
             >
               Light
             </button>
 
-            <span className="opacity-50">/</span>
+            <span>/</span>
 
             <button
               type="button"
               onClick={() => setTheme("dark")}
               aria-pressed={isDark}
-              className={`cursor-pointer uppercase transition-opacity duration-200 ${
-                isDark ? "opacity-100" : "opacity-50 hover:opacity-100"
-              }`}
+              className={`
+                ml-0.5
+                cursor-pointer
+                uppercase
+                transition-opacity
+                duration-200
+                ${isDark ? "opacity-100" : "opacity-50 hover:opacity-100"}
+              `}
             >
               Dark
             </button>
@@ -149,6 +169,7 @@ const Navbar = () => {
           <BurgerMenu />
         </div>
 
+        {/* Desktop */}
         <div className="hidden w-full lg:block">
           <div className="flex w-full items-start justify-between">
             <div className="flex items-start gap-x-14 xl:gap-x-34">
@@ -198,7 +219,7 @@ const Navbar = () => {
                 className="
                   flex
                   items-center
-                  gap-x-1
+                  gap-x-4
                   text-lg
                   font-semibold
                   uppercase
@@ -210,9 +231,14 @@ const Navbar = () => {
                   type="button"
                   onClick={() => setTheme("light")}
                   aria-pressed={!isDark}
-                  className={`cursor-pointer uppercase transition-opacity duration-200 ${
-                    !isDark ? "opacity-100" : "opacity-65 hover:opacity-100"
-                  }`}
+                  className={`
+                    mr-0.5
+                    cursor-pointer
+                    uppercase
+                    transition-opacity
+                    duration-200
+                    ${!isDark ? "opacity-100" : "opacity-65 hover:opacity-100"}
+                  `}
                 >
                   Light
                 </button>
@@ -223,9 +249,14 @@ const Navbar = () => {
                   type="button"
                   onClick={() => setTheme("dark")}
                   aria-pressed={isDark}
-                  className={`cursor-pointer uppercase transition-opacity duration-200 ${
-                    isDark ? "opacity-100" : "opacity-65 hover:opacity-100"
-                  }`}
+                  className={`
+                    ml-1
+                    cursor-pointer
+                    uppercase
+                    transition-opacity
+                    duration-200
+                    ${isDark ? "opacity-100" : "opacity-65 hover:opacity-100"}
+                  `}
                 >
                   Dark
                 </button>
@@ -254,20 +285,46 @@ const Navbar = () => {
                     key={route.label}
                     href={route.url}
                     aria-current={isActive ? "page" : undefined}
-                    className={`group relative flex items-center font-semibold transition-opacity duration-200 ${
-                      isActive ? "opacity-100" : "opacity-65 hover:opacity-100"
-                    }`}
+                    className={`
+                      group
+                      relative
+                      flex
+                      items-center
+                      overflow-hidden
+                      font-semibold
+                      transition-opacity
+                      duration-200
+                      ${
+                        isActive
+                          ? "opacity-100"
+                          : "opacity-65 hover:opacity-100"
+                      }
+                    `}
                   >
-                    <TextReveal
-                      as="span"
-                      mode="words"
-                      viewport={false}
-                      delay={0.3 + index * 0.08}
-                      stagger={0.04}
-                      duration={0.9}
+                    <motion.span
+                      initial={{
+                        y: "115%",
+                        opacity: 0,
+                        filter: "blur(10px)",
+                      }}
+                      animate={{
+                        y: "0%",
+                        opacity: 1,
+                        filter: "blur(0px)",
+                      }}
+                      transition={{
+                        delay: 0.3 + index * 0.08,
+                        duration: 0.9,
+                        ease: NAVBAR_EASE,
+                      }}
+                      className="
+                        block
+                        py-[0.04em]
+                        will-change-transform
+                      "
                     >
-                      {route.label}
-                    </TextReveal>
+                      <WaveLinkText text={route.label} />
+                    </motion.span>
                   </Link>
                 );
               })}

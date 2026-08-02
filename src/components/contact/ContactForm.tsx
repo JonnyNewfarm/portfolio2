@@ -239,11 +239,11 @@ export default function ContactForm() {
             overflow-hidden
             border-2
             border-[#161310]
-            px-8
-            py-4
+            px-6
+            py-3
             text-lg
             sm:text-xl
-            font-black
+            font-bold
             uppercase
             tracking-[0.2em]
             text-[#161310]
