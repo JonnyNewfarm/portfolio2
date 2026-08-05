@@ -43,9 +43,6 @@ export default function AnimatedLatestProjectPlane({
   const imageWidth = viewport.width / 1.3;
   const imageHeight = imageWidth / 1.78;
 
-  /*
-   * Hvor mye av rammen som er synlig rundt bildet.
-   */
   const frameWidth = imageWidth * 1.07;
   const frameHeight = imageHeight * 1.13;
 
@@ -60,7 +57,7 @@ export default function AnimatedLatestProjectPlane({
 
   const positionVelocity = useRef(new THREE.Vector2(0, 0));
 
-  const bendCurrent = useRef(new THREE.Vector2(155, 28));
+  const bendCurrent = useRef(new THREE.Vector2(52, 10));
   const bendVelocity = useRef(new THREE.Vector2(0, 0));
 
   const alphaCurrent = useRef(0);
@@ -75,10 +72,10 @@ export default function AnimatedLatestProjectPlane({
         value: texture,
       },
       uDelta: {
-        value: new THREE.Vector2(155, 28),
+        value: new THREE.Vector2(52, 10),
       },
       uAmplitude: {
-        value: 0.00155,
+        value: 0.00105,
       },
       uAlpha: {
         value: 0,
@@ -90,13 +87,13 @@ export default function AnimatedLatestProjectPlane({
   const frameUniforms = useMemo(
     () => ({
       uColor: {
-        value: new THREE.Color(isDark ? "#4a4540" : "#7a1e16"),
+        value: new THREE.Color(isDark ? "#8e968c" : "#6b7368"),
       },
       uDelta: {
-        value: new THREE.Vector2(155, 28),
+        value: new THREE.Vector2(52, 10),
       },
       uAmplitude: {
-        value: 0.00155,
+        value: 0.00105,
       },
       uAlpha: {
         value: 0,
@@ -169,7 +166,7 @@ export default function AnimatedLatestProjectPlane({
 
       positionVelocity.current.set(-imageWidth * 1.35, -imageHeight * 0.14);
 
-      bendVelocity.current.set(-340, -58);
+      bendVelocity.current.set(-112, -20);
     }
 
     const alphaTarget = 1;
@@ -193,11 +190,14 @@ export default function AnimatedLatestProjectPlane({
 
     const differenceY = pointerTarget.current.y - smoothPointer.current.y;
 
-    const targetBendX = hovered.current ? differenceX * 460 : 0;
-    const targetBendY = hovered.current ? differenceY * 460 : 0;
+    const hoverBendStrength = 175;
 
-    const bendStiffness = hovered.current ? 115 : 88;
-    const bendDamping = hovered.current ? 15 : 10.5;
+    const targetBendX = hovered.current ? differenceX * hoverBendStrength : 0;
+
+    const targetBendY = hovered.current ? differenceY * hoverBendStrength : 0;
+
+    const bendStiffness = hovered.current ? 95 : 82;
+    const bendDamping = hovered.current ? 18 : 14;
 
     bendVelocity.current.x +=
       (targetBendX - bendCurrent.current.x) * bendStiffness * delta;
@@ -208,6 +208,18 @@ export default function AnimatedLatestProjectPlane({
     bendVelocity.current.multiplyScalar(Math.exp(-bendDamping * delta));
 
     bendCurrent.current.addScaledVector(bendVelocity.current, delta);
+
+    bendCurrent.current.x = THREE.MathUtils.clamp(
+      bendCurrent.current.x,
+      -65,
+      65,
+    );
+
+    bendCurrent.current.y = THREE.MathUtils.clamp(
+      bendCurrent.current.y,
+      -45,
+      45,
+    );
 
     const maxFollowX = imageWidth * 0.18;
     const maxFollowY = imageHeight * 0.16;
@@ -282,7 +294,6 @@ export default function AnimatedLatestProjectPlane({
 
   return (
     <group ref={groupRef}>
-      {/* Frame */}
       <mesh position={[0, 0, -0.025]}>
         <planeGeometry args={[frameWidth, frameHeight, 24, 18]} />
 
@@ -299,7 +310,6 @@ export default function AnimatedLatestProjectPlane({
         />
       </mesh>
 
-      {/* Selve bildet */}
       <mesh
         position={[0, 0, 0]}
         onPointerEnter={handlePointerEnter}

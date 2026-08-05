@@ -47,7 +47,7 @@ export default function ContactFormField({
           font-semibold
           uppercase
           tracking-[0.1em]
-          opacity-80
+          opacity-95
         "
       >
         {label}
@@ -122,8 +122,8 @@ export default function ContactFormField({
           id={`${id}-error`}
           className="
             mt-3
-            text-sm
-            font-bold
+            text-2xl
+            font-semibold
             text-red-600
           "
         >

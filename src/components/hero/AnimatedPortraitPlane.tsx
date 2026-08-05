@@ -39,7 +39,11 @@ export default function AnimatedPortraitPlane({
 
   const positionVelocity = useRef(new THREE.Vector2(0, 0));
 
-  const bendCurrent = useRef(new THREE.Vector2(-155, 28));
+  /*
+   * Tidligere: (-155, 28)
+   * Lavere startverdi gir mindre strukket inngangsbend.
+   */
+  const bendCurrent = useRef(new THREE.Vector2(-52, 10));
   const bendVelocity = useRef(new THREE.Vector2(0, 0));
 
   const alphaCurrent = useRef(0);
@@ -54,10 +58,14 @@ export default function AnimatedPortraitPlane({
         value: texture,
       },
       uDelta: {
-        value: new THREE.Vector2(-155, 28),
+        value: new THREE.Vector2(-52, 10),
       },
       uAmplitude: {
-        value: 0.00155,
+        /*
+         * Tidligere: 0.00155
+         * Dette demper selve deformasjonen fra shaderen.
+         */
+        value: 0.00105,
       },
       uAlpha: {
         value: 0,
@@ -97,7 +105,11 @@ export default function AnimatedPortraitPlane({
     if (!hasStartedLoadAnimation.current) {
       hasStartedLoadAnimation.current = true;
 
-      bendVelocity.current.set(310, -54);
+      /*
+       * Tidligere: (310, -54)
+       * Lavere fart gir mindre voldsom bounce og mindre overstrekking.
+       */
+      bendVelocity.current.set(105, -18);
 
       positionVelocity.current.set(
         portraitWidth * 0.95,
@@ -126,11 +138,22 @@ export default function AnimatedPortraitPlane({
 
     const rawDifferenceY = pointerTarget.current.y - smoothPointer.current.y;
 
-    const targetBendX = hovered.current ? rawDifferenceX * 520 : 0;
-    const targetBendY = hovered.current ? rawDifferenceY * 520 : 0;
+    /*
+     * Tidligere: 520
+     * Dette er hovedårsaken til at bildet strakk seg mye ved hover.
+     */
+    const hoverBendStrength = 175;
 
-    const bendStiffness = hovered.current ? 115 : 88;
-    const bendDamping = hovered.current ? 15 : 10.5;
+    const targetBendX = hovered.current
+      ? rawDifferenceX * hoverBendStrength
+      : 0;
+
+    const targetBendY = hovered.current
+      ? rawDifferenceY * hoverBendStrength
+      : 0;
+
+    const bendStiffness = hovered.current ? 95 : 82;
+    const bendDamping = hovered.current ? 18 : 14;
 
     bendVelocity.current.x +=
       (targetBendX - bendCurrent.current.x) * bendStiffness * delta;
@@ -141,6 +164,22 @@ export default function AnimatedPortraitPlane({
     bendVelocity.current.multiplyScalar(Math.exp(-bendDamping * delta));
 
     bendCurrent.current.addScaledVector(bendVelocity.current, delta);
+
+    /*
+     * Ekstra sikkerhet slik at benden aldri kan bli ekstrem,
+     * selv ved raske musebevegelser eller frame drops.
+     */
+    bendCurrent.current.x = THREE.MathUtils.clamp(
+      bendCurrent.current.x,
+      -65,
+      65,
+    );
+
+    bendCurrent.current.y = THREE.MathUtils.clamp(
+      bendCurrent.current.y,
+      -45,
+      45,
+    );
 
     const maxFollowX = portraitWidth * 0.42;
     const maxFollowY = portraitHeight * 0.22;

@@ -45,9 +45,8 @@ export default function ContactDetails() {
           grid
           grid-cols-1
           gap-10
-          text-sm
+          text-lg
           font-bold
-          uppercase
           tracking-[0.18em]
           sm:grid-cols-2
           lg:sticky
@@ -60,7 +59,9 @@ export default function ContactDetails() {
             className="
               mb-1
               text-lg
-              tracking-[0.24em]
+              tracking-[0.1]
+                        uppercase
+
             "
           >
             Details
@@ -70,10 +71,11 @@ export default function ContactDetails() {
             className="
               flex
               flex-col
-              text-xl
+              text-2xl
               items-start
               font-normal
               gap-2
+
             "
           >
             <a
@@ -111,7 +113,7 @@ export default function ContactDetails() {
             className="
               mb-1
               text-lg
-              tracking-[0.24em]
+              tracking-[0.1]
             "
           >
             Social
@@ -148,7 +150,7 @@ export default function ContactDetails() {
             className="
               mb-1
               text-lg
-              tracking-[0.1em]
+              tracking-[0.1]
             "
           >
             Work

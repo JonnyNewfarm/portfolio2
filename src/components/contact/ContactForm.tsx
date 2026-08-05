@@ -108,7 +108,7 @@ export default function ContactForm() {
             mode="words"
             className="
               mb-3
-              text-xs
+              text-lg
               uppercase
               tracking-[0.24em]
               opacity-90
@@ -122,7 +122,7 @@ export default function ContactForm() {
             mode="lines"
             delay={0.05}
             className="
-              text-[6vw]
+              text-[8.5vw]
               font-semibold
               uppercase
               leading-[0.9]
@@ -281,12 +281,12 @@ export default function ContactForm() {
         <p
           className="
             max-w-[360px]
-            text-lg
+            text-3xl
             font-normal
             leading-[1.35]
           "
         >
-          Open for freelance collaborations.
+          Open for collaborations.
         </p>
       </FadeIn>
     </form>

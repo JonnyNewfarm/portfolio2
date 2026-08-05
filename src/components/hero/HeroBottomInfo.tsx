@@ -5,17 +5,10 @@ import { useEffect, useState } from "react";
 
 import TextReveal from "@/components/TextReveal";
 
-import AnimatedUnderline from "./AnimatedUnderline";
 import { heroEase } from "./heroConstants";
 import LatestProjectPreview from "./LatestProjectPreview";
 
-type HeroBottomInfoProps = {
-  onOpenRoomAction: () => void;
-};
-
-export default function HeroBottomInfo({
-  onOpenRoomAction,
-}: HeroBottomInfoProps) {
+export default function HeroBottomInfo() {
   const [localTime, setLocalTime] = useState("--:--");
 
   useEffect(() => {
@@ -111,29 +104,13 @@ export default function HeroBottomInfo({
           <span className="inline-block tabular-nums">{localTime} (CEST)</span>
         </div>
 
-        <button
-          type="button"
-          onClick={onOpenRoomAction}
+        <div
           className="
-            group
-            relative
-            hidden
-            cursor-pointer
-            whitespace-nowrap
-            pb-[3px]
-            text-xl
-            font-semibold
-            uppercase
-            leading-none
-            tracking-[0.04em]
-
-            lg:inline-block
+          hidden whitespace-nowrap lg:block
           "
         >
-          <TextReveal as="span">3D version / Open room</TextReveal>
-
-          <AnimatedUnderline />
-        </button>
+          <TextReveal as="span">Portfolio / 2026</TextReveal>
+        </div>
 
         <div
           className="

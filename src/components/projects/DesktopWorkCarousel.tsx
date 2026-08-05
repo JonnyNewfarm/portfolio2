@@ -357,7 +357,7 @@ dark:text-[#e7e3dd]
           delay={0.08}
           as="p"
           className="
-            mb-4
+            mb-1
             text-[16px]
             font-semibold
             uppercase
@@ -373,8 +373,7 @@ dark:text-[#e7e3dd]
           delay={0.13}
           as="p"
           className="
-            text-[clamp(18px,1.3vw,24px)]
-            leading-[1.02]
+text-2xl            leading-[1.02]
             tracking-[0.01em]
             font-normal
           "

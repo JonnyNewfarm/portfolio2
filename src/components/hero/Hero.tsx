@@ -1,25 +1,11 @@
 "use client";
 
-import { AnimatePresence } from "framer-motion";
-import { useCallback, useState } from "react";
-
 import TextReveal from "@/components/TextReveal";
 
 import HeroBottomInfo from "./HeroBottomInfo";
 import HeroPortrait from "./HeroPortrait";
-import Fullscreen3DRoom from "./room/Fullscreen3DRoom";
 
 export default function Hero() {
-  const [show3DRoom, setShow3DRoom] = useState(false);
-
-  const open3DRoom = useCallback(() => {
-    setShow3DRoom(true);
-  }, []);
-
-  const close3DRoom = useCallback(() => {
-    setShow3DRoom(false);
-  }, []);
-
   return (
     <>
       <section
@@ -77,19 +63,10 @@ export default function Hero() {
               </TextReveal>
             </div>
 
-            <HeroBottomInfo onOpenRoomAction={open3DRoom} />
+            <HeroBottomInfo />
           </div>
         </div>
       </section>
-
-      <AnimatePresence mode="wait">
-        {show3DRoom ? (
-          <Fullscreen3DRoom
-            key="fullscreen-3d-room"
-            onCloseAction={close3DRoom}
-          />
-        ) : null}
-      </AnimatePresence>
     </>
   );
 }

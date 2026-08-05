@@ -23,9 +23,7 @@ export const projects: Project[] = [
     year: "2026",
     category: "Design & code",
     link: "https://www.calero.studio/",
-    about:
-      "E-commerce store with visual direction, product storytelling and smooth motion.",
-    stack:
+about: "E-commerce store for curated lighting.",    stack:
       "React, Prisma, Three.js, GSAP, TailwindCSS, Neon, Stripe.",
     role:
       "Design, frontend, backend, Stripe and motion.",

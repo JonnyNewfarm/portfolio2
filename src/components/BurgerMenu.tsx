@@ -213,24 +213,6 @@ const BurgerMenu = () => {
             >
               <div className="pb-6">
                 <TextReveal
-                  as="p"
-                  mode="words"
-                  viewport={false}
-                  delay={0.2}
-                  stagger={0.04}
-                  duration={0.75}
-                  className="
-                    mb-3
-                    text-[10px]
-                    uppercase
-                    tracking-[0.28em]
-                    text-white/35
-                  "
-                >
-                  Navigation
-                </TextReveal>
-
-                <TextReveal
                   as="h2"
                   mode="chars"
                   viewport={false}
@@ -239,13 +221,13 @@ const BurgerMenu = () => {
                   duration={0.7}
                   className="
                     text-4xl
-                    font-black
+                    font-normal
                     uppercase
                     leading-[0.9]
                     tracking-[0.01em]
                   "
                 >
-                  Menu
+                  Navigation
                 </TextReveal>
               </div>
 
@@ -291,7 +273,7 @@ const BurgerMenu = () => {
                           stagger={0.045}
                           duration={0.8}
                           className="
-                            text-2xl
+                            text-5xl
                             uppercase
                             tracking-[0.02em]
                             transition-opacity

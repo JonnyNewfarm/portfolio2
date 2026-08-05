@@ -20,10 +20,10 @@ export default function ContactHeader() {
           delay={0.12}
           className="
             max-w-[1250px]
-            text-[11vw]
+            text-[12vw]
             font-semibold
             uppercase
-            leading-[0.86]
+            leading-[0.8]
             tracking-[0.0em]
             sm:text-[14vw]
             md:text-[10vw]

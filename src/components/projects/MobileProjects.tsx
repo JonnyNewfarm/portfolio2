@@ -24,7 +24,7 @@ export default function MobileProjects() {
           as="p"
           className="
             mb-2
-            text-xs
+            text-sm
             uppercase
             tracking-[0.18em]
             text-[#161310]/90
@@ -39,8 +39,8 @@ export default function MobileProjects() {
           delay={0.1}
           as="h1"
           className="
-            text-5xl
-            font-semibold
+            text-[12vw]
+            font-bold
             uppercase
             leading-[0.92]
             tracking-[0.01em]
@@ -68,18 +68,18 @@ export default function MobileProjects() {
               flex-col
             "
           >
-            <div>
+            <div className="flex flex-row-reverse justify-between  items-end">
               <ProjectsTextReveal
                 active
                 delay={0.12 + index * 0.06}
                 as="p"
                 className="
-                  mb-3
                   text-[16px]
+                  mb-2
                   uppercase
                   tracking-[0.28em]
-                  text-[#161310]/80
-                  dark:text-stone-300/80
+                  text-[#161310]/95
+                  dark:text-stone-300/95
                 "
               >
                 {String(index + 1).padStart(2, "0")}
@@ -90,10 +90,10 @@ export default function MobileProjects() {
                 delay={0.16 + index * 0.06}
                 as="h2"
                 className="
-                  mb-5
+                  mb-2
                   cursor-pointer
                   text-3xl
-                  font-normal
+                  font-semibold
                   uppercase
                   leading-[0.95]
                   tracking-[-0.01em]
@@ -173,8 +173,8 @@ export default function MobileProjects() {
                 delay={0.22 + index * 0.06}
                 as="p"
                 className="
-                  text-lg
-                  leading-relaxed
+                  text-2xl
+                  leading-[1.1]
                   text-[#161310]
                   dark:text-stone-300
                 "
@@ -200,10 +200,10 @@ export default function MobileProjects() {
                     delay={0.28 + index * 0.06}
                     as="p"
                     className="
-                      mb-2
-                      text-[10px]
+                      
+                      text-xl
                       uppercase
-                      tracking-[0.22em]
+                      font-semibold
                       text-[#161310]/90
                       dark:text-stone-300/90
                     "
@@ -216,8 +216,8 @@ export default function MobileProjects() {
                     delay={0.32 + index * 0.06}
                     as="p"
                     className="
-                      text-sm
-                      leading-relaxed
+                      text-2xl
+                      leading-[1.3]
 text-[#211f1e]
 dark:text-[#e7e3dd]
                     "
