@@ -26,7 +26,7 @@ export const carouselMotion = {
 
 export const CARD_WIDTH = 2.85;
 export const CARD_HEIGHT = 1.62;
-export const CARD_GAP = 0.16;
+export const CARD_GAP = 0.3;
 
 export const CARD_STRIDE =
   CARD_WIDTH + CARD_GAP;

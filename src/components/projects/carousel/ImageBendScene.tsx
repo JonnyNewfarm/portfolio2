@@ -1,21 +1,28 @@
 import { useFrame, useThree } from "@react-three/fiber";
-import { useEffect, useRef } from "react";
+
+import { useEffect, useMemo, useRef } from "react";
+
 import * as THREE from "three";
 
-import { CARD_STRIDE, carouselMotion } from "../projectsConstants";
+import { CARD_GAP, CARD_HEIGHT, carouselMotion } from "../projectsConstants";
 
 import type { CarouselItem, CarouselRuntimeRef } from "../projectsTypes";
 
 import CurvedImageCard from "./CurvedImageCard";
 import useCarouselImages from "./useCarouselImages";
-import { wrapIndex } from "./carouselUtils";
+import { wrapPosition } from "./carouselUtils";
 
 type ImageBendSceneProps = {
   items: CarouselItem[];
+
   runtimeRef: CarouselRuntimeRef;
+
   onActiveProjectChangeAction: (index: number) => void;
+
   onReadyAction: () => void;
 };
+
+const FRAME_PADDING_X = 0.1;
 
 export default function ImageBendScene({
   items,
@@ -27,11 +34,65 @@ export default function ImageBendScene({
 
   const { camera, size } = useThree();
 
-  const trackWidth = items.length * CARD_STRIDE;
-
   const activeProjectRef = useRef(0);
 
   const hasReportedReadyRef = useRef(false);
+
+  const imageWidths = useMemo(() => {
+    return textures.map((texture) => {
+      const image = texture.image as
+        | {
+            width?: number;
+            height?: number;
+          }
+        | undefined;
+
+      if (!image?.width || !image?.height) {
+        return CARD_HEIGHT;
+      }
+
+      const aspectRatio = image.width / image.height;
+
+      return CARD_HEIGHT * aspectRatio;
+    });
+  }, [textures]);
+
+  const layout = useMemo(() => {
+    if (imageWidths.length === 0) {
+      return {
+        positions: [] as number[],
+        trackWidth: 0,
+      };
+    }
+
+    const visualWidths = imageWidths.map((width) => width + FRAME_PADDING_X);
+
+    const positions: number[] = new Array(visualWidths.length);
+
+    positions[0] = 0;
+
+    for (let index = 1; index < visualWidths.length; index += 1) {
+      const previousWidth = visualWidths[index - 1];
+
+      const currentWidth = visualWidths[index];
+
+      positions[index] =
+        positions[index - 1] + previousWidth / 2 + CARD_GAP + currentWidth / 2;
+    }
+
+    const lastIndex = visualWidths.length - 1;
+
+    const trackWidth =
+      positions[lastIndex] +
+      visualWidths[lastIndex] / 2 +
+      CARD_GAP +
+      visualWidths[0] / 2;
+
+    return {
+      positions,
+      trackWidth,
+    };
+  }, [imageWidths]);
 
   useEffect(() => {
     const perspectiveCamera = camera as THREE.PerspectiveCamera;
@@ -48,6 +109,10 @@ export default function ImageBendScene({
       hasReportedReadyRef.current = true;
 
       onReadyAction();
+    }
+
+    if (!items.length || layout.trackWidth <= 0) {
+      return;
     }
 
     const runtime = runtimeRef.current;
@@ -108,10 +173,24 @@ export default function ImageBendScene({
     runtime.bendAmount +=
       (runtime.desiredBend - runtime.bendAmount) * carouselMotion.bendEase;
 
-    const nearestItemIndex = wrapIndex(
-      Math.round(runtime.offset / CARD_STRIDE),
-      items.length,
-    );
+    let nearestItemIndex = 0;
+    let nearestDistance = Infinity;
+
+    for (let index = 0; index < layout.positions.length; index += 1) {
+      const x = wrapPosition(
+        layout.positions[index] - runtime.offset,
+
+        layout.trackWidth,
+      );
+
+      const distance = Math.abs(x);
+
+      if (distance < nearestDistance) {
+        nearestDistance = distance;
+
+        nearestItemIndex = index;
+      }
+    }
 
     const nearestProjectIndex = items[nearestItemIndex]?.projectIndex ?? 0;
 
@@ -128,9 +207,10 @@ export default function ImageBendScene({
         <CurvedImageCard
           key={`${item.project.title}-${item.image}-${index}`}
           item={item}
-          index={index}
           texture={textures[index]}
-          trackWidth={trackWidth}
+          imageWidth={imageWidths[index]}
+          baseX={layout.positions[index] ?? 0}
+          trackWidth={layout.trackWidth}
           runtimeRef={runtimeRef}
         />
       ))}

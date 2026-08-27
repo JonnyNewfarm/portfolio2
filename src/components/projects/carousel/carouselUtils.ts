@@ -1,4 +1,5 @@
 import { projects } from "../projectData";
+
 import type {
   CarouselItem,
   CarouselRuntime,
@@ -8,9 +9,22 @@ export function wrapIndex(
   index: number,
   length: number,
 ) {
+  return ((index % length) + length) % length;
+}
+
+export function wrapPosition(
+  value: number,
+  trackWidth: number,
+) {
+  if (trackWidth <= 0) {
+    return value;
+  }
+
   return (
-    ((index % length) + length) %
-    length
+    ((value + trackWidth / 2) % trackWidth +
+      trackWidth) %
+      trackWidth -
+    trackWidth / 2
   );
 }
 
@@ -34,8 +48,10 @@ export function createCarouselRuntime(): CarouselRuntime {
     desiredOffset: 0,
     glideSpeed: 0,
     hasMomentum: false,
+
     bendAmount: 0,
     desiredBend: 0,
+
     highestSpeed: 0,
     speedSamples: [0, 0, 0, 0, 0],
   };

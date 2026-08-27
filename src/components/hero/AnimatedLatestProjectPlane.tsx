@@ -23,6 +23,8 @@ const frameFragmentShader = `
 
   void main() {
     gl_FragColor = vec4(uColor, uAlpha);
+
+    #include <colorspace_fragment>
   }
 `;
 
@@ -84,10 +86,13 @@ export default function AnimatedLatestProjectPlane({
     [texture],
   );
 
+  const LIGHT_FRAME_COLOR = "#828078";
+  const DARK_FRAME_COLOR = "#444340";
+
   const frameUniforms = useMemo(
     () => ({
       uColor: {
-        value: new THREE.Color(isDark ? "#8e968c" : "#6b7368"),
+        value: new THREE.Color(LIGHT_FRAME_COLOR),
       },
       uDelta: {
         value: new THREE.Vector2(52, 10),
@@ -109,9 +114,10 @@ export default function AnimatedLatestProjectPlane({
       return;
     }
 
-    frameMaterial.uniforms.uColor.value.set(isDark ? "#8e968c" : "#6b7368");
+    frameMaterial.uniforms.uColor.value.set(
+      isDark ? DARK_FRAME_COLOR : LIGHT_FRAME_COLOR,
+    );
   }, [isDark]);
-
   useEffect(() => {
     texture.colorSpace = THREE.SRGBColorSpace;
 

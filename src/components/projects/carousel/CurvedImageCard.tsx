@@ -2,32 +2,33 @@ import { useFrame } from "@react-three/fiber";
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 
-import {
-  CARD_HEIGHT,
-  CARD_STRIDE,
-  CARD_WIDTH,
-  carouselMotion,
-} from "../projectsConstants";
+import { CARD_HEIGHT, carouselMotion } from "../projectsConstants";
 
 import type { CarouselItem, CarouselRuntimeRef } from "../projectsTypes";
 
+import { wrapPosition } from "./carouselUtils";
+
 type CurvedImageCardProps = {
   item: CarouselItem;
-  index: number;
   texture: THREE.Texture;
+
+  baseX: number;
+  imageWidth: number;
+
   trackWidth: number;
   runtimeRef: CarouselRuntimeRef;
 };
 
-const FRAME_PADDING_X = 0.1;
-const FRAME_PADDING_Y = 0.1;
-const LIGHT_FRAME_COLOR = "#6b7368";
-const DARK_FRAME_COLOR = "#8e968c";
+const FRAME_PADDING_X = 0.15;
+const FRAME_PADDING_Y = 0.15;
+const LIGHT_FRAME_COLOR = "#a8a69d";
+const DARK_FRAME_COLOR = "#444340";
 
 export default function CurvedImageCard({
   item,
-  index,
   texture,
+  baseX,
+  imageWidth,
   trackWidth,
   runtimeRef,
 }: CurvedImageCardProps) {
@@ -37,11 +38,12 @@ export default function CurvedImageCard({
   const frameMeshRef = useRef<THREE.Mesh>(null);
 
   const imageBaseVerticesRef = useRef<Float32Array | null>(null);
+
   const frameBaseVerticesRef = useRef<Float32Array | null>(null);
 
   const [isDark, setIsDark] = useState(false);
 
-  const initialX = index * CARD_STRIDE - trackWidth / 2;
+  const initialX = wrapPosition(baseX - runtimeRef.current.offset, trackWidth);
 
   const animatedXRef = useRef(initialX);
   const intendedXRef = useRef(initialX);
@@ -49,9 +51,13 @@ export default function CurvedImageCard({
   const imageMaterial = useMemo(() => {
     return new THREE.MeshBasicMaterial({
       map: texture,
+
       color: new THREE.Color("#ffffff"),
+
       side: THREE.DoubleSide,
+
       toneMapped: false,
+
       transparent: false,
       opacity: 1,
     });
@@ -60,12 +66,20 @@ export default function CurvedImageCard({
   const frameMaterial = useMemo(() => {
     return new THREE.MeshBasicMaterial({
       color: new THREE.Color(LIGHT_FRAME_COLOR),
+
       side: THREE.DoubleSide,
+
       toneMapped: false,
+
       transparent: false,
       opacity: 1,
     });
   }, []);
+
+  useEffect(() => {
+    imageBaseVerticesRef.current = null;
+    frameBaseVerticesRef.current = null;
+  }, [imageWidth]);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -103,10 +117,12 @@ export default function CurvedImageCard({
 
   useFrame(() => {
     const group = groupRef.current;
+
     const imageMesh = imageMeshRef.current;
+
     const frameMesh = frameMeshRef.current;
 
-    if (!group || !imageMesh || !frameMesh) {
+    if (!group || !imageMesh || !frameMesh || trackWidth <= 0) {
       return;
     }
 
@@ -134,16 +150,13 @@ export default function CurvedImageCard({
       );
     }
 
-    let wrappedX = index * CARD_STRIDE - runtimeRef.current.offset;
-
-    wrappedX = ((wrappedX % trackWidth) + trackWidth) % trackWidth;
-
-    if (wrappedX > trackWidth / 2) {
-      wrappedX -= trackWidth;
-    }
+    const wrappedX = wrapPosition(
+      baseX - runtimeRef.current.offset,
+      trackWidth,
+    );
 
     const jumpedAcrossLoop =
-      Math.abs(wrappedX - intendedXRef.current) > CARD_WIDTH * 2;
+      Math.abs(wrappedX - intendedXRef.current) > trackWidth / 2;
 
     if (jumpedAcrossLoop) {
       animatedXRef.current = wrappedX;
@@ -154,10 +167,6 @@ export default function CurvedImageCard({
     animatedXRef.current +=
       (intendedXRef.current - animatedXRef.current) * carouselMotion.cardEase;
 
-    /*
-     * Flytter hele gruppen slik at både bildet og rammen
-     * følger samme carousel-bevegelse.
-     */
     group.position.x = animatedXRef.current;
 
     const bendRadius = 2.35;
@@ -174,6 +183,7 @@ export default function CurvedImageCard({
         vertexIndex += 1
       ) {
         const x = baseVertices[vertexIndex * 3];
+
         const y = baseVertices[vertexIndex * 3 + 1];
 
         const worldX = group.position.x + x;
@@ -205,15 +215,12 @@ export default function CurvedImageCard({
       THREE.MathUtils.clamp(distanceFromMiddle / 7.5, 0, 1),
     );
 
-    /*
-     * Skalerer gruppen, ikke bare bildet.
-     */
     group.scale.setScalar(scale);
   });
 
   return (
     <group ref={groupRef} userData={item}>
-      {/* Ramme bak bildet */}
+      {/* Frame */}
       <mesh
         ref={frameMeshRef}
         material={frameMaterial}
@@ -221,22 +228,24 @@ export default function CurvedImageCard({
       >
         <planeGeometry
           args={[
-            CARD_WIDTH + FRAME_PADDING_X,
+            imageWidth + FRAME_PADDING_X,
+
             CARD_HEIGHT + FRAME_PADDING_Y,
+
             36,
             18,
           ]}
         />
       </mesh>
 
-      {/* Selve prosjektbildet */}
+      {/* Image */}
       <mesh
         ref={imageMeshRef}
         material={imageMaterial}
         position={[0, 0, 0]}
         userData={item}
       >
-        <planeGeometry args={[CARD_WIDTH, CARD_HEIGHT, 36, 18]} />
+        <planeGeometry args={[imageWidth, CARD_HEIGHT, 36, 18]} />
       </mesh>
     </group>
   );

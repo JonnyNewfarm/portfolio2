@@ -39,10 +39,6 @@ export default function AnimatedPortraitPlane({
 
   const positionVelocity = useRef(new THREE.Vector2(0, 0));
 
-  /*
-   * Tidligere: (-155, 28)
-   * Lavere startverdi gir mindre strukket inngangsbend.
-   */
   const bendCurrent = useRef(new THREE.Vector2(-52, 10));
   const bendVelocity = useRef(new THREE.Vector2(0, 0));
 
@@ -61,10 +57,6 @@ export default function AnimatedPortraitPlane({
         value: new THREE.Vector2(-52, 10),
       },
       uAmplitude: {
-        /*
-         * Tidligere: 0.00155
-         * Dette demper selve deformasjonen fra shaderen.
-         */
         value: 0.00105,
       },
       uAlpha: {
@@ -105,10 +97,6 @@ export default function AnimatedPortraitPlane({
     if (!hasStartedLoadAnimation.current) {
       hasStartedLoadAnimation.current = true;
 
-      /*
-       * Tidligere: (310, -54)
-       * Lavere fart gir mindre voldsom bounce og mindre overstrekking.
-       */
       bendVelocity.current.set(105, -18);
 
       positionVelocity.current.set(
@@ -138,10 +126,6 @@ export default function AnimatedPortraitPlane({
 
     const rawDifferenceY = pointerTarget.current.y - smoothPointer.current.y;
 
-    /*
-     * Tidligere: 520
-     * Dette er hovedårsaken til at bildet strakk seg mye ved hover.
-     */
     const hoverBendStrength = 175;
 
     const targetBendX = hovered.current
@@ -165,10 +149,6 @@ export default function AnimatedPortraitPlane({
 
     bendCurrent.current.addScaledVector(bendVelocity.current, delta);
 
-    /*
-     * Ekstra sikkerhet slik at benden aldri kan bli ekstrem,
-     * selv ved raske musebevegelser eller frame drops.
-     */
     bendCurrent.current.x = THREE.MathUtils.clamp(
       bendCurrent.current.x,
       -65,
