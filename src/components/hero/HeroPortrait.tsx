@@ -7,8 +7,17 @@ import { Suspense, useState } from "react";
 import AnimatedPortraitPlane from "./AnimatedPortraitPlane";
 import { heroEase } from "./heroConstants";
 
-export default function HeroPortrait() {
+type HeroPortraitProps = {
+  onReady?: () => void;
+};
+
+export default function HeroPortrait({ onReady }: HeroPortraitProps) {
   const [imageLoaded, setImageLoaded] = useState(false);
+
+  const handleLoaded = () => {
+    setImageLoaded(true);
+    onReady?.();
+  };
 
   return (
     <motion.div
@@ -87,11 +96,7 @@ export default function HeroPortrait() {
             }}
           >
             <Suspense fallback={null}>
-              <AnimatedPortraitPlane
-                onLoadedAction={() => {
-                  setImageLoaded(true);
-                }}
-              />
+              <AnimatedPortraitPlane onLoadedAction={handleLoaded} />
             </Suspense>
           </Canvas>
 
@@ -100,12 +105,12 @@ export default function HeroPortrait() {
               absolute
               -top-10
               left-0
-              font-semibold
+              z-50
               mt-3.5
               text-[14px]
+              font-semibold
               uppercase
               tracking-[0.045em]
-              z-50
             "
           >
             portrait / 2026
