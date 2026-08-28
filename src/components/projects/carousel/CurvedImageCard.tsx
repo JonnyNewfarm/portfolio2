@@ -21,7 +21,7 @@ type CurvedImageCardProps = {
 
 const FRAME_PADDING_X = 0.15;
 const FRAME_PADDING_Y = 0.15;
-const LIGHT_FRAME_COLOR = "#a8a69d";
+const LIGHT_FRAME_COLOR = "#807e75";
 const DARK_FRAME_COLOR = "#444340";
 
 export default function CurvedImageCard({
