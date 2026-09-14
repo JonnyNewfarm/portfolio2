@@ -52,12 +52,27 @@ const BurgerMenu = () => {
 
   return (
     <>
-      <button
+      <motion.button
         ref={buttonRef}
         type="button"
         onClick={() => setIsOpen((previous) => !previous)}
         aria-label={isOpen ? "Close menu" : "Open menu"}
         aria-expanded={isOpen}
+        initial={{
+          y: 14,
+          opacity: 0,
+          filter: "blur(8px)",
+        }}
+        animate={{
+          y: 0,
+          opacity: 1,
+          filter: "blur(0px)",
+        }}
+        transition={{
+          delay: 0.24,
+          duration: 0.8,
+          ease: MENU_EASE,
+        }}
         className={`
           relative
           z-[60]
@@ -71,6 +86,7 @@ const BurgerMenu = () => {
           tracking-[0.2em]
           transition-colors
           duration-300
+
           ${isOpen ? "text-white" : "text-[#1c1a17] dark:text-stone-300"}
         `}
       >
@@ -88,6 +104,7 @@ const BurgerMenu = () => {
             h-1
             w-1
             rounded-full
+
             ${isOpen ? "bg-white" : "bg-black dark:bg-white"}
           `}
         />
@@ -118,7 +135,7 @@ const BurgerMenu = () => {
             </motion.span>
           </AnimatePresence>
         </span>
-      </button>
+      </motion.button>
 
       <AnimatePresence>
         {isOpen && (

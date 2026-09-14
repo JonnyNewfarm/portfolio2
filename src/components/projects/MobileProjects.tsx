@@ -39,7 +39,7 @@ export default function MobileProjects() {
           delay={0.1}
           as="h1"
           className="
-            text-[12vw]
+            text-[11vw]
             font-bold
             uppercase
             leading-[0.92]
@@ -68,23 +68,7 @@ export default function MobileProjects() {
               flex-col
             "
           >
-            <div className="flex flex-row-reverse justify-between  items-end">
-              <ProjectsTextReveal
-                active
-                delay={0.12 + index * 0.06}
-                as="p"
-                className="
-                  text-[16px]
-                  mb-2
-                  uppercase
-                  tracking-[0.28em]
-                  text-[#161310]/95
-                  dark:text-stone-300/95
-                "
-              >
-                {String(index + 1).padStart(2, "0")}
-              </ProjectsTextReveal>
-
+            <div className="">
               <ProjectsTextReveal
                 active
                 delay={0.16 + index * 0.06}
@@ -181,51 +165,6 @@ export default function MobileProjects() {
               >
                 {project.about}
               </ProjectsTextReveal>
-
-              <div
-                className="
-                  mt-5
-                  flex
-                  flex-col
-                  gap-4
-                  border-t
-                  border-[#161310]/15
-                  pt-4
-                  dark:border-stone-300/15
-                "
-              >
-                <div>
-                  <ProjectsTextReveal
-                    active
-                    delay={0.28 + index * 0.06}
-                    as="p"
-                    className="
-                      
-                      text-xl
-                      uppercase
-                      font-semibold
-                      text-[#161310]/90
-                      dark:text-stone-300/90
-                    "
-                  >
-                    Stack
-                  </ProjectsTextReveal>
-
-                  <ProjectsTextReveal
-                    active
-                    delay={0.32 + index * 0.06}
-                    as="p"
-                    className="
-                      text-2xl
-                      leading-[1.3]
-text-[#211f1e]
-dark:text-[#e7e3dd]
-                    "
-                  >
-                    {project.stack}
-                  </ProjectsTextReveal>
-                </div>
-              </div>
             </div>
           </motion.article>
         ))}

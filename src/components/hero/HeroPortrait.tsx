@@ -38,7 +38,7 @@ export default function HeroPortrait({ onReady }: HeroPortraitProps) {
       className="
         absolute
         left-0
-        top-[22%]
+        top-[36%]
         z-20
 
         sm:left-auto
@@ -103,14 +103,17 @@ export default function HeroPortrait({ onReady }: HeroPortraitProps) {
           <p
             className="
               absolute
-              -top-10
               left-0
+              top-full
               z-50
-              mt-3.5
+              mt-4
               text-[14px]
               font-semibold
               uppercase
               tracking-[0.045em]
+
+              sm:-top-10
+              sm:mt-3.5
             "
           >
             portrait / 2026

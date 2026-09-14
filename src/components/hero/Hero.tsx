@@ -35,8 +35,47 @@ export default function Hero() {
           "
         >
           <div className="relative h-full w-full">
+            {/* TEXT */}
+            <div
+              className="
+                absolute
+                left-0
+                top-[15%]
+                z-30
+
+                sm:top-[60%]
+
+                lg:top-[20vh]
+              "
+            >
+              <TextReveal
+                as="h1"
+                mode="lines"
+                delay={0.95}
+                className="
+                  text-[28px]
+                  font-bold
+                  uppercase
+                  leading-[0.95]
+                  tracking-[0em]
+
+                  sm:text-[40px]
+
+                  lg:text-[50px]
+
+                  xl:text-[60px]
+                "
+              >
+                {
+                  "Designer & developer\ncrafting interactive digital\nexperiences."
+                }
+              </TextReveal>
+            </div>
+
+            {/* PORTRAIT */}
             <HeroPortrait onReady={() => setIsHeroReady(true)} />
 
+            {/* LOADER */}
             <AnimatePresence>
               {!isHeroReady && (
                 <motion.div
@@ -56,11 +95,14 @@ export default function Hero() {
                     bottom-5
                     right-0
                     z-50
+
                     sm:bottom-8
                   "
                 >
                   <motion.div
-                    animate={{ rotate: 360 }}
+                    animate={{
+                      rotate: 360,
+                    }}
                     transition={{
                       duration: 0.9,
                       repeat: Infinity,
@@ -78,37 +120,6 @@ export default function Hero() {
                 </motion.div>
               )}
             </AnimatePresence>
-
-            <div
-              className="
-                absolute
-                left-0
-                top-[64%]
-                z-20
-                sm:top-[60%]
-                lg:top-[20vh]
-              "
-            >
-              <TextReveal
-                as="h1"
-                mode="lines"
-                delay={0.95}
-                className="
-                  text-[28px]
-                  font-bold
-                  uppercase
-                  leading-[0.95]
-                  tracking-[0em]
-                  sm:text-[40px]
-                  lg:text-[50px]
-                  xl:text-[60px]
-                "
-              >
-                {
-                  "Designer & developer\ncrafting interactive digital\nexperiences."
-                }
-              </TextReveal>
-            </div>
 
             <HeroBottomInfo />
           </div>

@@ -28,6 +28,7 @@ const routes = [
 
 const Navbar = () => {
   const pathname = usePathname();
+
   const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
@@ -84,12 +85,13 @@ const Navbar = () => {
         py-5
         text-[#211f1e]
         dark:text-[#e7e3dd]
+
         lg:px-12
         xl:px-16
       "
     >
       <div className="flex items-center justify-between">
-        {/* Mobile */}
+        {/* MOBILE LEFT */}
         <div className="flex items-center gap-x-5 lg:hidden">
           <Link
             href="/"
@@ -139,6 +141,7 @@ const Navbar = () => {
                 uppercase
                 transition-opacity
                 duration-200
+
                 ${!isDark ? "opacity-100" : "opacity-50 hover:opacity-100"}
               `}
             >
@@ -157,6 +160,7 @@ const Navbar = () => {
                 uppercase
                 transition-opacity
                 duration-200
+
                 ${isDark ? "opacity-100" : "opacity-50 hover:opacity-100"}
               `}
             >
@@ -165,11 +169,12 @@ const Navbar = () => {
           </TextReveal>
         </div>
 
+        {/* MOBILE MENU */}
         <div className="lg:hidden">
           <BurgerMenu />
         </div>
 
-        {/* Desktop */}
+        {/* DESKTOP */}
         <div className="hidden w-full lg:block">
           <div className="flex w-full items-start justify-between">
             <div className="flex items-start gap-x-14 xl:gap-x-34">
@@ -237,6 +242,7 @@ const Navbar = () => {
                     uppercase
                     transition-opacity
                     duration-200
+
                     ${!isDark ? "opacity-100" : "opacity-65 hover:opacity-100"}
                   `}
                 >
@@ -255,6 +261,7 @@ const Navbar = () => {
                     uppercase
                     transition-opacity
                     duration-200
+
                     ${isDark ? "opacity-100" : "opacity-65 hover:opacity-100"}
                   `}
                 >
@@ -294,6 +301,7 @@ const Navbar = () => {
                       font-semibold
                       transition-opacity
                       duration-200
+
                       ${
                         isActive
                           ? "opacity-100"
