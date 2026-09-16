@@ -3,10 +3,10 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 
 import { CARD_HEIGHT, carouselMotion } from "../projectsConstants";
-
 import type { CarouselItem, CarouselRuntimeRef } from "../projectsTypes";
 
 import { wrapPosition } from "./carouselUtils";
+import { frameFragmentShader, frameVertexShader } from "./framerShader";
 
 type CurvedImageCardProps = {
   item: CarouselItem;
@@ -21,8 +21,20 @@ type CurvedImageCardProps = {
 
 const FRAME_PADDING_X = 0.15;
 const FRAME_PADDING_Y = 0.15;
-const LIGHT_FRAME_COLOR = "#807e75";
-const DARK_FRAME_COLOR = "#444340";
+
+/*
+ * LIGHT MODE
+ */
+const LIGHT_FRAME_COLOR_1 = "#807e75";
+const LIGHT_FRAME_COLOR_2 = "#b0a58f";
+const LIGHT_FRAME_COLOR_3 = "#6f7468";
+
+/*
+ * DARK MODE
+ */
+const DARK_FRAME_COLOR_1 = "#6f7069";
+const DARK_FRAME_COLOR_2 = "#9a927f";
+const DARK_FRAME_COLOR_3 = "#565b52";
 
 export default function CurvedImageCard({
   item,
@@ -38,7 +50,6 @@ export default function CurvedImageCard({
   const frameMeshRef = useRef<THREE.Mesh>(null);
 
   const imageBaseVerticesRef = useRef<Float32Array | null>(null);
-
   const frameBaseVerticesRef = useRef<Float32Array | null>(null);
 
   const [isDark, setIsDark] = useState(false);
@@ -48,6 +59,9 @@ export default function CurvedImageCard({
   const animatedXRef = useRef(initialX);
   const intendedXRef = useRef(initialX);
 
+  /*
+   * IMAGE MATERIAL
+   */
   const imageMaterial = useMemo(() => {
     return new THREE.MeshBasicMaterial({
       map: texture,
@@ -63,24 +77,54 @@ export default function CurvedImageCard({
     });
   }, [texture]);
 
+  /*
+   * FRAME MATERIAL
+   */
   const frameMaterial = useMemo(() => {
-    return new THREE.MeshBasicMaterial({
-      color: new THREE.Color(LIGHT_FRAME_COLOR),
+    return new THREE.ShaderMaterial({
+      vertexShader: frameVertexShader,
+      fragmentShader: frameFragmentShader,
+
+      uniforms: {
+        uTime: {
+          value: 0,
+        },
+
+        uColor1: {
+          value: new THREE.Color(LIGHT_FRAME_COLOR_1),
+        },
+
+        uColor2: {
+          value: new THREE.Color(LIGHT_FRAME_COLOR_2),
+        },
+
+        uColor3: {
+          value: new THREE.Color(LIGHT_FRAME_COLOR_3),
+        },
+      },
 
       side: THREE.DoubleSide,
 
-      toneMapped: false,
-
       transparent: false,
-      opacity: 1,
+
+      depthWrite: true,
+      depthTest: true,
+
+      toneMapped: false,
     });
   }, []);
 
+  /*
+   * RESET BASE VERTICES
+   */
   useEffect(() => {
     imageBaseVerticesRef.current = null;
     frameBaseVerticesRef.current = null;
   }, [imageWidth]);
 
+  /*
+   * WATCH THEME
+   */
   useEffect(() => {
     const root = document.documentElement;
 
@@ -102,30 +146,55 @@ export default function CurvedImageCard({
     };
   }, []);
 
+  /*
+   * UPDATE FRAME COLORS
+   */
   useEffect(() => {
-    frameMaterial.color.set(isDark ? DARK_FRAME_COLOR : LIGHT_FRAME_COLOR);
+    if (isDark) {
+      frameMaterial.uniforms.uColor1.value.set(DARK_FRAME_COLOR_1);
 
-    frameMaterial.needsUpdate = true;
+      frameMaterial.uniforms.uColor2.value.set(DARK_FRAME_COLOR_2);
+
+      frameMaterial.uniforms.uColor3.value.set(DARK_FRAME_COLOR_3);
+
+      return;
+    }
+
+    frameMaterial.uniforms.uColor1.value.set(LIGHT_FRAME_COLOR_1);
+
+    frameMaterial.uniforms.uColor2.value.set(LIGHT_FRAME_COLOR_2);
+
+    frameMaterial.uniforms.uColor3.value.set(LIGHT_FRAME_COLOR_3);
   }, [frameMaterial, isDark]);
 
+  /*
+   * DISPOSE MATERIALS
+   */
   useEffect(() => {
     return () => {
       imageMaterial.dispose();
       frameMaterial.dispose();
     };
-  }, [frameMaterial, imageMaterial]);
+  }, [imageMaterial, frameMaterial]);
 
-  useFrame(() => {
+  useFrame((state) => {
     const group = groupRef.current;
 
     const imageMesh = imageMeshRef.current;
-
     const frameMesh = frameMeshRef.current;
 
     if (!group || !imageMesh || !frameMesh || trackWidth <= 0) {
       return;
     }
 
+    /*
+     * ANIMATE FRAME GRADIENT
+     */
+    frameMaterial.uniforms.uTime.value = state.clock.elapsedTime;
+
+    /*
+     * GEOMETRIES
+     */
     const imageGeometry = imageMesh.geometry as THREE.PlaneGeometry;
 
     const frameGeometry = frameMesh.geometry as THREE.PlaneGeometry;
@@ -138,18 +207,27 @@ export default function CurvedImageCard({
       "position",
     ) as THREE.BufferAttribute;
 
+    /*
+     * STORE ORIGINAL IMAGE VERTICES
+     */
     if (!imageBaseVerticesRef.current) {
       imageBaseVerticesRef.current = new Float32Array(
         imagePositionAttribute.array as Float32Array,
       );
     }
 
+    /*
+     * STORE ORIGINAL FRAME VERTICES
+     */
     if (!frameBaseVerticesRef.current) {
       frameBaseVerticesRef.current = new Float32Array(
         framePositionAttribute.array as Float32Array,
       );
     }
 
+    /*
+     * CAROUSEL POSITION
+     */
     const wrappedX = wrapPosition(
       baseX - runtimeRef.current.offset,
       trackWidth,
@@ -169,10 +247,16 @@ export default function CurvedImageCard({
 
     group.position.x = animatedXRef.current;
 
+    /*
+     * BEND SETTINGS
+     */
     const bendRadius = 2.35;
 
     const bendPeak = carouselMotion.bendLimit * runtimeRef.current.bendAmount;
 
+    /*
+     * SHARED BEND FUNCTION
+     */
     const deformGeometry = (
       positionAttribute: THREE.BufferAttribute,
       baseVertices: Float32Array,
@@ -203,10 +287,19 @@ export default function CurvedImageCard({
       positionAttribute.needsUpdate = true;
     };
 
+    /*
+     * BEND IMAGE
+     */
     deformGeometry(imagePositionAttribute, imageBaseVerticesRef.current);
 
+    /*
+     * BEND FRAME
+     */
     deformGeometry(framePositionAttribute, frameBaseVerticesRef.current);
 
+    /*
+     * SCALE CARDS TOWARD EDGES
+     */
     const distanceFromMiddle = Math.abs(group.position.x);
 
     const scale = THREE.MathUtils.lerp(
@@ -220,7 +313,7 @@ export default function CurvedImageCard({
 
   return (
     <group ref={groupRef} userData={item}>
-      {/* Frame */}
+      {/* FRAME */}
       <mesh
         ref={frameMeshRef}
         material={frameMaterial}
@@ -238,7 +331,7 @@ export default function CurvedImageCard({
         />
       </mesh>
 
-      {/* Image */}
+      {/* IMAGE */}
       <mesh
         ref={imageMeshRef}
         material={imageMaterial}
