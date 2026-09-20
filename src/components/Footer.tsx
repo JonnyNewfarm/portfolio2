@@ -59,7 +59,7 @@ dark:text-[#e7e3dd] md:px-10 lg:px-16 ${isProjectsPage ? "md:hidden" : ""}`}
                 Navigation
               </p>
 
-              <div className="flex flex-col items-start gap-1 text-xl font-semibold uppercase leading-[1.05] tracking-[0.02em] opacity-80 md:items-end md:text-4xl">
+              <div className="flex flex-col items-start gap-1 text-2xl font-semibold uppercase leading-[1.05] tracking-[0.02em] opacity-90 md:items-end md:text-4xl">
                 <Link href="/" className="w-fit transition hover:opacity-60">
                   <WaveLinkText text="Home" />
                 </Link>
@@ -85,7 +85,7 @@ dark:text-[#e7e3dd] md:px-10 lg:px-16 ${isProjectsPage ? "md:hidden" : ""}`}
                 Social
               </p>
 
-              <div className="flex flex-col items-start gap-1 text-xl font-semibold uppercase leading-[1.05] tracking-[0.02em] opacity-80 md:items-end md:text-4xl">
+              <div className="flex flex-col items-start gap-1 text-2xl font-semibold uppercase leading-[1.05] tracking-[0.02em] opacity-90 md:items-end md:text-4xl">
                 <a
                   href="https://www.linkedin.com/in/jonas-nygaard-0aa767366/"
                   target="_blank"
@@ -108,9 +108,9 @@ dark:text-[#e7e3dd] md:px-10 lg:px-16 ${isProjectsPage ? "md:hidden" : ""}`}
           </div>
         </div>
 
-        <div className="mt-20 grid grid-cols-1 gap-6 border-t border-stone-400/30 pt-6 text-lg font-normal uppercase tracking-[0.14em] opacity-75 dark:border-stone-200/20 md:grid-cols-4">
+        <div className="mt-20 grid grid-cols-1 gap-6 border-t border-stone-400/30 pt-6 text-lg font-normal uppercase tracking-[0.14em] opacity-90 dark:border-stone-200/20 md:grid-cols-4">
           <div>
-            <p className="mb-1 text-sm ">Created by</p>
+            <p className="mb-1 text-lg ">Created by</p>
             <a
               target="_blank"
               rel="noopener noreferrer"
@@ -122,7 +122,7 @@ dark:text-[#e7e3dd] md:px-10 lg:px-16 ${isProjectsPage ? "md:hidden" : ""}`}
           </div>
 
           <div>
-            <p className="mb-1 text-sm ">Email</p>
+            <p className="mb-1 text-lg ">Email</p>
             <a
               href="mailto:jonasnygaard96@gmail.com"
               className="inline-block font-semibold w-fit normal-case tracking-[0.1] transition hover:opacity-60"
@@ -132,12 +132,12 @@ dark:text-[#e7e3dd] md:px-10 lg:px-16 ${isProjectsPage ? "md:hidden" : ""}`}
           </div>
 
           <div>
-            <p className="mb-1 text-sm ">Local time</p>
+            <p className="mb-1 text-lg ">Local time</p>
             <p className="font-semibold">{time}</p>
           </div>
 
           <div className="md:text-right">
-            <p className="mb-1 text-sm ">Location</p>
+            <p className="mb-1 text-lg ">Location</p>
             <p className="font-semibold">Oslo, Norway</p>
           </div>
         </div>

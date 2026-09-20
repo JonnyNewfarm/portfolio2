@@ -104,20 +104,6 @@ export default function ContactForm() {
       >
         <div>
           <ContactTextReveal
-            as="p"
-            mode="words"
-            className="
-              mb-3
-              text-lg
-              uppercase
-              tracking-[0.24em]
-              opacity-90
-            "
-          >
-            Send a message
-          </ContactTextReveal>
-
-          <ContactTextReveal
             as="h2"
             mode="lines"
             delay={0.05}

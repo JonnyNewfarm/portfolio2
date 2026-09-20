@@ -1,16 +1,81 @@
 "use client";
 
-import Image from "next/image";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import { useCallback, useEffect, useState } from "react";
 
 import { TEXT_EASE } from "./projectsConstants";
 import { projects } from "./projectData";
 import ProjectsTextReveal from "./ProjectsTextReveal";
+import MobileProjectThreeCard from "./MobileProjectThreeCard";
 
 export default function MobileProjects() {
+  const [isMobile, setIsMobile] = useState<boolean | null>(null);
+  const [isDark, setIsDark] = useState(false);
+
+  const [loadedProjectIndexes, setLoadedProjectIndexes] = useState<Set<number>>(
+    () => new Set(),
+  );
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 767px)");
+
+    const update = () => {
+      setIsMobile(mediaQuery.matches);
+    };
+
+    update();
+
+    mediaQuery.addEventListener("change", update);
+
+    return () => {
+      mediaQuery.removeEventListener("change", update);
+    };
+  }, []);
+
+  useEffect(() => {
+    const updateThemeState = () => {
+      setIsDark(document.documentElement.classList.contains("dark"));
+    };
+
+    updateThemeState();
+
+    const observer = new MutationObserver(updateThemeState);
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  const handleProjectReady = useCallback((index: number) => {
+    setLoadedProjectIndexes((current) => {
+      if (current.has(index)) {
+        return current;
+      }
+
+      const next = new Set(current);
+
+      next.add(index);
+
+      return next;
+    });
+  }, []);
+
+  const isProjectsReady =
+    projects.length === 0 || loadedProjectIndexes.size === projects.length;
+
+  if (isMobile !== true) {
+    return null;
+  }
+
   return (
     <div
       className="
+        relative
         px-6
         pb-16
         pt-28
@@ -52,7 +117,70 @@ export default function MobileProjects() {
         </ProjectsTextReveal>
       </div>
 
-      <div
+      <AnimatePresence>
+        {!isProjectsReady && (
+          <motion.div
+            initial={{
+              opacity: 0,
+              scale: 0.9,
+            }}
+            animate={{
+              opacity: 1,
+              scale: 1,
+            }}
+            exit={{
+              opacity: 0,
+              scale: 0.9,
+            }}
+            transition={{
+              duration: 0.35,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+            className="
+              pointer-events-none
+              fixed
+              bottom-5
+              right-6
+              z-[100]
+              text-[#161310]
+              dark:text-stone-200
+              md:hidden
+            "
+          >
+            <motion.div
+              animate={{
+                rotate: 360,
+              }}
+              transition={{
+                duration: 0.9,
+                repeat: Infinity,
+                ease: "linear",
+              }}
+              className="
+                h-5
+                w-5
+                rounded-full
+                border-[1.5px]
+                border-current/20
+                border-t-current
+              "
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <motion.div
+        initial={false}
+        animate={{
+          opacity: isProjectsReady ? 1 : 0,
+        }}
+        transition={{
+          duration: 0.32,
+          ease: TEXT_EASE,
+        }}
+        style={{
+          pointerEvents: isProjectsReady ? "auto" : "none",
+        }}
         className="
           mt-14
           flex
@@ -61,16 +189,17 @@ export default function MobileProjects() {
         "
       >
         {projects.map((project, index) => (
-          <motion.article
+          <article
             key={project.title}
             className="
               flex
               flex-col
             "
           >
-            <div className="">
+            {/* TITLE */}
+            <div>
               <ProjectsTextReveal
-                active
+                active={isProjectsReady}
                 delay={0.16 + index * 0.06}
                 as="h2"
                 className="
@@ -89,59 +218,16 @@ export default function MobileProjects() {
               </ProjectsTextReveal>
             </div>
 
-            <motion.a
+            <MobileProjectThreeCard
+              src={`/projects/${project.images[0]}`}
               href={project.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              initial={{
-                opacity: 0,
-                y: 18,
-                filter: "blur(6px)",
+              title={project.title}
+              isDark={isDark}
+              projectsReady={isProjectsReady}
+              onReadyAction={() => {
+                handleProjectReady(index);
               }}
-              whileInView={{
-                opacity: 1,
-                y: 0,
-                filter: "blur(0px)",
-              }}
-              viewport={{
-                once: true,
-                amount: 0.2,
-              }}
-              transition={{
-                duration: 0.85,
-                delay: 0.08,
-                ease: TEXT_EASE,
-              }}
-              className="
-                block
-                w-full
-                will-change-[opacity,transform,filter]
-              "
-            >
-              <div
-                className="
-    bg-[#a8a69d]
-    p-[10px]
-    dark:bg-[#444340]
-
-  "
-              >
-                <Image
-                  src={`/projects/${project.images[0]}`}
-                  alt={project.title}
-                  width={1600}
-                  height={1200}
-                  sizes="100vw"
-                  className="
-      block
-      h-auto
-      w-full
-      object-contain
-    "
-                  draggable={false}
-                />
-              </div>
-            </motion.a>
+            />
 
             <div
               className="
@@ -153,7 +239,7 @@ export default function MobileProjects() {
               "
             >
               <ProjectsTextReveal
-                active
+                active={isProjectsReady}
                 delay={0.22 + index * 0.06}
                 as="p"
                 className="
@@ -166,9 +252,9 @@ export default function MobileProjects() {
                 {project.about}
               </ProjectsTextReveal>
             </div>
-          </motion.article>
+          </article>
         ))}
-      </div>
+      </motion.div>
     </div>
   );
 }
