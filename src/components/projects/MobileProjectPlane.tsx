@@ -172,14 +172,12 @@ export default function MobileProjectPlane({
     texture.colorSpace = THREE.SRGBColorSpace;
 
     texture.wrapS = THREE.ClampToEdgeWrapping;
-
     texture.wrapT = THREE.ClampToEdgeWrapping;
 
-    texture.minFilter = THREE.LinearMipmapLinearFilter;
-
+    texture.minFilter = THREE.LinearFilter;
     texture.magFilter = THREE.LinearFilter;
 
-    texture.generateMipmaps = true;
+    texture.generateMipmaps = false;
 
     texture.anisotropy = Math.min(gl.capabilities.getMaxAnisotropy(), 16);
 

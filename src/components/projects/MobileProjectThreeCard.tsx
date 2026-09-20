@@ -73,7 +73,7 @@ export default function MobileProjectThreeCard({
       </div>
 
       <Canvas
-        dpr={[1, 1.25]}
+        dpr={[1, 2]}
         shadows={false}
         frameloop={isInView ? "always" : "demand"}
         camera={{
