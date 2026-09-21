@@ -17,6 +17,7 @@ export default function AnimatedPortraitPlane({
   onLoadedAction,
 }: AnimatedPortraitPlaneProps) {
   const meshRef = useRef<THREE.Mesh | null>(null);
+
   const materialRef = useRef<THREE.ShaderMaterial | null>(null);
 
   const texture = useLoader(THREE.TextureLoader, "/newfarm-4.jpg");
@@ -26,9 +27,11 @@ export default function AnimatedPortraitPlane({
   const canvasScale = 1.6;
 
   const portraitWidth = viewport.width / canvasScale;
+
   const portraitHeight = viewport.height / canvasScale;
 
   const pointerTarget = useRef(new THREE.Vector2(0.5, 0.5));
+
   const smoothPointer = useRef(new THREE.Vector2(0.5, 0.5));
 
   const positionTarget = useRef(new THREE.Vector2(0, 0));
@@ -40,12 +43,15 @@ export default function AnimatedPortraitPlane({
   const positionVelocity = useRef(new THREE.Vector2(0, 0));
 
   const bendCurrent = useRef(new THREE.Vector2(-52, 10));
+
   const bendVelocity = useRef(new THREE.Vector2(0, 0));
 
   const alphaCurrent = useRef(0);
+
   const alphaVelocity = useRef(0);
 
   const hasStartedLoadAnimation = useRef(false);
+
   const hovered = useRef(false);
 
   const uniforms = useMemo(
@@ -53,12 +59,15 @@ export default function AnimatedPortraitPlane({
       uTexture: {
         value: texture,
       },
+
       uDelta: {
         value: new THREE.Vector2(-52, 10),
       },
+
       uAmplitude: {
         value: 0.00105,
       },
+
       uAlpha: {
         value: 0,
       },
@@ -70,9 +79,11 @@ export default function AnimatedPortraitPlane({
     texture.colorSpace = THREE.SRGBColorSpace;
 
     texture.wrapS = THREE.ClampToEdgeWrapping;
+
     texture.wrapT = THREE.ClampToEdgeWrapping;
 
     texture.minFilter = THREE.LinearMipmapLinearFilter;
+
     texture.magFilter = THREE.LinearFilter;
 
     texture.generateMipmaps = true;
@@ -86,6 +97,7 @@ export default function AnimatedPortraitPlane({
 
   useFrame((_, rawDelta) => {
     const mesh = meshRef.current;
+
     const material = materialRef.current;
 
     if (!mesh || !material) {
@@ -94,20 +106,28 @@ export default function AnimatedPortraitPlane({
 
     const delta = Math.min(rawDelta, 1 / 30);
 
+    /*
+     * SLOWER INITIAL ENTRANCE
+     */
     if (!hasStartedLoadAnimation.current) {
       hasStartedLoadAnimation.current = true;
 
-      bendVelocity.current.set(105, -18);
+      bendVelocity.current.set(84, -14);
 
       positionVelocity.current.set(
-        portraitWidth * 0.95,
-        -portraitHeight * 0.12,
+        portraitWidth * 0.72,
+        -portraitHeight * 0.09,
       );
     }
 
+    /*
+     * SLOWER FADE
+     */
     const alphaTarget = 1;
-    const alphaStiffness = 72;
-    const alphaDamping = 14;
+
+    const alphaStiffness = 60;
+
+    const alphaDamping = 13;
 
     alphaVelocity.current +=
       (alphaTarget - alphaCurrent.current) * alphaStiffness * delta;
@@ -118,6 +138,9 @@ export default function AnimatedPortraitPlane({
 
     alphaCurrent.current = THREE.MathUtils.clamp(alphaCurrent.current, 0, 1);
 
+    /*
+     * POINTER
+     */
     const pointerFollow = 1 - Math.exp(-delta * 8.5);
 
     smoothPointer.current.lerp(pointerTarget.current, pointerFollow);
@@ -126,6 +149,9 @@ export default function AnimatedPortraitPlane({
 
     const rawDifferenceY = pointerTarget.current.y - smoothPointer.current.y;
 
+    /*
+     * BEND
+     */
     const hoverBendStrength = 175;
 
     const targetBendX = hovered.current
@@ -136,8 +162,15 @@ export default function AnimatedPortraitPlane({
       ? rawDifferenceY * hoverBendStrength
       : 0;
 
-    const bendStiffness = hovered.current ? 95 : 82;
-    const bendDamping = hovered.current ? 18 : 14;
+    /*
+     * Hover beholdes responsive.
+     *
+     * Non-hover/load gjøres
+     * litt roligere.
+     */
+    const bendStiffness = hovered.current ? 95 : 70;
+
+    const bendDamping = hovered.current ? 18 : 13;
 
     bendVelocity.current.x +=
       (targetBendX - bendCurrent.current.x) * bendStiffness * delta;
@@ -161,16 +194,28 @@ export default function AnimatedPortraitPlane({
       45,
     );
 
+    /*
+     * POSITION
+     */
     const maxFollowX = portraitWidth * 0.42;
+
     const maxFollowY = portraitHeight * 0.22;
 
     positionTarget.current.set(
       hovered.current ? (pointerTarget.current.x - 0.5) * maxFollowX : 0,
+
       hovered.current ? (pointerTarget.current.y - 0.5) * maxFollowY : 0,
     );
 
-    const positionStiffness = hovered.current ? 34 : 78;
-    const positionDamping = hovered.current ? 7.5 : 8.5;
+    /*
+     * Hover-feel beholdes.
+     *
+     * Load/return gjøres bare
+     * litt roligere.
+     */
+    const positionStiffness = hovered.current ? 34 : 66;
+
+    const positionDamping = hovered.current ? 7.5 : 8.3;
 
     positionVelocity.current.x +=
       (positionTarget.current.x - positionCurrent.current.x) *
@@ -187,6 +232,7 @@ export default function AnimatedPortraitPlane({
     positionCurrent.current.addScaledVector(positionVelocity.current, delta);
 
     mesh.position.x = positionCurrent.current.x;
+
     mesh.position.y = positionCurrent.current.y;
 
     material.uniforms.uDelta.value.set(
@@ -204,6 +250,7 @@ export default function AnimatedPortraitPlane({
 
     if (event.uv) {
       pointerTarget.current.copy(event.uv);
+
       smoothPointer.current.copy(event.uv);
     }
   };
@@ -222,6 +269,7 @@ export default function AnimatedPortraitPlane({
     event.stopPropagation();
 
     hovered.current = false;
+
     pointerTarget.current.set(0.5, 0.5);
   };
 

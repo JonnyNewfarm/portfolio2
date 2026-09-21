@@ -31,6 +31,39 @@ const DARK_FRAME_COLOR_3 = "#565b52";
 
 const FRAME_PADDING_PX = 10;
 
+/*
+ * ENTRANCE
+ *
+ * Litt kraftigere bend enn portrait,
+ * men ikke overkill.
+ */
+const START_BEND_X = -72;
+const START_BEND_Y = 14;
+
+const START_POSITION_X = -0.12;
+const START_POSITION_Y = 0.02;
+
+/*
+ * Fade er tidsbasert så den ikke
+ * begynner å pulse/bounce sammen
+ * med spring-bevegelsen.
+ */
+const IMAGE_FADE_DELAY = 0.03;
+const IMAGE_FADE_DURATION = 0.88;
+
+const FRAME_FADE_DELAY = 0.13;
+const FRAME_FADE_DURATION = 0.92;
+
+const clamp01 = (value: number) => {
+  return THREE.MathUtils.clamp(value, 0, 1);
+};
+
+const smootherStep = (value: number) => {
+  const t = clamp01(value);
+
+  return t * t * t * (t * (t * 6 - 15) + 10);
+};
+
 export default function MobileProjectPlane({
   src,
   active,
@@ -47,6 +80,12 @@ export default function MobileProjectPlane({
 
   const { viewport, size, gl } = useThree();
 
+  /*
+   * --------------------------------
+   * ACTUAL IMAGE RATIO
+   * --------------------------------
+   */
+
   const textureImage = texture.image as HTMLImageElement;
 
   const naturalWidth = textureImage?.naturalWidth || textureImage?.width || 1;
@@ -55,6 +94,12 @@ export default function MobileProjectPlane({
     textureImage?.naturalHeight || textureImage?.height || 1;
 
   const imageAspect = naturalWidth / naturalHeight;
+
+  /*
+   * --------------------------------
+   * SIZE
+   * --------------------------------
+   */
 
   const worldPerPixel = viewport.width / size.width;
 
@@ -68,27 +113,48 @@ export default function MobileProjectPlane({
 
   const imageHeight = imageWidth / imageAspect;
 
-  const positionTarget = useRef(new THREE.Vector2(0, 0));
+  /*
+   * --------------------------------
+   * POSITION SPRING
+   * --------------------------------
+   */
 
   const positionCurrent = useRef(
-    new THREE.Vector2(-imageWidth * 0.16, imageHeight * 0.025),
+    new THREE.Vector2(
+      imageWidth * START_POSITION_X,
+      imageHeight * START_POSITION_Y,
+    ),
   );
 
   const positionVelocity = useRef(new THREE.Vector2(0, 0));
 
-  const bendCurrent = useRef(new THREE.Vector2(-52, 10));
+  /*
+   * --------------------------------
+   * BEND SPRING
+   * --------------------------------
+   */
+
+  const bendCurrent = useRef(new THREE.Vector2(START_BEND_X, START_BEND_Y));
 
   const bendVelocity = useRef(new THREE.Vector2(0, 0));
 
-  const alphaCurrent = useRef(0);
+  /*
+   * --------------------------------
+   * ENTRANCE
+   * --------------------------------
+   */
 
-  const alphaVelocity = useRef(0);
-
-  const hasStartedLoadAnimation = useRef(false);
+  const entranceTime = useRef(0);
 
   const wasActive = useRef(false);
 
   const hasReportedReady = useRef(false);
+
+  /*
+   * --------------------------------
+   * IMAGE UNIFORMS
+   * --------------------------------
+   */
 
   const imageUniforms = useMemo(
     () => ({
@@ -97,11 +163,11 @@ export default function MobileProjectPlane({
       },
 
       uDelta: {
-        value: new THREE.Vector2(-52, 10),
+        value: new THREE.Vector2(START_BEND_X, START_BEND_Y),
       },
 
       uAmplitude: {
-        value: 0.00105,
+        value: 0.0011,
       },
 
       uAlpha: {
@@ -110,6 +176,12 @@ export default function MobileProjectPlane({
     }),
     [texture],
   );
+
+  /*
+   * --------------------------------
+   * FRAME UNIFORMS
+   * --------------------------------
+   */
 
   const frameUniforms = useMemo(
     () => ({
@@ -130,11 +202,11 @@ export default function MobileProjectPlane({
       },
 
       uDelta: {
-        value: new THREE.Vector2(-52, 10),
+        value: new THREE.Vector2(START_BEND_X, START_BEND_Y),
       },
 
       uAmplitude: {
-        value: 0.00105,
+        value: 0.0011,
       },
 
       uAlpha: {
@@ -143,6 +215,12 @@ export default function MobileProjectPlane({
     }),
     [],
   );
+
+  /*
+   * --------------------------------
+   * THEME
+   * --------------------------------
+   */
 
   useEffect(() => {
     const frameMaterial = frameMaterialRef.current;
@@ -168,13 +246,21 @@ export default function MobileProjectPlane({
     frameMaterial.uniforms.uColor3.value.set(LIGHT_FRAME_COLOR_3);
   }, [isDark]);
 
+  /*
+   * --------------------------------
+   * TEXTURE
+   * --------------------------------
+   */
+
   useEffect(() => {
     texture.colorSpace = THREE.SRGBColorSpace;
 
     texture.wrapS = THREE.ClampToEdgeWrapping;
+
     texture.wrapT = THREE.ClampToEdgeWrapping;
 
     texture.minFilter = THREE.LinearFilter;
+
     texture.magFilter = THREE.LinearFilter;
 
     texture.generateMipmaps = false;
@@ -190,6 +276,12 @@ export default function MobileProjectPlane({
     }
   }, [gl, onReadyAction, texture]);
 
+  /*
+   * --------------------------------
+   * ANIMATION
+   * --------------------------------
+   */
+
   useFrame((state, rawDelta) => {
     const group = groupRef.current;
 
@@ -203,18 +295,40 @@ export default function MobileProjectPlane({
 
     const delta = Math.min(rawDelta, 1 / 30);
 
+    /*
+     * Moving gradient.
+     */
     frameMaterial.uniforms.uTime.value = state.clock.elapsedTime;
+
+    /*
+     * --------------------------------
+     * WAIT
+     * --------------------------------
+     */
 
     if (!active) {
       wasActive.current = false;
 
-      group.position.x = -imageWidth * 0.16;
+      entranceTime.current = 0;
 
-      group.position.y = imageHeight * 0.025;
+      positionCurrent.current.set(
+        imageWidth * START_POSITION_X,
+        imageHeight * START_POSITION_Y,
+      );
 
-      imageMaterial.uniforms.uDelta.value.set(-52, 10);
+      positionVelocity.current.set(0, 0);
 
-      frameMaterial.uniforms.uDelta.value.set(-52, 10);
+      bendCurrent.current.set(START_BEND_X, START_BEND_Y);
+
+      bendVelocity.current.set(0, 0);
+
+      group.position.x = positionCurrent.current.x;
+
+      group.position.y = positionCurrent.current.y;
+
+      imageMaterial.uniforms.uDelta.value.set(START_BEND_X, START_BEND_Y);
+
+      frameMaterial.uniforms.uDelta.value.set(START_BEND_X, START_BEND_Y);
 
       imageMaterial.uniforms.uAlpha.value = 0;
 
@@ -223,102 +337,60 @@ export default function MobileProjectPlane({
       return;
     }
 
+    /*
+     * --------------------------------
+     * FIRST ACTIVE FRAME
+     * --------------------------------
+     */
+
     if (!wasActive.current) {
       wasActive.current = true;
 
-      hasStartedLoadAnimation.current = false;
+      entranceTime.current = 0;
 
-      positionCurrent.current.set(-imageWidth * 0.16, imageHeight * 0.025);
+      positionCurrent.current.set(
+        imageWidth * START_POSITION_X,
+        imageHeight * START_POSITION_Y,
+      );
 
-      positionTarget.current.set(0, 0);
+      /*
+       * Litt kick.
+       *
+       * Mye mindre enn portrait,
+       * men nok til at vi får
+       * litt liv / bounce.
+       */
+      positionVelocity.current.set(imageWidth * 0.28, -imageHeight * 0.025);
 
-      positionVelocity.current.set(0, 0);
+      bendCurrent.current.set(START_BEND_X, START_BEND_Y);
 
-      bendCurrent.current.set(-52, 10);
-
-      bendVelocity.current.set(0, 0);
-
-      alphaCurrent.current = 0;
-
-      alphaVelocity.current = 0;
-
-      group.position.x = positionCurrent.current.x;
-
-      group.position.y = positionCurrent.current.y;
-
-      imageMaterial.uniforms.uDelta.value.set(-52, 10);
-
-      frameMaterial.uniforms.uDelta.value.set(-52, 10);
-
-      imageMaterial.uniforms.uAlpha.value = 0;
-
-      frameMaterial.uniforms.uAlpha.value = 0;
+      bendVelocity.current.set(42, -7);
     }
 
-    if (!hasStartedLoadAnimation.current) {
-      hasStartedLoadAnimation.current = true;
+    entranceTime.current += delta;
 
-      bendVelocity.current.set(105, -18);
+    const time = entranceTime.current;
 
-      positionVelocity.current.set(imageWidth * 0.95, -imageHeight * 0.12);
-    }
+    /*
+     * --------------------------------
+     * POSITION SPRING
+     * --------------------------------
+     *
+     * Litt underdamped.
+     *
+     * Gir en liten overshoot,
+     * men ikke portrait-nivå bounce.
+     */
 
-    const alphaTarget = 1;
+    const positionStiffness = 68;
 
-    const alphaStiffness = 72;
-    const alphaDamping = 14;
-
-    alphaVelocity.current +=
-      (alphaTarget - alphaCurrent.current) * alphaStiffness * delta;
-
-    alphaVelocity.current *= Math.exp(-alphaDamping * delta);
-
-    alphaCurrent.current += alphaVelocity.current * delta;
-
-    alphaCurrent.current = THREE.MathUtils.clamp(alphaCurrent.current, 0, 1);
-
-    const targetBendX = 0;
-    const targetBendY = 0;
-
-    const bendStiffness = 82;
-    const bendDamping = 14;
-
-    bendVelocity.current.x +=
-      (targetBendX - bendCurrent.current.x) * bendStiffness * delta;
-
-    bendVelocity.current.y +=
-      (targetBendY - bendCurrent.current.y) * bendStiffness * delta;
-
-    bendVelocity.current.multiplyScalar(Math.exp(-bendDamping * delta));
-
-    bendCurrent.current.addScaledVector(bendVelocity.current, delta);
-
-    bendCurrent.current.x = THREE.MathUtils.clamp(
-      bendCurrent.current.x,
-      -65,
-      65,
-    );
-
-    bendCurrent.current.y = THREE.MathUtils.clamp(
-      bendCurrent.current.y,
-      -45,
-      45,
-    );
-
-    positionTarget.current.set(0, 0);
-
-    const positionStiffness = 78;
-    const positionDamping = 8.5;
+    const positionDamping = 10;
 
     positionVelocity.current.x +=
-      (positionTarget.current.x - positionCurrent.current.x) *
-      positionStiffness *
-      delta;
+      (0 - positionCurrent.current.x) * positionStiffness * delta;
 
     positionVelocity.current.y +=
-      (positionTarget.current.y - positionCurrent.current.y) *
-      positionStiffness *
-      delta;
+      (0 - positionCurrent.current.y) * positionStiffness * delta;
 
     positionVelocity.current.multiplyScalar(Math.exp(-positionDamping * delta));
 
@@ -327,6 +399,44 @@ export default function MobileProjectPlane({
     group.position.x = positionCurrent.current.x;
 
     group.position.y = positionCurrent.current.y;
+
+    /*
+     * --------------------------------
+     * BEND SPRING
+     * --------------------------------
+     *
+     * Litt løsere enn position.
+     *
+     * Dermed har bildet fortsatt
+     * litt bend etter at posisjonen
+     * nesten har landet.
+     */
+
+    const bendStiffness = 60;
+
+    const bendDamping = 9.5;
+
+    bendVelocity.current.x +=
+      (0 - bendCurrent.current.x) * bendStiffness * delta;
+
+    bendVelocity.current.y +=
+      (0 - bendCurrent.current.y) * bendStiffness * delta;
+
+    bendVelocity.current.multiplyScalar(Math.exp(-bendDamping * delta));
+
+    bendCurrent.current.addScaledVector(bendVelocity.current, delta);
+
+    bendCurrent.current.x = THREE.MathUtils.clamp(
+      bendCurrent.current.x,
+      -90,
+      55,
+    );
+
+    bendCurrent.current.y = THREE.MathUtils.clamp(
+      bendCurrent.current.y,
+      -40,
+      40,
+    );
 
     imageMaterial.uniforms.uDelta.value.set(
       bendCurrent.current.x,
@@ -338,19 +448,37 @@ export default function MobileProjectPlane({
       bendCurrent.current.y,
     );
 
-    imageMaterial.uniforms.uAlpha.value = alphaCurrent.current;
+    /*
+     * --------------------------------
+     * IMAGE FADE
+     * --------------------------------
+     *
+     * Smooth, men raskere enn
+     * forrige versjon.
+     */
 
-    const frameAlpha = THREE.MathUtils.smoothstep(
-      alphaCurrent.current,
-      0.28,
-      1,
+    const imageFade = smootherStep(
+      (time - IMAGE_FADE_DELAY) / IMAGE_FADE_DURATION,
     );
 
-    frameMaterial.uniforms.uAlpha.value = frameAlpha * 0.96;
+    imageMaterial.uniforms.uAlpha.value = imageFade;
+
+    /*
+     * --------------------------------
+     * FRAME FADE
+     * --------------------------------
+     */
+
+    const frameFade = smootherStep(
+      (time - FRAME_FADE_DELAY) / FRAME_FADE_DURATION,
+    );
+
+    frameMaterial.uniforms.uAlpha.value = frameFade * 0.96;
   });
 
   return (
     <group ref={groupRef}>
+      {/* GRADIENT FRAME */}
       <mesh position={[0, 0, -0.025]}>
         <planeGeometry args={[frameWidth, frameHeight, 48, 60]} />
 
@@ -367,6 +495,7 @@ export default function MobileProjectPlane({
         />
       </mesh>
 
+      {/* IMAGE */}
       <mesh>
         <planeGeometry args={[imageWidth, imageHeight, 48, 60]} />
 
