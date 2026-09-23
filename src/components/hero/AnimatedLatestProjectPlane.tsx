@@ -45,13 +45,51 @@ export default function AnimatedLatestProjectPlane({
 
   const { viewport, gl } = useThree();
 
+  /*
+   * =====================================================
+   * IMAGE SIZE
+   * =====================================================
+   *
+   * Ikke tving bildet til 16:9.
+   * Bruk faktisk aspect ratio fra texture.
+   */
+
+  const textureAspect = useMemo(() => {
+    const image = texture.image as
+      | HTMLImageElement
+      | {
+          width?: number;
+          height?: number;
+        };
+
+    const width =
+      "naturalWidth" in image && image.naturalWidth
+        ? image.naturalWidth
+        : image.width;
+
+    const height =
+      "naturalHeight" in image && image.naturalHeight
+        ? image.naturalHeight
+        : image.height;
+
+    if (!width || !height) {
+      return 2.09;
+    }
+
+    return width / height;
+  }, [texture]);
+
   const imageWidth = viewport.width / 1.3;
 
-  const imageHeight = imageWidth / 1.78;
+  const imageHeight = imageWidth / textureAspect;
 
+  /*
+   * Rammen i første screenshot er relativt smal
+   * på sidene, men har litt mer luft oppe/nede.
+   */
   const frameWidth = imageWidth * 1.07;
 
-  const frameHeight = imageHeight * 1.13;
+  const frameHeight = imageHeight * 1.14;
 
   const pointerTarget = useRef(new THREE.Vector2(0.5, 0.5));
 
@@ -231,9 +269,7 @@ export default function AnimatedLatestProjectPlane({
     }
 
     /*
-     * --------------------------------
-     * SLOWER INITIAL ENTRANCE
-     * --------------------------------
+     * INITIAL ENTRANCE
      */
     if (!hasStartedAnimation.current) {
       hasStartedAnimation.current = true;
@@ -244,9 +280,7 @@ export default function AnimatedLatestProjectPlane({
     }
 
     /*
-     * --------------------------------
-     * SLOWER ALPHA
-     * --------------------------------
+     * ALPHA
      */
     const alphaTarget = 1;
 
@@ -283,11 +317,6 @@ export default function AnimatedLatestProjectPlane({
 
     const targetBendY = hovered.current ? differenceY * hoverBendStrength : 0;
 
-    /*
-     * Hover samme som før.
-     *
-     * Entrance / return litt roligere.
-     */
     const bendStiffness = hovered.current ? 95 : 70;
 
     const bendDamping = hovered.current ? 18 : 13;
@@ -327,12 +356,6 @@ export default function AnimatedLatestProjectPlane({
       hovered.current ? (pointerTarget.current.y - 0.5) * maxFollowY : 0,
     );
 
-    /*
-     * Hover beholdes.
-     *
-     * Non-hover / entrance
-     * litt roligere.
-     */
     const positionStiffness = hovered.current ? 34 : 62;
 
     const positionDamping = hovered.current ? 7.5 : 7.4;

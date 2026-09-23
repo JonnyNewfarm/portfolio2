@@ -7,10 +7,18 @@ import { Suspense, useEffect, useState } from "react";
 import AnimatedLatestProjectPlane from "./AnimatedLatestProjectPlane";
 import { heroEase } from "./heroConstants";
 
-export default function LatestProjectPreview() {
+type LatestProjectPreviewProps = {
+  variant?: "desktop" | "mobile";
+};
+
+export default function LatestProjectPreview({
+  variant = "desktop",
+}: LatestProjectPreviewProps) {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [animationActive, setAnimationActive] = useState(false);
   const [isDark, setIsDark] = useState(false);
+
+  const isMobile = variant === "mobile";
 
   useEffect(() => {
     const root = document.documentElement;
@@ -65,38 +73,93 @@ export default function LatestProjectPreview() {
       }}
       transition={{
         duration: 0.8,
-        delay: 0.85,
+        delay: isMobile ? 0 : 0.85,
         ease: heroEase,
       }}
-      className="
-        group
-        relative
-        hidden
-        w-[clamp(200px,14vw,260px)]
-        cursor-pointer
-        sm:block
-      "
+      className={
+        isMobile
+          ? `
+              group
+              relative
+              block
+              w-full
+              cursor-pointer
+            `
+          : `
+              group
+              relative
+              hidden
+              w-[clamp(200px,14vw,260px)]
+              cursor-pointer
+
+              sm:block
+            `
+      }
     >
-      <p
+      <div
+        className={
+          isMobile
+            ? `
+                mb-4
+                flex
+                items-center
+                justify-between
+              `
+            : ""
+        }
+      >
+        <p
+          className={
+            isMobile
+              ? `
+                  text-[14px]
+                  font-semibold
+                  uppercase
+                  leading-none
+                  tracking-[0.05em]
+                `
+              : `
+                  mb-2
+                  ml-1
+                  text-md
+                  font-semibold
+                  uppercase
+                  leading-none
+                  tracking-[0.04em]
+                `
+          }
+        >
+          Latest project
+        </p>
+
+        {isMobile && (
+          <p
+            className="
+              text-[13px]
+              font-semibold
+              uppercase
+              tracking-[0.05em]
+              opacity-70
+            "
+          >
+            2026
+          </p>
+        )}
+      </div>
+
+      <div
         className="
-          mb-2
-          ml-1
-          text-md
-          font-semibold
-          uppercase
-          leading-none
-          tracking-[0.04em]
+          relative
+          aspect-[16/9]
+          w-full
+          overflow-visible
         "
       >
-        Latest project
-      </p>
-
-      <div className="relative aspect-[16/9] w-full overflow-visible">
         <Canvas
-          dpr={[1.5, 2]}
+          dpr={isMobile ? [1, 1.25] : [1.5, 2]}
           gl={{
             alpha: true,
-            antialias: true,
+            antialias: !isMobile,
             powerPreference: "high-performance",
             stencil: false,
           }}
@@ -106,13 +169,23 @@ export default function LatestProjectPreview() {
             near: 0.1,
             far: 10,
           }}
-          style={{
-            position: "absolute",
-            left: "-12%",
-            top: "-18%",
-            width: "124%",
-            height: "136%",
-          }}
+          style={
+            isMobile
+              ? {
+                  position: "absolute",
+                  left: "-5%",
+                  top: "-12%",
+                  width: "110%",
+                  height: "124%",
+                }
+              : {
+                  position: "absolute",
+                  left: "-12%",
+                  top: "-18%",
+                  width: "124%",
+                  height: "136%",
+                }
+          }
         >
           <Suspense fallback={null}>
             <AnimatedLatestProjectPlane
@@ -125,6 +198,42 @@ export default function LatestProjectPreview() {
           </Suspense>
         </Canvas>
       </div>
+
+      {isMobile && (
+        <div
+          className="
+            mt-5
+            flex
+            items-end
+            justify-between
+          "
+        >
+          <div>
+            <p
+              className="
+                text-[20px]
+                font-semibold
+                uppercase
+                leading-none
+              "
+            >
+              Kerimov Designs
+            </p>
+
+            <p
+              className="
+                mt-2
+                text-[13px]
+                uppercase
+                tracking-[0.04em]
+                opacity-80
+              "
+            >
+              Design / Development
+            </p>
+          </div>
+        </div>
+      )}
     </motion.a>
   );
 }

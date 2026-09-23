@@ -7,6 +7,7 @@ import TextReveal from "@/components/TextReveal";
 
 import HeroBottomInfo from "./HeroBottomInfo";
 import HeroPortrait from "./HeroPortrait";
+import MobileHeroContinuation from "./MobileHeroContinuation";
 
 export default function Hero() {
   const [isHeroReady, setIsHeroReady] = useState(false);
@@ -16,11 +17,14 @@ export default function Hero() {
       <section
         className="
           relative
-          h-[120dvh]
+          h-dvh
           bg-[#ececec]
           text-[#211f1e]
+
           dark:bg-[#1e1c1a]
           dark:text-[#e7e3dd]
+
+          sm:h-[120dvh]
         "
       >
         <div
@@ -30,7 +34,9 @@ export default function Hero() {
             h-dvh
             overflow-hidden
             px-5
+
             sm:px-8
+
             lg:px-[3vw]
           "
         >
@@ -73,14 +79,22 @@ export default function Hero() {
             </div>
 
             {/* PORTRAIT */}
-            <HeroPortrait onReady={() => setIsHeroReady(true)} />
+            <HeroPortrait
+              onReady={() => {
+                setIsHeroReady(true);
+              }}
+            />
 
             {/* LOADER */}
             <AnimatePresence>
               {!isHeroReady && (
                 <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
+                  initial={{
+                    opacity: 0,
+                  }}
+                  animate={{
+                    opacity: 1,
+                  }}
                   exit={{
                     opacity: 0,
                     scale: 0.9,
@@ -125,6 +139,9 @@ export default function Hero() {
           </div>
         </div>
       </section>
+
+      {/* MOBILE CONTINUATION */}
+      <MobileHeroContinuation />
     </>
   );
 }

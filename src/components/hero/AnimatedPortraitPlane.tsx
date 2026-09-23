@@ -152,7 +152,7 @@ export default function AnimatedPortraitPlane({
     /*
      * BEND
      */
-    const hoverBendStrength = 175;
+    const hoverBendStrength = 85;
 
     const targetBendX = hovered.current
       ? rawDifferenceX * hoverBendStrength
@@ -197,9 +197,8 @@ export default function AnimatedPortraitPlane({
     /*
      * POSITION
      */
-    const maxFollowX = portraitWidth * 0.42;
-
-    const maxFollowY = portraitHeight * 0.22;
+    const maxFollowX = portraitWidth * 0.22;
+    const maxFollowY = portraitHeight * 0.12;
 
     positionTarget.current.set(
       hovered.current ? (pointerTarget.current.x - 0.5) * maxFollowX : 0,
