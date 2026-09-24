@@ -156,10 +156,10 @@ export default function LatestProjectPreview({
         "
       >
         <Canvas
-          dpr={isMobile ? [1, 1.25] : [1.5, 2]}
+          dpr={[1.5, 2]}
           gl={{
             alpha: true,
-            antialias: !isMobile,
+            antialias: true,
             powerPreference: "high-performance",
             stencil: false,
           }}
